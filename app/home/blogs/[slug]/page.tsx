@@ -1,11 +1,12 @@
-import { useRouter } from "next/router";
+"use client";
+import { useParams } from 'next/navigation'
 import { blogs } from "@/components/blogs/blogData";
 import { Blog } from "@/components/blogs/types";
 import HomeLayout from "@/components/home/HomeLayout";
 
 const BlogDetail: React.FC = () => {
-  const router = useRouter();
-  const { slug } = router.query;
+  const params = useParams();
+  const { slug } = params;
 
   const blog: Blog | undefined = blogs.find((blog) => blog.slug === slug);
 
