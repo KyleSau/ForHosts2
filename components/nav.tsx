@@ -137,6 +137,24 @@ export default function Nav({ children }: { children: ReactNode }) {
         icon: <Globe width={18} />,
       },
       {
+        name: "Listings",
+        href: "/posts",
+        isActive: segments[0] === "posts",
+        icon: <Globe width={18} />,
+      },
+      {
+        name: "Reservations",
+        href: "/reservations",
+        isActive: segments[0] === "reservations",
+        icon: <Globe width={18} />,
+      },
+      {
+        name: "Stripe Connect",
+        href: "/stripe",
+        isActive: segments[0] === "stripe",
+        icon: <Globe width={18} />,
+      },
+      {
         name: "Settings",
         href: "/settings",
         isActive: segments[0] === "settings",
