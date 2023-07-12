@@ -24,29 +24,29 @@ import Image from "next/image";
 import { FileCode, Github } from "lucide-react";
 
 const externalLinks = [
-  /*{
-    name: "Read announcement",
+  {
+    name: "Placeholder 1",
     href: "",
     icon: <Megaphone width={18} />,
   },
   {
-    name: "Star on GitHub",
-    href: "https://github.com/vercel/platforms",
+    name: "Placeholder 2",
+    href: "",
     icon: <Github width={18} />,
   },
   {
-    name: "Read the guide",
-    href: "https://vercel.com/guides/nextjs-multi-tenant-application",
+    name: "Placeholder 3",
+    href: "",
     icon: <FileCode width={18} />,
   },
   {
-    name: "View demo site",
-    href: "https://demo.vercel.pub",
+    name: "Placeholder 4",
+    href: "",
     icon: <Layout width={18} />,
   },
   {
-    name: "Deploy your own",
-    href: "https://vercel.com/templates/next.js/platforms-starter-kit",
+    name: "Placeholder 5",
+    href: "",
     icon: (
       <svg
         width={18}
@@ -58,7 +58,7 @@ const externalLinks = [
         <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="currentColor" />
       </svg>
     ),
-  },*/
+  },
 ];
 
 export default function Nav({ children }: { children: ReactNode }) {
