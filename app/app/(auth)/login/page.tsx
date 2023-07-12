@@ -5,7 +5,7 @@ import { Suspense } from "react";
 export default function LoginPage() {
   return (
     <div className="mx-5 border border-stone-200 py-10 dark:border-stone-700 sm:mx-auto sm:w-full sm:max-w-md sm:rounded-lg sm:shadow-md">
-      <Image
+      {/* <Image
         alt="Platforms Starter Kit"
         width={100}
         height={100}
@@ -19,13 +19,13 @@ export default function LoginPage() {
         Build multi-tenant applications with custom domains. <br />
         <a
           className="font-medium text-black hover:text-stone-800 dark:text-stone-300 dark:hover:text-stone-100"
-          href="https://vercel.com/blog/platforms-starter-kit"
+          href=""
           rel="noreferrer"
           target="_blank"
         >
           Read the announcement.
         </a>
-      </p>
+      </p> */}
 
       <div className="mx-auto mt-4 w-11/12 max-w-xs sm:w-full">
         <Suspense
