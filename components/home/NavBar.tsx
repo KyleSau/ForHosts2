@@ -147,7 +147,7 @@ const Navbar = () => {
           {navOptions.map((option) => (
             <li key={option.name} onClick={closeMobileMenu}>
               <Link
-                href={option.url || ""}
+                href={option.url || "/"}
                 className={`block text-2xl font-bold text-black`}
               >
                 {option.name}
