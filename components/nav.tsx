@@ -25,28 +25,28 @@ import { FileCode, Github } from "lucide-react";
 
 const externalLinks = [
   {
-    name: "Read announcement",
-    href: "https://vercel.com/blog/platforms-starter-kit",
+    name: "Placeholder 1",
+    href: "",
     icon: <Megaphone width={18} />,
   },
   {
-    name: "Star on GitHub",
-    href: "https://github.com/vercel/platforms",
+    name: "Placeholder 2",
+    href: "",
     icon: <Github width={18} />,
   },
   {
-    name: "Read the guide",
-    href: "https://vercel.com/guides/nextjs-multi-tenant-application",
+    name: "Placeholder 3",
+    href: "",
     icon: <FileCode width={18} />,
   },
   {
-    name: "View demo site",
-    href: "https://demo.vercel.pub",
+    name: "Placeholder 4",
+    href: "",
     icon: <Layout width={18} />,
   },
   {
-    name: "Deploy your own",
-    href: "https://vercel.com/templates/next.js/platforms-starter-kit",
+    name: "Placeholder 5",
+    href: "",
     icon: (
       <svg
         width={18}
@@ -137,6 +137,24 @@ export default function Nav({ children }: { children: ReactNode }) {
         icon: <Globe width={18} />,
       },
       {
+        name: "Listings",
+        href: "/posts",
+        isActive: segments[0] === "posts",
+        icon: <Globe width={18} />,
+      },
+      {
+        name: "Reservations",
+        href: "/reservations",
+        isActive: segments[0] === "reservations",
+        icon: <Globe width={18} />,
+      },
+      {
+        name: "Stripe Connect",
+        href: "/stripe",
+        isActive: segments[0] === "stripe",
+        icon: <Globe width={18} />,
+      },
+      {
         name: "Settings",
         href: "/settings",
         isActive: segments[0] === "settings",
@@ -162,15 +180,14 @@ export default function Nav({ children }: { children: ReactNode }) {
           segments[0] === "post" && segments.length === 2 && !showSidebar
             ? "left-5 top-5"
             : "right-5 top-7"
-        } sm:hidden`}
+          } sm:hidden`}
         onClick={() => setShowSidebar(!showSidebar)}
       >
         <Menu width={20} />
       </button>
       <div
-        className={`transform ${
-          showSidebar ? "translate-x-0" : "-translate-x-full"
-        } fixed z-10 flex h-full w-full flex-col justify-between border-r border-stone-200 bg-stone-100 p-4 transition-all dark:border-stone-700 dark:bg-stone-900 sm:w-60 sm:translate-x-0`}
+        className={`transform ${showSidebar ? "translate-x-0" : "-translate-x-full"
+          } fixed z-10 flex h-full w-full flex-col justify-between border-r border-stone-200 bg-stone-100 p-4 transition-all dark:border-stone-700 dark:bg-stone-900 sm:w-60 sm:translate-x-0`}
       >
         <div className="grid gap-2">
           <div className="flex items-center space-x-2 rounded-lg px-2 py-1.5">
@@ -212,9 +229,8 @@ export default function Nav({ children }: { children: ReactNode }) {
               <Link
                 key={name}
                 href={href}
-                className={`flex items-center space-x-3 ${
-                  isActive ? "bg-stone-200 text-black dark:bg-stone-700" : ""
-                } rounded-lg px-2 py-1.5 transition-all duration-150 ease-in-out hover:bg-stone-200 active:bg-stone-300 dark:text-white dark:hover:bg-stone-700 dark:active:bg-stone-800`}
+                className={`flex items-center space-x-3 ${isActive ? "bg-stone-200 text-black dark:bg-stone-700" : ""
+                  } rounded-lg px-2 py-1.5 transition-all duration-150 ease-in-out hover:bg-stone-200 active:bg-stone-300 dark:text-white dark:hover:bg-stone-700 dark:active:bg-stone-800`}
               >
                 {icon}
                 <span className="text-sm font-medium">{name}</span>
