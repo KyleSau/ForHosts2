@@ -24,7 +24,7 @@ import Image from "next/image";
 import { FileCode, Github } from "lucide-react";
 
 const externalLinks = [
-  {
+  /*{
     name: "Read announcement",
     href: "",
     icon: <Megaphone width={18} />,
@@ -58,7 +58,7 @@ const externalLinks = [
         <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="currentColor" />
       </svg>
     ),
-  },
+  },*/
 ];
 
 export default function Nav({ children }: { children: ReactNode }) {
