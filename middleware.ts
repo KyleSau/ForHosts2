@@ -43,12 +43,15 @@ export default async function middleware(req: NextRequest) {
     hostname === "localhost:3000" ||
     hostname === process.env.NEXT_PUBLIC_ROOT_DOMAIN
   ) {
-    // return NextResponse.rewrite(new URL(`/home${path}`, req.url));
+//     console.log('req.url:', req.url);
+// console.log('path:', path);
+// console.log('formed URL:', `/home${path}`);
+    return NextResponse.rewrite(new URL(`/home${path}`, req.url));
     // we're redirecting to the blog post for this demo, but you can change this to
     // rewrite to the /home folder if you want to use the home page (or whatever you wanna name it)
-    return NextResponse.redirect(
-      "https://vercel.com/blog/platforms-starter-kit",
-    );
+    // return NextResponse.redirect(
+    //   "https://vercel.com/blog/platforms-starter-kit",
+    // );
   }
 
   // rewrite everything else to `/[domain]/[path] dynamic route

@@ -1,16 +1,22 @@
-import Image from "next/image";
+import LandingPage from "@/components/home/Hero";
+import HomeLayout from "@/components/home/HomeLayout";
+import LandingInfo from "@/components/home/LandingInfo";
+import { PropertyQuantitySelection } from "@/components/home/PropertyQuantitySelection";
 
-export default function HomePage() {
+
+export default function Home() {
+  const services = [
+    { imageUrl: "https://example.com/image1.jpg", description: "Service 1" },
+    { imageUrl: "https://example.com/image2.jpg", description: "Service 2" },
+    { imageUrl: "https://example.com/image3.jpg", description: "Service 3" },
+  ];
   return (
-    <div className="flex h-screen bg-black">
-      <div className="m-auto w-48">
-        <Image
-          width={512}
-          height={512}
-          src="/logo.png"
-          alt="Platforms on Vercel"
-        />
-      </div>
+    <div>
+      <HomeLayout>
+        <LandingPage />
+        <LandingInfo header="Our Services" services={services} />
+        <PropertyQuantitySelection />
+      </HomeLayout>
     </div>
   );
 }
