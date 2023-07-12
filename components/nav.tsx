@@ -138,8 +138,8 @@ export default function Nav({ children }: { children: ReactNode }) {
       },
       {
         name: "Listings",
-        href: "/posts",
-        isActive: segments[0] === "posts",
+        href: "/listings",
+        isActive: segments[0] === "listings",
         icon: <Globe width={18} />,
       },
       {
