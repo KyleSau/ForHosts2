@@ -12,6 +12,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        sitecolor: "#add8e6",
         // light mode
         tremor: {
           brand: {
@@ -112,6 +113,7 @@ module.exports = {
         cal: ["var(--font-cal)", ...fontFamily.sans],
         title: ["var(--font-title)", ...fontFamily.sans],
         mono: ["Consolas", ...fontFamily.mono],
+        sitefont: ['Quicksand', ...fontFamily.sans],
       },
       typography: {
         DEFAULT: {
