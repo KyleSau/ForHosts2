@@ -18,7 +18,7 @@ export const blogs: Blog[] = [
     id: 2,
     title: "Insurance For Short Term Rentals",
     description: "A directory of insurance policies for short term rentals",
-    content: "https://waivo.io </br> https://www.insuraguest.com/ </br> https://superhog.com/ </br>",
+    content: "https://waivo.io  https://www.insuraguest.com/  https://superhog.com/  https://safely.com/",
     slug: 'blog-2',
     image: {
       path: "/houseFrontDoor7.svg",
