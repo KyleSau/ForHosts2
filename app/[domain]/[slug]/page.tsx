@@ -53,7 +53,7 @@ export default async function SitePostPage({
             {toDateString(data.createdAt)}
           </p>
           <h1>
-            ID: {data.id}
+            {data.id}
           </h1>
           <h1 className="mb-10 font-title text-3xl font-bold text-stone-800 dark:text-white md:text-6xl">
             {data.title}
