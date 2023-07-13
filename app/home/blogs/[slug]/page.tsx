@@ -54,7 +54,8 @@ const BlogDetail: React.FC = () => {
           <p className="text-lg text-center text-gray-700  ">{blog.content}</p>
         </div>
       </div>
-      <hr className="border-t-2 border-gray-200 my-8" />
+      <hr className="border-t-2 border-black my-8" />
+      <h1 className="flex justify-center text-lg font-bold">Read more...</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
         {randomBlogs.map((blog, index) => (
           <div key={index} className="flex flex-col items-center justify-center space-y-4 p-4">
