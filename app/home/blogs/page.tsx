@@ -11,7 +11,8 @@ const BlogPage: React.FC = () => {
 
   const indexOfLastBlog = currentPage * PER_PAGE;
   const indexOfFirstBlog = indexOfLastBlog - PER_PAGE;
-  const currentBlogs = blogs.slice(indexOfFirstBlog, indexOfLastBlog);
+  const sortedBlogs = blogs.sort((a, b) => a.id - b.id);
+  const currentBlogs = sortedBlogs.slice(indexOfFirstBlog, indexOfLastBlog);
 
   const renderBlogs = currentBlogs.map((blog) => (
     <BlogCard key={blog.id} blog={blog} />
