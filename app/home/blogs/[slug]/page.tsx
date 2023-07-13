@@ -10,7 +10,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Section } from "@/components/home/Section";
 
-function shuffleArray(array) {
+function shuffleArray<T>(array: T[]): T[] {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
@@ -21,7 +21,8 @@ function shuffleArray(array) {
 const BlogDetail: React.FC = () => {
   const params = useParams();
   const { slug } = params;
-  const [randomBlogs, setRandomBlogs] = useState([]);
+  const [randomBlogs, setRandomBlogs] = useState<Blog[]>([]);
+
   const blog: Blog | undefined = blogs.find((blog) => blog.slug === slug);
 
   useEffect(() => {
