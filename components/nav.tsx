@@ -13,6 +13,8 @@ import {
   Newspaper,
   Settings,
   CalendarCheck2,
+  Home,
+  CircleDollarSign,
 } from "lucide-react";
 import {
   useParams,
@@ -135,13 +137,13 @@ export default function Nav({ children }: { children: ReactNode }) {
         name: "Sites",
         href: "/sites",
         isActive: segments[0] === "sites",
-        icon: <Globe width={18} />,
+        icon: <Layout width={18} />,
       },
       {
         name: "Rentals",
         href: "/rentals",
         isActive: segments[0] === "rentals",
-        icon: <Globe width={18} />,
+        icon: <Home width={18} />,
       },
       {
         name: "Reservations",
@@ -153,7 +155,7 @@ export default function Nav({ children }: { children: ReactNode }) {
         name: "Stripe Connect",
         href: "/stripe",
         isActive: segments[0] === "stripe",
-        icon: <Globe width={18} />,
+        icon: <CircleDollarSign width={18} />,
       },
       {
         name: "Settings",
