@@ -24,7 +24,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ blog }) => {
           {blog.title}
         </div>
         <p className="text-gray-700 text-base text-center overflow-y-auto">
-          {blog.content}
+          {blog.description}
         </p>
       </div>
     </Link>
