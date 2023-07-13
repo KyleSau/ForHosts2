@@ -13,12 +13,12 @@ export const blogs: Blog[] = [
       altText: "A sample image",
     },
   },
-  
+
   {
     id: 2,
-    title: "Sample Blog",
-    description: "This is a sample description for the second blog post.",
-    content: "Lorem ipsum dolor sit amet...",
+    title: "Insurance For Short Term Rentals",
+    description: "A directory of insurance policies for short term rentals",
+    content: "https://waivo.io </br> https://www.insuraguest.com/ </br> https://superhog.com/ </br>",
     slug: 'blog-2',
     image: {
       path: "/houseFrontDoor7.svg",

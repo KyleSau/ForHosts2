@@ -56,12 +56,12 @@ export default function CreateSiteModal() {
             htmlFor="name"
             className="text-sm font-medium text-stone-500 dark:text-stone-400"
           >
-            Site Name
+            Website Name (Title)
           </label>
           <input
             name="name"
             type="text"
-            placeholder="My Awesome Site"
+            placeholder="My Awesome Rental Website"
             autoFocus
             value={data.name}
             onChange={(e) => setData({ ...data, name: e.target.value })}
@@ -106,7 +106,7 @@ export default function CreateSiteModal() {
           </label>
           <textarea
             name="description"
-            placeholder="Description about why my site is so awesome"
+            placeholder="Describe your site, 140 characters maximum"
             value={data.description}
             onChange={(e) => setData({ ...data, description: e.target.value })}
             maxLength={140}
