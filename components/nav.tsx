@@ -12,6 +12,7 @@ import {
   Menu,
   Newspaper,
   Settings,
+  CalendarCheck2,
 } from "lucide-react";
 import {
   useParams,
@@ -146,7 +147,7 @@ export default function Nav({ children }: { children: ReactNode }) {
         name: "Reservations",
         href: "/reservations",
         isActive: segments[0] === "reservations",
-        icon: <Globe width={18} />,
+        icon: <CalendarCheck2 width={18} />,
       },
       {
         name: "Stripe Connect",
