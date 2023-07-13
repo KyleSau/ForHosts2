@@ -42,7 +42,7 @@ const BlogPage: React.FC = () => {
         title="Blogs"
         description="Various blogs on the rental business"
       >
-        <div>
+        <div className="rounded-lg border border-black p-10">
         <div className="flex flex-wrap justify-center md:grid md:grid-cols-3 gap-4">
             {renderBlogs}</div>
           <ul className="flex list-none pl-0 mb-0 justify-center">

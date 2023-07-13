@@ -31,7 +31,7 @@ const PropertyQuantitySelection = () => {
                 <p className="mt-2">I manage 1-10 properties</p>
               </div>
             </div>
-            <button className="hover:text-black text-blue-600 font-bold py-2 px-4 rounded mt-3">
+            <button className="hover:text-black text-black hover:bg-sitecolor font-bold py-2 px-4 rounded mt-3 border border-black ">
               Get Started &#8599;
             </button>
           </div>
@@ -53,7 +53,7 @@ const PropertyQuantitySelection = () => {
                 <p className="mt-2">I manage 10+ properties</p>
               </div>
             </div>
-            <button className="hover:text-black text-blue-600 font-bold py-2 px-4 rounded mt-3">
+            <button className="hover:text-black text-black hover:bg-sitecolor font-bold py-2 px-4 rounded mt-3 border border-black ">
               Get Started &#8599;
             </button>
           </div>
