@@ -5,7 +5,7 @@ import Link from "next/link";
 import { FaUserCircle, FaAngleDown, FaBars, FaTimes } from "react-icons/fa";
 import Logo from "../Logo";
 import { useSession } from "next-auth/react";
-
+import { useRouter } from "next/router";
 type NavOption = {
   name: string;
   url?: string;
@@ -108,21 +108,28 @@ const Navbar = () => {
                 )}
               </li>
             ))}
-            {/* {session ? (
-              <button
-                className=" hover:bg-gray-200 text-black font-bold w-28 rounded-xl h-12 text-lg hover:border-2 focus:outline-none transition-all ease-in-out duration-150"
-                onClick={() => router.push('https://app.forhosts.com')}
-              >
-                Dashboard
-              </button>
-            ) : (
-              <button
-                className=" hover:bg-gray-200 text-black font-bold w-28 rounded-xl h-12 text-lg hover:border-2 focus:outline-none transition-all ease-in-out duration-150"
-                onClick={() => router.push('https://app.forhosts.com/login')}
-              >
-                <span className="text-black"> Login</span>
-              </button>
-            )} */}
+
+
+{
+  session ? (
+    <Link href="https://dashboard.forhosts.com">
+      <button
+        className=" hover:bg-gray-200 text-black font-bold w-28 rounded-xl h-12 text-lg hover:border-2 focus:outline-none transition-all ease-in-out duration-150"
+      >
+        Dashboard
+      </button>
+    </Link>
+  ) : (
+    <Link href="https://dashboard.forhosts.com/login">
+      <button
+        className=" hover:bg-gray-200 text-black font-bold w-28 rounded-xl h-12 text-lg hover:border-2 focus:outline-none transition-all ease-in-out duration-150"
+      >
+        <span className="text-black"> Login</span>
+      </button>
+    </Link>
+  )
+}
+
           </ul>
 
           <div className="md:hidden">

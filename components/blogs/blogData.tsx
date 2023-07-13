@@ -5,6 +5,7 @@ export const blogs: Blog[] = [
   {
     id: 1,
     title: "Sample Blog",
+    description: "This is a sample description for the first blog post.",
     content: "Lorem ipsum dolor sit amet...",
     slug: 'blog-1',
     image: {
@@ -15,6 +16,7 @@ export const blogs: Blog[] = [
   {
     id: 2,
     title: "Sample Blog",
+    description: "This is a sample description for the second blog post.",
     content: "Lorem ipsum dolor sit amet...",
     slug: 'blog-2',
     image: {
@@ -25,6 +27,7 @@ export const blogs: Blog[] = [
   {
     id: 3,
     title: "Sample Blog",
+    description: "This is a sample description for the third blog post.",
     content: "Lorem ipsum dolor sit amet...",
     slug: 'blog-3',
     image: {
@@ -35,6 +38,7 @@ export const blogs: Blog[] = [
   {
     id: 4,
     title: "Sample Blog",
+    description: "This is a sample description for the fourth blog post.",
     content: "Lorem ipsum dolor sit amet...",
     slug: 'blog-4',
     image: {
@@ -45,6 +49,7 @@ export const blogs: Blog[] = [
   {
     id: 5,
     title: "Sample Blog",
+    description: "This is a sample description for the fifth blog post.",
     content: "Lorem ipsum dolor sit amet...",
     slug: 'blog-5',
     image: {
@@ -55,6 +60,7 @@ export const blogs: Blog[] = [
   {
     id: 6,
     title: "Sample Blog",
+    description: "This is a sample description for the sixth blog post.",
     content: "Lorem ipsum dolor sit amet...",
     slug: 'blog-6',
     image: {
@@ -65,6 +71,7 @@ export const blogs: Blog[] = [
   {
     id: 7,
     title: "Sample Blog",
+    description: "This is a sample description for the seventh blog post.",
     content: "Lorem ipsum dolor sit amet...",
     slug: 'blog-7',
     image: {
@@ -75,6 +82,7 @@ export const blogs: Blog[] = [
   {
     id: 8,
     title: "Sample Blog",
+    description: "This is a sample description for the eighth blog post.",
     content: "Lorem ipsum dolor sit amet...",
     slug: 'blog-8',
     image: {
