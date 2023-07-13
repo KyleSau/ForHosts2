@@ -6,9 +6,9 @@ import { Metadata } from "next";
 import clsx from "clsx";
 
 export const metadata: Metadata = {
-  title: "Platforms Starter Kit",
+  title: "ForHosts",
   description:
-    "Create a fullstack application with multi-tenancy and custom domains support using Next.js, Prisma, and PostgreSQL",
+    "Create a dynamic website for your customers looking to book your properties!",
   icons: ["https://vercel.pub/favicon.ico"],
 };
 
