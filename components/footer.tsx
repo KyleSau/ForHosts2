@@ -68,7 +68,7 @@ function Footer() {
               </a>
             </NextLink>
           </div>
-          <p className="text-lg mt-2 text-center">&copy; Copyright 2023 ForHosts</p>
+          <p className="text-lg mt-2 text-center">&copy; ForHosts 2023</p>
         </div>
       </Container>
     </footer>
