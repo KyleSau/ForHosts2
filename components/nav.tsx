@@ -152,9 +152,9 @@ export default function Nav({ children }: { children: ReactNode }) {
         icon: <CalendarCheck2 width={18} />,
       },
       {
-        name: "Stripe Connect",
-        href: "/stripe",
-        isActive: segments[0] === "stripe",
+        name: "Payments",
+        href: "/payments",
+        isActive: segments[0] === "payments",
         icon: <CircleDollarSign width={18} />,
       },
       {
