@@ -114,7 +114,7 @@ const Navbar = () => {
   session ? (
     <Link href="https://dashboard.forhosts.com">
       <button
-        className=" hover:bg-gray-200 text-black font-bold w-28 rounded-xl h-12 text-lg hover:border-2 focus:outline-none transition-all ease-in-out duration-150"
+className=" hover:bg-sitecolor text-black font-bold w-28 border-2 border-black rounded-xl h-12 text-lg hover:border-2 focus:outline-none transition-all ease-in-out duration-150"
       >
         Dashboard
       </button>
