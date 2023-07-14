@@ -37,7 +37,7 @@ const externalLinks = [
   },
   {
     name: "Support",
-    href: "",
+    href: "https://tawk.to/chat/64a6e01c94cf5d49dc61f524/1h4ltms4a",
     icon: <MessagesSquare width={18} />,
   },
   {
