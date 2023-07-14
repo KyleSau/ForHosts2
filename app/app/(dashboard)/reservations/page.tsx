@@ -99,10 +99,10 @@ export default async function ReservationsPage() {
                     <tr key={idx}>
                         <td>{idx}</td>
                         {
-                            resFields?.map((field) => {
+                            resFields?.map((field, fieldIdx) => {
                                 type ObjectKey = keyof typeof reservation;
                                 const fieldName = field.name as ObjectKey;
-                                return <td>{reservation[fieldName]}</td>
+                                return <td key={fieldIdx}>{reservation[fieldName]}</td>
                             }
                         )}
                     </tr>
