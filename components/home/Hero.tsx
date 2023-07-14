@@ -21,9 +21,12 @@ const Hero: React.FC = () => {
           <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">ForHosts is the simplest way for short term rental owners to create a fully functional direct booking website without any technical skills required.</p>
           <Link href="/get-started">
             <button className={`${quicksand
-              .className} mt-4 px-10 py-4 bg-blue-600 text-white font-semibold rounded-lg transition-all duration-500 ease-in-out transform hover:scale-105`}>
-              Take a Tour
+              .className} mt-4 px-10 py-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-all duration-500 ease-in-out transform hover:scale-105`}>
+               <Link href="/get-started">
 
+
+              Get Started
+              </Link>
             </button>
           </Link>
         </div>
