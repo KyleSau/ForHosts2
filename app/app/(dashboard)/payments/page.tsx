@@ -15,31 +15,7 @@ export default async function PaymentsPage() {
                 <h1 className="font-cal text-3xl font-bold dark:text-white">
                     Payments
                 </h1>
-                <Form
-                    title="Name"
-                    description="Your full name"
-                    helpText="Please use 32 characters maximum."
-                    inputAttrs={{
-                        name: "name",
-                        type: "text",
-                        defaultValue: session.user.name!,
-                        placeholder: "John Doe",
-                        maxLength: 32,
-                    }}
-                    handleSubmit={editUser}
-                />
-                <Form
-                    title="Email"
-                    description="Your email"
-                    helpText="Please enter a valid email."
-                    inputAttrs={{
-                        name: "email",
-                        type: "email",
-                        defaultValue: session.user.email!,
-                        placeholder: "john@gmail.com",
-                    }}
-                    handleSubmit={editUser}
-                />
+                This page is where hosts payment gateway options would be displayed.
             </div>
         </div>
     );
