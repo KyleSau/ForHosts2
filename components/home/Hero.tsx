@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import LandingInfo from "./LandingInfo";
+import LandingInfo from "./landing-info";
 import { Quicksand } from 'next/font/google'
 
 const quicksand = Quicksand({

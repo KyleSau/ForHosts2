@@ -1,6 +1,6 @@
 import LandingPage from "@/components/home/Hero";
-import HomeLayout from "@/components/home/HomeLayout";
-import LandingInfo from "@/components/home/LandingInfo";
+import HomeLayout from "@/components/home/home-layout";
+import LandingInfo from "@/components/home/landing-info";
 import { PropertyQuantitySelection } from "@/components/home/PropertyQuantitySelection";
 
 

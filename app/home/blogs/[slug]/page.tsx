@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
 import { useParams } from "next/navigation";
-import { blogs } from "@/components/blogs/blogData";
+import { blogs } from "@/components/blogs/blog-data";
 import { Blog } from "@/components/blogs/types";
-import HomeLayout from "@/components/home/HomeLayout";
+import HomeLayout from "@/components/home/home-layout";
 import Meta from "@/components/meta";
 import Image from "next/image";
 import Link from "next/link";

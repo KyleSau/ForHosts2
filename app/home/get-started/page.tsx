@@ -1,4 +1,4 @@
-import HomeLayout from '@/components/home/HomeLayout'
+import HomeLayout from '@/components/home/home-layout'
 import { Section } from '@/components/home/Section'
 import Image from 'next/image'
 import React from 'react'

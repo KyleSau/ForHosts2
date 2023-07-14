@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import Navbar from './NavBar';
+import Navbar from './nav-bar';
 import Footer from '../footer';
 import Meta from '../meta';
 interface WithChildren {

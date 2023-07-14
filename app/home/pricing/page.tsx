@@ -1,5 +1,5 @@
-import HomeLayout from "@/components/home/HomeLayout";
-import Navbar from "@/components/home/NavBar";
+import HomeLayout from "@/components/home/home-layout";
+import Navbar from "@/components/home/nav-bar";
 import PriceCards from "@/components/home/PricingCard";
 import Meta from "@/components/meta";
 export default function Pricing() {

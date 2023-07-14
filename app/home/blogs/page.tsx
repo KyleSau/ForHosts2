@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import { blogs } from "@/components/blogs/blogData";
-import BlogCard from "@/components/blogs/blogCard";
-import HomeLayout from "@/components/home/HomeLayout";
+import { blogs } from "@/components/blogs/blog-data";
+import BlogCard from "@/components/blogs/blog-card";
+import HomeLayout from "@/components/home/home-layout";
 import { Section } from "@/components/home/Section";
 const PER_PAGE = 6; // Number of blogs per page
 
