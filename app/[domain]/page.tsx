@@ -88,7 +88,7 @@ export default async function SiteHomePage({
               className="hidden dark:block"
             />
             <p className="font-title text-2xl text-stone-600 dark:text-stone-400">
-              No posts yet.
+              No Properties Yet.
             </p>
           </div>
         )}
@@ -97,7 +97,7 @@ export default async function SiteHomePage({
       {posts.length > 1 && (
         <div className="mx-5 mb-20 max-w-screen-xl lg:mx-24 2xl:mx-auto">
           <h2 className="mb-10 font-title text-4xl dark:text-white md:text-5xl">
-            More stories
+            Other Rentals
           </h2>
           <div className="grid w-full grid-cols-1 gap-x-4 gap-y-8 md:grid-cols-2 xl:grid-cols-3">
             {posts.slice(1).map((metadata, index) => (
