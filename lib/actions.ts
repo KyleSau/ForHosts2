@@ -427,3 +427,95 @@ export const editUser = async (
     }
   }
 };
+
+//endpoints for reservations
+//create reservation
+//cancel reservation
+//enum for reservation: {CONFIRMED, PENDING, CANCELLED, INACTIVE}
+// export const createReservation = async ()
+
+
+// const data = await prisma?.reservation.findUnique({
+//     where: {
+//       id: params.id,
+//     },
+//   });
+
+
+export const getReservations = async (limit: number = 10) => {
+    const session = await getSession();
+    if (!session?.user.id) {
+        return {
+          error: "Not authenticated",
+        };
+    }
+    
+    try {
+        const reservations = await prisma.reservation.findMany({
+            where: {
+                user: {
+                    id: session.user.id as string
+                }
+            },
+            orderBy: {
+                createdAt: "desc"
+            },
+            ...limit ? { take: limit } : {}
+        });
+        return reservations;
+    } catch (error: any) {
+        return {
+            error: error.message,
+          };
+    }
+};
+
+
+export const createReservation = async (formData: FormData) => {
+    const session = await getSession();
+    if (!session?.user.id) {
+      return {
+        error: "Not authenticated",
+      };
+    }
+    const startDate = formData.get("startDate");
+    const endDate = formData.get("endDate");
+
+    try {
+        const now = new Date();
+        const response = await prisma?.reservation.create({
+            data: {
+                userId: "testuserid123",
+                listingId: "testlistingid123",
+                startDate: now,
+                endDate: now,
+                totalPrice: 100,
+                createdAt: now,
+                status: "CONFIRMED"
+            }
+        });
+        console.log('response: ', response);
+
+        return response;
+    } catch (error: any) {
+        if (error.code === "P2002") {
+            return {
+                error: `This reservation is already taken`,
+            };
+        } else {
+            return {
+                error: error.message,
+            };
+        }
+    }
+};
+
+
+export const cancelReservation = async (formData: FormData) => {
+    const session = await getSession();
+    if (!session?.user.id) {
+      return {
+        error: "Not authenticated",
+      };
+    }
+};
