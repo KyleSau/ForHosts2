@@ -1,7 +1,7 @@
 "use client";
 import { Section } from "./Section";
 import { useState } from "react";
-
+import Link from "next/link";
 const PropertyQuantitySelection = () => {
   const [isHovered1, setIsHovered1] = useState(false);
   const [isHovered2, setIsHovered2] = useState(false);
@@ -31,9 +31,15 @@ const PropertyQuantitySelection = () => {
                 <p className="mt-2">I manage 1-10 properties</p>
               </div>
             </div>
-            <button className="hover:text-black text-black hover:bg-sitecolor hover:scale-110 transition ease-in-out delay-75 font-bold py-2 px-4 rounded mt-3 border border-black ">
-              Get Started &#8599;
-            </button>
+            
+           
+
+<button className="hover:text-black text-black hover:bg-sitecolor hover:scale-110 transition ease-in-out delay-75 font-bold py-2 px-4 rounded mt-3 border border-black ">
+  <Link href="/get-started">
+    Get Started &#8599;
+  </Link>
+</button>
+
           </div>
           <div 
             className={`flex flex-col items-center transition-all`}
@@ -54,7 +60,9 @@ const PropertyQuantitySelection = () => {
               </div>
             </div>
             <button className="hover:text-black text-black hover:bg-sitecolor hover:scale-110 transition ease-in-out delay-75 font-bold py-2 px-4 rounded mt-3 border border-black ">
-              Get Started &#8599;
+            <Link href="/get-started">
+    Get Started &#8599;
+  </Link>
             </button>
           </div>
         </div>
