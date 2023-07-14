@@ -1,60 +1,52 @@
-import { ReactNode } from "react";
-import prisma from "@/lib/prisma";
-import Form from "@/components/form";
 import { getSession } from "@/lib/auth";
 import { redirect, useRouter } from "next/navigation";
-import { useModal } from "@/components/modal/provider";
-import { editUser } from "@/lib/actions";
-import va from "@vercel/analytics";
-import { toast } from "sonner";
-import { createReservation } from "@/lib/actions";
-import { Prisma, Reservation } from "@prisma/client";
 import ReservationTable from "@/components/reservations/Reservation-Table";
 
 ////// DUMMY DATA ////// TODO: Remove when connection to DB is confirmed
+
 const reservations = [
   {
     id: "resId123",
     userId: "userId123",
     listingId: "listing123",
-    startDate: new Date(),
-    endDate: undefined,
+    startDate: new Date().toISOString().substring(0, 10),
+    endDate: new Date().toISOString().substring(0, 10),
     totalPrice: 100,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
     status: "CONFIRMED",
   },
   {
     id: "resId234",
     userId: "userId234",
     listingId: "listing234",
-    startDate: new Date(),
-    endDate: undefined,
+    startDate: new Date().toISOString().substring(0, 10),
+    endDate: new Date().toISOString().substring(0, 10),
     totalPrice: 180,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
     status: "PENDING",
   },
   {
     id: "resId345",
     userId: "userId345",
     listingId: "listing345",
-    startDate: new Date(),
-    endDate: undefined,
+    startDate: new Date().toISOString().substring(0, 10),
+    endDate: new Date().toISOString().substring(0, 10),
     totalPrice: 135,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
     status: "CONFIRMED",
   },
   {
     id: "resId456",
     userId: "userId456",
     listingId: "listing456",
-    startDate: new Date(),
-    endDate: undefined,
+    startDate: new Date().toISOString().substring(0, 10),
+    endDate: new Date().toISOString().substring(0, 10),
     totalPrice: 240,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
     status: "PENDING",
   },
 ];
