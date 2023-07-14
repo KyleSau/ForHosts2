@@ -41,7 +41,7 @@ const externalLinks = [
     icon: <MessagesSquare width={18} />,
   },
   {
-    name: "Blog",
+    name: "Blogs",
     href: "https://forhosts.com/blogs",
     icon: <BookOpen width={18} />,
   },
