@@ -42,7 +42,7 @@ const externalLinks = [
   },
   {
     name: "Blog",
-    href: "",
+    href: "https://forhosts.com/blogs",
     icon: <BookOpen width={18} />,
   },
   {
