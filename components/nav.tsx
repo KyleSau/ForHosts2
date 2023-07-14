@@ -192,7 +192,7 @@ export default function Nav({ children }: { children: ReactNode }) {
               className=" p-2"
             >
               <Image
-                src="/ForHostsLogo.svg"
+                src="/ForHostsLogoWithoutSlug.svg"
                 width={160}
                 height={75}
                 alt="Logo"
