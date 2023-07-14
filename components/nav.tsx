@@ -15,6 +15,9 @@ import {
   CalendarCheck2,
   Home,
   CircleDollarSign,
+  FileQuestion,
+  MessagesSquare,
+  BookOpen,
 } from "lucide-react";
 import {
   useParams,
@@ -28,39 +31,29 @@ import { FileCode, Github } from "lucide-react";
 
 const externalLinks = [
   {
-    name: "Placeholder 1",
+    name: "Guides",
     href: "",
-    icon: <Megaphone width={18} />,
+    icon: <FileQuestion width={18} />,
   },
   {
-    name: "Placeholder 2",
+    name: "Support",
     href: "",
-    icon: <Github width={18} />,
+    icon: <MessagesSquare width={18} />,
   },
   {
-    name: "Placeholder 3",
+    name: "Blog",
     href: "",
-    icon: <FileCode width={18} />,
+    icon: <BookOpen width={18} />,
   },
   {
-    name: "Placeholder 4",
+    name: "Newsletter",
+    href: "",
+    icon: <Newspaper width={18} />,
+  },
+  {
+    name: "Community",
     href: "",
     icon: <Layout width={18} />,
-  },
-  {
-    name: "Placeholder 5",
-    href: "",
-    icon: (
-      <svg
-        width={18}
-        viewBox="0 0 76 76"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="py-1 text-black dark:text-white"
-      >
-        <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="currentColor" />
-      </svg>
-    ),
   },
 ];
 
