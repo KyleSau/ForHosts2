@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { Post, Site } from "@prisma/client";
+import { Prisma, Post, Site } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { withPostAuth, withSiteAuth } from "./auth";
 import { getSession } from "@/lib/auth";
@@ -434,13 +434,59 @@ export const editUser = async (
 //enum for reservation: {CONFIRMED, PENDING, CANCELLED, INACTIVE}
 // export const createReservation = async ()
 
-
 // const data = await prisma?.reservation.findUnique({
 //     where: {
 //       id: params.id,
 //     },
 //   });
 
+////// DUMMY DATA ////// TODO: Remove when connection to DB is confirmed
+const DUMMY_RESERVATIONS = [
+    {
+        id: "resId123",
+        userId: "userId123",
+        listingId: "listing123",
+        startDate: Date.now(),
+        endDate: undefined,
+        totalPrice: 100,
+        createdAt: new Date(Date.now()).toISOString(),
+        updatedAt: Date.now(),
+        status: "CONFIRMED"
+    }, 
+    {
+        id: "resId234",
+        userId: "userId234",
+        listingId: "listing234",
+        startDate: Date.now(),
+        endDate: undefined,
+        totalPrice: 180,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        status: "PENDING"
+    },
+    {
+        id: "resId345",
+        userId: "userId345",
+        listingId: "listing345",
+        startDate: Date.now(),
+        endDate: undefined,
+        totalPrice: 135,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        status: "CONFIRMED"
+    }, 
+    {
+        id: "resId456",
+        userId: "userId456",
+        listingId: "listing456",
+        startDate: Date.now(),
+        endDate: undefined,
+        totalPrice: 240,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        status: "PENDING"
+    }
+];
 
 export const getReservations = async (limit: number = 10) => {
     const session = await getSession();
@@ -451,18 +497,26 @@ export const getReservations = async (limit: number = 10) => {
     }
     
     try {
-        const reservations = await prisma.reservation.findMany({
-            where: {
-                user: {
-                    id: session.user.id as string
-                }
-            },
-            orderBy: {
-                createdAt: "desc"
-            },
-            ...limit ? { take: limit } : {}
+        // const reservations = await prisma.reservation.findMany({
+        //     where: {
+        //         user: {
+        //             id: session.user.id as string
+        //         }
+        //     },
+        //     orderBy: {
+        //         createdAt: "desc"
+        //     },
+        //     ...limit ? { take: limit } : {}
+        // });
+        
+        //TODO: This is a dummy promise that loads some data; remove when communication with DB is established
+        const reservationsPromise = new Promise((resolve, reject) => {
+            setTimeout(() => resolve(DUMMY_RESERVATIONS), 5000); //simulate a delay
+            //resolve(DUMMY_RESERVATIONS);
         });
-        return reservations;
+            
+        // console.log("actions.tx: getReservations: reservationsPromise: ", reservationsPromise);
+        return reservationsPromise;
     } catch (error: any) {
         return {
             error: error.message,
@@ -470,6 +524,11 @@ export const getReservations = async (limit: number = 10) => {
     }
 };
 
+export const getReservationFields = async () => {
+    const resFields = Prisma.dmmf?.datamodel.models.find(model => model.name === "Reservation")?.fields;
+    //console.log("actions.ts: getReservationFields: resFields: ", resFields);
+    return resFields;
+};
 
 export const createReservation = async (formData: FormData) => {
     const session = await getSession();
