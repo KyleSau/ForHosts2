@@ -17,7 +17,7 @@ export default function CreatePostButton() {
       onClick={() =>
         startTransition(async () => {
           const post = await createPost(null, id, null);
-          va.track("Created Post");
+          va.track("Created Property");
           router.refresh();
           router.push(`/post/${post.id}`);
         })
