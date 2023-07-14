@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "ForHosts",
   description:
     "Create a dynamic website for your customers looking to book your properties!",
-  icons: ["https://vercel.pub/favicon.ico"],
+  icons: ["logo.png"],
 };
 
 export default function RootLayout({
