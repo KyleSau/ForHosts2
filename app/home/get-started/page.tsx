@@ -7,7 +7,7 @@ const GetStartedPage: React.FC = () => {
   return (
     <HomeLayout>
       <Section title='How many properties do you plan on listing?' description='Choose the option that best describes your business'>
-        <div className="flex justify-between pt-20">
+        <div className="flex flex-col md:flex-row justify-between pt-20 md:space-x-10 space-y-10 md:space-y-0">
           <div className="flex flex-col space-y-16">
             <button className="flex space-x-4 items-center border border-black hover:bg-sitecolor text-black font-bold py-3 px-4 rounded">
               <div>
@@ -26,8 +26,8 @@ const GetStartedPage: React.FC = () => {
               </div>
             </button>
           </div>
-          <div>
-          <Image src='/rentalApartment.svg' width={250} height={80} alt='Image 2' />
+          <div className="mt-10 md:mt-0 flex justify-center md:justify-start">
+          <Image src='/rentalApartment.svg' width={250} height={100} alt='Image 2' />
           </div>
         </div>
       </Section>
