@@ -1,5 +1,5 @@
 import { getSession } from "@/lib/auth";
-import { redirect, useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import ReservationTable from "@/components/reservations/reservation-table";
 
 ////// DUMMY DATA ////// TODO: Remove when connection to DB is confirmed
