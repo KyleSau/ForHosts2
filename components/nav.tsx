@@ -28,7 +28,6 @@ import {
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { getSiteFromPostId } from "@/lib/actions";
 import Image from "next/image";
-import { FileCode, Github } from "lucide-react";
 
 const externalLinks = [
   {
