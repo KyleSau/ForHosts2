@@ -32,7 +32,7 @@ import { FileCode, Github } from "lucide-react";
 const externalLinks = [
   {
     name: "Guides",
-    href: "",
+    href: null,
     icon: <FileQuestion width={18} />,
   },
   {
@@ -47,12 +47,12 @@ const externalLinks = [
   },
   {
     name: "Newsletter",
-    href: "",
+    href: null,
     icon: <Newspaper width={18} />,
   },
   {
     name: "Community",
-    href: "",
+    href: null,
     icon: <Layout width={18} />,
   },
 ];
