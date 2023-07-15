@@ -33,7 +33,7 @@ const Hero: React.FC = () => {
           </Link>
         </div>
         <div className="hidden md:flex md:w-1/2 justify-center">
-          <Image src="/heroHome2.svg" alt="Home" width={400} height={200} />
+          <Image src="/homefeature.svg" alt="Home" width={400} height={200} />
         </div>
       </div>
     </div>

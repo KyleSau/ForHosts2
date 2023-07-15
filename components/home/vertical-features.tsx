@@ -9,13 +9,13 @@ const VerticalFeatures = () => (
     <VerticalFeatureRow
       title="Why us?"
       description="We offer the simplest way to launch your own direct booking website with lightning fast hosting, Quick and easy setup, and a beautiful website that you can customize to your liking."
-      image="/feature.svg"
+      image="/searching.svg"
       imageAlt="First feature alt text"
     />
     <VerticalFeatureRow
       title="How do we help?"
       description="A direct booking website puts you in complete control of your short term rental business. You set your own rules, and you don't have to pay any commissions."
-      image="/feature2.svg"
+      image="/growth.svg"
       imageAlt="Second feature alt text"
       reverse
     />
