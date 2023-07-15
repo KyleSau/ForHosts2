@@ -10,6 +10,9 @@ interface Props {
 }
 
 const ReservationTable: React.FC<Props> = ({ reservations }) => {
+
+  const a = "force--";
+
   const resFields = Prisma.dmmf.datamodel.models.find(
     (model) => model.name === "Reservation"
   )?.fields;

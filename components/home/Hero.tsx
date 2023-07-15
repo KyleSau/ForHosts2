@@ -10,6 +10,9 @@ const quicksand2 = Quicksand({
   weight: '400',
   subsets: ['latin'],
 })
+
+const a = "force--";
+
 const Hero: React.FC = () => {
   return (
     <div className="h-[600px] bg-gray-300 flex items-center justify-center">
