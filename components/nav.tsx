@@ -32,7 +32,7 @@ import { FileCode, Github } from "lucide-react";
 const externalLinks = [
   {
     name: "Guides",
-    href: "",
+    href: null,
     icon: <FileQuestion width={18} />,
   },
   {
@@ -47,12 +47,12 @@ const externalLinks = [
   },
   {
     name: "Newsletter",
-    href: "",
+    href: null,
     icon: <Newspaper width={18} />,
   },
   {
     name: "Community",
-    href: "",
+    href: null,
     icon: <Layout width={18} />,
   },
 ];
@@ -192,7 +192,7 @@ export default function Nav({ children }: { children: ReactNode }) {
               className=" p-2"
             >
               <Image
-                src="/ForHostsLogo.svg"
+                src="/ForHostsLogoWithoutSlug.svg"
                 width={160}
                 height={75}
                 alt="Logo"

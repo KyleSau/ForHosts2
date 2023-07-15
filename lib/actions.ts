@@ -442,50 +442,50 @@ export const editUser = async (
 
 ////// DUMMY DATA ////// TODO: Remove when connection to DB is confirmed
 const DUMMY_RESERVATIONS = [
-    {
-        id: "resId123",
-        userId: "userId123",
-        listingId: "listing123",
-        startDate: Date.now(),
-        endDate: undefined,
-        totalPrice: 100,
-        createdAt: new Date(Date.now()).toISOString(),
-        updatedAt: Date.now(),
-        status: "CONFIRMED"
-    }, 
-    {
-        id: "resId234",
-        userId: "userId234",
-        listingId: "listing234",
-        startDate: Date.now(),
-        endDate: undefined,
-        totalPrice: 180,
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-        status: "PENDING"
-    },
-    {
-        id: "resId345",
-        userId: "userId345",
-        listingId: "listing345",
-        startDate: Date.now(),
-        endDate: undefined,
-        totalPrice: 135,
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-        status: "CONFIRMED"
-    }, 
-    {
-        id: "resId456",
-        userId: "userId456",
-        listingId: "listing456",
-        startDate: Date.now(),
-        endDate: undefined,
-        totalPrice: 240,
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-        status: "PENDING"
-    }
+  {
+    id: "resId123",
+    userId: "userId123",
+    listingId: "listing123",
+    startDate: new Date().toISOString().substring(0, 10),
+    endDate: new Date().toISOString().substring(0, 10),
+    totalPrice: 100,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    status: "CONFIRMED",
+  },
+  {
+    id: "resId234",
+    userId: "userId234",
+    listingId: "listing234",
+    startDate: new Date().toISOString().substring(0, 10),
+    endDate: new Date().toISOString().substring(0, 10),
+    totalPrice: 180,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    status: "PENDING",
+  },
+  {
+    id: "resId345",
+    userId: "userId345",
+    listingId: "listing345",
+    startDate: new Date().toISOString().substring(0, 10),
+    endDate: new Date().toISOString().substring(0, 10),
+    totalPrice: 135,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    status: "CONFIRMED",
+  },
+  {
+    id: "resId456",
+    userId: "userId456",
+    listingId: "listing456",
+    startDate: new Date().toISOString().substring(0, 10),
+    endDate: new Date().toISOString().substring(0, 10),
+    totalPrice: 240,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    status: "PENDING",
+  },
 ];
 
 export const getReservations = async (limit: number = 10) => {

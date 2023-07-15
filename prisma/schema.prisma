@@ -154,4 +154,3 @@ model Reservation {
   listing    Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade) 
   status     String
 }
-

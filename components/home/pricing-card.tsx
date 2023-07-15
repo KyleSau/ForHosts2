@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, FC } from "react";
-import CustomSlider from "./CustomSlider";
+import CustomSlider from "./custom-slider";
 interface PriceCardProps {
   title: string;
   subtitle: string;
@@ -39,9 +39,8 @@ const PriceCard: FC<PriceCardProps> = ({
   isHotOffer = false,
 }) => (
   <div
-    className={`relative flex flex-col items-center p-8 mt-6 bg-white rounded-md shadow-lg transition-all duration-500 ease-in-out transform ${
-      isFeatured ? "scale-110 mt-4" : ""
-    }`}
+    className={`relative flex flex-col items-center p-8 mt-6 bg-white rounded-md shadow-lg transition-all duration-500 ease-in-out transform ${isFeatured ? "scale-110 mt-4" : ""
+      }`}
   >
     {isHotOffer && <Badge />}
     <h2 className="mb-1 text-2xl font-semibold">{title}</h2>

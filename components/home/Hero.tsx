@@ -22,11 +22,11 @@ const Hero: React.FC = () => {
           <Link href="/get-started">
             <button className={`${quicksand
               .className} mt-4 px-10 py-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-all duration-500 ease-in-out transform hover:scale-105`}>
-               <Link href="/get-started">
+          
 
 
               Get Started
-              </Link>
+      
             </button>
           </Link>
         </div>

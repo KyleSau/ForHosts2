@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import React from 'react'
-import { VerticalFeatures } from './VerticalFeatures'
+import { VerticalFeatures } from './vertical-features'
 
 type MyComponentProps = {
   header: string
@@ -12,7 +12,7 @@ type MyComponentProps = {
 
 const LandingInfo: React.FC<MyComponentProps> = ({ header, services }) => {
   return (
-<VerticalFeatures />
+    <VerticalFeatures />
   )
 }
 
