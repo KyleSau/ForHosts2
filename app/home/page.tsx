@@ -1,4 +1,4 @@
-import LandingPage from "@/components/home/hero";
+import Hero from "@/components/home/hero";
 import HomeLayout from "@/components/home/home-layout";
 import LandingInfo from "@/components/home/landing-info";
 import { PropertyQuantitySelection } from "@/components/home/property-quantity-selection";
@@ -13,7 +13,7 @@ export default function Home() {
   return (
     <div>
       <HomeLayout>
-        <LandingPage />
+        <Hero />
         <LandingInfo header="Our Services" services={services} />
         <PropertyQuantitySelection />
       </HomeLayout>
