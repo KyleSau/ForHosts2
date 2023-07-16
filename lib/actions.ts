@@ -533,7 +533,7 @@ export const createReservation = async (formData: FormData) => {
   // console.log("formData: ", formData);
 
   const session = await getSession();
-  console.log("session user id: ", session?.user.id);
+  //console.log("session user id: ", session?.user.id);
   if (!session?.user.id) {
     return {
       error: "Not authenticated",
