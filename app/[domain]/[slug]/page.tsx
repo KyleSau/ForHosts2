@@ -95,7 +95,7 @@ export default async function SitePostPage({
       </div>
       <div className="relative m-auto mb-10 h-80 w-full max-w-screen-lg overflow-hidden md:mb-20 md:h-150 md:w-5/6 md:rounded-2xl lg:w-2/3">
         <BlurImage
-          alt={data.title ?? "Post image"}
+          alt={data.title ?? "Property Image"}
           width={1200}
           height={630}
           className="h-full w-full object-cover"
