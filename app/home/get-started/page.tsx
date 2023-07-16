@@ -29,7 +29,7 @@ const GetStartedPage: React.FC = () => {
             </Link>
 
             <Link href="/get-started/multi-explore" legacyBehavior>
-              <a className="flex items-center space-x-4 rounded border border-black px-4 py-3 font-bold text-black hover:bg-sitecolor">
+              <a className="flex items-center space-x-4 rounded border border-black px-4 py-3 font-bold text-black bg-gray-300 hover:bg-sitecolor">
                 <div>
                   <Image
                     src="/apartmentWide.svg"
