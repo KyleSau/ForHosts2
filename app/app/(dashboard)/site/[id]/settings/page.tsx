@@ -24,7 +24,7 @@ export default async function SiteSettingsIndex({
           name: "name",
           type: "text",
           defaultValue: data?.name!,
-          placeholder: "My Awesome Site",
+          placeholder: "My Awesome Website",
           maxLength: 32,
         }}
         handleSubmit={updateSite}
