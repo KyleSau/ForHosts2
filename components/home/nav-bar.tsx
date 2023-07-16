@@ -20,7 +20,7 @@ const navOptions: NavOption[] = [
   {
     name: "Features",
     subOptions: [
-      { name: "Channel Manager", url: "/channels" },
+      { name: "Channel Manager", url: "/channel-manager" },
       { name: "Payment Options", url: "/payments" },
       { name: "Booking System", url: "/booking" },
     ],
@@ -110,25 +110,25 @@ const Navbar = () => {
             ))}
 
 
-{
-  session ? (
-    <Link href="https://dashboard.forhosts.com">
-      <button
-className=" hover:bg-sitecolor text-black font-bold w-28 border-2 border-black rounded-xl h-12 text-lg hover:border-2 focus:outline-none transition-all ease-in-out duration-150"
-      >
-        Dashboard
-      </button>
-    </Link>
-  ) : (
-    <Link href="https://dashboard.forhosts.com/login">
-      <button
-        className=" hover:bg-sitecolor text-black font-bold w-28 border-2 border-black rounded-xl h-12 text-lg hover:border-2 focus:outline-none transition-all ease-in-out duration-150"
-      >
-        <span className="text-black"> Login</span>
-      </button>
-    </Link>
-  )
-}
+            {
+              session ? (
+                <Link href="https://dashboard.forhosts.com">
+                  <button
+                    className=" hover:bg-sitecolor text-black font-bold w-28 border-2 border-black rounded-xl h-12 text-lg hover:border-2 focus:outline-none transition-all ease-in-out duration-150"
+                  >
+                    Dashboard
+                  </button>
+                </Link>
+              ) : (
+                <Link href="https://dashboard.forhosts.com/login">
+                  <button
+                    className=" hover:bg-sitecolor text-black font-bold w-28 border-2 border-black rounded-xl h-12 text-lg hover:border-2 focus:outline-none transition-all ease-in-out duration-150"
+                  >
+                    <span className="text-black"> Login</span>
+                  </button>
+                </Link>
+              )
+            }
 
           </ul>
 

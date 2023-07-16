@@ -1,4 +1,3 @@
-"use client"
 import React, { useState } from 'react';
 import { toast } from "sonner";
 import va from "@vercel/analytics";
@@ -83,3 +82,4 @@ export default function ReservationForm() {
           </form>
     </>);
 }
+

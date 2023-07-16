@@ -18,6 +18,7 @@ import {
   FileQuestion,
   MessagesSquare,
   BookOpen,
+  CalendarDays,
 } from "lucide-react";
 import {
   useParams,
@@ -27,16 +28,15 @@ import {
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { getSiteFromPostId } from "@/lib/actions";
 import Image from "next/image";
-import { FileCode, Github } from "lucide-react";
 
 const externalLinks = [
   {
     name: "Guides",
-    href: null,
+    href: undefined,
     icon: <FileQuestion width={18} />,
   },
   {
-    name: "Support",
+    name: "Live Chat",
     href: "https://tawk.to/chat/64a6e01c94cf5d49dc61f524/1h4ltms4a",
     icon: <MessagesSquare width={18} />,
   },
@@ -44,16 +44,6 @@ const externalLinks = [
     name: "Blogs",
     href: "https://forhosts.com/blogs",
     icon: <BookOpen width={18} />,
-  },
-  {
-    name: "Newsletter",
-    href: null,
-    icon: <Newspaper width={18} />,
-  },
-  {
-    name: "Community",
-    href: null,
-    icon: <Layout width={18} />,
   },
 ];
 
@@ -80,7 +70,7 @@ export default function Nav({ children }: { children: ReactNode }) {
           icon: <ArrowLeft width={18} />,
         },
         {
-          name: "Properties",
+          name: "Rentals",
           href: `/site/${id}`,
           isActive: segments.length === 2,
           icon: <Newspaper width={18} />,
@@ -101,7 +91,7 @@ export default function Nav({ children }: { children: ReactNode }) {
     } else if (segments[0] === "post" && id) {
       return [
         {
-          name: "Back to All Properties",
+          name: "Back to All Rentals",
           href: siteId ? `/site/${siteId}` : "/sites",
           icon: <ArrowLeft width={18} />,
         },
@@ -149,6 +139,18 @@ export default function Nav({ children }: { children: ReactNode }) {
         href: "/payments",
         isActive: segments[0] === "payments",
         icon: <CircleDollarSign width={18} />,
+      },
+      {
+        name: "Calendar",
+        href: "/calendar",
+        isActive: segments[0] === "calendar",
+        icon: <CalendarDays width={18} />,
+      },
+      {
+        name: "Inbox",
+        href: "/inbox",
+        isActive: segments[0] === "inbox",
+        icon: <MessagesSquare width={18} />,
       },
       {
         name: "Settings",

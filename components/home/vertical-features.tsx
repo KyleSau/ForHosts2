@@ -8,20 +8,21 @@ const VerticalFeatures = () => (
   >
     <VerticalFeatureRow
       title="Why us?"
-      description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse bibendum, nunc non posuere consectetur, justo erat semper enim, non hendrerit dui odio id enim."
-      image="/feature.svg"
+      description="We offer the simplest way to launch your own direct booking website with lightning fast hosting, Quick and easy setup, and a beautiful website that you can customize to your liking."
+      image="/searching.svg"
       imageAlt="First feature alt text"
     />
     <VerticalFeatureRow
       title="How do we help?"
-      description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse bibendum, nunc non posuere consectetur, justo erat semper enim, non hendrerit dui odio id enim."
-      image="/feature2.svg"
+      description="A direct booking website puts you in complete control of your short term rental business. You set your own rules, and you don't have to pay any commissions."
+      image="/growth.svg"
       imageAlt="Second feature alt text"
       reverse
     />
     <VerticalFeatureRow
       title="Your success is our success"
-      description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse bibendum, nunc non posuere consectetur, justo erat semper enim, non hendrerit dui odio id enim."
+      description="We strive for host success. We are constantly adding new features to help you grow your business. We are always here to help you with any questions you may have.
+      ForHosts is a small business, and we are always looking for ways to improve. If you have any suggestions, please let us know!"
       image="/feature3.svg"
       imageAlt="Third feature alt text"
     />
