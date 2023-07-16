@@ -156,6 +156,12 @@ export default function Nav({ children }: { children: ReactNode }) {
         isActive: segments[0] === "settings",
         icon: <Settings width={18} />,
       },
+      {
+        name: "Create Reservation",
+        href: "/reservation_form",
+        isActive: true,
+        icon: undefined
+      }
     ];
   }, [segments, id, siteId]);
 

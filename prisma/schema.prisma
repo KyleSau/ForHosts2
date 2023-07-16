@@ -3,9 +3,9 @@
 
 datasource db {
   provider          = "postgresql"
-  url               = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl         = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
-  shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // used for migrations
+  url               = env("POSTGRES2_PRISMA_URL") // uses connection pooling
+  directUrl         = env("POSTGRES2_URL_NON_POOLING") // uses a direct connection
+  shadowDatabaseUrl = env("POSTGRES2_URL_NON_POOLING") // used for migrations
 }
 
 generator client {
@@ -28,7 +28,7 @@ model User {
   sites         Site[]
   posts         Post[]
   Listing       Listing[]
-  Reservation   Reservation[]
+  // Reservation   Reservation[]
 }
 
 model Account {
@@ -138,7 +138,7 @@ model Listing {
   userId        String?
   price         Int
   user          User?         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  reservations  Reservation[]
+  // reservations  Reservation[]
 }
 
 model Reservation {
@@ -150,7 +150,7 @@ model Reservation {
   totalPrice Int
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  user       User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  listing    Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade) 
+  // user       User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  // listing    Listing?  @relation(fields: [listingId], references: [id], onDelete: Cascade) 
   status     String
 }

@@ -497,30 +497,28 @@ export const getReservations = async (limit: number = 10) => {
     }
     
     try {
-        // const reservations = await prisma.reservation.findMany({
-        //     where: {
-        //         user: {
-        //             id: session.user.id as string
-        //         }
-        //     },
-        //     orderBy: {
-        //         createdAt: "desc"
-        //     },
-        //     ...limit ? { take: limit } : {}
-        // });
+        const reservations = await prisma.reservation.findMany({
+          where: {
+            userId: session.user.id
+          },
+          orderBy: {
+            createdAt: "desc"
+          },
+          ...limit ? { take: limit } : {}
+        });
         
         //TODO: This is a dummy promise that loads some data; remove when communication with DB is established
-        const reservationsPromise = new Promise((resolve, reject) => {
-            setTimeout(() => resolve(DUMMY_RESERVATIONS), 5000); //simulate a delay
-            //resolve(DUMMY_RESERVATIONS);
-        });
+        // const reservationsPromise = new Promise((resolve, reject) => {
+        //     setTimeout(() => resolve(DUMMY_RESERVATIONS), 5000); //simulate a delay
+        //     //resolve(DUMMY_RESERVATIONS);
+        // });
             
-        // console.log("actions.tx: getReservations: reservationsPromise: ", reservationsPromise);
-        return reservationsPromise;
+        //console.log("actions.tx: getReservations: reservations: ", reservations);
+        return reservations;
     } catch (error: any) {
         return {
             error: error.message,
-          };
+        };
     }
 };
 
@@ -531,42 +529,49 @@ export const getReservationFields = async () => {
 };
 
 export const createReservation = async (formData: FormData) => {
-    const session = await getSession();
-    if (!session?.user.id) {
-      return {
-        error: "Not authenticated",
-      };
-    }
-    const startDate = formData.get("startDate");
-    const endDate = formData.get("endDate");
+  // console.log("entered createReservation");
+  // console.log("formData: ", formData);
 
-    try {
-        const now = new Date();
-        const response = await prisma?.reservation.create({
-            data: {
-                userId: "testuserid123",
-                listingId: "testlistingid123",
-                startDate: now,
-                endDate: now,
-                totalPrice: 100,
-                createdAt: now,
-                status: "CONFIRMED"
-            }
-        });
-        console.log('response: ', response);
+  const session = await getSession();
+  console.log("session user id: ", session?.user.id);
+  if (!session?.user.id) {
+    return {
+      error: "Not authenticated",
+    };
+  }
+  // const userId = formData.get("user-id") as string;
+  const listingId = formData.get("listing-id") as string;
+  const startDate = new Date(formData.get("start-date") as string);
+  const endDate = new Date(formData.get("end-date") as string);
+  const totalPrice = Number(formData.get("total-price"));
+  const reservationStatus = formData.get("reservation-status") as string;
 
-        return response;
-    } catch (error: any) {
-        if (error.code === "P2002") {
-            return {
-                error: `This reservation is already taken`,
-            };
-        } else {
-            return {
-                error: error.message,
-            };
+  try {
+      const now = new Date();
+      const response = await prisma?.reservation.create({
+        data: {
+          userId: session.user.id,
+          listingId,
+          startDate,
+          endDate,
+          totalPrice,
+          updatedAt: now,
+          status: reservationStatus
         }
-    }
+      });
+      //console.log('response: ', response);
+      return response;
+  } catch (error: any) {
+      if (error.code === "P2002") {
+          return {
+              error: `This reservation is already taken`,
+          };
+      } else {
+          return {
+              error: error.message,
+          };
+      }
+  }
 };
 
 
