@@ -26,7 +26,7 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.AUTH_GITHUB_SECRET as string,
       profile(profile) {
         return {
-          id: profile.getId().toString(),
+          id: profile.id.toString(),
           name: profile.name || profile.login,
           gh_username: profile.name,
           email: profile.email,
