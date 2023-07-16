@@ -28,7 +28,7 @@ export const authOptions: NextAuthOptions = {
         return {
           id: profile.getId().toString(),
           name: profile.name || profile.login,
-          gh_username: profile.login,
+          gh_username: profile.name,
           email: profile.email,
           image: profile.avatar_url,
         };
