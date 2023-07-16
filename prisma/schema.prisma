@@ -28,7 +28,7 @@ model User {
   sites         Site[]
   posts         Post[]
   Listing       Listing[]
-  //Reservation   Reservation[]
+  // Reservation   Reservation[]
 }
 
 model Account {
@@ -137,8 +137,8 @@ model Listing {
   locationValue String
   userId        String?
   price         Int
-  user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  //reservations  Reservation[]
+  user          User?         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  // reservations  Reservation[]
 }
 
 model Reservation {
@@ -150,7 +150,7 @@ model Reservation {
   totalPrice Int
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  //user       User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  //listing    Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  // user       User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  // listing    Listing?  @relation(fields: [listingId], references: [id], onDelete: Cascade) 
   status     String
 }
