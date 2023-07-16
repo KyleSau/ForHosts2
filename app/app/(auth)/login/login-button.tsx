@@ -100,7 +100,7 @@ export default function LoginButton() {
         disabled={loading}
         onClick={() => {
           setLoading(true);
-          signIn("facebook");
+          signIn("apple");
         }}
         className={`${loading
           ? "cursor-not-allowed bg-stone-50 dark:bg-stone-800"
