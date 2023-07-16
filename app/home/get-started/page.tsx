@@ -13,7 +13,7 @@ const GetStartedPage: React.FC = () => {
         <div className="flex flex-col justify-between space-y-10 pt-20 md:flex-row md:space-x-10 md:space-y-0">
           <div className="flex flex-col space-y-16">
             <Link href="/get-started/explore" legacyBehavior>
-              <a className="flex items-center space-x-4 rounded border border-black px-4 py-3 font-bold text-black hover:bg-sitecolor">
+              <a className="flex items-center space-x-4 rounded border border-black px-4 py-3 font-bold text-black bg-gray-300 hover:bg-sitecolor">
                 <div>
                   <Image
                     src="/apartmentNarrow.svg"
