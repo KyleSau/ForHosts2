@@ -3,6 +3,7 @@ import GitHubProvider from "next-auth/providers/github";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "@/lib/prisma";
 import GoogleProvider from "next-auth/providers/google";
+import AppleProvider from "next-auth/providers/apple";
 
 const VERCEL_DEPLOYMENT = !!process.env.VERCEL_URL;
 
@@ -27,8 +28,7 @@ export const authOptions: NextAuthOptions = {
       profile(profile) {
         return {
           id: profile.sub,
-          name: profile.name || profile.login,
-          gh_username: profile.name,
+          name: profile.name,
           email: profile.email,
           image: profile.picture,
         };
