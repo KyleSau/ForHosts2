@@ -10,7 +10,9 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import AppleIcon from '@mui/icons-material/Apple';
 
 export default function LoginButton() {
-  const [loading, setLoading] = useState(false);
+  const [githubLoading, setGithubLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [facebookLoading, setFacebookLoading] = useState(false);
 
   // Get error message added by next/auth in URL.
   const searchParams = useSearchParams();
@@ -24,17 +26,17 @@ export default function LoginButton() {
   return (
     <div>
       <button
-        disabled={loading}
+        disabled={githubLoading}
         onClick={() => {
-          setLoading(true);
+          setGithubLoading(true);
           signIn("github");
         }}
-        className={`${loading
+        className={`${githubLoading
           ? "cursor-not-allowed bg-stone-50 dark:bg-stone-800"
           : "bg-white hover:bg-stone-50 active:bg-stone-100 dark:bg-black dark:hover:border-white dark:hover:bg-black"
           } group my-2 flex h-10 w-full items-center justify-center space-x-2 rounded-md border border-stone-200 transition-colors duration-75 focus:outline-none dark:border-stone-700`}
       >
-        {loading ? (
+        {githubLoading ? (
           <LoadingDots color="#A8A29E" />
         ) : (
           <>
@@ -53,17 +55,17 @@ export default function LoginButton() {
         )}
       </button>
       <button
-        disabled={loading}
+        disabled={googleLoading}
         onClick={() => {
-          setLoading(true);
+          setGoogleLoading(true);
           signIn("google");
         }}
-        className={`${loading
+        className={`${googleLoading
           ? "cursor-not-allowed bg-stone-50 dark:bg-stone-800"
           : "bg-white hover:bg-stone-50 active:bg-stone-100 dark:bg-black dark:hover:border-white dark:hover:bg-black"
           } group my-2 flex h-10 w-full items-center justify-center space-x-2 rounded-md border border-stone-200 transition-colors duration-75 focus:outline-none dark:border-stone-700`}
       >
-        {loading ? (
+        {googleLoading ? (
           <LoadingDots color="#A8A29E" />
         ) : (
           <>
@@ -75,17 +77,17 @@ export default function LoginButton() {
         )}
       </button>
       <button
-        disabled={loading}
+        disabled={facebookLoading}
         onClick={() => {
-          setLoading(true);
+          setFacebookLoading(true);
           signIn("facebook");
         }}
-        className={`${loading
+        className={`${facebookLoading
           ? "cursor-not-allowed bg-stone-50 dark:bg-stone-800"
           : "bg-white hover:bg-stone-50 active:bg-stone-100 dark:bg-black dark:hover:border-white dark:hover:bg-black"
           } group my-2 flex h-10 w-full items-center justify-center space-x-2 rounded-md border border-stone-200 transition-colors duration-75 focus:outline-none dark:border-stone-700`}
       >
-        {loading ? (
+        {facebookLoading ? (
           <LoadingDots color="#A8A29E" />
         ) : (
           <>
