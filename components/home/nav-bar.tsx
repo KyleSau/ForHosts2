@@ -38,12 +38,21 @@ const navOptions: NavOption[] = [
 const Navbar = () => {
   const [activeOption, setActiveOption] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeMobileSubOption, setActiveMobileSubOption] = useState<string | null>(null);
   const { data: session } = useSession();
 
   const handleMobileMenuToggle = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
-
+  
+  const handleMobileSubOptionsToggle = (name: string) => {
+    if (activeMobileSubOption === name) {
+      setActiveMobileSubOption(null);
+    } else {
+      setActiveMobileSubOption(name);
+    }
+  };
+  
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
   };
@@ -109,7 +118,6 @@ const Navbar = () => {
               </li>
             ))}
 
-
             {
               session ? (
                 <Link href="https://dashboard.forhosts.com">
@@ -152,17 +160,67 @@ const Navbar = () => {
         </button>
         <ul className="space-y-8">
           {navOptions.map((option) => (
-            <li key={option.name} onClick={closeMobileMenu}>
-              <Link
-                href={option.url || "/"}
-                className={`block text-2xl font-bold text-black`}
+            <li key={option.name}>
+              <div onClick={() => {
+                if (option.subOptions) {
+                  handleMobileSubOptionsToggle(option.name);
+                } else {
+                  closeMobileMenu();
+                }
+              }}
+              className="flex justify-between items-center"
               >
-                {option.name}
-              </Link>
+                <Link
+                  href={option.url || "#"}
+                  className={`block text-2xl font-bold text-black`}
+                >
+                  {option.name}
+                </Link>
+                {option.subOptions && <FaAngleDown size={20} />}
+              </div>
+
+              {/* Check if subOptions exist, and if so, map over them */}
+              {option.subOptions && activeMobileSubOption === option.name && (
+              <ul className={activeMobileSubOption === option.name ? "slide-down" : ""}>
+                {option.subOptions.map((subOption) => (
+                  <li key={subOption.name} onClick={closeMobileMenu} className="ml-4">
+                    <Link
+                      href={subOption.url || "#"}
+                      className={`block text-xl font-bold text-black`}
+                    >
+                      {subOption.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              
+              )}
+              
             </li>
           ))}
+
         </ul>
+        <div className="w-40 mt-24 ">
+            { session ? (
+              <Link href="https://dashboard.forhosts.com">
+                <button
+                  className="hover:bg-sitecolor text-black font-bold w-full border-2 border-black rounded-xl h-12 text-lg hover:border-2 focus:outline-none transition-all ease-in-out duration-150"
+                >
+                  Dashboard
+                </button>
+              </Link>
+            ) : (
+              <Link href="https://dashboard.forhosts.com/login">
+                <button
+                  className="hover:bg-sitecolor text-black font-bold w-full border-2 border-black rounded-xl h-12 text-lg hover:border-2 focus:outline-none transition-all ease-in-out duration-150"
+                >
+                  <span className="text-black"> Login</span>
+                </button>
+              </Link>
+            )}
+          </div>
       </div>
+      
     </nav>
   );
 };
