@@ -16,6 +16,7 @@ export const authOptions: NextAuthOptions = {
         return {
           id: profile.id,
           name: profile.name,
+          gh_username: profile.name,
           email: profile.email,
           image: profile.picture.data.url,
         };
@@ -41,6 +42,7 @@ export const authOptions: NextAuthOptions = {
         return {
           id: profile.sub,
           name: profile.name,
+          gh_username: profile.name,
           email: profile.email,
           image: profile.picture,
         };

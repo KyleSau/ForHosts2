@@ -16,6 +16,8 @@ module.exports = {
       "flag.vercel.app",
       "illustrations.popsy.co",
       "lh3.googleusercontent.com",
+      "www.facebook.com",
+      "platform-lookaside.fbsbx.com",
     ],
   },
   reactStrictMode: false,
