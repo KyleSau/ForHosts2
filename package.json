@@ -57,6 +57,7 @@
     "react-textarea-autosize": "^8.4.0",
     "react-tweet": "^3.0.1",
     "remark": "^14.0.2",
+    "schedulely": "^0.3.0",
     "sharp": "^0.31.3",
     "sonner": "^0.4.0",
     "styled-components": "^6.0.4",
