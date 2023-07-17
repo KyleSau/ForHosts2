@@ -23,7 +23,7 @@ const VerticalFeatures = () => (
       title="Your success is our success"
       description="We strive for host success. We are constantly adding new features to help you grow your business. We are always here to help you with any questions you may have.
       ForHosts is a small business, and we are always looking for ways to improve. If you have any suggestions, please let us know!"
-      image="/feature3.svg"
+      image="/growthfrontpage.svg"
       imageAlt="Third feature alt text"
     />
   </Section>
