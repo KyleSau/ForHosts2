@@ -3,7 +3,8 @@ import { Prisma } from "@prisma/client";
 import React from "react";
 import { useState, useEffect } from "react";
 import { getReservationFields, getReservations } from "@/lib/actions";
-import { CheckCircle, XCircle, MinusCircle, Clock } from "lucide-react";
+import { CheckCircle, XCircle, Clock } from "lucide-react";
+import { RESERVATION_STATUS } from "@/lib/types";
 
 interface Reservation {
   [key: string]: any;
@@ -18,11 +19,6 @@ const ReservationTable: React.FC<Props> = () => {
 
   const [reservationFields, setReservationFields] = useState<Prisma.DMMF.Field[] | undefined>(undefined);
   const [reservations, setReservations] = useState<any>([]);
-  const STATUS_VALUES = {
-    CONFIRMED: "CONFIRMED", 
-    PENDING: "PENDING", 
-    CANCELLED: "CANCELLED"
-  };
 
   useEffect(() => {
     async function handleGetReservationFields() {
@@ -39,6 +35,44 @@ const ReservationTable: React.FC<Props> = () => {
       }
       handleGetReservations();
   }, []);
+
+  const handleTableStyleFormatting = (fieldIdx: number, fieldName: string | number, fieldValue: any) => {
+    if(fieldName === "status") {
+      let statusIcon = undefined;
+
+      switch(fieldValue) {
+        case RESERVATION_STATUS.CONFIRMED:
+          statusIcon = <CheckCircle color="#00ff40"/>;
+          break;
+        case RESERVATION_STATUS.PENDING:
+          statusIcon = <Clock color="#fffa3c" />
+          break;
+        case RESERVATION_STATUS.CANCELLED:
+          statusIcon = <XCircle color="#ff0000" />;
+          break;
+        default:
+          break;
+      }
+
+      return ( 
+        <td key={fieldIdx} className="px-2 sm:px-6 py-4 text-center border-r">
+          <div className="flex flex-row justify-stretch">{ statusIcon }{ fieldValue }</div>
+        </td> 
+      );
+    } else if(fieldValue instanceof Date) {
+      return (
+        <td key={fieldIdx} className="px-2 sm:px-6 py-4 text-center border-r">
+          { fieldValue.toUTCString() }
+        </td>
+      );
+    } else {
+      return (
+        <td key={fieldIdx} className="px-2 sm:px-6 py-4 text-center border-r">
+          { fieldValue }
+        </td>
+      );
+    }
+  }
 
   return (
     <div className="overflow-x-auto lg:overflow-visible w-full lg:w-auto">
@@ -65,7 +99,7 @@ const ReservationTable: React.FC<Props> = () => {
           </tr>
         </thead>
           <tbody className="text-white divide-y divide-gray-200">
-            { reservations.map((reservation: Reservation, idx: number) => {
+            { reservations?.map((reservation: Reservation, idx: number) => {
               return (
                 <tr className="hover:bg-gray-500" key={idx}>
                   <td className="px-2 sm:px-6 py-4 text-center border-r">{idx+1}</td>
@@ -73,41 +107,7 @@ const ReservationTable: React.FC<Props> = () => {
                     type ObjectKey = keyof typeof reservation;
                     const fieldName = field.name as ObjectKey;
                     const fieldValue = reservation[fieldName];
-                    
-                    if(fieldName === "status") {
-                      let statusIcon = undefined;
-
-                      switch(fieldValue) {
-                        case STATUS_VALUES.CONFIRMED:
-                          statusIcon = <CheckCircle color="#00ff40"/>;
-                          break;
-                        case STATUS_VALUES.CANCELLED:
-                          statusIcon = <XCircle color="#ff0000" />;
-                          break;
-                        case STATUS_VALUES.PENDING:
-                          statusIcon = <Clock color="#fffa3c" />
-                        default:
-                          break;
-                      }
-
-                      return ( 
-                        <td key={fieldIdx} className="px-2 sm:px-6 py-4 text-center border-r">
-                          <div>{ statusIcon }{ fieldValue }</div>
-                        </td> 
-                      );
-                    } else if(fieldValue instanceof Date) {
-                      return (
-                        <td key={fieldIdx} className="px-2 sm:px-6 py-4 text-center border-r">
-                          { fieldValue.toUTCString() }
-                        </td>
-                      );
-                    } else {
-                      return (
-                        <td key={fieldIdx} className="px-2 sm:px-6 py-4 text-center border-r">
-                          { fieldValue }
-                        </td>
-                      );
-                    }
+                    return handleTableStyleFormatting(fieldIdx, fieldName, fieldValue);
                   })}
                 </tr>
               );

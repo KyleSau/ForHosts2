@@ -56,3 +56,11 @@ export interface DomainVerificationResponse {
     reason: string;
   }[];
 }
+
+//////////////////////////////////// Data Types ////////////////////////////////////
+
+export const RESERVATION_STATUS = {
+  CONFIRMED: "CONFIRMED", 
+  PENDING: "PENDING", 
+  CANCELLED: "CANCELLED"
+};

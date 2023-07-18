@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import va from "@vercel/analytics";
 import { createReservation } from '@/lib/actions';
 import { useRouter } from 'next/navigation';
+import { RESERVATION_STATUS } from '@/lib/types';
 
 interface ReservationData {
     startDate: Date;
@@ -75,10 +76,11 @@ export default function ReservationForm() {
             <br/>
             <label htmlFor="reservation-status" className="bg-neutral-800 text-neutral-50 dark:bg-transparent">status: </label>
             <select id="reservation-status" name="reservation-status">
-              <option value="CONFIRMED">CONFIRMED</option>
-              <option value="PENDING">PENDING</option>
-              <option value="CANCELLED">CANCELLED</option>
-              <option value="INACTIVE">INACTIVE</option>
+              { 
+                Object.keys(RESERVATION_STATUS).map((statusEnum: string) => 
+                  <option value={statusEnum}>{statusEnum}</option>
+                )
+              }
             </select>
           </form>
     </>);
