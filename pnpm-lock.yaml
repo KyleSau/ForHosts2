@@ -149,6 +149,9 @@ dependencies:
   remark:
     specifier: ^14.0.2
     version: 14.0.3
+  schedulely:
+    specifier: ^0.3.0
+    version: 0.3.0(react-dom@18.2.0)(react@18.2.0)
   sharp:
     specifier: ^0.31.3
     version: 0.31.3
@@ -7486,6 +7489,16 @@ packages:
     engines: {node: '>=v12.22.7'}
     dependencies:
       xmlchars: 2.2.0
+    dev: false
+
+  /schedulely@0.3.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-Ez6QdIIfN9JtgmVPXShKx3dRQkE2QfQO/c3BohTSrHwd1giuRShxxj1JqGy85CGqNqyA0mIW1AGmuiO061iXUg==}
+    peerDependencies:
+      react: '>=17.0.2'
+      react-dom: '>=17.0.2'
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /scheduler@0.23.0:
