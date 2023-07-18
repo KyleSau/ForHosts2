@@ -50,6 +50,7 @@ export default async function PostOG({
           </h1>
           <p tw="mt-4 text-xl text-gray-600 max-w-xl text-center">
             {truncate(data.description, 120)}
+            test
           </p>
           <div tw="flex items-center justify-center">
             <img

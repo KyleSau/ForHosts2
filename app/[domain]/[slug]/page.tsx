@@ -117,7 +117,7 @@ export default async function SitePostPage({
           </div>
           <div className="relative flex justify-center">
             <span className="bg-white px-2 text-sm text-stone-500 dark:bg-black dark:text-stone-400">
-              Continue Reading
+              Other Rentals
             </span>
           </div>
         </div>
