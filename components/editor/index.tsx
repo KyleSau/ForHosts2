@@ -16,6 +16,7 @@ import { updatePost, updatePostMetadata } from "@/lib/actions";
 import clsx from "clsx";
 import LoadingDots from "../icons/loading-dots";
 import { ExternalLink } from "lucide-react";
+import { Decimal } from "decimal.js";
 
 type PostWithSite = Post & { site: { subdomain: string | null } | null };
 
@@ -35,6 +36,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
     // compare the title, description and content only
     if (
       debouncedData.title === post.title &&
+      debouncedData.price === post.price &&
       debouncedData.description === post.description &&
       debouncedData.content === post.content
     ) {
@@ -184,8 +186,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
               await updatePostMetadata(formData, post.id, "published").then(
                 () => {
                   toast.success(
-                    `Successfully ${
-                      data.published ? "unpublished" : "published"
+                    `Successfully ${data.published ? "unpublished" : "published"
                     } your post.`,
                   );
                   setData((prev) => ({ ...prev, published: !prev.published }));
@@ -217,6 +218,24 @@ export default function Editor({ post }: { post: PostWithSite }) {
           onChange={(e) => setData({ ...data, title: e.target.value })}
           className="dark:placeholder-text-600 border-none px-0 font-cal text-3xl placeholder:text-stone-400 focus:outline-none focus:ring-0 dark:bg-black dark:text-white"
         />
+        {/* force this to be a number later */}
+        <input
+          type="number"
+          placeholder="Price"
+          defaultValue={post?.price ? post.price.toString() : ""}
+          autoFocus
+          onChange={(e) => {
+            const inputValue = e.target.value;
+            const inputPrice = new Decimal(inputValue);
+
+            if (inputValue === "" || !isNaN(parseFloat(inputValue))) {
+              setData({ ...data, price: inputPrice });
+            }
+          }}
+          className="dark:placeholder-text-600 border-none px-0 font-cal text-3xl placeholder:text-stone-400 focus:outline-none focus:ring-0 dark:bg-black dark:text-white"
+        />
+
+
         <TextareaAutosize
           placeholder="Description"
           defaultValue={post?.description || ""}

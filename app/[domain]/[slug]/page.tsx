@@ -4,6 +4,7 @@ import BlogCard from "@/components/blog-card";
 import BlurImage from "@/components/blur-image";
 import MDX from "@/components/mdx";
 import { placeholderBlurhash, toDateString } from "@/lib/utils";
+import ReservationForm from "@/components/booking/reservation-form";
 
 export async function generateMetadata({
   params,
@@ -52,9 +53,8 @@ export default async function SitePostPage({
           <p className="m-auto my-5 w-10/12 text-sm font-light text-stone-500 dark:text-stone-400 md:text-base">
             {toDateString(data.createdAt)}
           </p>
-          <h1>
-            {data.id}
-          </h1>
+          {/* Prop for listingId */}
+          <ReservationForm listingId={data.id} />
           <h1 className="mb-10 font-title text-3xl font-bold text-stone-800 dark:text-white md:text-6xl">
             {data.title}
           </h1>

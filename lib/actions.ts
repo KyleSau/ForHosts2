@@ -15,6 +15,7 @@ import {
 import { put } from "@vercel/blob";
 import { customAlphabet } from "nanoid";
 import { getBlurDataURL } from "@/lib/utils";
+import { useRadioGroup } from "@mui/material";
 
 const nanoid = customAlphabet(
   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
@@ -280,6 +281,7 @@ export const updatePost = async (data: Post) => {
       },
       data: {
         title: data.title,
+        price: data.price,
         description: data.description,
         content: data.content,
       },
@@ -295,7 +297,7 @@ export const updatePost = async (data: Post) => {
     // if the site has a custom domain, we need to revalidate those tags too
     post.site?.customDomain &&
       (await revalidateTag(`${post.site?.customDomain}-posts`),
-      await revalidateTag(`${post.site?.customDomain}-${post.slug}`));
+        await revalidateTag(`${post.site?.customDomain}-${post.slug}`));
 
     return response;
   } catch (error: any) {
@@ -357,7 +359,7 @@ export const updatePostMetadata = withPostAuth(
       // if the site has a custom domain, we need to revalidate those tags too
       post.site?.customDomain &&
         (await revalidateTag(`${post.site?.customDomain}-posts`),
-        await revalidateTag(`${post.site?.customDomain}-${post.slug}`));
+          await revalidateTag(`${post.site?.customDomain}-${post.slug}`));
 
       return response;
     } catch (error: any) {
@@ -489,97 +491,90 @@ const DUMMY_RESERVATIONS = [
 ];
 
 export const getReservations = async (limit: number = 10) => {
-    const session = await getSession();
-    if (!session?.user.id) {
-        return {
-          error: "Not authenticated",
-        };
-    }
-    
-    try {
-        const reservations = await prisma.reservation.findMany({
-          where: {
-            userId: session.user.id
-          },
-          orderBy: {
-            createdAt: "desc"
-          },
-          ...limit ? { take: limit } : {}
-        });
-        
-        //TODO: This is a dummy promise that loads some data; remove when communication with DB is established
-        // const reservationsPromise = new Promise((resolve, reject) => {
-        //     setTimeout(() => resolve(DUMMY_RESERVATIONS), 5000); //simulate a delay
-        //     //resolve(DUMMY_RESERVATIONS);
-        // });
-            
-        //console.log("actions.tx: getReservations: reservations: ", reservations);
-        return reservations;
-    } catch (error: any) {
-        return {
-            error: error.message,
-        };
-    }
-};
-
-export const getReservationFields = async () => {
-    const resFields = Prisma.dmmf?.datamodel.models.find(model => model.name === "Reservation")?.fields;
-    //console.log("actions.ts: getReservationFields: resFields: ", resFields);
-    return resFields;
-};
-
-export const createReservation = async (formData: FormData) => {
-  // console.log("entered createReservation");
-  // console.log("formData: ", formData);
-
   const session = await getSession();
-  //console.log("session user id: ", session?.user.id);
+
   if (!session?.user.id) {
     return {
       error: "Not authenticated",
     };
   }
-  // const userId = formData.get("user-id") as string;
-  const listingId = formData.get("listing-id") as string;
-  const startDate = new Date(formData.get("start-date") as string);
-  const endDate = new Date(formData.get("end-date") as string);
-  const totalPrice = Number(formData.get("total-price"));
-  const reservationStatus = formData.get("reservation-status") as string;
 
   try {
-      const now = new Date();
-      const response = await prisma?.reservation.create({
-        data: {
-          userId: session.user.id,
-          listingId,
-          startDate,
-          endDate,
-          totalPrice,
-          updatedAt: now,
-          status: reservationStatus
-        }
-      });
-      //console.log('response: ', response);
-      return response;
+    const userId = session.user.id;
+
+    const posts = await prisma.post.findMany({
+      where: {
+        userId: userId,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    const postIds = posts.map((post) => post.id);
+
+    const reservations = await prisma.reservation.findMany({
+      where: {
+        listingId: {
+          in: postIds,
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return reservations;
   } catch (error: any) {
-      if (error.code === "P2002") {
-          return {
-              error: `This reservation is already taken`,
-          };
-      } else {
-          return {
-              error: error.message,
-          };
-      }
+    return {
+      error: error.message,
+    };
   }
 };
 
+export const getReservationFields = async () => {
+  const resFields = Prisma.dmmf?.datamodel.models.find(model => model.name === "Reservation")?.fields;
+  return resFields;
+};
 
-export const cancelReservation = async (formData: FormData) => {
-    const session = await getSession();
-    if (!session?.user.id) {
+export const createReservation = async (formData: FormData) => {
+  const listingId = formData.get("listingId") as string;
+  const startDate = new Date(formData.get("start-date") as string);
+  const endDate = new Date(formData.get("end-date") as string);
+  const totalPrice = Number(formData.get("totalPrice"));
+  const reservationStatus = formData.get("status") as string;
+
+  try {
+    const now = new Date();
+    const response = await prisma?.reservation.create({
+      data: {
+        listingId,
+        startDate,
+        endDate,
+        totalPrice,
+        updatedAt: now,
+        status: reservationStatus
+      }
+    });
+    return response;
+  } catch (error: any) {
+    if (error.code === "P2002") {
       return {
-        error: "Not authenticated",
+        error: `This reservation is already taken`,
+      };
+    } else {
+      return {
+        error: error.message,
       };
     }
+  }
+};
+
+export const cancelReservation = async (formData: FormData) => {
+  const session = await getSession();
+  if (!session?.user.id) {
+    return {
+      error: "Not authenticated",
+    };
+  }
 };
