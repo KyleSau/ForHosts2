@@ -3,6 +3,7 @@ import { Prisma } from "@prisma/client";
 import React from "react";
 import { useState, useEffect } from "react";
 import { getReservationFields, getReservations } from "@/lib/actions";
+import { CheckCircle, XCircle, MinusCircle, Clock } from "lucide-react";
 
 interface Reservation {
   [key: string]: any;
@@ -17,6 +18,11 @@ const ReservationTable: React.FC<Props> = () => {
 
   const [reservationFields, setReservationFields] = useState<Prisma.DMMF.Field[] | undefined>(undefined);
   const [reservations, setReservations] = useState<any>([]);
+  const STATUS_VALUES = {
+    CONFIRMED: "CONFIRMED", 
+    PENDING: "PENDING", 
+    CANCELLED: "CANCELLED"
+  };
 
   useEffect(() => {
     async function handleGetReservationFields() {
@@ -67,11 +73,41 @@ const ReservationTable: React.FC<Props> = () => {
                     type ObjectKey = keyof typeof reservation;
                     const fieldName = field.name as ObjectKey;
                     const fieldValue = reservation[fieldName];
-                    return (
-                      <td key={fieldIdx} className="px-2 sm:px-6 py-4 text-center border-r">
-                        {fieldValue instanceof Date? fieldValue.toUTCString(): fieldValue}
-                      </td>
-                    );
+                    
+                    if(fieldName === "status") {
+                      let statusIcon = undefined;
+
+                      switch(fieldValue) {
+                        case STATUS_VALUES.CONFIRMED:
+                          statusIcon = <CheckCircle color="#00ff40"/>;
+                          break;
+                        case STATUS_VALUES.CANCELLED:
+                          statusIcon = <XCircle color="#ff0000" />;
+                          break;
+                        case STATUS_VALUES.PENDING:
+                          statusIcon = <Clock color="#fffa3c" />
+                        default:
+                          break;
+                      }
+
+                      return ( 
+                        <td key={fieldIdx} className="px-2 sm:px-6 py-4 text-center border-r">
+                          <div>{ statusIcon }{ fieldValue }</div>
+                        </td> 
+                      );
+                    } else if(fieldValue instanceof Date) {
+                      return (
+                        <td key={fieldIdx} className="px-2 sm:px-6 py-4 text-center border-r">
+                          { fieldValue.toUTCString() }
+                        </td>
+                      );
+                    } else {
+                      return (
+                        <td key={fieldIdx} className="px-2 sm:px-6 py-4 text-center border-r">
+                          { fieldValue }
+                        </td>
+                      );
+                    }
                   })}
                 </tr>
               );
