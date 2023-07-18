@@ -228,7 +228,6 @@ export default function Editor({ post }: { post: PostWithSite }) {
           className="dark:placeholder-text-600 border-none px-0 font-cal text-3xl placeholder:text-stone-400 focus:outline-none focus:ring-0 dark:bg-black dark:text-white"
         />
 
-
         <TextareaAutosize
           placeholder="Description"
           defaultValue={post?.description || ""}
