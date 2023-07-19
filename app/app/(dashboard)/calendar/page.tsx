@@ -148,7 +148,7 @@ export default function CustomCalendar() {
                     });
                     events.push({
                         id: idx++,
-                        title: reservation.listingId,
+                        title: reservation.title,
                         start: new Date(reservation.startDate),
                         end: new Date(reservation.endDate),
                         blocked: false
