@@ -457,7 +457,7 @@ export const getReservations = async (limit: number = 10) => {
     // const postTitles = posts.map((post) => post.title);
     // const postTitlesMap = new Map(posts.map((post) => [post.id, post.title]));
 
-    const reservations: (Reservation & { post: Post })[] = await prisma.reservation.findMany({
+    const reservations = await prisma.reservation.findMany({
       // where: {
       //   listingId: {
       //     in: postIds,
@@ -562,7 +562,7 @@ export const getReservationFields = async () => {
 };
 
 export const createReservation = async (formData: FormData) => {
-  const listingId = formData.get("listingId") as string;
+  const postId = formData.get("postId") as string;
   const startDate = new Date(formData.get("start-date") as string);
   const endDate = new Date(formData.get("end-date") as string);
   const totalPrice = Number(formData.get("totalPrice"));
@@ -572,7 +572,7 @@ export const createReservation = async (formData: FormData) => {
     const now = new Date();
     const response = await prisma?.reservation.create({
       data: {
-        listingId,
+        postId,
         startDate,
         endDate,
         totalPrice,

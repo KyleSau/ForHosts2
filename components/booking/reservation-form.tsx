@@ -10,13 +10,13 @@ interface ReservationData {
   startDate: Date;
   endDate: Date;
   guests: number;
-  listingId: string;
+  postId: string;
 }
 
-// Retrieve the listingId as a prop
-// Limit the guestCapacity from the listingId
+// Retrieve the postId as a prop
+// Limit the guestCapacity from the postId
 
-export default function ReservationForm({ listingId }: { listingId: string }) {
+export default function ReservationForm({ postId }: { postId: string }) {
   const router = useRouter();
 
   const [reservation, setReservation] = useState<ReservationData>();
@@ -29,11 +29,11 @@ export default function ReservationForm({ listingId }: { listingId: string }) {
   const handleFinalizeReservation = async (data: FormData) => {
     console.log('Finalize Reservation');
     // Send ReservationData as MetaData to Stripe Checkout
-    data.append('listingId', listingId);
+    data.append('postId', postId);
     data.append('totalPrice', '1000'); // this is a test value
     data.append('status', 'COMPLETED');
 
-    console.log('test: ' + data.get('listingId'));
+    console.log('test: ' + data.get('postId'));
     // This will be invoked by payment intent webhook.
     await createReservation(data).then((res: any) => {
       if (res.error) {
@@ -60,7 +60,7 @@ export default function ReservationForm({ listingId }: { listingId: string }) {
       id="reservationForm1"
       className="w-full rounded-md bg-white text-black dark:text-black md:max-w-md md:border md:border-stone-200 md:shadow dark:md:border-stone-700 flex flex-col items-center"
     >
-      <label>Internal ListingId: {listingId}</label>
+      <label>Internal ListingId: {postId}</label>
       <br />
       {/* Date Ranger Picker */}
       <label htmlFor="start-date" className="bg-white text-black dark:bg-white dark:text-black">startDate: </label>
