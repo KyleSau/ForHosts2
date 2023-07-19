@@ -4,36 +4,13 @@ import { toast } from "sonner";
 import va from "@vercel/analytics";
 import { createReservation } from '@/lib/actions';
 import { useRouter } from 'next/navigation';
-import { RESERVATION_STATUS } from '@/lib/types';
-
-interface ReservationData {
-  startDate: Date;
-  endDate: Date;
-  guests: number;
-  postId: string;
-}
-
-// Retrieve the postId as a prop
-// Limit the guestCapacity from the postId
 
 export default function ReservationForm({ postId }: { postId: string }) {
   const router = useRouter();
 
-  const [reservation, setReservation] = useState<ReservationData>();
-
-  // const delegateStripeCheckout = async (data: FormData) => {
-  //   console.log('Delegate Stripe Checkout');
-  // }
-
   // Delegate to Stripe checkout.
   const handleFinalizeReservation = async (data: FormData) => {
-    console.log('Finalize Reservation');
-    // Send ReservationData as MetaData to Stripe Checkout
-    data.append('postId', postId);
-    data.append('totalPrice', '1000'); // this is a test value
-    data.append('status', 'COMPLETED');
 
-    console.log('test: ' + data.get('postId'));
     // This will be invoked by payment intent webhook.
     await createReservation(data).then((res: any) => {
       if (res.error) {
@@ -48,9 +25,6 @@ export default function ReservationForm({ postId }: { postId: string }) {
       }
     });
   };
-
-  // from the startDate -> endDate determine days and multiply by price
-
 
   return (<>
     {/* Date Ranger Picker from AirBnB */}

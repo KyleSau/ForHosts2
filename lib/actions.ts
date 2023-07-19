@@ -455,33 +455,23 @@ export const getReservations = async (limit: number = 10) => {
   }
 };
 
-// fix createReservation
-// fix updateReservation
-// fix getReservationFields
-// tidy up ReservationTable (remove useEffect, follow pattern of other tables)
-
-export const getReservationFields = async () => {
-  const resFields = Prisma.dmmf?.datamodel.models.find(model => model.name === "Reservation")?.fields;
-  return resFields;
-};
-
+// this will be invoked by the stripe webhook
+// StripeMetaData
 export const createReservation = async (formData: FormData) => {
+
+  // FormData
   const postId = formData.get("postId") as string;
   const startDate = new Date(formData.get("start-date") as string);
   const endDate = new Date(formData.get("end-date") as string);
-  const totalPrice = Number(formData.get("totalPrice"));
-  const reservationStatus = formData.get("status") as string;
 
   try {
-    const now = new Date();
     const response = await prisma?.reservation.create({
       data: {
         postId,
         startDate,
         endDate,
-        totalPrice,
-        updatedAt: now,
-        status: reservationStatus
+        totalPrice: 100,
+        status: "CONFIRMED",
       }
     });
     return response;
@@ -497,12 +487,3 @@ export const createReservation = async (formData: FormData) => {
     }
   }
 };
-
-// export const cancelReservation = async (formData: FormData) => {
-//   const session = await getSession();
-//   if (!session?.user.id) {
-//     return {
-//       error: "Not authenticated",
-//     };
-//   }
-// };
