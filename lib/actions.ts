@@ -432,6 +432,7 @@ export const editUser = async (
 export const getReservations = async (limit: number = 10) => {
   const session = await getSession();
 
+  // test
   if (!session?.user.id) {
     return {
       error: "Not authenticated",
