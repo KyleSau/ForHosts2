@@ -42,53 +42,6 @@ interface Event {
     blocked: boolean;
 }
 
-const events: Event[] = [
-    {
-        id: 1,
-        title: "booked",
-        start: new Date(2023, 6, 8, 8, 30, 0),
-        end: new Date(2023, 6, 23, 12, 30, 0),
-        blocked: true
-    },
-    {
-        id: 2,
-        title: "booked2",
-        // allDay: true,
-        start: new Date(2023, 6, 8, 8, 30, 0),
-        end: new Date(2023, 6, 16, 12, 30, 0),
-        blocked: false
-    },
-    {
-        id: 3,
-        title: "booked3",
-        start: new Date(2023, 6, 8, 8, 30, 0),
-        end: new Date(2023, 6, 11, 12, 30, 0),
-        blocked: false
-    },
-    {
-        id: 4,
-        title: "booked22",
-        start: new Date(2023, 6, 9, 8, 30, 0),
-        end: new Date(2023, 6, 15, 12, 30, 0),
-        blocked: false
-    },
-    {
-        id: 5,
-        title: "noneblocked",
-        start: new Date(2023, 6, 25, 8, 30, 0),
-        end: new Date(2023, 6, 27, 12, 30, 0),
-        blocked: false
-    },
-];
-
-const resourceMap = [
-    { resourceId: 1, resourceTitle: "Rental 1" },
-    { resourceId: 2, resourceTitle: "Rental 2" },
-    { resourceId: 3, resourceTitle: "Rental 3" },
-    { resourceId: 4, resourceTitle: "Rental 4" },
-    { resourceId: 5, resourceTitle: "Rental 4" }
-];
-
 const styles = {
     container: {
         width: "100wh",
@@ -96,7 +49,6 @@ const styles = {
         margin: "ml-auto mr-auto"
     }
 };
-
 
 const components = {
     event: (props: any) => {
@@ -118,18 +70,14 @@ interface Reservation {
     [key: string]: any;
 }
 
-
 export default function CustomCalendar() {
 
     const [events, setEvents] = useState<Event[]>([]);
-
-    // const [reservationFields, setReservationFields] = useState<Prisma.DMMF.Field[] | undefined>(undefined);
     const [reservations, setReservations] = useState<any>([]);
 
     useEffect(() => {
         async function handleGetReservationFields() {
             const resFields = await getReservationFields();
-            // setReservationFields(resFields);
         }
         handleGetReservationFields();
     }, []);
@@ -162,9 +110,6 @@ export default function CustomCalendar() {
 
         handleGetReservations();
     }, []);
-
-
-
 
     return (
         <div className="flex max-w-screen-xl flex-col">
