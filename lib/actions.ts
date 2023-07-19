@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { Prisma, Post, Site } from "@prisma/client";
+import { Prisma, Post, Site, Reservation } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { withPostAuth, withSiteAuth } from "./auth";
 import { getSession } from "@/lib/auth";
@@ -441,48 +441,66 @@ export const getReservations = async (limit: number = 10) => {
   try {
     const userId = session.user.id;
 
-    const posts = await prisma.post.findMany({
-      where: {
-        userId: userId,
-      },
-      select: {
-        id: true,
-        title: true,
-      },
-    });
+    // const posts = await prisma.post.findMany({
+    //   where: {
+    //     userId: userId,
+    //   },
+    //   select: {
+    //     id: true,
+    //     title: true,
+    //   },
+    // });
 
-    console.log('posts: ', (JSON.stringify(posts)));
+    // console.log('posts: ', (JSON.stringify(posts)));
 
-    const postIds = posts.map((post) => post.id);
+    // const postIds = posts.map((post) => post.id);
     // const postTitles = posts.map((post) => post.title);
-    const postTitlesMap = new Map(posts.map((post) => [post.id, post.title]));
+    // const postTitlesMap = new Map(posts.map((post) => [post.id, post.title]));
 
-    const reservations = await prisma.reservation.findMany({
-      where: {
-        listingId: {
-          in: postIds,
-        },
-      },
+    const reservations: (Reservation & { post: Post })[] = await prisma.reservation.findMany({
+      // where: {
+      //   listingId: {
+      //     in: postIds,
+      //   },
+      // },
       orderBy: {
         createdAt: "desc",
       },
+      include: {
+        post: true,
+      },
     });
+
+    // const reservations = await prisma.reservation.findMany({
+    //   where: {
+    //     listingId: {
+    //       in: postIds,
+    //     },
+    //   },
+    //   orderBy: {
+    //     createdAt: "desc",
+    //   },
+    //   include: {
+    //     post: true,
+    //   },
+    // });
 
     // disclaimer:
     // this is an absolute shit way of doing this and should be changed to a join.
-    const reservationsWithTitles = reservations.map((reservation) => {
-      const postId = reservation.listingId;
-      const title = postTitlesMap.get(postId);
-      return {
-        ...reservation,
-        title: title || "Unknown Title",
-      };
-    });
+    // const reservationsWithTitles = reservations.map((reservation) => {
+    //   const postId = reservation.listingId;
+    //   const title = postTitlesMap.get(postId);
+    //   return {
+    //     ...reservation,
+    //     title: title || "Unknown Title",
+    //   };
+    // });
 
-    // Log the updated reservations
-    console.log("Reservations with Titles:", reservationsWithTitles);
+    // // Log the updated reservations
+    // console.log("Reservations with Titles:", reservationsWithTitles);
 
-    return reservationsWithTitles;
+    // return reservationsWithTitles;
+    return reservations;
   } catch (error: any) {
     return {
       error: error.message,
