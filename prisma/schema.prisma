@@ -116,16 +116,16 @@ model Site {
 
 model Reservation {
   id         String   @id @default(cuid())
-  listingId  String // technically postId as of current
+  postId     String // technically postId as of current
   startDate  DateTime
   endDate    DateTime
   totalPrice Int
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   status     String
-  post       Post?    @relation(fields: [listingId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  post       Post?    @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  @@index([listingId])
+  @@index([postId])
 }
 
 model Example {
