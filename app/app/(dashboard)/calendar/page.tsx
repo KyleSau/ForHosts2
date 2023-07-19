@@ -178,9 +178,6 @@ export default function CustomCalendar() {
                         defaultView={Views.MONTH}
                         views={[Views.DAY, Views.WEEK, Views.MONTH]}
                         step={60}
-                        resources={resourceMap}
-                        resourceIdAccessor="resourceId"
-                        resourceTitleAccessor="resourceTitle"
                     />
                 </div>
             </div>
