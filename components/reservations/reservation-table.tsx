@@ -20,18 +20,18 @@ const ReservationTable: React.FC<Props> = () => {
 
   useEffect(() => {
     async function handleGetReservationFields() {
-        const resFields = await getReservationFields();
-        setReservationFields(resFields);
+      const resFields = await getReservationFields();
+      setReservationFields(resFields);
     }
     handleGetReservationFields();
   }, []);
 
   useEffect(() => {
-      async function handleGetReservations(): Promise<any> {
-          const reservations = await getReservations();
-          setReservations(reservations);
-      }
-      handleGetReservations();
+    async function handleGetReservations(): Promise<any> {
+      const reservations = await getReservations();
+      setReservations(reservations);
+    }
+    handleGetReservations();
   }, []);
 
   return (
@@ -39,7 +39,7 @@ const ReservationTable: React.FC<Props> = () => {
       <table className="min-w-full divide-y divide-gray-200 border-collapse lg:w-auto">
         <thead className="bg-gray-50">
           <tr>
-            { reservationFields && 
+            {reservationFields &&
               <th
                 scope="col"
                 className="px-2 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r"
@@ -47,7 +47,7 @@ const ReservationTable: React.FC<Props> = () => {
                 #
               </th>
             }
-            { reservationFields?.map((field, fieldIdx) => (
+            {reservationFields?.map((field, fieldIdx) => (
               <th
                 scope="col"
                 key={fieldIdx}
@@ -58,25 +58,25 @@ const ReservationTable: React.FC<Props> = () => {
             ))}
           </tr>
         </thead>
-          <tbody className="text-white divide-y divide-gray-200">
-            { reservations.map((reservation: Reservation, idx: number) => {
-              return (
-                <tr className="hover:bg-gray-500" key={idx}>
-                  <td className="px-2 sm:px-6 py-4 text-center border-r">{idx+1}</td>
-                  { reservationFields?.map((field, fieldIdx) => {
-                    type ObjectKey = keyof typeof reservation;
-                    const fieldName = field.name as ObjectKey;
-                    const fieldValue = reservation[fieldName];
-                    return (
-                      <td key={fieldIdx} className="px-2 sm:px-6 py-4 text-center border-r">
-                        {fieldValue instanceof Date? fieldValue.toUTCString(): fieldValue}
-                      </td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
+        <tbody className="text-white divide-y divide-gray-200">
+          {reservations.map((reservation: Reservation, idx: number) => {
+            return (
+              <tr className="hover:bg-gray-500" key={idx}>
+                <td className="px-2 sm:px-6 py-4 text-center border-r">{idx + 1}</td>
+                {reservationFields?.map((field, fieldIdx) => {
+                  type ObjectKey = keyof typeof reservation;
+                  const fieldName = field.name as ObjectKey;
+                  const fieldValue = reservation[fieldName];
+                  return (
+                    <td key={fieldIdx} className="px-2 sm:px-6 py-4 text-center border-r">
+                      {fieldValue instanceof Date ? fieldValue.toUTCString() : fieldValue}
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
       </table>
     </div>
   );
