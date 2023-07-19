@@ -15,7 +15,6 @@ import {
 import { put } from "@vercel/blob";
 import { customAlphabet } from "nanoid";
 import { getBlurDataURL } from "@/lib/utils";
-import { useRadioGroup } from "@mui/material";
 
 const nanoid = customAlphabet(
   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
@@ -430,66 +429,6 @@ export const editUser = async (
   }
 };
 
-//endpoints for reservations
-//create reservation
-//cancel reservation
-//enum for reservation: {CONFIRMED, PENDING, CANCELLED, INACTIVE}
-// export const createReservation = async ()
-
-// const data = await prisma?.reservation.findUnique({
-//     where: {
-//       id: params.id,
-//     },
-//   });
-
-////// DUMMY DATA ////// TODO: Remove when connection to DB is confirmed
-const DUMMY_RESERVATIONS = [
-  {
-    id: "resId123",
-    userId: "userId123",
-    listingId: "listing123",
-    startDate: new Date().toISOString().substring(0, 10),
-    endDate: new Date().toISOString().substring(0, 10),
-    totalPrice: 100,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    status: "CONFIRMED",
-  },
-  {
-    id: "resId234",
-    userId: "userId234",
-    listingId: "listing234",
-    startDate: new Date().toISOString().substring(0, 10),
-    endDate: new Date().toISOString().substring(0, 10),
-    totalPrice: 180,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    status: "PENDING",
-  },
-  {
-    id: "resId345",
-    userId: "userId345",
-    listingId: "listing345",
-    startDate: new Date().toISOString().substring(0, 10),
-    endDate: new Date().toISOString().substring(0, 10),
-    totalPrice: 135,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    status: "CONFIRMED",
-  },
-  {
-    id: "resId456",
-    userId: "userId456",
-    listingId: "listing456",
-    startDate: new Date().toISOString().substring(0, 10),
-    endDate: new Date().toISOString().substring(0, 10),
-    totalPrice: 240,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    status: "PENDING",
-  },
-];
-
 export const getReservations = async (limit: number = 10) => {
   const session = await getSession();
 
@@ -508,10 +447,15 @@ export const getReservations = async (limit: number = 10) => {
       },
       select: {
         id: true,
+        title: true,
       },
     });
 
+    console.log('posts: ', (JSON.stringify(posts)));
+
     const postIds = posts.map((post) => post.id);
+    // const postTitles = posts.map((post) => post.title);
+    const postTitlesMap = new Map(posts.map((post) => [post.id, post.title]));
 
     const reservations = await prisma.reservation.findMany({
       where: {
@@ -524,13 +468,73 @@ export const getReservations = async (limit: number = 10) => {
       },
     });
 
-    return reservations;
+    // disclaimer:
+    // this is an absolute shit way of doing this and should be changed to a join.
+    const reservationsWithTitles = reservations.map((reservation) => {
+      const postId = reservation.listingId;
+      const title = postTitlesMap.get(postId);
+      return {
+        ...reservation,
+        title: title || "Unknown Title",
+      };
+    });
+
+    // Log the updated reservations
+    console.log("Reservations with Titles:", reservationsWithTitles);
+
+    return reservationsWithTitles;
   } catch (error: any) {
     return {
       error: error.message,
     };
   }
 };
+// export const getReservations = async (limit: number = 10) => {
+//   const session = await getSession();
+
+//   if (!session?.user.id) {
+//     return {
+//       error: "Not authenticated",
+//     };
+//   }
+
+//   try {
+//     const userId = session.user.id;
+
+//     const posts = await prisma.post.findMany({
+//       where: {
+//         userId: userId,
+//       },
+//       select: {
+//         id: true,
+//         title: true,
+//       },
+//     });
+
+//     const postIds = posts.map((post) => post.id);
+
+
+//     const reservations = await prisma.reservation.findMany({
+//       where: {
+//         listingId: {
+//           in: postIds,
+//         },
+//       },
+//       orderBy: {
+//         createdAt: "desc",
+//       },
+//       include: {
+//         post: true,
+//       }
+//     });
+
+//     return reservations;
+//   } catch (error: any) {
+//     return {
+//       error: error.message,
+//     };
+//   }
+// };
 
 export const getReservationFields = async () => {
   const resFields = Prisma.dmmf?.datamodel.models.find(model => model.name === "Reservation")?.fields;
@@ -570,11 +574,11 @@ export const createReservation = async (formData: FormData) => {
   }
 };
 
-export const cancelReservation = async (formData: FormData) => {
-  const session = await getSession();
-  if (!session?.user.id) {
-    return {
-      error: "Not authenticated",
-    };
-  }
-};
+// export const cancelReservation = async (formData: FormData) => {
+//   const session = await getSession();
+//   if (!session?.user.id) {
+//     return {
+//       error: "Not authenticated",
+//     };
+//   }
+// };

@@ -12,41 +12,14 @@ export const authOptions: NextAuthOptions = {
     FacebookProvider({
       clientId: process.env.FACEBOOK_CLIENT_ID as string,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string,
-      profile(profile) {
-        return {
-          id: profile.id,
-          name: profile.name,
-          gh_username: profile.name,
-          email: profile.email,
-          image: profile.picture.data.url,
-        };
-      },
     }),
     GitHubProvider({
       clientId: process.env.AUTH_GITHUB_ID as string,
       clientSecret: process.env.AUTH_GITHUB_SECRET as string,
-      profile(profile) {
-        return {
-          id: profile.id.toString(),
-          name: profile.name || profile.login,
-          gh_username: profile.login,
-          email: profile.email,
-          image: profile.avatar_url,
-        };
-      },
     }),
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-      profile(profile) {
-        return {
-          id: profile.sub,
-          name: profile.name,
-          gh_username: profile.name,
-          email: profile.email,
-          image: profile.picture,
-        };
-      },
     }),
   ],
   pages: {
