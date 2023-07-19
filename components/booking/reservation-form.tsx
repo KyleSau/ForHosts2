@@ -12,6 +12,7 @@ export default function ReservationForm({ postId }: { postId: string }) {
   const handleFinalizeReservation = async (data: FormData) => {
 
     // This will be invoked by payment intent webhook.
+    data.append("postId", postId);
     await createReservation(data).then((res: any) => {
       if (res.error) {
         console.log("Getting res.error: ", res.error);

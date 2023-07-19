@@ -21,7 +21,7 @@ export default async function ReservationsPage() {
       </div>
       <div className="mt-5">
         <div className="overflow-x-auto">
-          <ReservationTable data={data} />
+          <ReservationTable reservations={data} />
         </div>
       </div>
     </div>
