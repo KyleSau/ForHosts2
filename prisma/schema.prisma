@@ -124,6 +124,8 @@ model Reservation {
   updatedAt  DateTime @updatedAt
   status     String
   post       Post?    @relation(fields: [listingId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([listingId])
 }
 
 model Example {
