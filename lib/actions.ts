@@ -440,7 +440,7 @@ export const getReservations = async (limit: number = 10) => {
   }
 
   try {
-    const userId = session.user.id;
+    // const userId = session.user.id;
 
     // const posts = await prisma.post.findMany({
     //   where: {
