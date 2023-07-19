@@ -1,7 +1,6 @@
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import ReservationTable from "@/components/reservations/reservation-table";
-
 export default async function ReservationsPage() {
   const session = await getSession();
   if (!session) {
