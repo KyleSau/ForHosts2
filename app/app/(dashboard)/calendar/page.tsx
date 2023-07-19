@@ -96,7 +96,7 @@ export default function CustomCalendar() {
                     });
                     events.push({
                         id: idx++,
-                        title: reservation.title,
+                        title: reservation.post?.title ?? 'No title',
                         start: new Date(reservation.startDate),
                         end: new Date(reservation.endDate),
                         blocked: false
