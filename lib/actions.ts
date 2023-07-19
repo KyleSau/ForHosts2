@@ -432,7 +432,6 @@ export const editUser = async (
 export const getReservations = async (limit: number = 10) => {
   const session = await getSession();
 
-  // test
   if (!session?.user.id) {
     return {
       error: "Not authenticated",
@@ -440,30 +439,7 @@ export const getReservations = async (limit: number = 10) => {
   }
 
   try {
-    // const userId = session.user.id;
-
-    // const posts = await prisma.post.findMany({
-    //   where: {
-    //     userId: userId,
-    //   },
-    //   select: {
-    //     id: true,
-    //     title: true,
-    //   },
-    // });
-
-    // console.log('posts: ', (JSON.stringify(posts)));
-
-    // const postIds = posts.map((post) => post.id);
-    // const postTitles = posts.map((post) => post.title);
-    // const postTitlesMap = new Map(posts.map((post) => [post.id, post.title]));
-
     const reservations = await prisma.reservation.findMany({
-      // where: {
-      //   listingId: {
-      //     in: postIds,
-      //   },
-      // },
       orderBy: {
         createdAt: "desc",
       },
@@ -471,38 +447,6 @@ export const getReservations = async (limit: number = 10) => {
         post: true,
       },
     });
-
-    //ffs
-
-    // const reservations = await prisma.reservation.findMany({
-    //   where: {
-    //     listingId: {
-    //       in: postIds,
-    //     },
-    //   },
-    //   orderBy: {
-    //     createdAt: "desc",
-    //   },
-    //   include: {
-    //     post: true,
-    //   },
-    // });
-
-    // disclaimer:
-    // this is an absolute shit way of doing this and should be changed to a join.
-    // const reservationsWithTitles = reservations.map((reservation) => {
-    //   const postId = reservation.listingId;
-    //   const title = postTitlesMap.get(postId);
-    //   return {
-    //     ...reservation,
-    //     title: title || "Unknown Title",
-    //   };
-    // });
-
-    // // Log the updated reservations
-    // console.log("Reservations with Titles:", reservationsWithTitles);
-
-    // return reservationsWithTitles;
     return reservations;
   } catch (error: any) {
     return {
@@ -510,52 +454,11 @@ export const getReservations = async (limit: number = 10) => {
     };
   }
 };
-// export const getReservations = async (limit: number = 10) => {
-//   const session = await getSession();
 
-//   if (!session?.user.id) {
-//     return {
-//       error: "Not authenticated",
-//     };
-//   }
-
-//   try {
-//     const userId = session.user.id;
-
-//     const posts = await prisma.post.findMany({
-//       where: {
-//         userId: userId,
-//       },
-//       select: {
-//         id: true,
-//         title: true,
-//       },
-//     });
-
-//     const postIds = posts.map((post) => post.id);
-
-
-//     const reservations = await prisma.reservation.findMany({
-//       where: {
-//         listingId: {
-//           in: postIds,
-//         },
-//       },
-//       orderBy: {
-//         createdAt: "desc",
-//       },
-//       include: {
-//         post: true,
-//       }
-//     });
-
-//     return reservations;
-//   } catch (error: any) {
-//     return {
-//       error: error.message,
-//     };
-//   }
-// };
+// fix createReservation
+// fix updateReservation
+// fix getReservationFields
+// tidy up ReservationTable (remove useEffect, follow pattern of other tables)
 
 export const getReservationFields = async () => {
   const resFields = Prisma.dmmf?.datamodel.models.find(model => model.name === "Reservation")?.fields;
