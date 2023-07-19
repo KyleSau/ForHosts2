@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import va from "@vercel/analytics";
 import { createReservation } from '@/lib/actions';
 import { useRouter } from 'next/navigation';
+import { RESERVATION_STATUS } from '@/lib/types';
 
 interface ReservationData {
   startDate: Date;
