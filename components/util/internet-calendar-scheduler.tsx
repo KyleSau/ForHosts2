@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { saveAs } from 'file-saver';
 
 interface Event {
     id: string;
@@ -43,13 +44,17 @@ const InternetCalendarScheduler: React.FC<InternetCalendarSchedulerProps> = ({ e
         return lines.join('\n');
     };
 
-    const iCalData = generateICal();
+    useEffect(() => {
+        const downloadICSFile = () => {
+            const icsData = generateICal();
+            const blobData = new Blob([icsData], { type: 'text/calendar' });
+            saveAs(blobData, 'calendar.ics');
+        };
 
-    return (
-        <div>
-            {iCalData}
-        </div>
-    );
+        downloadICSFile();
+    }, []);
+
+    return <div>Downloading .ics file...</div>;
 };
 
 export default InternetCalendarScheduler;

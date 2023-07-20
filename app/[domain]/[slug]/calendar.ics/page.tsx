@@ -21,6 +21,7 @@ export default async function CalendarICSPage({
 
     return (
         <div>
+            The Hard R
             <InternetCalendarScheduler events={events} />
         </div>
     );
