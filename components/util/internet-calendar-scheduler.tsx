@@ -47,7 +47,7 @@ const InternetCalendarScheduler: React.FC<InternetCalendarSchedulerProps> = ({ e
 
     return (
         <div>
-            <pre>{iCalData}</pre>
+            {iCalData}
         </div>
     );
 };
