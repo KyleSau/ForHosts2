@@ -1,8 +1,6 @@
-import { ReactNode } from "react";
-import Form from "@/components/form";
+
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { editUser } from "@/lib/actions";
 import { Suspense } from "react";
 import Posts from "@/components/posts";
 import PlacholderCard from "@/components/placeholder-card";

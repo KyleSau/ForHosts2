@@ -1,11 +1,15 @@
 import { getSession } from "@/lib/auth";
+import { getReservations } from "@/lib/actions";
 import { redirect } from "next/navigation";
 import ReservationTable from "@/components/reservations/reservation-table";
 export default async function ReservationsPage() {
   const session = await getSession();
+
   if (!session) {
     redirect("/login");
   }
+
+  const data: any = await getReservations();
 
   return (
     <div className="mx-auto  sm:px-6 lg:px-8 py-5">
@@ -16,7 +20,7 @@ export default async function ReservationsPage() {
       </div>
       <div className="mt-5">
         <div className="overflow-x-auto">
-          <ReservationTable />
+          <ReservationTable reservations={data} />
         </div>
       </div>
     </div>

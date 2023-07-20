@@ -57,10 +57,17 @@ export interface DomainVerificationResponse {
   }[];
 }
 
-//////////////////////////////////// Data Types ////////////////////////////////////
+// this is only used in ReservationTable
+export interface Post {
+  id: string;
+  title: string;
+}
 
-export const RESERVATION_STATUS = {
-  CONFIRMED: "CONFIRMED", 
-  PENDING: "PENDING", 
-  CANCELLED: "CANCELLED"
-};
+export interface Reservation {
+  status: string;
+  post: Post;
+  startDate: Date;
+  endDate: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}

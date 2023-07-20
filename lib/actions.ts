@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { Prisma, Post, Site } from "@prisma/client";
+import { Prisma, Post, Site, Reservation } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { withPostAuth, withSiteAuth } from "./auth";
 import { getSession } from "@/lib/auth";
@@ -439,125 +439,39 @@ export const getReservations = async (limit: number = 10) => {
   }
 
   try {
-    const userId = session.user.id;
-
-    const posts = await prisma.post.findMany({
-      where: {
-        userId: userId,
-      },
-      select: {
-        id: true,
-        title: true,
-      },
-    });
-
-    console.log('posts: ', (JSON.stringify(posts)));
-
-    const postIds = posts.map((post) => post.id);
-    // const postTitles = posts.map((post) => post.title);
-    const postTitlesMap = new Map(posts.map((post) => [post.id, post.title]));
-
     const reservations = await prisma.reservation.findMany({
-      where: {
-        listingId: {
-          in: postIds,
-        },
-      },
       orderBy: {
         createdAt: "desc",
       },
+      include: {
+        post: true,
+      },
     });
-
-    // disclaimer:
-    // this is an absolute shit way of doing this and should be changed to a join.
-    const reservationsWithTitles = reservations.map((reservation) => {
-      const postId = reservation.listingId;
-      const title = postTitlesMap.get(postId);
-      return {
-        ...reservation,
-        title: title || "Unknown Title",
-      };
-    });
-
-    // Log the updated reservations
-    console.log("Reservations with Titles:", reservationsWithTitles);
-
-    return reservationsWithTitles;
+    return reservations;
   } catch (error: any) {
     return {
       error: error.message,
     };
   }
 };
-// export const getReservations = async (limit: number = 10) => {
-//   const session = await getSession();
 
-//   if (!session?.user.id) {
-//     return {
-//       error: "Not authenticated",
-//     };
-//   }
-
-//   try {
-//     const userId = session.user.id;
-
-//     const posts = await prisma.post.findMany({
-//       where: {
-//         userId: userId,
-//       },
-//       select: {
-//         id: true,
-//         title: true,
-//       },
-//     });
-
-//     const postIds = posts.map((post) => post.id);
-
-
-//     const reservations = await prisma.reservation.findMany({
-//       where: {
-//         listingId: {
-//           in: postIds,
-//         },
-//       },
-//       orderBy: {
-//         createdAt: "desc",
-//       },
-//       include: {
-//         post: true,
-//       }
-//     });
-
-//     return reservations;
-//   } catch (error: any) {
-//     return {
-//       error: error.message,
-//     };
-//   }
-// };
-
-export const getReservationFields = async () => {
-  const resFields = Prisma.dmmf?.datamodel.models.find(model => model.name === "Reservation")?.fields;
-  return resFields;
-};
-
+// this will be invoked by the stripe webhook
+// StripeMetaData
 export const createReservation = async (formData: FormData) => {
-  const listingId = formData.get("listingId") as string;
+
+  // FormData
+  const postId = formData.get("postId") as string;
   const startDate = new Date(formData.get("start-date") as string);
   const endDate = new Date(formData.get("end-date") as string);
-  const totalPrice = Number(formData.get("totalPrice"));
-  const reservationStatus = formData.get("status") as string;
 
   try {
-    const now = new Date();
     const response = await prisma?.reservation.create({
       data: {
-        listingId,
+        postId,
         startDate,
         endDate,
-        totalPrice,
-        updatedAt: now,
-        status: reservationStatus
+        totalPrice: 100,
+        status: "CONFIRMED",
       }
     });
     return response;
@@ -573,12 +487,3 @@ export const createReservation = async (formData: FormData) => {
     }
   }
 };
-
-// export const cancelReservation = async (formData: FormData) => {
-//   const session = await getSession();
-//   if (!session?.user.id) {
-//     return {
-//       error: "Not authenticated",
-//     };
-//   }
-// };

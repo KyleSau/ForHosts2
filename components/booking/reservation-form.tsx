@@ -4,37 +4,15 @@ import { toast } from "sonner";
 import va from "@vercel/analytics";
 import { createReservation } from '@/lib/actions';
 import { useRouter } from 'next/navigation';
-import { RESERVATION_STATUS } from '@/lib/types';
 
-interface ReservationData {
-  startDate: Date;
-  endDate: Date;
-  guests: number;
-  listingId: string;
-}
-
-// Retrieve the listingId as a prop
-// Limit the guestCapacity from the listingId
-
-export default function ReservationForm({ listingId }: { listingId: string }) {
+export default function ReservationForm({ postId }: { postId: string }) {
   const router = useRouter();
-
-  const [reservation, setReservation] = useState<ReservationData>();
-
-  // const delegateStripeCheckout = async (data: FormData) => {
-  //   console.log('Delegate Stripe Checkout');
-  // }
 
   // Delegate to Stripe checkout.
   const handleFinalizeReservation = async (data: FormData) => {
-    console.log('Finalize Reservation');
-    // Send ReservationData as MetaData to Stripe Checkout
-    data.append('listingId', listingId);
-    data.append('totalPrice', '1000'); // this is a test value
-    data.append('status', 'COMPLETED');
 
-    console.log('test: ' + data.get('listingId'));
     // This will be invoked by payment intent webhook.
+    data.append("postId", postId);
     await createReservation(data).then((res: any) => {
       if (res.error) {
         console.log("Getting res.error: ", res.error);
@@ -49,9 +27,6 @@ export default function ReservationForm({ listingId }: { listingId: string }) {
     });
   };
 
-  // from the startDate -> endDate determine days and multiply by price
-
-
   return (<>
     {/* Date Ranger Picker from AirBnB */}
 
@@ -60,7 +35,7 @@ export default function ReservationForm({ listingId }: { listingId: string }) {
       id="reservationForm1"
       className="w-full rounded-md bg-white text-black dark:text-black md:max-w-md md:border md:border-stone-200 md:shadow dark:md:border-stone-700 flex flex-col items-center"
     >
-      <label>Internal ListingId: {listingId}</label>
+      <label>Internal ListingId: {postId}</label>
       <br />
       {/* Date Ranger Picker */}
       <label htmlFor="start-date" className="bg-white text-black dark:bg-white dark:text-black">startDate: </label>
