@@ -6,6 +6,7 @@ import Image from "next/image";
 import BlogItem from "@/components/blogs/blog-item";
 import { Section } from "@/components/home/Section";
 import { GetStaticPaths, GetStaticProps } from "next";
+import { GetServerSideProps } from 'next';
 
 type Params = {
   slug: string;
@@ -26,7 +27,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 // Fetch blog data and generate metadata for each blog at build time.
-export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ params }) => {
   const { slug } = params || {};
 
   const blog = blogs.find((blog) => blog.slug === slug);
