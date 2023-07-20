@@ -5,61 +5,41 @@ import HomeLayout from "@/components/home/home-layout";
 import Image from "next/image";
 import BlogItem from "@/components/blogs/blog-item";
 import { Section } from "@/components/home/Section";
+import { GetStaticPaths, GetStaticProps } from "next";
 
-// interface BlogDetailProps {
-//   params: {
-//     slug: string;
-//   };
-//   randomBlogs: Blog[];
-// }
+type Params = {
+  slug: string;
+};
 
 type Props = {
-  params: {
-    slug: string;
-  };
-  searchParams: any;
+  blog: Blog | null;
 };
 
-// type ResolvingMetadata = Promise<Metadata> | Metadata;
+// Generate all possible paths (slugs) for the blogs at build time.
+export const getStaticPaths: GetStaticPaths = async () => {
+  const paths = blogs.map((blog) => ({
+    params: { slug: blog.slug },
+    
+  }));
 
-type BlogMetadata = {
-  title: string;
-  description: string;
-  keywords: string;
+  return { paths, fallback: false };
 };
 
+// Fetch blog data and generate metadata for each blog at build time.
+export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) => {
+  const { slug } = params || {};
 
-export async function generateMetadata({ params }: Props, parent: BlogMetadata): Promise<BlogMetadata> {
-  const { slug } = params;
   const blog = blogs.find((blog) => blog.slug === slug);
 
   if (!blog) {
-    // Return a default metadata object if the blog is not found
+    
     return {
-      title: "",
-      description: "",
-      keywords: "",
+      props: { blog: null },
     };
   }
 
-  return {
-    
-    title: blog.title,
-    description: blog.description,
-    keywords: blog.keywords.join(", "),
-  };
-}
-
-
-// export async function generateMetadata({ params }) {
-//   const { slug } = params;
-//    const blog = blogs.find((blog) => blog.slug === slug);
-//   return { title: blog.title,
-//     description: blog.description,
-//     keywords: blog.keywords.join(", "),
-//   }
-// };
-// }
+  return { props: { blog } };
+};
 
 // randomizing the blogs below the main blog component
 function getRandomBlogs(n: number, currentBlogSlug: string) {
@@ -73,12 +53,8 @@ function getRandomBlogs(n: number, currentBlogSlug: string) {
   return tempBlogs.slice(0, n);
 }
 
-// main component the renders most of the pages contents
-const BlogDetail: React.FC<Props> = ({ params }) => {
-  const { slug } = params;
-
-  const blog = blogs.find((blog: Blog) => blog.slug === slug);
-
+// main component that renders most of the pages contents
+const BlogDetail: React.FC<Props> = ({ blog }) => {
   if (!blog) {
     return (
       <HomeLayout>
@@ -87,9 +63,8 @@ const BlogDetail: React.FC<Props> = ({ params }) => {
     );
   }
 
-  // Call the getRandomBlogs function with the number of blogs you want to display, idk if we wanna change the amount later
-  //so i thought fk it and made a variable.
-  const randomBlogs = getRandomBlogs(4, slug);
+  // Call the getRandomBlogs function with the number of blogs you want to display.
+  const randomBlogs = getRandomBlogs(4, blog.slug);
 
   // Create the BlogItem components for the random blogs
   const randomBlogItems = randomBlogs.map((blog) => (
