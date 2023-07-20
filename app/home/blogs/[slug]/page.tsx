@@ -13,7 +13,6 @@ import { Section } from "@/components/home/Section";
 //   randomBlogs: Blog[];
 // }
 
-
 type Props = {
   params: {
     slug: string;
@@ -33,36 +32,37 @@ type Metadata = {
   };
 };
 
-export function generateMetadata(
-  { params }: Props,
-  parent: Metadata,
-): Metadata {
-  // read route params
+export async function generateMetadata({ params }: Props, parent: Metadata) {
   const { slug } = params;
-
-  // fetch data from local array
   const blog = blogs.find((blog) => blog.slug === slug);
 
-  if (blog) {
-    // access and extend parent metadata
-    const previousImages = parent.openGraph?.images || [];
-
-    // Assuming the `keywords` property is an array of strings
+  if (!blog) {
+    // Return a default metadata object if the blog is not found
     return {
-      title: blog.title,
-      description: blog.description,
-      keywords: blog.keywords.join(", "),
-      openGraph: {
-        description: blog.description,
-        images: [blog.image.path, ...previousImages],
-      },
+      title: "",
+      description: "",
+      keywords: "",
     };
-  } else {
-    throw new Error("Blog not found");
   }
+
+  return {
+    
+    title: blog.title,
+    description: blog.description,
+    keywords: blog.keywords.join(", "),
+  };
 }
 
 
+// export async function generateMetadata({ params }) {
+//   const { slug } = params;
+//    const blog = blogs.find((blog) => blog.slug === slug);
+//   return { title: blog.title,
+//     description: blog.description,
+//     keywords: blog.keywords.join(", "),
+//   }
+// };
+// }
 
 // randomizing the blogs below the main blog component
 function getRandomBlogs(n: number, currentBlogSlug: string) {
