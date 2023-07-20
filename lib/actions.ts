@@ -471,7 +471,7 @@ export const createReservation = async (formData: FormData) => {
         startDate,
         endDate,
         totalPrice: 100,
-        status: "CONFIRMED",
+        status: "PENDING",
       }
     });
     return response;
@@ -487,3 +487,4 @@ export const createReservation = async (formData: FormData) => {
     }
   }
 };
+

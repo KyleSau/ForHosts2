@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { CheckCircle, XCircle, Clock } from "lucide-react";
 import { Reservation } from "@/lib/types";
+import Pagination, { paginate } from "../pagination";
+
 
 const getStatusIcon = (status: string) => {
   let icon = null;
@@ -34,6 +36,12 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
 }) => {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [filterType, setFilterType] = useState<"all" | "CONFIRMED" | "PENDING" | "CANCELLED">("all");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const pageSize = 5;
+
+  const onPageChange = (page: number) => {
+    setCurrentPage(page);
+  }
 
   const filteredReservations = filterType === "all" ? reservations : reservations.filter(reservation => reservation.status === filterType);
 
@@ -44,6 +52,8 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
       return b.createdAt.getTime() - a.createdAt.getTime();
     }
   });
+
+  const paginatedReservations = paginate(sortedReservations, currentPage, pageSize);
 
   return (
     <div className="overflow-x-auto lg:overflow-visible w-full lg:w-auto">
@@ -67,6 +77,12 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
           {sortOrder === "asc" ? "Sort Ascending" : "Sort Descending"}
         </button>
       </div>
+      <Pagination 
+        items={sortedReservations.length} 
+        pageSize={pageSize} 
+        currentPage={currentPage} 
+        onPageChange={onPageChange}
+      />
       <table className="min-w-full divide-y divide-gray-200 border-collapse lg:w-auto">
         <thead className="bg-gray-50">
           <tr>
@@ -90,7 +106,7 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
           </tr>
         </thead>
         <tbody className="text-white divide-y divide-gray-200">
-          {sortedReservations.map((reservation, idx) => (
+          {paginatedReservations.map((reservation, idx) => (
             <tr className="hover:bg-gray-500" key={idx}>
               <td className="px-2 sm:px-6 py-4 text-center border-r">
                 {idx + 1}

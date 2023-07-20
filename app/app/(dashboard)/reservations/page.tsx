@@ -2,6 +2,7 @@ import { getSession } from "@/lib/auth";
 import { getReservations } from "@/lib/actions";
 import { redirect } from "next/navigation";
 import ReservationTable from "@/components/reservations/reservation-table";
+import ReservationForm from "@/components/booking/reservation-form";
 
 export default async function ReservationsPage() {
   const session = await getSession();
@@ -19,6 +20,7 @@ export default async function ReservationsPage() {
           Reservations
         </h1>
       </div>
+      <ReservationForm postId={"clk9o32k7000azq40mtshf32u"}/>
       <div className="mt-5">
         <div className="overflow-x-auto">
           <ReservationTable reservations={data} />
