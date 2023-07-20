@@ -6,12 +6,12 @@ import Image from "next/image";
 import BlogItem from "@/components/blogs/blog-item";
 import { Section } from "@/components/home/Section";
 
-interface BlogDetailProps {
-  params: {
-    slug: string;
-  };
-  randomBlogs: Blog[];
-}
+// interface BlogDetailProps {
+//   params: {
+//     slug: string;
+//   };
+//   randomBlogs: Blog[];
+// }
 
 
 type Props = {
@@ -75,7 +75,7 @@ function getRandomBlogs(n: number, currentBlogSlug: string) {
 }
 
 // main component the renders most of the pages contents
-const BlogDetail: React.FC<BlogDetailProps> = ({ params }) => {
+const BlogDetail: React.FC<Props> = ({ params }) => {
   const { slug } = params;
 
   const blog = blogs.find((blog: Blog) => blog.slug === slug);
