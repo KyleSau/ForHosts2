@@ -21,7 +21,7 @@ type Props = {
   searchParams: any;
 };
 
-type ResolvingMetadata = Promise<Metadata> | Metadata;
+// type ResolvingMetadata = Promise<Metadata> | Metadata;
 
 type Metadata = {
   title: string;
@@ -33,10 +33,10 @@ type Metadata = {
   };
 };
 
-export async function generateMetadata(
+export function generateMetadata(
   { params }: Props,
-  parent: ResolvingMetadata,
-): Promise<Metadata> {
+  parent: Metadata,
+): Metadata {
   // read route params
   const { slug } = params;
 
@@ -45,13 +45,13 @@ export async function generateMetadata(
 
   if (blog) {
     // access and extend parent metadata
-    const previousImages = (await parent).openGraph?.images || [];
+    const previousImages = parent.openGraph?.images || [];
 
-    // im assumin that the blog object has a `description` and `keywords` property
+    // Assuming the `keywords` property is an array of strings
     return {
       title: blog.title,
       description: blog.description,
-      keywords: blog.keywords.join(", "), // assuming keywords is an array of strings
+      keywords: blog.keywords.join(", "),
       openGraph: {
         description: blog.description,
         images: [blog.image.path, ...previousImages],
@@ -61,6 +61,7 @@ export async function generateMetadata(
     throw new Error("Blog not found");
   }
 }
+
 
 // randomizing the blogs below the main blog component
 function getRandomBlogs(n: number, currentBlogSlug: string) {
