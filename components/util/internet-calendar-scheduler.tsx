@@ -34,7 +34,7 @@ const InternetCalendarScheduler: React.FC<InternetCalendarSchedulerProps> = ({ e
             lines.push(`DTSTART:${event.startDate.toISOString().replace(/[-:]/g, '')}Z`);
             lines.push(`DTEND:${event.endDate.toISOString().replace(/[-:]/g, '')}Z`);
             lines.push(`DESCRIPTION:${event.status || 'none'}`);
-            lines.push(`LOCATION:none}`);
+            lines.push(`LOCATION:none`);
             lines.push('END:VEVENT');
         });
 
@@ -48,7 +48,6 @@ const InternetCalendarScheduler: React.FC<InternetCalendarSchedulerProps> = ({ e
     return (
         <div>
             <pre>{iCalData}</pre>
-            {JSON.stringify(events)}
         </div>
     );
 };
