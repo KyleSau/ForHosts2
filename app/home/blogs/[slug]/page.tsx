@@ -26,13 +26,9 @@ type Metadata = {
   title: string;
   description: string;
   keywords: string;
-  openGraph: {
-    description: string;
-    images: string[];
-  };
 };
 
-export async function generateMetadata({ params }: Props, parent: Metadata) {
+export async function generateMetadata({ params }: Props, parent: Metadata): Promise<Metadata> {
   const { slug } = params;
   const blog = blogs.find((blog) => blog.slug === slug);
 
