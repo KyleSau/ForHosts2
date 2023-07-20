@@ -3,7 +3,7 @@ import { getReservationsByPostId } from "@/lib/actions";
 import { getPostData } from "@/lib/fetchers";
 import InternetCalendarScheduler from "@/components/util/internet-calendar-scheduler";
 
-export default async function CalendarICS({
+export default async function CalendarICSPage({
     params,
 }: {
     params: { domain: string; slug: string };
@@ -19,7 +19,7 @@ export default async function CalendarICS({
 
     return (
         <div>
-            Post Id: {data.id}
+            {/* Post Id: {data.id} */}
             <InternetCalendarScheduler events={events} />
         </div>
     );

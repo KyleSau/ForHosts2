@@ -48,6 +48,7 @@ const InternetCalendarScheduler: React.FC<InternetCalendarSchedulerProps> = ({ e
     return (
         <div>
             <pre>{iCalData}</pre>
+            {JSON.stringify(events)}
         </div>
     );
 };
