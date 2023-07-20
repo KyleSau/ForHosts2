@@ -429,6 +429,21 @@ export const editUser = async (
   }
 };
 
+export const getReservationsByPostId = async (postId: string) => {
+  try {
+    const reservations = await prisma.reservation.findMany({
+      where: {
+        id: postId,
+      },
+    });
+    return reservations;
+  } catch (error: any) {
+    return {
+      error: "Failed to fetch reservations",
+    };
+  }
+};
+
 export const getReservations = async (limit: number = 10) => {
   const session = await getSession();
 
@@ -440,7 +455,7 @@ export const getReservations = async (limit: number = 10) => {
 
   try {
     const reservations = await prisma.reservation.findMany({
-      take: limit,
+      // take: limit,
       orderBy: {
         createdAt: "desc",
       },
