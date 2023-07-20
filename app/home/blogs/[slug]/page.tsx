@@ -22,13 +22,14 @@ type Props = {
 
 // type ResolvingMetadata = Promise<Metadata> | Metadata;
 
-type Metadata = {
+type BlogMetadata = {
   title: string;
   description: string;
   keywords: string;
 };
 
-export async function generateMetadata({ params }: Props, parent: Metadata): Promise<Metadata> {
+
+export async function generateMetadata({ params }: Props, parent: BlogMetadata): Promise<BlogMetadata> {
   const { slug } = params;
   const blog = blogs.find((blog) => blog.slug === slug);
 
