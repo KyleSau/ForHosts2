@@ -35,6 +35,9 @@ export default function ReservationCalendar({ reservations }: any) {
         }));
     }, []);
 
+    const handleSelectedEvent = (event: any) => {
+        console.log(event);
+    };
 
     return (
         <div>
@@ -45,6 +48,7 @@ export default function ReservationCalendar({ reservations }: any) {
                         <BigCalendar
                             // components={components}
                             selectable={true}
+                            onSelectEvent={handleSelectedEvent}
                             localizer={localizer}
                             events={events}
                             defaultView={Views.MONTH}

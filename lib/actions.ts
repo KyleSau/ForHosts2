@@ -432,7 +432,7 @@ export const editUser = async (
 export const getReservations = async (limit: number = 10) => {
   const session = await getSession();
 
-  if (!session?.user.id) {
+  if (!session || !session.user || !session.user.id) {
     return {
       error: "Not authenticated",
     };
@@ -440,8 +440,14 @@ export const getReservations = async (limit: number = 10) => {
 
   try {
     const reservations = await prisma.reservation.findMany({
+      take: limit,
       orderBy: {
         createdAt: "desc",
+      },
+      where: {
+        post: {
+          userId: session.user.id,
+        },
       },
       include: {
         post: true,
@@ -450,10 +456,11 @@ export const getReservations = async (limit: number = 10) => {
     return reservations;
   } catch (error: any) {
     return {
-      error: error.message,
+      error: "Failed to fetch reservations",
     };
   }
 };
+
 
 // this will be invoked by the stripe webhook
 // StripeMetaData
