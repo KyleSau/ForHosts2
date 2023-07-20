@@ -6,33 +6,33 @@ import MDX from "@/components/mdx";
 import { placeholderBlurhash, toDateString } from "@/lib/utils";
 import ReservationForm from "@/components/booking/reservation-form";
 
-// export async function generateMetadata({
-//   params,
-// }: {
-//   params: { domain: string; slug: string };
-// }) {
-//   const { domain, slug } = params;
-//   const data = await getPostData(domain, slug);
-//   if (!data) {
-//     return null;
-//   }
-//   const { id, title, description } = data;
+export async function generateMetadata({
+  params,
+}: {
+  params: { domain: string; slug: string };
+}) {
+  const { domain, slug } = params;
+  const data = await getPostData(domain, slug);
+  if (!data) {
+    return null;
+  }
+  const { id, title, description } = data;
 
-//   return {
-//     title,
-//     description,
-//     openGraph: {
-//       title,
-//       description,
-//     },
-//     twitter: {
-//       card: "summary_large_image",
-//       title,
-//       description,
-//       creator: "@vercel",
-//     },
-//   };
-// }
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      creator: "@vercel",
+    },
+  };
+}
 
 export default async function SitePostPage({
   params,
