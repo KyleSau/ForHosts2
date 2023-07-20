@@ -63,6 +63,7 @@ export function generateMetadata(
 }
 
 
+
 // randomizing the blogs below the main blog component
 function getRandomBlogs(n: number, currentBlogSlug: string) {
   const tempBlogs = blogs.filter((blog) => blog.slug !== currentBlogSlug);
