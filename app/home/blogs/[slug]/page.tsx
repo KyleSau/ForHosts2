@@ -13,6 +13,7 @@ interface BlogDetailProps {
   randomBlogs: Blog[];
 }
 
+
 type Props = {
   params: {
     slug: string;
