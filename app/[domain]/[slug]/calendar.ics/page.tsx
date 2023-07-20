@@ -15,11 +15,12 @@ export default async function CalendarICSPage({
         notFound();
     }
 
-    const events: any = await getReservationsByPostId(data.id);
+    const postId = data.id;
+
+    const events: any = await getReservationsByPostId(postId);
 
     return (
         <div>
-            {/* Post Id: {data.id} */}
             <InternetCalendarScheduler events={events} />
         </div>
     );
