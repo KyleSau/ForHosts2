@@ -432,9 +432,9 @@ export const editUser = async (
 export const getReservationsByPostId = async (postId: string) => {
   try {
     const reservations = await prisma.reservation.findMany({
-      where: {
-        id: postId,
-      },
+      // where: {
+      //   id: postId,
+      // },
     });
     return reservations;
   } catch (error: any) {
