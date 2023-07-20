@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     BEGIN: VCALENDAR
     VERSION: 2.0
     PRODID: -//Your Company//Your Application//EN
-        CALSCALE: GREGORIAN
+    CALSCALE: GREGORIAN
     BEGIN: VEVENT
     SUMMARY: clkalnvrt0002mi084cw8m8d0
     DTSTART: 20230703T193000.000ZZ
