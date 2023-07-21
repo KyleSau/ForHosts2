@@ -8,8 +8,7 @@ export async function GET(
 
   const events: any = await getReservationsByPostId(postId);
 
-  const eventComponents = events.map((event: any) => `
-BEGIN:VEVENT
+  const eventComponents = events.map((event: any) => `BEGIN:VEVENT
 SUMMARY:${event.postId || 'none'}
 DTSTART:${new Date(event.startDate).toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z')}
 DTEND:${new Date(event.endDate).toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z')}
