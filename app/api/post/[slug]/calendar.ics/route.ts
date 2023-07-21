@@ -30,8 +30,8 @@ END:VCALENDAR
   headers.set('Content-Type', 'text/calendar');
   headers.set('Content-Disposition', 'inline'); // Display content inline
 
-  return new Response(calendarContent, {
+  return new Response(calendarContent/*, {
     status: 200,
     headers,
-  });
+  }*/);
 }
