@@ -22,15 +22,14 @@ END:VEVENT`
 VERSION:2.0
 PRODID:-//ForHosts.com//Host Site//EN
 CALSCALE:GREGORIAN${eventComponents.join('')}
-END:VCALENDAR
-  `;
+END:VCALENDAR`;
 
   const headers = new Headers();
   headers.set('Content-Type', 'text/calendar');
   headers.set('Content-Disposition', 'inline'); // Display content inline
 
-  return new Response(calendarContent/*, {
+  return new Response(calendarContent, {
     status: 200,
     headers,
-  }*/);
+  });
 }
