@@ -26,7 +26,9 @@ export async function GET(
 
   const headers = new Headers();
   headers.set('Content-Type', 'text/calendar');
-  headers.set('Content-Disposition', 'attachment; filename=calendar.ics');
+  // this will make the file download
+  // headers.set('Content-Disposition', 'attachment; filename=calendar.ics');
+  headers.set('Content-Disposition', 'inline'); // Display content inline
 
   return new Response(calendarContent, {
     status: 200,
