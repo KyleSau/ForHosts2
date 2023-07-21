@@ -23,6 +23,9 @@ dependencies:
   '@next-auth/prisma-adapter':
     specifier: ^1.0.5
     version: 1.0.6(@prisma/client@4.15.0)(next-auth@4.22.1)
+  '@next/mdx':
+    specifier: ^13.4.10
+    version: 13.4.10
   '@prisma/client':
     specifier: ^4.15.0
     version: 4.15.0(prisma@4.15.0)
@@ -110,6 +113,9 @@ dependencies:
   decimal.js:
     specifier: ^10.4.3
     version: 10.4.3
+  file-saver:
+    specifier: ^2.0.5
+    version: 2.0.5
   focus-trap-react:
     specifier: ^10.1.4
     version: 10.1.4(prop-types@15.8.1)(react-dom@18.2.0)(react@18.2.0)
@@ -146,6 +152,9 @@ dependencies:
   openai-edge:
     specifier: ^1.1.0
     version: 1.1.0
+  postcss-import:
+    specifier: ^15.1.0
+    version: 15.1.0(postcss@8.4.24)
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -208,6 +217,9 @@ devDependencies:
   '@tailwindcss/typography':
     specifier: ^0.5.8
     version: 0.5.9(tailwindcss@3.3.2)
+  '@types/file-saver':
+    specifier: ^2.0.5
+    version: 2.0.5
   '@types/js-cookie':
     specifier: ^3.0.2
     version: 3.0.3
@@ -2239,6 +2251,20 @@ packages:
       glob: 7.1.7
     dev: true
 
+  /@next/mdx@13.4.10:
+    resolution: {integrity: sha512-0ZbUIr3yuFFfkaYth2kNFAT0fbyylJTMqZy5zTdb7YGqvYjKFD8n75L3UYAX0g5mibGp3iETJ0I7730sW13PKQ==}
+    peerDependencies:
+      '@mdx-js/loader': '>=0.15.0'
+      '@mdx-js/react': '>=0.15.0'
+    peerDependenciesMeta:
+      '@mdx-js/loader':
+        optional: true
+      '@mdx-js/react':
+        optional: true
+    dependencies:
+      source-map: 0.7.4
+    dev: false
+
   /@next/swc-darwin-arm64@13.4.9-canary.1:
     resolution: {integrity: sha512-SMd4EE/512oPh5Fe9/rDdz+7tjpmV+0zCsGYIU7JElyZ9lJWm2kIo+NZlYbWwpkRdVwsWVgZ/0LI91lrTWsiUQ==}
     engines: {node: '>= 10'}
@@ -2928,6 +2954,10 @@ packages:
   /@types/estree@1.0.1:
     resolution: {integrity: sha512-LG4opVs2ANWZ1TJoKc937iMmNstM/d0ae1vNbnBvBhqCSezgVUOzcLCqbI5elV8Vy6WKwKjaqR+zO9VKirBBCA==}
     dev: false
+
+  /@types/file-saver@2.0.5:
+    resolution: {integrity: sha512-zv9kNf3keYegP5oThGLaPk8E081DFDuwfqjtiTzm6PoxChdJ1raSuADf2YGCVIyrSynLrgc8JWv296s7Q7pQSQ==}
+    dev: true
 
   /@types/hast@2.3.4:
     resolution: {integrity: sha512-wLEm0QvaoawEDoTRwzTXp4b4jpwiJDvR5KMnFnVodm3scufTlBOWRD6N1OBf9TZMhjlNsSfcO5V+7AF4+Vy+9g==}
@@ -4794,6 +4824,10 @@ packages:
     dependencies:
       flat-cache: 3.0.4
     dev: true
+
+  /file-saver@2.0.5:
+    resolution: {integrity: sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA==}
+    dev: false
 
   /fill-range@7.0.1:
     resolution: {integrity: sha512-qOo9F+dMUmC2Lcb4BbVvnKJxTPjCm+RRpe4gDuGrzkL7mEVl/djYSu2OdQ2Pa302N4oqkSg9ir6jaLWJ2USVpQ==}
