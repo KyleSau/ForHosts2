@@ -15,7 +15,7 @@ DTSTART:${new Date(event.startDate).toISOString().replace(/[-:]/g, '').replace(/
 DTEND:${new Date(event.endDate).toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z')}
 DESCRIPTION:${event.status || 'none'}
 LOCATION:none
-END:VEVENT>`
+END:VEVENT`
   );
 
   const calendarContent = `
