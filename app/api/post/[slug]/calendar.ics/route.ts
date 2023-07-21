@@ -20,7 +20,7 @@ export async function GET(
     DTEND:${new Date(event.endDate).toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z')}
     DESCRIPTION:${event.status || 'none'}
     LOCATION:none
-    END:VEVENT>`).join('\n')}
+    END:VEVENT>`)}
     END:VCALENDAR
   `;
 
