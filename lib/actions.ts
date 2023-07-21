@@ -464,11 +464,11 @@ export const getReservations = async (limit: number = 10) => {
       orderBy: {
         createdAt: "desc",
       },
-      where: {
-        post: {
-          userId: session.user.id,
-        },
-      },
+      // where: {
+      //   post: {
+      //     userId: session.user.id,
+      //   },
+      // },
       include: {
         post: true,
       },

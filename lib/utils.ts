@@ -51,3 +51,10 @@ export const toDateString = (date: Date) => {
 export const random = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
+
+const chunkIntoSizeNSubarrays = (arr: Array<number>, subarrySize: number) => {
+  const n = subarrySize;
+  return Array.from({ length: Math.floor(arr.length/n) + arr.length%n }, (_, i) =>
+    arr.slice(i * n, i * n + n)
+  );
+}

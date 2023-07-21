@@ -4,17 +4,23 @@ import { CheckCircle, XCircle, Clock } from "lucide-react";
 import { Reservation } from "@/lib/types";
 import Pagination, { paginate } from "../pagination";
 
+const RESERVATION_STATUS = {
+  ALL: "all",
+  CONFIRMED: "CONFIRMED",
+  PENDING: "PENDING",
+  CANCELLED: "CANCELLED"
+}
 
 const getStatusIcon = (status: string) => {
   let icon = null;
   switch (status) {
-    case "CONFIRMED":
+    case RESERVATION_STATUS.CONFIRMED:
       icon = <CheckCircle color="#00ff40" />;
       break;
-    case "PENDING":
+    case RESERVATION_STATUS.PENDING:
       icon = <Clock color="#fffa3c" />;
       break;
-    case "CANCELLED":
+    case RESERVATION_STATUS.CANCELLED:
       icon = <XCircle color="#ff0000" />;
       break;
     default:
@@ -76,13 +82,13 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
         >
           {sortOrder === "asc" ? "Sort Ascending" : "Sort Descending"}
         </button>
+        <Pagination 
+          items={sortedReservations.length} 
+          pageSize={pageSize} 
+          currentPage={currentPage} 
+          onPageChange={onPageChange}
+        />
       </div>
-      <Pagination 
-        items={sortedReservations.length} 
-        pageSize={pageSize} 
-        currentPage={currentPage} 
-        onPageChange={onPageChange}
-      />
       <table className="min-w-full divide-y divide-gray-200 border-collapse lg:w-auto">
         <thead className="bg-gray-50">
           <tr>
@@ -109,7 +115,7 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
           {paginatedReservations.map((reservation, idx) => (
             <tr className="hover:bg-gray-500" key={idx}>
               <td className="px-2 sm:px-6 py-4 text-center border-r">
-                {idx + 1}
+                {idx+1}
               </td>
               <td className="px-2 sm:px-6 py-4 text-center border-r">
                 {reservation.post.title}
