@@ -230,17 +230,19 @@ export const getSiteFromPostId = async (postId: string) => {
   return post?.siteId;
 };
 
-export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
+/*export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
   const session = await getSession();
   if (!session?.user.id) {
     return {
       error: "Not authenticated",
     };
   }
+
   const response = await prisma.post.create({
     data: {
       siteId: site.id,
       userId: session.user.id,
+      calendarUrls: [`https://forhosts.com/api/post/${id}/calendar.ics`], // Set the initial URL in an array
     },
   });
 
@@ -250,7 +252,44 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
   site.customDomain && (await revalidateTag(`${site.customDomain}-posts`));
 
   return response;
+});*/
+export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
+  const session = await getSession();
+  if (!session?.user.id) {
+    return {
+      error: "Not authenticated",
+    };
+  }
+
+  const postData = {
+    siteId: site.id,
+    userId: session.user.id,
+    calendarUrls: [], // Initialize calendarUrls as an empty array for now
+  };
+
+  const response = await prisma.post.create({
+    data: postData,
+  });
+
+  const initialCalendarUrl = `https://forhosts.com/api/post/${response.id}/calendar.ics`;
+
+  // Now update the post with the initial calendarUrl
+  const updatedPost = await prisma.post.update({
+    where: { id: response.id },
+    data: {
+      calendarUrls: [initialCalendarUrl],
+    },
+  });
+
+  await revalidateTag(
+    `${site.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}-posts`,
+  );
+  site.customDomain && (await revalidateTag(`${site.customDomain}-posts`));
+
+  return updatedPost;
 });
+
+
 
 // creating a separate function for this because we're not using FormData
 export const updatePost = async (data: Post) => {
@@ -480,6 +519,27 @@ export const getReservations = async (limit: number = 10) => {
     };
   }
 };
+
+// get all the calendar urls from the Post
+export const getCalendarUrls = async (postId: string) => {
+  try {
+    const post = await prisma.post.findUnique({
+      where: {
+        id: postId,
+      },
+      select: {
+        calendarUrls: true,
+      },
+    });
+    return post?.calendarUrls || []; // Return an empty array if calendarUrls is not found
+  } catch (error: any) {
+    return {
+      error: "Failed to fetch calendar urls",
+    };
+  }
+};
+
+
 
 
 // this will be invoked by the stripe webhook

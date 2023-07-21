@@ -28,6 +28,7 @@ END:VCALENDAR`;
   headers.set('Content-Type', 'text/calendar');
   headers.set('Content-Disposition', 'inline'); // Display content inline
 
+  // NextResponse is a custom class that extends Response
   return new Response(calendarContent, {
     status: 200,
     headers,
