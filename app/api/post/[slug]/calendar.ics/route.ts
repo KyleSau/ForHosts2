@@ -12,8 +12,7 @@ export async function GET(
     BEGIN:VCALENDAR
     VERSION:2.0
     PRODID:-//ForHosts.com//Host Site//EN
-    CALSCALE:GREGORIAN
-    ${events.map((event: any) => `
+    CALSCALE:GREGORIAN ${events.map((event: any) => `
     BEGIN:VEVENT
     SUMMARY:${event.postId || 'none'}
     DTSTART:${new Date(event.startDate).toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z')}
