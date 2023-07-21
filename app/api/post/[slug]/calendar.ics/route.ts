@@ -30,8 +30,8 @@ export async function GET(
   // headers.set('Content-Disposition', 'attachment; filename=calendar.ics');
   headers.set('Content-Disposition', 'inline'); // Display content inline
 
-  return new Response(calendarContent, {
+  return new Response(calendarContent/*, {
     status: 200,
     headers,
-  });
+  }*/);
 }
