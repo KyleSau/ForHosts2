@@ -5,12 +5,7 @@ import { Providers } from "./providers";
 import { Metadata } from "next";
 import clsx from "clsx";
 
-export const metadata: Metadata = {
-  title: "ForHosts",
-  description:
-    "Create a dynamic website for your customers looking to book your properties!",
-  icons: ["logo.png"],
-};
+
 
 export default function RootLayout({
   children,

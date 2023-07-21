@@ -56,6 +56,7 @@
     "next-auth": "4.22.1",
     "next-mdx-remote": "^4.4.1",
     "openai-edge": "^1.1.0",
+    "postcss-import": "^15.1.0",
     "react": "^18.2.0",
     "react-big-calendar": "^1.8.1",
     "react-dom": "^18.2.0",
