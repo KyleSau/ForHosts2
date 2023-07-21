@@ -8,7 +8,8 @@ export async function GET(
 
   const events: any = await getReservationsByPostId(postId);
 
-  const eventComponents = events.map((event: any) => `BEGIN:VEVENT
+  const eventComponents = events.map((event: any) => `
+BEGIN:VEVENT
 SUMMARY:${event.postId || 'none'}
 DTSTART:${new Date(event.startDate).toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z')}
 DTEND:${new Date(event.endDate).toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z')}
@@ -17,8 +18,7 @@ LOCATION:none
 END:VEVENT`
   );
 
-  const calendarContent = `
-BEGIN:VCALENDAR
+  const calendarContent = `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//ForHosts.com//Host Site//EN
 CALSCALE:GREGORIAN${eventComponents.join('')}
