@@ -20,7 +20,7 @@ export default async function ReservationsPage() {
           Reservations
         </h1>
       </div>
-      <ReservationForm postId={"clk9o32k7000azq40mtshf32u"}/>
+      {/* <ReservationForm postId={"clk9o32k7000azq40mtshf32u"}/> */}
       <div className="mt-5">
         <div className="overflow-x-auto">
           <ReservationTable reservations={data} />

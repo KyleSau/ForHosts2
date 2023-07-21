@@ -17,19 +17,21 @@ const Pagination = (
     onPageChange: any
   }
 ) => {
+  const SELECTOR_COUNT_LIM = 10; // only allow n numbered buttons at most
+  const [startPgIdx, setStartPgIdx] = useState(0); //inclusive
+  const [endPgIdx, setEndPgIdx] = useState(SELECTOR_COUNT_LIM); //exclusive
+
   const pagesCount = Math.ceil(items/pageSize);
-  console.log("pagesCount: ", pagesCount);
 
   if(pagesCount === 1) {
     return null;
   }
-  const SELECTOR_COUNT_LIM = 5; // only allow n numbered buttons
-
-  const [startPgIdx, setStartPgIdx] = useState(0); //inclusive
-  const [endPgIdx, setEndPgIdx] = useState(SELECTOR_COUNT_LIM); //exclusive
 
   const pages = Array.from({ length: pagesCount }, (_, i) => (i + 1));
-  console.log("pagination.tsx: pages: ", pages);
+
+  if(pages.length === 0) {
+    return null;
+  }
 
   const inactivePageStyle = "flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 \
     hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white";
@@ -38,7 +40,7 @@ const Pagination = (
 
   function renderNumberButtons() {
     return pages.slice(startPgIdx, endPgIdx).map((page: number) => {
-      console.log("page: ", page, " currentPage: ", currentPage);
+      //console.log("page: ", page, " currentPage: ", currentPage);
       return (
         <li>
           <a onClick={() => onPageChange(page)} 
@@ -72,7 +74,7 @@ const Pagination = (
     }
   }
 
-  return (
+  return (<>
     <ul className="flex -space-x-px h-8 text-sm">
       <li>
         <a 
@@ -98,7 +100,7 @@ const Pagination = (
         </a>
       </li>
     </ul>
-  );
+  </>);
 };
 
 export default Pagination;
