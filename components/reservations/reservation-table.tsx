@@ -89,7 +89,7 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
             ))}
           </tr>
         </thead>
-        <tbody className="text-white divide-y divide-gray-200">
+        <tbody className="text-black divide-y divide-gray-200">
           {sortedReservations.map((reservation, idx) => (
             <tr className="hover:bg-gray-500" key={idx}>
               <td className="px-2 sm:px-6 py-4 text-center border-r">
