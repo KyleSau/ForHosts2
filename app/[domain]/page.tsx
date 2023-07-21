@@ -61,7 +61,7 @@ export default async function SiteHomePage({
                     </div>
                   )}
                 </div>
-                <p className="ml-3 inline-block whitespace-nowrap align-middle text-sm font-semibold dark:text-white md:text-base">
+                <p className="ml-3 inline-block whitespace-nowrap align-middle text-sm font-semibold text:black md:text-base">
                   {data.user?.name}
                 </p>
                 {/* dark:border-stone-400 */}

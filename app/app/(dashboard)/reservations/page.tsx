@@ -14,7 +14,7 @@ export default async function ReservationsPage() {
   return (
     <div className="mx-auto  sm:px-6 lg:px-8 py-5">
       <div className="text-center">
-        <h1 className="text-lg sm:text-xl lg:text-2xl font-bold dark:text-white">
+        <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text:black">
           Reservations
         </h1>
       </div>

@@ -41,7 +41,7 @@ export default function LoginButton() {
         ) : (
           <>
             <svg
-              className="h-4 w-4 text-black dark:text-white"
+              className="h-4 w-4 text-black text:black"
               aria-hidden="true"
               fill="currentColor"
               viewBox="0 0 24 24"

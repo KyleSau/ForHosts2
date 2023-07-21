@@ -13,7 +13,7 @@ export default function CTA() {
       <button
         onClick={() => setCloseCTA(!closeCTA)}
         className={`${closeCTA ? "rotate-180" : "rotate-0"
-          } absolute right-3 top-2 text-black transition-all duration-150 ease-in-out dark:text-white lg:hidden`}
+          } absolute right-3 top-2 text-black transition-all duration-150 ease-in-out lg:hidden`}
       >
         <svg
           viewBox="0 0 24 24"
@@ -40,7 +40,7 @@ export default function CTA() {
           This is a demo site showcasing how to build a multi-tenant application
           with{" "}
           <a
-            className="font-semibold text-black underline dark:text-white"
+            className="font-semibold text-black underline text:black"
             href="https://platformize.co"
             rel="noreferrer"
             target="_blank"
