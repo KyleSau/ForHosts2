@@ -14,13 +14,13 @@ export async function GET(
     PRODID:-//ForHosts.com//Host Site//EN
     CALSCALE:GREGORIAN
     ${events.map((event: any) => `
-      BEGIN:VEVENT
-      SUMMARY:${event.postId || 'none'}
-      DTSTART:${new Date(event.startDate).toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z')}
-      DTEND:${new Date(event.endDate).toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z')}
-      DESCRIPTION:${event.status || 'none'}
-      LOCATION:none
-      END:VEVENT>`).join('\n')}
+    BEGIN:VEVENT
+    SUMMARY:${event.postId || 'none'}
+    DTSTART:${new Date(event.startDate).toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z')}
+    DTEND:${new Date(event.endDate).toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z')}
+    DESCRIPTION:${event.status || 'none'}
+    LOCATION:none
+    END:VEVENT>`).join('\n')}
     END:VCALENDAR
   `;
 
