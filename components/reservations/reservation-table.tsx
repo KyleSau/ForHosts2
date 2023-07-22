@@ -60,7 +60,7 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
   });
 
   const paginatedReservations = paginate(sortedReservations, currentPage, tableRowLimit);
-  
+
   return (
     <div className="overflow-x-auto lg:overflow-visible w-full lg:w-auto">
       <div className="flex flex-auto mb-4">
@@ -86,7 +86,7 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
         </div>
         <div className="flex flex-auto justify-end">
           <label htmlFor="num-of-items-adjuster" className="mr-2 font-medium text-gray-600">Number of Items:</label>
-          <select id="num-of-items-adjuster" className="px-2 py-1 border rounded-md bg-white text-gray-800 w-24" 
+          <select id="num-of-items-adjuster" className="px-2 py-1 border rounded-md bg-white text-gray-800 w-24"
             onChange={(selection) => setTableRowLimit(parseInt(selection.target.value))}
           >
             <option defaultValue="10">10</option>
@@ -118,7 +118,7 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
             ))}
           </tr>
         </thead>
-        <tbody className="text-white divide-y divide-gray-200">
+        <tbody className="text-black divide-y divide-gray-200">
           {paginatedReservations.map((reservation, idx) => (
             <tr className="hover:bg-gray-500" key={idx}>
               <td className="px-2 sm:px-6 py-4 text-center border-r">
@@ -144,10 +144,10 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
         </tbody>
       </table>
 
-      <Pagination 
-        items={sortedReservations.length} 
-        pageSize={tableRowLimit} 
-        currentPage={currentPage} 
+      <Pagination
+        items={sortedReservations.length}
+        pageSize={tableRowLimit}
+        currentPage={currentPage}
         onPageChange={onPageChange}
       />
     </div>
