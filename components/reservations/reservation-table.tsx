@@ -89,7 +89,7 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
           <select id="num-of-items-adjuster" className="px-2 py-1 border rounded-md bg-white text-gray-800 w-24"
             onChange={(selection) => setTableRowLimit(parseInt(selection.target.value))}
           >
-            <option value="10" selected>10</option>
+            <option defaultValue="10">10</option>
             <option value="20">20</option>
             <option value="50">50</option>
             <option value="100">100</option>
