@@ -18,6 +18,7 @@ module.exports = {
       "lh3.googleusercontent.com",
       "www.facebook.com",
       "platform-lookaside.fbsbx.com",
+      "ccd1kw3boji7y6xm.public.blob.vercel-storage.com"
     ],
   },
   reactStrictMode: false,
