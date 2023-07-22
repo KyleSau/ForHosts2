@@ -28,6 +28,7 @@ model User {
   sessions      Session[]
   sites         Site[]
   posts         Post[]
+  Review        Review[]
 }
 
 model Account {
@@ -88,10 +89,43 @@ model Post {
   user          User?         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId        String?
   reservations  Reservation[]
-  calendarUrls  String[]
+  calendarUrl   String[] // ical links
+
+  // New fields to include additional features
+  checkInTime          String? // Check-in time for the rental property
+  checkOutTime         String? // Check-out time for the rental property
+  amenities            String[] // List of amenities available at the property
+  location             String? // Location of the rental property
+  instantBooking       Boolean? // Indicates if the property supports instant booking
+  rating               Float? // Average rating based on guest reviews
+  reviews              Review[] // List of guest reviews and ratings
+  currency             String? // Currency in which the price is listed
+  minimumStay          Int? // Minimum number of nights required for booking
+  cleaningFee          Int? // One-time cleaning fee for the property
+  securityDeposit      Int? // Refundable security deposit amount
+  availabilityCalendar String? // Availability calendar of the property
+  photoGallery         String[] // List of images showcasing the property
+  virtualTour          String? // URL to a virtual tour of the property
+  additionalServices   String[] // List of additional services offered at the property
+  cancellationPolicy   String? // Cancellation policy for bookings
 
   @@unique([slug, siteId])
   @@index([siteId])
+  @@index([userId])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  postId    String
+  rating    Float
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId    String?
+  Post      Post     @relation(fields: [postId], references: [id])
+
+  @@index([postId])
   @@index([userId])
 }
 
@@ -117,7 +151,7 @@ model Site {
 
 model Reservation {
   id         String   @id @default(cuid())
-  postId     String // technically postId as of current
+  postId     String
   startDate  DateTime
   endDate    DateTime
   totalPrice Int
