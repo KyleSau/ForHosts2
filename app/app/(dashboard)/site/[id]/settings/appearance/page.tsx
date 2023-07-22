@@ -38,6 +38,17 @@ export default async function SiteSettingsAppearance({
         handleSubmit={updateSite}
       />
       <Form
+        title="Amenities"
+        description="The font for the heading text your site."
+        helpText="Please select a font."
+        inputAttrs={{
+          name: "font",
+          type: "select",
+          defaultValue: data?.font!,
+        }}
+        handleSubmit={updateSite}
+      />
+      <Form
         title="Font"
         description="The font for the heading text your site."
         helpText="Please select a font."
