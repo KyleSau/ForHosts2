@@ -22,21 +22,19 @@ const Pagination = (
   const [endPgIdx, setEndPgIdx] = useState(SELECTOR_COUNT_LIM); //exclusive
 
   const pagesCount = Math.ceil(items/pageSize);
-
-  if(pagesCount === 1) {
-    return null;
-  }
-
-  const pages = Array.from({ length: pagesCount }, (_, i) => (i + 1));
-
-  if(pages.length === 0) {
-    return null;
-  }
+  const pages = Array.from({ length: pagesCount == 0 ? 1: pagesCount }, (_, i) => (i + 1));
 
   const inactivePageStyle = "flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 \
-    hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white";
-  const activePageStyle = "z-10 flex items-center justify-center px-3 h-8 leading-tight text-blue-600 border border-blue-300 bg-blue-50 \
+    hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-400 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white";
+  
+  const activePageStyle = "z-10 flex items-center justify-center px-3 h-8 leading-tight text-gray-500 border border-blue-300 bg-blue-500 \
     hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white";
+  
+  const leftArrowStyle = "flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg \
+    hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-100 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white";
+  
+  const rightArrowStyle = "flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg \
+    hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-100 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
 
   function renderNumberButtons() {
     return pages.slice(startPgIdx, endPgIdx).map((page: number, idx: number) => {
@@ -44,7 +42,7 @@ const Pagination = (
       return (
         <li key={idx+1}>
           <a onClick={() => onPageChange(page)} 
-            {...(page == currentPage) && {"aria-current": "page", "color": "red"}} 
+            {...(page == currentPage) && {"aria-current": "page"}} 
             className={ currentPage? activePageStyle: inactivePageStyle }
           >
             {page}
@@ -74,15 +72,15 @@ const Pagination = (
     }
   }
 
-  return (<>
-    <ul className="flex -space-x-px h-8 text-sm">
+  return (
+    <ul className="flex -space-x-px h-8 text-sm mt-6 justify-center">
       <li key={0}>
         <a 
           onClick={() => updateNumberedRowButtons(currentPage, false)} 
-          className="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+          className={leftArrowStyle}>
           <span className="sr-only">Previous</span>
           <svg className="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 1 1 5l4 4"/>
           </svg>
         </a>
       </li>
@@ -92,15 +90,15 @@ const Pagination = (
       <li key={SELECTOR_COUNT_LIM}>
         <a 
           onClick={() => updateNumberedRowButtons(currentPage, true)}
-          className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+          className={rightArrowStyle}>
           <span className="sr-only">Next</span>
           <svg className="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 9 4-4-4-4"/>
           </svg>
         </a>
       </li>
     </ul>
-  </>);
+  );
 };
 
 export default Pagination;

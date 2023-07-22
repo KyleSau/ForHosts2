@@ -60,54 +60,43 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
   });
 
   const paginatedReservations = paginate(sortedReservations, currentPage, tableRowLimit);
-
+  
   return (
     <div className="overflow-x-auto lg:overflow-visible w-full lg:w-auto">
-      <div className="mb-4">
-        <label htmlFor="filterSelect" className="mr-2 font-medium text-gray-600">Filter:</label>
-        <select
-          id="filterSelect"
-          className="px-2 py-1 border rounded-md bg-white text-gray-800"
-          value={filterType}
-          onChange={(e) => setFilterType(e.target.value as "all" | "CONFIRMED" | "PENDING" | "CANCELLED")}
-        >
-          <option value="all">All</option>
-          <option value="CONFIRMED">Confirmed</option>
-          <option value="PENDING">Pending</option>
-          <option value="CANCELLED">Cancelled</option>
-        </select>
-        <button
-          className="ml-4 px-2 py-1 border rounded-md bg-white text-gray-800"
-          onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
-        >
-          {sortOrder === "asc" ? "Sort Ascending" : "Sort Descending"}
-        </button>
-        <Pagination 
-          items={sortedReservations.length} 
-          pageSize={tableRowLimit} 
-          currentPage={currentPage} 
-          onPageChange={onPageChange}
-        />
-        <div className="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1">
-            <button 
-            data-action="decrement" 
-            className=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none" 
-            onClick={() => setTableRowLimit(tableRowLimit > 1? tableRowLimit-1: tableRowLimit)}>
-              <span className="m-auto text-2xl font-thin">−</span>
-            </button>
-            <input type="number" 
-              className="outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700 outline-none" 
-              name="table-row-limit" 
-              defaultValue={tableRowLimit}>  
-            </input>
-            <button 
-            data-action="increment" 
-            className="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer" 
-            onClick={() => setTableRowLimit(tableRowLimit < 50? tableRowLimit+1: tableRowLimit)}>
-              <span className="m-auto text-2xl font-thin">+</span>
-            </button>
+      <div className="flex flex-auto mb-4">
+        <div className="justify-start">
+          <label htmlFor="filterSelect" className="mr-2 font-medium text-gray-600">Filter:</label>
+          <select
+            id="filterSelect"
+            className="px-2 py-1 border rounded-md bg-white text-gray-800"
+            value={filterType}
+            onChange={(e) => setFilterType(e.target.value as "all" | "CONFIRMED" | "PENDING" | "CANCELLED")}
+          >
+            <option value="all">All</option>
+            <option value="CONFIRMED">Confirmed</option>
+            <option value="PENDING">Pending</option>
+            <option value="CANCELLED">Cancelled</option>
+          </select>
+          <button
+            className="ml-4 px-2 py-1 border rounded-md bg-white text-gray-800"
+            onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
+          >
+            {sortOrder === "asc" ? "Sort Ascending" : "Sort Descending"}
+          </button>
+        </div>
+        <div className="flex flex-auto justify-end">
+          <label htmlFor="num-of-items-adjuster" className="mr-2 font-medium text-gray-600">Number of Items:</label>
+          <select id="num-of-items-adjuster" className="px-2 py-1 border rounded-md bg-white text-gray-800 w-24" 
+            onChange={(selection) => setTableRowLimit(parseInt(selection.target.value))}
+          >
+            <option value="10" selected>10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
         </div>
       </div>
+
       <table className="min-w-full divide-y divide-gray-200 border-collapse lg:w-auto">
         <thead className="bg-gray-50">
           <tr>
@@ -154,6 +143,13 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
           ))}
         </tbody>
       </table>
+
+      <Pagination 
+        items={sortedReservations.length} 
+        pageSize={tableRowLimit} 
+        currentPage={currentPage} 
+        onPageChange={onPageChange}
+      />
     </div>
   );
 };
