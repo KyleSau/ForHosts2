@@ -265,7 +265,7 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
       },
     },
   });
-  
+
 
   await revalidateTag(
     `${site.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}-posts`,
@@ -323,6 +323,7 @@ export const updatePost = async (data: Post) => {
         additionalServices: data.additionalServices,
         availabilityWindow: data.availabilityWindow,
         calendarUrls: data.calendarUrls,
+        propertyType: 'idk', // change this to data.propertyTpe
       },
     });
 
