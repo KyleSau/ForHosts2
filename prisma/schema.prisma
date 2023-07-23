@@ -74,8 +74,8 @@ model VerificationToken {
 
 model Post {
   id            String        @id @default(cuid())
-  title         String?       @db.Text
-  price         String?       @db.Text // FLOAT
+  title         String       @db.Text
+  price         Int   
   description   String?       @db.Text
   content       String?       @db.Text
   slug          String        @default(cuid())
@@ -93,17 +93,17 @@ model Post {
 
   // New fields to include additional features
   maxGuests            Int?
-  checkInTime          String? // Check-in time for the rental property
-  checkOutTime         String? // Check-out time for the rental property
+  checkInTime          String // Check-in time for the rental property
+  checkOutTime         String // Check-out time for the rental property
   amenities            String[] // List of amenities available at the property
-  location             String? // Location of the rental property
+  location             String // Location of the rental property
   instantBooking       Boolean? // Indicates if the property supports instant booking
   rating               Float? // Average rating based on guest reviews
   reviews              Review[] // List of guest reviews and ratings
-  currency             String? // Currency in which the price is listed
-  minimumStay          Int? // Minimum number of nights required for booking
-  cleaningFee          Int? // One-time cleaning fee for the property
-  securityDeposit      Int? // Refundable security deposit amount
+  currency             String // Currency in which the price is listed
+  minimumStay          Int // Minimum number of nights required for booking
+  cleaningFee          Int // One-time cleaning fee for the property
+  securityDeposit      Int // Refundable security deposit amount
   availabilityCalendar String? // Availability calendar of the property
   photoGallery         String[] // List of images showcasing the property
   additionalServices   String[] // List of additional services offered at the property
