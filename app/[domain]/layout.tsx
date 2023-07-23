@@ -106,7 +106,8 @@ export default async function SiteLayout({
 
   return (
     <div className={fontMapper[data.font]}>
-      <div className="ease left-0 right-0 top-0 z-30 flex h-16 bg-white transition-all duration-150 ">
+      {/* Top bar displaying the site name and logo, Replace with Navbar? */}
+      {/* <div className="ease left-0 right-0 top-0 z-30 flex h-16 bg-white transition-all duration-150 ">
         <div className="mx-auto flex h-full max-w-screen-xl items-center justify-center space-x-5 px-10 sm:px-20">
           <Link href="/" className="flex items-center justify-center">
             <div className="inline-block h-8 w-8 overflow-hidden rounded-full align-middle">
@@ -122,9 +123,10 @@ export default async function SiteLayout({
             </span>
           </Link>
         </div>
-      </div>
+      </div> */}
 
-      <div className="mt-20">{children}</div>
+      {/* Main content */}
+      <div className="mt-5">{children}</div>
 
       {params.domain == `demo.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}` ||
         params.domain == `platformize.co` ? (
