@@ -3,13 +3,7 @@ import React, { useState } from "react";
 import { CheckCircle, XCircle, Clock } from "lucide-react";
 import { Reservation } from "@/lib/types";
 import Pagination, { paginate } from "../pagination";
-
-const RESERVATION_STATUS = {
-  ALL: "all",
-  CONFIRMED: "CONFIRMED",
-  PENDING: "PENDING",
-  CANCELLED: "CANCELLED"
-}
+import { RESERVATION_STATUS } from "@/lib/constants";
 
 const getStatusIcon = (status: string) => {
   let icon = null;
