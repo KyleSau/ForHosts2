@@ -75,7 +75,7 @@ model VerificationToken {
 model Post {
   id            String        @id @default(cuid())
   title         String        @db.Text
-  price         Int
+  price         String
   description   String?       @db.Text
   content       String?       @db.Text
   slug          String        @default(cuid())
@@ -92,7 +92,7 @@ model Post {
   calendarUrls  String[] // ical links
 
   // New fields to include additional features
-  propertyType         String //
+  propertyType         String // 
   maxGuests            Int?
   checkInTime          String // Check-in time for the rental property
   checkOutTime         String // Check-out time for the rental property
