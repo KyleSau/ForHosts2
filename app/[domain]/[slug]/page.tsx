@@ -5,8 +5,9 @@ import BlurImage from "@/components/blur-image";
 import MDX from "@/components/mdx";
 import { placeholderBlurhash, toDateString } from "@/lib/utils";
 import ReservationForm from "@/components/booking/reservation-form";
-import { Tooltip, IconButton } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ShowMore from 'react-show-more-button';
+import React, { useState } from "react";
 import {
   faWifi,
   faUtensils,
@@ -61,7 +62,7 @@ export async function generateMetadata({
     },
   };
 }
-
+// TODO: move amenity details to a separate file
 const amenitiesList: any = [
   "Wifi",
   "Kitchen Facilities",
@@ -205,10 +206,7 @@ export default async function SitePostPage({
   const data = await getPostData(domain, slug);
 
   const amenities = [
-    'Towels',
-    'Wifi',
-    'Bathroom',
-    'Breakfast'
+    data?.amenities
   ];
 
   if (!data) {
@@ -217,8 +215,29 @@ export default async function SitePostPage({
 
   return (
     <>
-      <div className="flex flex-col items-center justify-center">
-        <div className="m-auto w-full text-center md:w-7/12">
+      <div className="flex flex-col items-center">
+        <div className="grid grid-cols-3 gap-5 md:text-2xl">
+          <div>
+            <h1 className="font-bold text-stone-800 dark:text-white md:text-1xl">
+              {data.title}
+            </h1>
+          </div>
+          <div>
+            <h1 className="text-stone-600 dark:text-white md:text-1xl">
+              {data.location}
+            </h1>
+          </div>
+          <div>
+            <h1 className="text-stone-800 dark:text-white md:text-1xl">
+              ${data.price} Per Night
+            </h1>
+          </div>
+        </div>
+
+
+        {/* Make this Photo Gallery? */}
+        {/* md:w-7/12 */}
+        <div className="m-auto w-full text-center">
           <div className="relative m-auto mb-10 h-80 w-full max-w-screen-lg overflow-hidden md:mb-20 md:h-150 md:w-5/6 md:rounded-2xl lg:w-2/3">
             <BlurImage
               alt={data.title ?? "Property Image"}
@@ -231,33 +250,34 @@ export default async function SitePostPage({
             />
           </div>
           {/* Prop for postId */}
-          <h1 className="mb-10 font-title text-3xl font-bold text-stone-800 dark:text-white md:text-6xl">
-            {data.title}
-          </h1>
           <p className="text-md m-auto w-10/12 text-stone-600 dark:text-stone-400 md:text-lg">
             {data.description}
           </p>
-          <div className="flex flex-row justify-center mt-10">
-            <ReservationForm postId={data.id} />
-          </div>
           <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700 w-100" />
-          <h2 className={'text-lg mt-10'}>Amenities</h2>
-          <div className="flex flex-row justify-left">
-            <ul>
-              {amenitiesList.map((amenity: any) => (
-                <li key={amenity}>
-                  <div className={`flex items-center space-x-3 rounded-lg px-2 py-1.5 dark:text-white`}>
-                    {<FontAwesomeIcon icon={amenitiesMap[amenity]?.icon} />}
-                    <span className="text-sm font-medium m-5">{amenity} &nbsp; </span>{amenitiesMap[amenity]?.description}
-                  </div>
-                </li>
-              ))}
-            </ul>
+          <div className="grid grid-cols-2 gap-1 w-full">
+            {/* <ShowMore maxHeight={10}> */}
+            <div className="w-full">
+              <h2 className={"text-lg"}>Amenities</h2>
+              <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700 w-100" />
+              <ul className="grid grid-cols-5 gap-1 w-full">
+                {amenitiesList.map((amenity: any) => (
+                  <li className="text-sm grid items-center m-5 p-5 flex items-center space-x-3 rounded-lg px-2 py-1.5 dark:text-white grid w-full" key={amenity}>
+                    <div className={`justify-center`}>
+                      {<FontAwesomeIcon icon={amenitiesMap[amenity]?.icon} />} <br />
+                      <span className="text-sm font-medium m-5">{amenity} <br /> </span>{amenitiesMap[amenity]?.description}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {/* </ShowMore> */}
+            <div className="flex-row">
+              <ReservationForm postId={data.id} />
+            </div>
           </div>
         </div>
-      </div >
+      </div>
       <MDX source={data.mdxSource} />
-
       {
         data.adjacentPosts.length > 0 && (
           <div className="relative mb-20 mt-10 sm:mt-20">
