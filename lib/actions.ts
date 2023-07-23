@@ -475,8 +475,8 @@ export const getReservationsByPostId = async (postId: string) => {
           id: postId,
         },
         OR: [
-          { status: 'PENDING' },
-          { status: 'CONFIRMED' },
+          { paymentStatus: 'PENDING' },
+          { paymentStatus: 'CONFIRMED' },
         ],
       },
       include: {
@@ -562,7 +562,7 @@ export const createReservation = async (formData: FormData) => {
         startDate,
         endDate,
         totalPrice: 100,
-        status: "CONFIRMED",
+        paymentStatus: 'PENDING',
       }
     });
     return response;
