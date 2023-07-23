@@ -293,6 +293,14 @@ export default async function SitePostPage({
           <p className="text-md m-auto w-10/12 text-stone-600 dark:text-stone-400 md:text-lg">
             {data.description}
           </p>
+          <h2>Amenities</h2>
+          <ul>
+            {amenities.map((amenity) => (
+              <li key={amenity}>
+                <strong>{amenity}</strong>: {amenitiesMap[amenity]?.description}
+              </li>
+            ))}
+          </ul>
         </div>
         <a
           // if you are using Github OAuth, you can get rid of the Twitter option
