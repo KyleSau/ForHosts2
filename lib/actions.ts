@@ -242,16 +242,17 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
     data: {
       title: '',
       price: 0,
-      checkInTime: '',
-      checkOutTime: '',
-      location: '',
-      currency: '',
+      checkInTime: '0:00',
+      checkOutTime: '0:00',
+      location: 'location',
+      currency: 'USD',
       minimumStay: 0,
       cleaningFee: 0,
       securityDeposit: 0,
       amenities: [],  // empty array for amenities
       photoGallery: [],  // empty array for photoGallery
       additionalServices: [],  // empty array for additionalServices
+      calendarUrls: [],
       site: {
         connect: {
           id: site.id,
@@ -321,6 +322,7 @@ export const updatePost = async (data: Post) => {
         photoGallery: data.photoGallery,
         additionalServices: data.additionalServices,
         availabilityWindow: data.availabilityWindow,
+        calendarUrls: data.calendarUrls,
       },
     });
 
