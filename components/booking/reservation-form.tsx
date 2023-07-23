@@ -13,7 +13,7 @@ export default function ReservationForm({ postId }: { postId: string }) {
 
     // This will be invoked by payment intent webhook.
     data.append("postId", postId);
-    await createReservation(data).then((res: any) => {
+    await createReservation(data, new Date()).then((res: any) => {
       if (res.error) {
         console.log("Getting res.error: ", res.error);
         toast.error(res.error);
@@ -33,11 +33,12 @@ export default function ReservationForm({ postId }: { postId: string }) {
     <form
       action={(data: FormData) => handleFinalizeReservation(data)}
       id="reservationForm1"
-      className="w-full rounded-md bg-white text-black dark:text-black md:max-w-md md:border md:border-stone-200 md:shadow dark:md:border-stone-700 flex flex-col items-center m-auto p-4"
+      className="w-full rounded-md bg-white text-black dark:text-black md:max-w-md md:border md:border-stone-200 md:shadow dark:md:border-stone-700 flex flex-col items-center"
     >
+      <label>Internal ListingId: {postId}</label>
       <br />
       {/* Date Ranger Picker */}
-      <label htmlFor="start-date" className="bg-white text-black dark:bg-white dark:text-black">Starting Date </label>
+      <label htmlFor="start-date" className="bg-white text-black dark:bg-white dark:text-black">startDate: </label>
       <input
         type="datetime-local"
         id="start-date"
@@ -47,7 +48,7 @@ export default function ReservationForm({ postId }: { postId: string }) {
         max="2025-06-14T00:00"
       />
       <br />
-      <label htmlFor="end-date" className="bg-white text-black dark:bg-white dark:text-black">Ending Date </label>
+      <label htmlFor="end-date" className="bg-white text-black dark:bg-white dark:text-black">endDate: </label>
       <input
         type="datetime-local"
         id="end-date"
