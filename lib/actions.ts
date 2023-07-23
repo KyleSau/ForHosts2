@@ -252,6 +252,7 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
       amenities: [],  // empty array for amenities
       photoGallery: [],  // empty array for photoGallery
       additionalServices: [],  // empty array for additionalServices
+      calendarUrls: [],
       site: {
         connect: {
           id: site.id,
@@ -321,6 +322,7 @@ export const updatePost = async (data: Post) => {
         photoGallery: data.photoGallery,
         additionalServices: data.additionalServices,
         availabilityWindow: data.availabilityWindow,
+        calendarUrls: data.calendarUrls,
       },
     });
 
