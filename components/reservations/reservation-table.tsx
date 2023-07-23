@@ -119,7 +119,7 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
           </button>
         </div>
         <div className="flex flex-auto justify-end">
-          <label htmlFor="num-of-items-adjuster" className="mr-2 font-medium text-gray-600">Number of Items:</label>
+          <label htmlFor="num-of-items-adjuster" className="mr-2 mt-1 font-medium text-gray-600">Number of Items:</label>
           <select id="num-of-items-adjuster" className="px-2 py-1 border rounded-md bg-white text-gray-800 w-[80px]"
             onChange={(selection) => setTableRowLimit(parseInt(selection.target.value))}
           >
