@@ -197,30 +197,35 @@ const amenitiesMap: { [key: string]: { icon: any; description: string } } = amen
   {}
 );
 
-// function AmenitiesModal({ isOpen: any, onClose: any, amenities: any }) {
-//   return (
-//     // Add your modal implementation here, you can use a library like react-modal
-//     // Remember to style it as per your requirements
-//     // The modal should display the complete list of amenities with their icons
-//     // and a close button to handle the onClose event
-//     <Modal isOpen={isOpen} onRequestClose={onClose}>
-//       <div>
-//         <h2>All Amenities</h2>
-//         <ul>
-//           {amenities.map((amenity, index) => (
-//             <li key={index}>
-//               <FontAwesomeIcon icon={amenitiesMap[amenity]?.icon} />
-//               <span>{amenity}</span>
-//               <p>{amenitiesMap[amenity]?.description}</p>
-//             </li>
-//           ))}
-//         </ul>
-//         <button onClick={onClose}>Close</button>
-//       </div>
-//     </Modal>
-//   );
-// }
+interface AmenitiesModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  amenities: string[]; // Assuming amenities is an array of strings
+}
 
+function AmenitiesModal({ isOpen, onClose, amenities }: AmenitiesModalProps) {
+  return (
+    // Add your modal implementation here, you can use a library like react-modal
+    // Remember to style it as per your requirements
+    // The modal should display the complete list of amenities with their icons
+    // and a close button to handle the onClose event
+    <Modal showModal={isOpen} setShowModal={onClose}>
+      <div>
+        <h2>All Amenities</h2>
+        <ul>
+          {amenities.map((amenity, index) => (
+            <li key={index}>
+              <FontAwesomeIcon icon={amenitiesMap[amenity]?.icon} />
+              <span>{amenity}</span>
+              <p>{amenitiesMap[amenity]?.description}</p>
+            </li>
+          ))}
+        </ul>
+        <button onClick={onClose}>Close</button>
+      </div>
+    </Modal>
+  );
+}
 
 export default async function SitePostPage({
   params,
@@ -228,11 +233,8 @@ export default async function SitePostPage({
   params: { domain: string; slug: string };
 }) {
   const { domain, slug } = params;
+  const [isModalOpen, setModalOpen] = useState(false);
   const data = await getPostData(domain, slug);
-
-  const amenities = [
-    data?.amenities
-  ];
 
   if (!data) {
     notFound();
@@ -249,7 +251,7 @@ export default async function SitePostPage({
           </div>
           <div>
             <h1 className="text-stone-600 dark:text-white md:text-1xl">
-              {data.location}
+              {/* {data.location} */}
             </h1>
           </div>
           <div>
@@ -299,13 +301,17 @@ export default async function SitePostPage({
             </ul>
             {/* Show the "Show all amenities" button only if there are more than 10 amenities */}
             {amenitiesList.length > 10 && (
-              <button className="bg-gray-400 rounded-md p-2 hover:bg-gray-200">
+              <button onClick={() => setModalOpen(true)} className="bg-gray-400 rounded-md p-2 hover:bg-gray-200">
                 Show all ({amenitiesList.length}) amenities
               </button>
             )}
           </div>
 
-
+          <AmenitiesModal
+            isOpen={isModalOpen}
+            onClose={() => setModalOpen(false)}
+            amenities={amenitiesList}
+          />
 
           <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700 w-100" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-1 w-full">
