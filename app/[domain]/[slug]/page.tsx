@@ -330,48 +330,47 @@ export default async function SitePostPage({
             <ul>
               {amenities.map((amenity) => (
                 <li key={amenity}>
-                  <div className={`flex items-center space-x-3 ${"bg-stone-200 text-black dark:bg-stone-700" : ""
-                    } rounded-lg px-2 py-1.5 transition-all duration-150 ease-in-out hover:bg-stone-200 active:bg-stone-300 dark:text-white dark:hover:bg-stone-700 dark:active:bg-stone-800`}>
-                  <strong>{amenitiesMap[amenity].icon}{amenity}</strong>: {amenitiesMap[amenity]?.description}
-                  {icon}
-                  <span className="text-sm font-medium">{name}</span>
-                </div>
+                  <div className={`flex items-center space-x-3 rounded-lg px-2 py-1.5 transition-all duration-150 ease-in-out hover:bg-stone-200 active:bg-stone-300 dark:text-white dark:hover:bg-stone-700 dark:active:bg-stone-800`}>
+                    {/* <strong>{amenitiesMap[amenity].icon}{amenity}</strong>: {amenitiesMap[amenity]?.description} */}
+                    {amenitiesMap[amenity].icon}
+                    <span className="text-sm font-medium">{amenity} {amenitiesMap[amenity]?.description}</span>
+                  </div>
                 </li>
               ))}
-          </ul>
-        </div>
-      </div>
-      <a
-        // if you are using Github OAuth, you can get rid of the Twitter option
-        href={
-          data.site?.user?.username
-            ? `https://twitter.com/${data.site.user.username}`
-            : `https://github.com/${data.site?.user?.gh_username}`
-        }
-        rel="noreferrer"
-        target="_blank"
-      >
-        <div className="my-8">
-          <div className="relative inline-block h-8 w-8 overflow-hidden rounded-full align-middle md:h-12 md:w-12">
-            {data.site?.user?.image ? (
-              <BlurImage
-                alt={data.site?.user?.name ?? "User Avatar"}
-                height={80}
-                src={data.site.user.image}
-                width={80}
-              />
-            ) : (
-              <div className="absolute flex h-full w-full select-none items-center justify-center bg-stone-100 text-4xl text-stone-500">
-                ?
-              </div>
-            )}
-          </div>
-          <div className="text-md ml-3 inline-block align-middle dark:text-white md:text-lg">
-            by <span className="font-semibold">{data.site?.user?.name}</span>
+            </ul>
           </div>
         </div>
-      </a>
-    </div >
+        <a
+          // if you are using Github OAuth, you can get rid of the Twitter option
+          href={
+            data.site?.user?.username
+              ? `https://twitter.com/${data.site.user.username}`
+              : `https://github.com/${data.site?.user?.gh_username}`
+          }
+          rel="noreferrer"
+          target="_blank"
+        >
+          <div className="my-8">
+            <div className="relative inline-block h-8 w-8 overflow-hidden rounded-full align-middle md:h-12 md:w-12">
+              {data.site?.user?.image ? (
+                <BlurImage
+                  alt={data.site?.user?.name ?? "User Avatar"}
+                  height={80}
+                  src={data.site.user.image}
+                  width={80}
+                />
+              ) : (
+                <div className="absolute flex h-full w-full select-none items-center justify-center bg-stone-100 text-4xl text-stone-500">
+                  ?
+                </div>
+              )}
+            </div>
+            <div className="text-md ml-3 inline-block align-middle dark:text-white md:text-lg">
+              by <span className="font-semibold">{data.site?.user?.name}</span>
+            </div>
+          </div>
+        </a>
+      </div >
       <div className="relative m-auto mb-10 h-80 w-full max-w-screen-lg overflow-hidden md:mb-20 md:h-150 md:w-5/6 md:rounded-2xl lg:w-2/3">
         <BlurImage
           alt={data.title ?? "Property Image"}
@@ -386,32 +385,32 @@ export default async function SitePostPage({
 
       <MDX source={data.mdxSource} />
 
-  {
-    data.adjacentPosts.length > 0 && (
-      <div className="relative mb-20 mt-10 sm:mt-20">
-        <div
-          className="absolute inset-0 flex items-center"
-          aria-hidden="true"
-        >
-          <div className="w-full border-t border-stone-300 dark:border-stone-700" />
-        </div>
-        <div className="relative flex justify-center">
-          <span className="bg-white px-2 text-sm text-stone-500  dark:text-stone-400">
-            Other Rentals
-          </span>
-        </div>
-      </div>
-    )
-  }
-  {
-    data.adjacentPosts && (
-      <div className="mx-5 mb-20 grid max-w-screen-xl grid-cols-1 gap-x-4 gap-y-8 md:grid-cols-2 xl:mx-auto xl:grid-cols-3">
-        {data.adjacentPosts.map((data, index) => (
-          <BlogCard key={index} data={data} />
-        ))}
-      </div>
-    )
-  }
+      {
+        data.adjacentPosts.length > 0 && (
+          <div className="relative mb-20 mt-10 sm:mt-20">
+            <div
+              className="absolute inset-0 flex items-center"
+              aria-hidden="true"
+            >
+              <div className="w-full border-t border-stone-300 dark:border-stone-700" />
+            </div>
+            <div className="relative flex justify-center">
+              <span className="bg-white px-2 text-sm text-stone-500  dark:text-stone-400">
+                Other Rentals
+              </span>
+            </div>
+          </div>
+        )
+      }
+      {
+        data.adjacentPosts && (
+          <div className="mx-5 mb-20 grid max-w-screen-xl grid-cols-1 gap-x-4 gap-y-8 md:grid-cols-2 xl:mx-auto xl:grid-cols-3">
+            {data.adjacentPosts.map((data, index) => (
+              <BlogCard key={index} data={data} />
+            ))}
+          </div>
+        )
+      }
     </>
   );
 }
