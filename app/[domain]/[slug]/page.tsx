@@ -5,6 +5,26 @@ import BlurImage from "@/components/blur-image";
 import MDX from "@/components/mdx";
 import { placeholderBlurhash, toDateString } from "@/lib/utils";
 import ReservationForm from "@/components/booking/reservation-form";
+import {
+  ArrowLeft,
+  BarChart3,
+  Edit3,
+  Globe,
+  Layout,
+  LayoutDashboard,
+  Megaphone,
+  Menu,
+  Newspaper,
+  Settings,
+  CalendarCheck2,
+  Home,
+  CircleDollarSign,
+  FileQuestion,
+  MessagesSquare,
+  BookOpen,
+  CalendarDays,
+} from "lucide-react";
+
 
 export async function generateMetadata({
   params,
@@ -241,9 +261,21 @@ const amenitiesList: any = [
 ];
 
 const amenityDetails: any = {
-  "Towels": { icon: "icon-towels", description: "High-quality towels provided." },
-  "Bed sheets": { icon: "icon-bed-sheets", description: "Clean and comfortable bed sheets provided." },
-  "Soap": { icon: "icon-soap", description: "Soap available in the bathroom." },
+  "Wifi": {
+    icon: <ArrowLeft width={18} />,
+    description: "Wifi available throughout the listing."
+  },
+  "Towels": {
+    icon: <ArrowLeft width={18} />,
+    description: "High-quality towels provided."
+  },
+  "Bed sheets": {
+    icon: <ArrowLeft width={18} />,
+    description: "Clean and comfortable bed sheets provided."
+  },
+  "Soap": {
+    icon: "icon-soap", description: "Soap available in the bathroom."
+  },
   "Toilet paper": { icon: "icon-toilet-paper", description: "Toilet paper provided." },
   "Pillows": { icon: "icon-pillows", description: "Soft and fluffy pillows provided." },
   "Air conditioning": { icon: "icon-air-conditioning", description: "Air conditioning available." },
@@ -294,13 +326,19 @@ export default async function SitePostPage({
             {data.description}
           </p>
           <h2>Amenities</h2>
-          <ul>
-            {amenities.map((amenity) => (
-              <li key={amenity}>
-                <strong>{amenity}</strong>: {amenitiesMap[amenity]?.description}
-              </li>
-            ))}
-          </ul>
+          <div className="flex flex-row justify-left">
+            <ul>
+              {amenities.map((amenity) => (
+                <li key={amenity}>
+                  <div className={`flex items-center space-x-3 rounded-lg px-2 py-1.5 transition-all duration-150 ease-in-out hover:bg-stone-200 active:bg-stone-300 dark:text-white dark:hover:bg-stone-700 dark:active:bg-stone-800`}>
+                    {/* <strong>{amenitiesMap[amenity].icon}{amenity}</strong>: {amenitiesMap[amenity]?.description} */}
+                    {amenitiesMap[amenity].icon}
+                    <span className="text-sm font-medium">{amenity} {amenitiesMap[amenity]?.description}</span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
         <a
           // if you are using Github OAuth, you can get rid of the Twitter option
@@ -332,7 +370,7 @@ export default async function SitePostPage({
             </div>
           </div>
         </a>
-      </div>
+      </div >
       <div className="relative m-auto mb-10 h-80 w-full max-w-screen-lg overflow-hidden md:mb-20 md:h-150 md:w-5/6 md:rounded-2xl lg:w-2/3">
         <BlurImage
           alt={data.title ?? "Property Image"}
@@ -347,28 +385,32 @@ export default async function SitePostPage({
 
       <MDX source={data.mdxSource} />
 
-      {data.adjacentPosts.length > 0 && (
-        <div className="relative mb-20 mt-10 sm:mt-20">
-          <div
-            className="absolute inset-0 flex items-center"
-            aria-hidden="true"
-          >
-            <div className="w-full border-t border-stone-300 dark:border-stone-700" />
+      {
+        data.adjacentPosts.length > 0 && (
+          <div className="relative mb-20 mt-10 sm:mt-20">
+            <div
+              className="absolute inset-0 flex items-center"
+              aria-hidden="true"
+            >
+              <div className="w-full border-t border-stone-300 dark:border-stone-700" />
+            </div>
+            <div className="relative flex justify-center">
+              <span className="bg-white px-2 text-sm text-stone-500  dark:text-stone-400">
+                Other Rentals
+              </span>
+            </div>
           </div>
-          <div className="relative flex justify-center">
-            <span className="bg-white px-2 text-sm text-stone-500  dark:text-stone-400">
-              Other Rentals
-            </span>
+        )
+      }
+      {
+        data.adjacentPosts && (
+          <div className="mx-5 mb-20 grid max-w-screen-xl grid-cols-1 gap-x-4 gap-y-8 md:grid-cols-2 xl:mx-auto xl:grid-cols-3">
+            {data.adjacentPosts.map((data, index) => (
+              <BlogCard key={index} data={data} />
+            ))}
           </div>
-        </div>
-      )}
-      {data.adjacentPosts && (
-        <div className="mx-5 mb-20 grid max-w-screen-xl grid-cols-1 gap-x-4 gap-y-8 md:grid-cols-2 xl:mx-auto xl:grid-cols-3">
-          {data.adjacentPosts.map((data, index) => (
-            <BlogCard key={index} data={data} />
-          ))}
-        </div>
-      )}
+        )
+      }
     </>
   );
 }
