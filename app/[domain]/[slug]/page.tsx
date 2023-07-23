@@ -283,10 +283,10 @@ export default async function SitePostPage({
           <div className="w-full">
             <h2 className={"text-lg"}>Amenities</h2>
             <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700 w-100" />
-            <ul className="grid grid-cols-5 gap-1 w-full">
-              {amenities.slice(0, 10).map((amenity: any) => (
+            <ul className="grid grid-cols-2 w-full">
+              {amenitiesList.slice(0, 10).map((amenity: any) => (
                 <li
-                  className="text-sm grid items-center m-5 p-5 flex items-center space-x-3 rounded-lg px-2 py-1.5 dark:text-white grid w-full"
+                  className="text-sm grid items-center dark:text-white h-full w-full"
                   key={amenity}
                 >
                   <div className={`justify-center`}>
@@ -298,9 +298,9 @@ export default async function SitePostPage({
               ))}
             </ul>
             {/* Show the "Show all amenities" button only if there are more than 10 amenities */}
-            {amenities.length > 10 && (
-              <button onClick={() => console.log('test')/*setModalOpen(true)*/}>
-                Show all ({amenities.length}) amenities
+            {amenitiesList.length > 10 && (
+              <button className="bg-gray-400 rounded-md p-2 hover:bg-gray-200">
+                Show all ({amenitiesList.length}) amenities
               </button>
             )}
           </div>
@@ -314,13 +314,8 @@ export default async function SitePostPage({
               <h2 className={"text-lg"}>Amenities</h2>
               <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700 w-100" />
               <ul className="grid grid-cols-5 gap-1 w-full">
-<<<<<<< HEAD
-                {amenities.map((amenity: any) => (
-                  <li className="text-sm grid items-center m-5 p-5 flex items-center space-x-3 rounded-lg px-2 py-1.5 dark:text-white grid w-full" key={amenity}>
-=======
                 {amenitiesList.map((amenity: any) => (
-                  <li className="text-sm grid items-center m-auto p-5 items-center space-x-3 rounded-lg px-2 py-1.5 dark:text-white grid w-full grid-flow-row-dense" key={amenity}>
->>>>>>> 09d9c00370b77277915ee142a29d7d7d40b503ba
+                  <li className="text-sm grid items-center m-5 p-5 flex items-center space-x-3 rounded-lg px-2 py-1.5 dark:text-white grid w-full" key={amenity}>
                     <div className={`justify-center`}>
                       {<FontAwesomeIcon icon={amenitiesMap[amenity]?.icon} />} <br />
                       <span className="text-sm font-medium m-5">{amenity} <br /> </span>{amenitiesMap[amenity]?.description}
