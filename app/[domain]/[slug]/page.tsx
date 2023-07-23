@@ -6,8 +6,8 @@ import MDX from "@/components/mdx";
 import { placeholderBlurhash, toDateString } from "@/lib/utils";
 import ReservationForm from "@/components/booking/reservation-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import ShowMore from 'react-show-more-button';
 import React, { useState } from "react";
+import Modal from "@/components/modal";
 import {
   faWifi,
   faUtensils,
@@ -197,6 +197,31 @@ const amenitiesMap: { [key: string]: { icon: any; description: string } } = amen
   {}
 );
 
+// function AmenitiesModal({ isOpen: any, onClose: any, amenities: any }) {
+//   return (
+//     // Add your modal implementation here, you can use a library like react-modal
+//     // Remember to style it as per your requirements
+//     // The modal should display the complete list of amenities with their icons
+//     // and a close button to handle the onClose event
+//     <Modal isOpen={isOpen} onRequestClose={onClose}>
+//       <div>
+//         <h2>All Amenities</h2>
+//         <ul>
+//           {amenities.map((amenity, index) => (
+//             <li key={index}>
+//               <FontAwesomeIcon icon={amenitiesMap[amenity]?.icon} />
+//               <span>{amenity}</span>
+//               <p>{amenitiesMap[amenity]?.description}</p>
+//             </li>
+//           ))}
+//         </ul>
+//         <button onClick={onClose}>Close</button>
+//       </div>
+//     </Modal>
+//   );
+// }
+
+
 export default async function SitePostPage({
   params,
 }: {
@@ -253,6 +278,35 @@ export default async function SitePostPage({
           <p className="text-md m-auto w-10/12 text-stone-600 dark:text-stone-400 md:text-lg">
             {data.description}
           </p>
+
+
+          <div className="w-full">
+            <h2 className={"text-lg"}>Amenities</h2>
+            <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700 w-100" />
+            <ul className="grid grid-cols-5 gap-1 w-full">
+              {amenities.slice(0, 10).map((amenity: any) => (
+                <li
+                  className="text-sm grid items-center m-5 p-5 flex items-center space-x-3 rounded-lg px-2 py-1.5 dark:text-white grid w-full"
+                  key={amenity}
+                >
+                  <div className={`justify-center`}>
+                    {<FontAwesomeIcon icon={amenitiesMap[amenity]?.icon} />} <br />
+                    <span className="text-sm font-medium m-5">{amenity} <br /> </span>
+                    {amenitiesMap[amenity]?.description}
+                  </div>
+                </li>
+              ))}
+            </ul>
+            {/* Show the "Show all amenities" button only if there are more than 10 amenities */}
+            {amenities.length > 10 && (
+              <button onClick={() => console.log('test')/*setModalOpen(true)*/}>
+                Show all ({amenities.length}) amenities
+              </button>
+            )}
+          </div>
+
+
+
           <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700 w-100" />
           <div className="grid grid-cols-2 gap-1 w-full">
             {/* <ShowMore maxHeight={10}> */}
@@ -260,7 +314,7 @@ export default async function SitePostPage({
               <h2 className={"text-lg"}>Amenities</h2>
               <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700 w-100" />
               <ul className="grid grid-cols-5 gap-1 w-full">
-                {amenitiesList.map((amenity: any) => (
+                {amenities.map((amenity: any) => (
                   <li className="text-sm grid items-center m-5 p-5 flex items-center space-x-3 rounded-lg px-2 py-1.5 dark:text-white grid w-full" key={amenity}>
                     <div className={`justify-center`}>
                       {<FontAwesomeIcon icon={amenitiesMap[amenity]?.icon} />} <br />

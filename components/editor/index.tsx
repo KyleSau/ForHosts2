@@ -16,7 +16,6 @@ import { updatePost, updatePostMetadata } from "@/lib/actions";
 import clsx from "clsx";
 import LoadingDots from "../icons/loading-dots";
 import { ExternalLink } from "lucide-react";
-import { Decimal } from "decimal.js";
 
 type PostWithSite = Post & { site: { subdomain: string | null } | null };
 
