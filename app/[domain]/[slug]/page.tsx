@@ -89,100 +89,100 @@ const amenitiesList: any = [
   "Concierge Services"
 ];
 
-const amenityDetails = {
-  Wifi: {
+const amenityDetails: { [key: string]: { icon: any; description: string } } = {
+  "Wifi": {
     icon: faWifi,
     description: "Wifi available throughout the listing."
   },
-  Kitchen_Facilities: {
+  "Kitchen Facilities": {
     icon: faUtensils,
     description: "Fully equipped kitchen with stove, oven, refrigerator, and cooking utensils."
   },
-  Heating_and_Air_Conditioning: {
+  "Heating and Air Conditioning": {
     icon: faTemperatureHigh,
     description: "Climate control with heating and air conditioning."
   },
-  TV_and_Entertainment: {
+  "TV and Entertainment": {
     icon: faTv,
     description: "Television with cable/satellite, streaming services, or DVD player."
   },
-  Washer_and_Dryer: {
+  "Washer and Dryer": {
     icon: faTshirt,
     description: "Laundry facilities with washer and dryer."
   },
-  Free_Parking: {
+  "Free Parking": {
     icon: faParking,
     description: "Free parking space available."
   },
-  Pool: {
+  "Pool": {
     icon: faSwimmingPool,
     description: "Access to a swimming pool (private or shared)."
   },
-  Gym_Fitness_Center: {
+  "Gym/Fitness Center": {
     icon: faDumbbell,
     description: "On-site gym or fitness center."
   },
-  Hot_Tub_Jacuzzi: {
+  "Hot Tub/Jacuzzi": {
     icon: faHotTub,
     description: "Private or shared hot tub for relaxation."
   },
-  Outdoor_Space: {
+  "Outdoor Space": {
     icon: faTree,
     description: "Outdoor space, such as a patio, balcony, garden, or terrace."
   },
-  Barbecue_Grill: {
+  "Barbecue/Grill": {
     icon: faUtensilSpoon,
     description: "Barbecue or grill for outdoor cooking."
   },
-  Elevator: {
+  "Elevator": {
     icon: faElevator,
     description: "Elevator access (if applicable)."
   },
-  Pets_Allowed: {
+  "Pets Allowed": {
     icon: faPaw,
     description: "Pets are allowed in the listing."
   },
-  Family_Kid_Friendly: {
+  "Family/Kid-Friendly": {
     icon: faChild,
     description: "Amenities suitable for families with children."
   },
-  Smoking_Policy: {
+  "Smoking Policy": {
     icon: faSmoking,
     description: "Smoking policy for the listing."
   },
-  Wheelchair_Accessible: {
+  "Wheelchair Accessible": {
     icon: faWheelchair,
     description: "Facilities for guests with mobility challenges."
   },
-  Self_Check_in: {
+  "Self Check-in": {
     icon: faKey,
     description: "Self check-in with keyless entry or lockbox."
   },
-  Check_in_24_7: {
+  "24/7 Check-in": {
     icon: faClock,
     description: "Flexible check-in times, available 24/7."
   },
-  Workspace: {
+  "Workspace": {
     icon: faLaptop,
     description: "Designated workspace with a desk and chair."
   },
-  Breakfast: {
+  "Breakfast": {
     icon: faCoffee,
     description: "Complimentary breakfast items or vouchers provided."
   },
-  Bikes: {
+  "Bikes": {
     icon: faBicycle,
     description: "Bicycles available for guest use."
   },
-  Fireplace: {
+  "Fireplace": {
     icon: faFire,
     description: "Working fireplace (gas or wood-burning)."
   },
-  Security_Features: {
+  "Security Features": {
     icon: faShieldAlt,
     description: "Security features like smoke detectors and first aid kits."
   },
-  Concierge_Services: {
+  "Concierge Services": {
     icon: faConciergeBell,
     description: "Concierge services for local recommendations and activities."
   }
@@ -233,7 +233,7 @@ export default async function SitePostPage({
           <h2>Amenities</h2>
           <div className="flex flex-row justify-left">
             <ul>
-              {amenities.map((amenity) => (
+              {amenitiesList.map((amenity: any) => (
                 <li key={amenity}>
                   <div className={`flex items-center space-x-3 rounded-lg px-2 py-1.5 dark:text-white `}>
                     {<FontAwesomeIcon icon={amenitiesMap[amenity]?.icon} />}

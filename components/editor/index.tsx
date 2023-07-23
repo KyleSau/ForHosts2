@@ -38,7 +38,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
     // compare the title, description and content only
     if (
       debouncedData.title === post.title &&
-    debouncedData.price === post.price &&
+      debouncedData.price === post.price &&
       debouncedData.description === post.description &&
       debouncedData.content === post.content &&
       debouncedData.checkInTime === post.checkInTime &&
@@ -49,18 +49,18 @@ export default function Editor({ post }: { post: PostWithSite }) {
       debouncedData.cleaningFee === post.cleaningFee &&
       debouncedData.securityDeposit === post.securityDeposit &&
       JSON.stringify(debouncedData.amenities) ===
-        JSON.stringify(post.amenities) &&
+      JSON.stringify(post.amenities) &&
       debouncedData.maxGuests === post.maxGuests &&
       debouncedData.instantBooking === post.instantBooking &&
       debouncedData.rating === post.rating &&
       JSON.stringify(debouncedData.calendarUrls) ===
       JSON.stringify(post.calendarUrls) &&
       JSON.stringify(debouncedData.photoGallery) ===
-        JSON.stringify(post.photoGallery) &&
+      JSON.stringify(post.photoGallery) &&
       JSON.stringify(debouncedData.additionalServices) ===
-        JSON.stringify(post.additionalServices) &&
+      JSON.stringify(post.additionalServices) &&
       JSON.stringify(debouncedData.availabilityWindow) ===
-        JSON.stringify(post.availabilityWindow)
+      JSON.stringify(post.availabilityWindow)
     ) {
       return;
     }
@@ -208,8 +208,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
               await updatePostMetadata(formData, post.id, "published").then(
                 () => {
                   toast.success(
-                    `Successfully ${
-                      data.published ? "unpublished" : "published"
+                    `Successfully ${data.published ? "unpublished" : "published"
                     } your post.`,
                   );
                   setData((prev) => ({ ...prev, published: !prev.published }));
@@ -314,17 +313,17 @@ export default function Editor({ post }: { post: PostWithSite }) {
           }
           className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
         />
-           <div className="mb-2 mt-4">
-                        <input
-          type="text"
-          placeholder="iCal Calendar URLs (comma separated)"
-          defaultValue={post?.calendarUrls?.join(", ") || ""}
-          onChange={(e) =>
-            setData({ ...data, calendarUrls: e.target.value.split(", ") })
-          }
-          className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
+        <div className="mb-2 mt-4">
+          <input
+            type="text"
+            placeholder="iCal Calendar URLs (comma separated)"
+            defaultValue={post?.calendarUrls?.join(", ") || ""}
+            onChange={(e) =>
+              setData({ ...data, calendarUrls: e.target.value.split(", ") })
+            }
+            className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
           />
-          </div>
+        </div>
         <div className="mb-4">
           <h2 className="font-cal text-xl font-bold"> Currency</h2>
           <select
