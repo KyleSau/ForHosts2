@@ -4,6 +4,8 @@ import { Analytics } from "@vercel/analytics/react";
 import { Providers } from "./providers";
 import { Metadata } from "next";
 import clsx from "clsx";
+import "@fortawesome/fontawesome-svg-core/styles.css";
+
 
 
 
