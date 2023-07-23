@@ -10,7 +10,7 @@ export default async function ReservationsPage() {
   }
 
   const data: any = await getReservations();
-
+  //reservations page:  { error: 'Failed to fetch reservations' }
   return (
     <div className="mx-auto  sm:px-6 lg:px-8 py-5">
       <div className="text-center">
