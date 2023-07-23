@@ -64,6 +64,7 @@ export interface Post {
 }
 
 export interface Reservation {
+  id: string;
   status: string;
   post: Post;
   startDate: Date;
