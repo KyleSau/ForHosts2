@@ -128,12 +128,9 @@ export default async function SiteLayout({
       {/* Main content */}
       <div className="mt-5">{children}</div>
 
-      {params.domain == `demo.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}` ||
-        params.domain == `platformize.co` ? (
+      { (params.domain == `demo.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}` || params.domain == `platformize.co`) && 
         <CTA />
-      ) : (
-        <ReportAbuse />
-      )}
+      }
     </div>
   );
 }
