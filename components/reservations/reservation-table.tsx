@@ -40,8 +40,11 @@ const getStatusIcon = (status: string) => {
 const generateTableRows = (paginatedReservations: Reservation[]) => {
   return (
     <tbody className="text-black divide-y divide-gray-200">
-      {paginatedReservations.map((reservation, idx) => (
+      {paginatedReservations.map((reservation: Reservation, idx: number) => (
         <tr className="hover:bg-gray-500" key={idx}>
+          <td className="px-2 sm:px-6 py-4 text-center border-r">
+            {reservation.id}
+          </td>
           <td className="px-2 sm:px-6 py-4 text-center border-r">
             {reservation.post.title}
           </td>
@@ -135,7 +138,8 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
         <thead className="bg-gray-50">
           <tr>
             {[
-              "Listing",
+              "Listing ID",
+              "Listing Name",
               "Status",
               "Start",
               "End",
