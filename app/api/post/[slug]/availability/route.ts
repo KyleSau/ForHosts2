@@ -31,7 +31,7 @@ export async function GET(
             const response = await fetch(calendarUrl);
             const text = await response.text();
             console.log('text: ' + text);
-            const data = ical.parseICS(text);
+            const data = ical.parseICS(text); // if this throws an exception
 
             console.log('data: ' + JSON.stringify(data));
 

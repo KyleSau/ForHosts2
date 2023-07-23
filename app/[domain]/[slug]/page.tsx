@@ -93,111 +93,102 @@ const amenitiesList: string[] = [
 const amenityDetails = {
   Wifi: {
     icon: faWifi,
-    description: "Wifi available throughout the listing."
+    description: "Wifi available throughout the listing.",
   },
-  Kitchen_Facilities: {
+  "Kitchen Facilities": { // Updated property name
     icon: faUtensils,
-    description: "Fully equipped kitchen with stove, oven, refrigerator, and cooking utensils."
+    description: "Fully equipped kitchen with stove, oven, refrigerator, and cooking utensils.",
   },
-  Heating_and_Air_Conditioning: {
+  "Heating and Air Conditioning": { // Updated property name
     icon: faTemperatureHigh,
-    description: "Climate control with heating and air conditioning."
+    description: "Climate control with heating and air conditioning.",
   },
-  TV_and_Entertainment: {
+  "TV and Entertainment": { // Updated property name
     icon: faTv,
-    description: "Television with cable/satellite, streaming services, or DVD player."
+    description: "Television with cable/satellite, streaming services, or DVD player.",
   },
-  Washer_and_Dryer: {
+  "Washer and Dryer": { // Updated property name
     icon: faTshirt,
-    description: "Laundry facilities with washer and dryer."
+    description: "Laundry facilities with washer and dryer.",
   },
-  Free_Parking: {
+  "Free Parking": { // Updated property name
     icon: faParking,
-    description: "Free parking space available."
+    description: "Free parking space available.",
   },
   Pool: {
     icon: faSwimmingPool,
-    description: "Access to a swimming pool (private or shared)."
+    description: "Access to a swimming pool (private or shared).",
   },
-  Gym_Fitness_Center: {
+  "Gym/Fitness Center": { // Updated property name
     icon: faDumbbell,
-    description: "On-site gym or fitness center."
+    description: "On-site gym or fitness center.",
   },
-  Hot_Tub_Jacuzzi: {
+  "Hot Tub/Jacuzzi": { // Updated property name
     icon: faHotTub,
-    description: "Private or shared hot tub for relaxation."
+    description: "Private or shared hot tub for relaxation.",
   },
-  Outdoor_Space: {
+  "Outdoor Space": { // Updated property name
     icon: faTree,
-    description: "Outdoor space, such as a patio, balcony, garden, or terrace."
+    description: "Outdoor space, such as a patio, balcony, garden, or terrace.",
   },
-  Barbecue_Grill: {
+  "Barbecue/Grill": { // Updated property name
     icon: faUtensilSpoon,
-    description: "Barbecue or grill for outdoor cooking."
+    description: "Barbecue or grill for outdoor cooking.",
   },
   Elevator: {
     icon: faElevator,
-    description: "Elevator access (if applicable)."
+    description: "Elevator access (if applicable).",
   },
-  Pets_Allowed: {
+  "Pets Allowed": { // Updated property name
     icon: faPaw,
-    description: "Pets are allowed in the listing."
+    description: "Pets are allowed in the listing.",
   },
-  Family_Kid_Friendly: {
+  "Family/Kid-Friendly": { // Updated property name
     icon: faChild,
-    description: "Amenities suitable for families with children."
+    description: "Amenities suitable for families with children.",
   },
-  Smoking_Policy: {
+  "Smoking Policy": { // Updated property name
     icon: faSmoking,
-    description: "Smoking policy for the listing."
+    description: "Smoking policy for the listing.",
   },
-  Wheelchair_Accessible: {
+  "Wheelchair Accessible": { // Updated property name
     icon: faWheelchair,
-    description: "Facilities for guests with mobility challenges."
+    description: "Facilities for guests with mobility challenges.",
   },
-  Self_Check_in: {
+  "Self Check-in": { // Updated property name
     icon: faKey,
-    description: "Self check-in with keyless entry or lockbox."
+    description: "Self check-in with keyless entry or lockbox.",
   },
-  Check_in_24_7: {
+  "24/7 Check-in": { // Updated property name
     icon: faClock,
-    description: "Flexible check-in times, available 24/7."
+    description: "Flexible check-in times, available 24/7.",
   },
   Workspace: {
     icon: faLaptop,
-    description: "Designated workspace with a desk and chair."
+    description: "Designated workspace with a desk and chair.",
   },
   Breakfast: {
     icon: faCoffee,
-    description: "Complimentary breakfast items or vouchers provided."
+    description: "Complimentary breakfast items or vouchers provided.",
   },
   Bikes: {
     icon: faBicycle,
-    description: "Bicycles available for guest use."
+    description: "Bicycles available for guest use.",
   },
   Fireplace: {
     icon: faFire,
-    description: "Working fireplace (gas or wood-burning)."
+    description: "Working fireplace (gas or wood-burning).",
   },
-  Security_Features: {
+  "Security Features": { // Updated property name
     icon: faShieldAlt,
-    description: "Security features like smoke detectors and first aid kits."
+    description: "Security features like smoke detectors and first aid kits.",
   },
-  Concierge_Services: {
+  "Concierge Services": { // Updated property name
     icon: faConciergeBell,
-    description: "Concierge services for local recommendations and activities."
-  }
+    description: "Concierge services for local recommendations and activities.",
+  },
 };
 
-const amenitiesMap: { [key: string]: { icon: any; description: string } } = amenitiesList.reduce(
-  (map, amenity: any) => {
-    type ObjectKey = keyof typeof amenityDetails;
-    const fieldName: any = amenity as ObjectKey;
-    map[fieldName] = amenityDetails[fieldName] || { icon: "default-icon", description: "" };
-    return map;
-  },
-  {}
-);
 
 export default async function SitePostPage({
   params,
