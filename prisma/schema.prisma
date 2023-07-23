@@ -75,7 +75,7 @@ model VerificationToken {
 model Post {
   id            String        @id @default(cuid())
   title         String?       @db.Text
-  price         String?       @db.Text
+  price         String?       @db.Text // FLOAT
   description   String?       @db.Text
   content       String?       @db.Text
   slug          String        @default(cuid())
@@ -89,9 +89,10 @@ model Post {
   user          User?         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId        String?
   reservations  Reservation[]
-  calendarUrl   String[] // ical links
+  calendarUrls  String[] // ical links
 
   // New fields to include additional features
+  maxGuests            Int?
   checkInTime          String? // Check-in time for the rental property
   checkOutTime         String? // Check-out time for the rental property
   amenities            String[] // List of amenities available at the property
@@ -105,9 +106,10 @@ model Post {
   securityDeposit      Int? // Refundable security deposit amount
   availabilityCalendar String? // Availability calendar of the property
   photoGallery         String[] // List of images showcasing the property
-  virtualTour          String? // URL to a virtual tour of the property
   additionalServices   String[] // List of additional services offered at the property
-  cancellationPolicy   String? // Cancellation policy for bookings
+  availabilityWindow   String[] // how far out a listing can be booked
+  // advanceNotice
+  // cancellationPolicy   String? // Cancellation policy for bookings
 
   @@unique([slug, siteId])
   @@index([siteId])
@@ -150,15 +152,16 @@ model Site {
 }
 
 model Reservation {
-  id         String   @id @default(cuid())
-  postId     String
-  startDate  DateTime
-  endDate    DateTime
-  totalPrice Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  status     String
-  post       Post?    @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id            String   @id @default(cuid())
+  postId        String
+  startDate     DateTime
+  endDate       DateTime
+  totalPrice    Int
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  paymentStatus String
+  bookingStatus String
+  post          Post?    @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@index([postId])
 }

@@ -23,6 +23,9 @@ type PostWithSite = Post & { site: { subdomain: string | null } | null };
 export default function Editor({ post }: { post: PostWithSite }) {
   let [isPendingSaving, startTransitionSaving] = useTransition();
   let [isPendingPublishing, startTransitionPublishing] = useTransition();
+  const [selectedAmenities, setSelectedAmenities] = useState<Set<string>>(
+    new Set(/*post.amenities ||*/[])
+  );
 
   const [data, setData] = useState<PostWithSite>(post);
   const [hydrated, setHydrated] = useState(false);
