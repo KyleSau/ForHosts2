@@ -23,12 +23,11 @@ type PostWithSite = Post & { site: { subdomain: string | null } | null };
 export default function Editor({ post }: { post: PostWithSite }) {
   let [isPendingSaving, startTransitionSaving] = useTransition();
   let [isPendingPublishing, startTransitionPublishing] = useTransition();
-  const [selectedAmenities, setSelectedAmenities] = useState<Set<string>>(
-    new Set(/*post.amenities ||*/[])
-  );
 
   const [data, setData] = useState<PostWithSite>(post);
   const [hydrated, setHydrated] = useState(false);
+  const [showCheckTimes, setShowCheckTimes] = useState(false);
+  const [showPropertyDetails, setShowPropertyDetails] = useState(false);
 
   const url = process.env.NEXT_PUBLIC_VERCEL_ENV
     ? `https://${data.site?.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${data.slug}`
@@ -41,7 +40,25 @@ export default function Editor({ post }: { post: PostWithSite }) {
       debouncedData.title === post.title &&
       debouncedData.price === post.price &&
       debouncedData.description === post.description &&
-      debouncedData.content === post.content
+      debouncedData.content === post.content &&
+      debouncedData.checkInTime === post.checkInTime &&
+      debouncedData.checkOutTime === post.checkOutTime &&
+      debouncedData.location === post.location &&
+      debouncedData.currency === post.currency &&
+      debouncedData.minimumStay === post.minimumStay &&
+      debouncedData.cleaningFee === post.cleaningFee &&
+      debouncedData.securityDeposit === post.securityDeposit &&
+      JSON.stringify(debouncedData.amenities) ===
+        JSON.stringify(post.amenities) &&
+      debouncedData.maxGuests === post.maxGuests &&
+      debouncedData.instantBooking === post.instantBooking &&
+      debouncedData.rating === post.rating &&
+      JSON.stringify(debouncedData.photoGallery) ===
+        JSON.stringify(post.photoGallery) &&
+      JSON.stringify(debouncedData.additionalServices) ===
+        JSON.stringify(post.additionalServices) &&
+      JSON.stringify(debouncedData.availabilityWindow) ===
+        JSON.stringify(post.availabilityWindow)
     ) {
       return;
     }
@@ -189,7 +206,8 @@ export default function Editor({ post }: { post: PostWithSite }) {
               await updatePostMetadata(formData, post.id, "published").then(
                 () => {
                   toast.success(
-                    `Successfully ${data.published ? "unpublished" : "published"
+                    `Successfully ${
+                      data.published ? "unpublished" : "published"
                     } your post.`,
                   );
                   setData((prev) => ({ ...prev, published: !prev.published }));
@@ -219,27 +237,123 @@ export default function Editor({ post }: { post: PostWithSite }) {
           defaultValue={post?.title || ""}
           autoFocus
           onChange={(e) => setData({ ...data, title: e.target.value })}
-          className="dark:placeholder-text-600 border-none px-0 font-cal text-3xl placeholder:text-stone-400 focus:outline-none focus:ring-0"
+          className="dark:placeholder-text-600 border-none px-0 font-cal text-3xl placeholder:text-stone-400 focus:outline-none  focus:ring-0"
         />
         {/* force this to be a number later */}
-        <input
-          type="number"
-          placeholder="Price"
-          defaultValue={post?.price ? post.price.toString() : ""}
-          autoFocus
-          onChange={(e) => setData({ ...data, price: e.target.value })}
-          className="dark:placeholder-text-600 border-none px-0 font-cal text-3xl placeholder:text-stone-400 focus:outline-none focus:ring-0 "
-        />
 
         <TextareaAutosize
           placeholder="Description"
           defaultValue={post?.description || ""}
           onChange={(e) => setData({ ...data, description: e.target.value })}
-          className="dark:placeholder-text-600 w-full resize-none border-none px-0 placeholder:text-stone-400 focus:outline-none focus:ring-0"
+          className="dark:placeholder-text-600 w-full resize-none border-none px-0 placeholder:text-stone-400 focus:outline-none  focus:ring-0"
         />
       </div>
       {editor && <EditorBubbleMenu editor={editor} />}
       <EditorContent editor={editor} />
+      <div
+        className="flex cursor-pointer justify-center"
+        onClick={() => setShowCheckTimes(!showCheckTimes)}
+      >
+        <p className="flex items-center">
+          <h1 className="mb-12 mt-12 text-3xl font-bold">
+            Check times {showCheckTimes ? "↑" : "↓"}
+          </h1>
+        </p>
+      </div>
+      <div
+        style={{
+          maxHeight: showCheckTimes ? "1000px" : "0",
+          overflow: "hidden",
+          transition: "max-height 0.5s ease-in-out",
+        }}
+      >
+        <input
+          type="text"
+          placeholder="Check-in time"
+          defaultValue={post?.checkInTime || ""}
+          onChange={(e) => setData({ ...data, checkInTime: e.target.value })}
+          className="dark:placeholder-text-600 placeholder-text-stone-400 focus:placeholder-text-white w-full rounded-md border-none px-0 font-cal text-xl focus:bg-stone-400 focus:outline-none focus:ring-0"
+        />
+        <input
+          type="text"
+          placeholder="Check-out time"
+          defaultValue={post?.checkOutTime || ""}
+          onChange={(e) => setData({ ...data, checkOutTime: e.target.value })}
+          className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border-none px-0 font-cal text-xl focus:bg-stone-400 focus:outline-none focus:ring-0"
+        />
+      </div>
+
+      <div
+        className="flex cursor-pointer justify-center"
+        onClick={() => setShowPropertyDetails(!showPropertyDetails)}
+      >
+        <p className="flex items-center">
+          <h1 className="text-3xl font-bold ">
+            Property Details {showPropertyDetails ? "↑" : "↓"}
+          </h1>
+        </p>
+      </div>
+      <div
+        style={{
+          maxHeight: showPropertyDetails ? "1000px" : "0",
+          overflow: "hidden",
+          transition: "max-height 0.5s ease-in-out",
+        }}
+      >
+        <input
+          type="text"
+          placeholder="Amenities (comma separated)"
+          defaultValue={post?.amenities?.join(", ") || ""}
+          onChange={(e) =>
+            setData({ ...data, amenities: e.target.value.split(", ") })
+          }
+          className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border-none px-0 font-cal text-xl focus:bg-stone-400 focus:outline-none focus:ring-0"
+        />
+        <h2 className="font-cal text-xl font-bold"> Currency</h2>
+        <select
+          defaultValue={post?.currency || "USD"}
+          onChange={(e) => setData({ ...data, currency: e.target.value })}
+          className="placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border-none px-0 text-xl focus:bg-stone-400 focus:outline-none focus:ring-0 "
+        >
+          <option value="USD">USD</option>
+        </select>
+        <input
+          type="number"
+          placeholder="Price per night at property"
+          defaultValue={post?.price || ""}
+          onChange={(e) =>
+            setData({ ...data, price: parseInt(e.target.value, 10) })
+          }
+          className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border-none px-0 font-cal text-xl focus:bg-stone-400 focus:outline-none focus:ring-0"
+        />
+        <input
+          type="number"
+          placeholder="Minimum stay required at property (days)"
+          defaultValue={post?.minimumStay || ""}
+          onChange={(e) =>
+            setData({ ...data, minimumStay: parseInt(e.target.value, 10) })
+          }
+          className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border-none px-0 font-cal text-xl focus:bg-stone-400 focus:outline-none focus:ring-0"
+        />
+        <input
+          type="number"
+          placeholder="Cleaning fee"
+          defaultValue={post?.cleaningFee || ""}
+          onChange={(e) =>
+            setData({ ...data, cleaningFee: parseInt(e.target.value, 10) })
+          }
+          className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border-none px-0 font-cal text-xl focus:bg-stone-400 focus:outline-none focus:ring-0"
+        />
+        <input
+          type="number"
+          placeholder="Security deposit"
+          defaultValue={post?.securityDeposit || ""}
+          onChange={(e) =>
+            setData({ ...data, securityDeposit: parseInt(e.target.value, 10) })
+          }
+          className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border-none px-0 font-cal text-xl focus:bg-stone-400 focus:outline-none focus:ring-0"
+        />
+      </div>
     </div>
   );
 }

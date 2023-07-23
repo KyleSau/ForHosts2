@@ -240,10 +240,31 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
 
   const response = await prisma.post.create({
     data: {
-      siteId: site.id,
-      userId: session.user.id,
+      title: '',
+      price: 0,
+      checkInTime: '',
+      checkOutTime: '',
+      location: '',
+      currency: '',
+      minimumStay: 0,
+      cleaningFee: 0,
+      securityDeposit: 0,
+      amenities: [],  // empty array for amenities
+      photoGallery: [],  // empty array for photoGallery
+      additionalServices: [],  // empty array for additionalServices
+      site: {
+        connect: {
+          id: site.id,
+        },
+      },
+      user: {
+        connect: {
+          id: session.user.id,
+        },
+      },
     },
   });
+  
 
   await revalidateTag(
     `${site.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}-posts`,
@@ -286,6 +307,20 @@ export const updatePost = async (data: Post) => {
         price: data.price,
         description: data.description,
         content: data.content,
+        checkInTime: data.checkInTime,
+        checkOutTime: data.checkOutTime,
+        location: data.location,
+        currency: data.currency,
+        minimumStay: data.minimumStay,
+        cleaningFee: data.cleaningFee,
+        securityDeposit: data.securityDeposit,
+        amenities: data.amenities,
+        maxGuests: data.maxGuests,
+        instantBooking: data.instantBooking,
+        rating: data.rating,
+        photoGallery: data.photoGallery,
+        additionalServices: data.additionalServices,
+        availabilityWindow: data.availabilityWindow,
       },
     });
 
