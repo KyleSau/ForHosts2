@@ -188,10 +188,13 @@ const amenityDetails = {
   }
 };
 
-const amenitiesMap: any = amenitiesList.reduce((map: any, amenity: any) => {
-  map[amenity] = amenityDetails.amenity || { icon: "default-icon", description: "" };
-  return map;
-}, {});
+const amenitiesMap: { [key: string]: { icon: any; description: string } } = amenitiesList.reduce(
+  (map: any, amenity: string) => {
+    map[amenity] = amenityDetails[amenity as keyof typeof amenityDetails] || { icon: "default-icon", description: "" };
+    return map;
+  },
+  {}
+);
 
 export default async function SitePostPage({
   params,
