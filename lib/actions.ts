@@ -241,7 +241,7 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
   const response = await prisma.post.create({
     data: {
       title: '',
-      price: "0",
+      price: 0,
       checkInTime: '0:00',
       checkOutTime: '0:00',
       location: 'location',
