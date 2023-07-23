@@ -236,7 +236,7 @@ export default async function SitePostPage({
               {amenities.map((amenity) => (
                 <li key={amenity}>
                   <div className={`flex items-center space-x-3 rounded-lg px-2 py-1.5 dark:text-white `}>
-                    {<FontAwesomeIcon icon={amenitiesMap[amenity].icon} />}
+                    {<FontAwesomeIcon icon={amenitiesMap[amenity]?.icon} />}
                     <span className="text-sm font-medium m-5">{amenity} &nbsp; </span>{amenitiesMap[amenity]?.description}
                   </div>
                 </li>
