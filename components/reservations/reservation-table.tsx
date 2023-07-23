@@ -37,6 +37,35 @@ const getStatusIcon = (status: string) => {
   );
 };
 
+const generateTableRows = (paginatedReservations: Reservation[]) => {
+  return (
+    <tbody className="text-black divide-y divide-gray-200">
+      {paginatedReservations.map((reservation, idx) => (
+        <tr className="hover:bg-gray-500" key={idx}>
+          <td className="px-2 sm:px-6 py-4 text-center border-r">
+            {reservation.post.title}
+          </td>
+          <td className="px-2 sm:px-6 py-4 text-center border-r">
+            {getStatusIcon(reservation.status)}
+          </td>
+          <td className="px-2 sm:px-6 py-4 text-center border-r">
+            {reservation.startDate.toUTCString()}
+          </td>
+          <td className="px-2 sm:px-6 py-4 text-center border-r">
+            {reservation.endDate.toUTCString()}
+          </td>
+          <td className="px-2 sm:px-6 py-4 text-center border-r">
+            {reservation.createdAt.toUTCString()}
+          </td>
+          <td className="px-2 sm:px-6 py-4 text-center border-r">
+            {reservation.updatedAt.toUTCString()}
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  );
+}
+
 const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
   reservations,
 }) => {
@@ -49,15 +78,20 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
     setCurrentPage(page);
   }
 
-  const filteredReservations = filterType === "all" ? reservations : reservations.filter(reservation => reservation.status === filterType);
+  const filteredReservations = (reservations.length > 0)?
+    filterType === "all" ? 
+      reservations : reservations.filter(reservation => reservation.status === filterType)
+    : [];
 
-  const sortedReservations = filteredReservations.sort((a, b) => {
-    if (sortOrder === "asc") {
-      return a.createdAt.getTime() - b.createdAt.getTime();
-    } else {
-      return b.createdAt.getTime() - a.createdAt.getTime();
-    }
-  });
+  const sortedReservations = (filteredReservations.length > 0)?
+    filteredReservations?.sort((a, b) => {
+      if (sortOrder === "asc") {
+        return a.createdAt.getTime() - b.createdAt.getTime();
+      } else {
+        return b.createdAt.getTime() - a.createdAt.getTime();
+      }
+    })
+  : filteredReservations;
 
   const paginatedReservations = paginate(sortedReservations, currentPage, tableRowLimit);
 
@@ -68,7 +102,7 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
           <label htmlFor="filterSelect" className="mr-2 font-medium text-gray-600">Filter:</label>
           <select
             id="filterSelect"
-            className="px-2 py-1 border rounded-md bg-white text-gray-800"
+            className="px-2 py-1 border rounded-md bg-white text-gray-800 w-[120px]"
             value={filterType}
             onChange={(e) => setFilterType(e.target.value as "all" | "CONFIRMED" | "PENDING" | "CANCELLED")}
           >
@@ -86,7 +120,7 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
         </div>
         <div className="flex flex-auto justify-end">
           <label htmlFor="num-of-items-adjuster" className="mr-2 font-medium text-gray-600">Number of Items:</label>
-          <select id="num-of-items-adjuster" className="px-2 py-1 border rounded-md bg-white text-gray-800 w-24"
+          <select id="num-of-items-adjuster" className="px-2 py-1 border rounded-md bg-white text-gray-800 w-[80px]"
             onChange={(selection) => setTableRowLimit(parseInt(selection.target.value))}
           >
             <option defaultValue="10">10</option>
@@ -118,32 +152,16 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
             ))}
           </tr>
         </thead>
-        <tbody className="text-black divide-y divide-gray-200">
-          {paginatedReservations.map((reservation, idx) => (
-            <tr className="hover:bg-gray-500" key={idx}>
-              <td className="px-2 sm:px-6 py-4 text-center border-r">
-                {reservation.post.title}
-              </td>
-              <td className="px-2 sm:px-6 py-4 text-center border-r">
-                {getStatusIcon(reservation.status)}
-              </td>
-              <td className="px-2 sm:px-6 py-4 text-center border-r">
-                {reservation.startDate.toUTCString()}
-              </td>
-              <td className="px-2 sm:px-6 py-4 text-center border-r">
-                {reservation.endDate.toUTCString()}
-              </td>
-              <td className="px-2 sm:px-6 py-4 text-center border-r">
-                {reservation.createdAt.toUTCString()}
-              </td>
-              <td className="px-2 sm:px-6 py-4 text-center border-r">
-                {reservation.updatedAt.toUTCString()}
-              </td>
-            </tr>
-          ))}
-        </tbody>
+        {
+          (paginatedReservations.length == 0)? 
+            <tbody></tbody> :
+            generateTableRows(paginatedReservations)
+        }
       </table>
-
+      {
+        (paginatedReservations.length == 0) && 
+          <strong>You currently have no reservations made by guests.</strong>
+      }
       <Pagination
         items={sortedReservations.length}
         pageSize={tableRowLimit}
