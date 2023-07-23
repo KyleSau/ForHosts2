@@ -38,7 +38,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
     // compare the title, description and content only
     if (
       debouncedData.title === post.title &&
-      debouncedData.price === post.price &&
+    debouncedData.price === post.price &&
       debouncedData.description === post.description &&
       debouncedData.content === post.content &&
       debouncedData.checkInTime === post.checkInTime &&
@@ -53,6 +53,8 @@ export default function Editor({ post }: { post: PostWithSite }) {
       debouncedData.maxGuests === post.maxGuests &&
       debouncedData.instantBooking === post.instantBooking &&
       debouncedData.rating === post.rating &&
+      JSON.stringify(debouncedData.calendarUrls) ===
+      JSON.stringify(post.calendarUrls) &&
       JSON.stringify(debouncedData.photoGallery) ===
         JSON.stringify(post.photoGallery) &&
       JSON.stringify(debouncedData.additionalServices) ===
@@ -233,16 +235,15 @@ export default function Editor({ post }: { post: PostWithSite }) {
       <div className="mb-5 flex flex-col space-y-3 border-b border-stone-200 pb-5 dark:border-stone-700">
         <input
           type="text"
-          placeholder="Title"
+          placeholder="Title of Property"
           defaultValue={post?.title || ""}
           autoFocus
           onChange={(e) => setData({ ...data, title: e.target.value })}
           className="dark:placeholder-text-600 border-none px-0 font-cal text-3xl placeholder:text-stone-400 focus:outline-none  focus:ring-0"
         />
-        {/* force this to be a number later */}
 
         <TextareaAutosize
-          placeholder="Description"
+          placeholder="Description of Property"
           defaultValue={post?.description || ""}
           onChange={(e) => setData({ ...data, description: e.target.value })}
           className="dark:placeholder-text-600 w-full resize-none border-none px-0 placeholder:text-stone-400 focus:outline-none  focus:ring-0"
@@ -267,20 +268,24 @@ export default function Editor({ post }: { post: PostWithSite }) {
           transition: "max-height 0.5s ease-in-out",
         }}
       >
-        <input
-          type="text"
-          placeholder="Check-in time"
-          defaultValue={post?.checkInTime || ""}
-          onChange={(e) => setData({ ...data, checkInTime: e.target.value })}
-          className="dark:placeholder-text-600 placeholder-text-stone-400 focus:placeholder-text-white w-full rounded-md border-none px-0 font-cal text-xl focus:bg-stone-400 focus:outline-none focus:ring-0"
-        />
-        <input
-          type="text"
-          placeholder="Check-out time"
-          defaultValue={post?.checkOutTime || ""}
-          onChange={(e) => setData({ ...data, checkOutTime: e.target.value })}
-          className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border-none px-0 font-cal text-xl focus:bg-stone-400 focus:outline-none focus:ring-0"
-        />
+        <div className="mb-2">
+          <h2 className="font-cal text-xl font-bold">Check-in time</h2>
+          <input
+            type="time"
+            defaultValue={data.checkInTime}
+            onChange={(e) => setData({ ...data, checkInTime: e.target.value })}
+            className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
+          />
+        </div>
+        <div className="mb-6">
+          <h2 className="font-cal text-xl font-bold">Checkout time</h2>
+          <input
+            type="time"
+            defaultValue={data.checkOutTime}
+            onChange={(e) => setData({ ...data, checkOutTime: e.target.value })}
+            className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
+          />
+        </div>
       </div>
 
       <div
@@ -288,7 +293,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
         onClick={() => setShowPropertyDetails(!showPropertyDetails)}
       >
         <p className="flex items-center">
-          <h1 className="text-3xl font-bold ">
+          <h1 className="mb-14 text-3xl font-bold">
             Property Details {showPropertyDetails ? "↑" : "↓"}
           </h1>
         </p>
@@ -307,43 +312,63 @@ export default function Editor({ post }: { post: PostWithSite }) {
           onChange={(e) =>
             setData({ ...data, amenities: e.target.value.split(", ") })
           }
-          className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border-none px-0 font-cal text-xl focus:bg-stone-400 focus:outline-none focus:ring-0"
+          className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
         />
-        <h2 className="font-cal text-xl font-bold"> Currency</h2>
-        <select
-          defaultValue={post?.currency || "USD"}
-          onChange={(e) => setData({ ...data, currency: e.target.value })}
-          className="placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border-none px-0 text-xl focus:bg-stone-400 focus:outline-none focus:ring-0 "
-        >
-          <option value="USD">USD</option>
-        </select>
-        <input
-          type="number"
-          placeholder="Price per night at property"
-          defaultValue={post?.price || ""}
+           <div className="mb-2 mt-4">
+                        <input
+          type="text"
+          placeholder="iCal Calendar URLs (comma separated)"
+          defaultValue={post?.calendarUrls?.join(", ") || ""}
           onChange={(e) =>
-            setData({ ...data, price: parseInt(e.target.value, 10) })
+            setData({ ...data, calendarUrls: e.target.value.split(", ") })
           }
-          className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border-none px-0 font-cal text-xl focus:bg-stone-400 focus:outline-none focus:ring-0"
-        />
-        <input
-          type="number"
-          placeholder="Minimum stay required at property (days)"
-          defaultValue={post?.minimumStay || ""}
-          onChange={(e) =>
-            setData({ ...data, minimumStay: parseInt(e.target.value, 10) })
-          }
-          className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border-none px-0 font-cal text-xl focus:bg-stone-400 focus:outline-none focus:ring-0"
-        />
-        <input
-          type="number"
-          placeholder="Cleaning fee"
-          defaultValue={post?.cleaningFee || ""}
-          onChange={(e) =>
-            setData({ ...data, cleaningFee: parseInt(e.target.value, 10) })
-          }
-          className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border-none px-0 font-cal text-xl focus:bg-stone-400 focus:outline-none focus:ring-0"
-        />
+          className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
+          />
+          </div>
+        <div className="mb-4">
+          <h2 className="font-cal text-xl font-bold"> Currency</h2>
+          <select
+            defaultValue={post?.currency || "USD"}
+            onChange={(e) => setData({ ...data, currency: e.target.value })}
+            className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
+          >
+            <option value="USD">USD</option>
+          </select>
+        </div>
+        <div className="mb-4">
+          <input
+            type="number"
+            placeholder="Price per night at property"
+            defaultValue={post?.price || ""}
+            onChange={(e) =>
+              setData({ ...data, price: parseInt(e.target.value, 10) })
+            }
+            className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
+          />
+        </div>
+        <div className="mb-4">
+          <input
+            type="number"
+            placeholder="Minimum stay required at property (days)"
+            defaultValue={post?.minimumStay || ""}
+            onChange={(e) =>
+              setData({ ...data, minimumStay: parseInt(e.target.value, 10) })
+            }
+            className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
+          />
+        </div>
+        <div className="mb-4">
+          <input
+            type="number"
+            placeholder="Cleaning fee"
+            defaultValue={post?.cleaningFee || ""}
+            onChange={(e) =>
+              setData({ ...data, cleaningFee: parseInt(e.target.value, 10) })
+            }
+            className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
+          />
+        </div>
+
         <input
           type="number"
           placeholder="Security deposit"
@@ -351,7 +376,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
           onChange={(e) =>
             setData({ ...data, securityDeposit: parseInt(e.target.value, 10) })
           }
-          className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border-none px-0 font-cal text-xl focus:bg-stone-400 focus:outline-none focus:ring-0"
+          className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
         />
       </div>
     </div>
