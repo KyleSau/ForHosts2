@@ -241,7 +241,7 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
   const response = await prisma.post.create({
     data: {
       title: '',
-      price: 0,
+      price: "0",
       checkInTime: '0:00',
       checkOutTime: '0:00',
       location: 'location',
@@ -253,6 +253,7 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
       photoGallery: [],  // empty array for photoGallery
       additionalServices: [],  // empty array for additionalServices
       calendarUrls: [],
+      propertyType: 'idk',
       site: {
         connect: {
           id: site.id,
@@ -323,7 +324,7 @@ export const updatePost = async (data: Post) => {
         additionalServices: data.additionalServices,
         availabilityWindow: data.availabilityWindow,
         calendarUrls: data.calendarUrls,
-        propertyType: 'idk', // change this to data.propertyTpe
+        propertyType: data.propertyType, // change this to data.propertyTpe
       },
     });
 
