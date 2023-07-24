@@ -33,12 +33,10 @@ export default function ReservationForm({ postId }: { postId: string }) {
     <form
       action={(data: FormData) => handleFinalizeReservation(data)}
       id="reservationForm1"
-      className="w-full rounded-md bg-white text-black dark:text-black md:max-w-md md:border md:border-stone-200 md:shadow dark:md:border-stone-700 flex flex-col items-center"
+      className="w-full rounded-md bg-white text-black dark:text-black md:max-w-md md:border md:border-stone-200 md:shadow dark:md:border-stone-700 flex flex-col items-center p-5"
     >
-      <label>Internal ListingId: {postId}</label>
-      <br />
       {/* Date Ranger Picker */}
-      <label htmlFor="start-date" className="bg-white text-black dark:bg-white dark:text-black">startDate: </label>
+      <label htmlFor="start-date" className="bg-white text-black dark:bg-white dark:text-black">Check-In </label>
       <input
         type="datetime-local"
         id="start-date"
@@ -48,7 +46,7 @@ export default function ReservationForm({ postId }: { postId: string }) {
         max="2025-06-14T00:00"
       />
       <br />
-      <label htmlFor="end-date" className="bg-white text-black dark:bg-white dark:text-black">endDate: </label>
+      <label htmlFor="end-date" className="bg-white text-black dark:bg-white dark:text-black">Checkout </label>
       <input
         type="datetime-local"
         id="end-date"
