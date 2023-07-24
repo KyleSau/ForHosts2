@@ -163,7 +163,7 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
           <h1 className="font-cal text-4xl mt-5">No Reservations Yet</h1>
           <Image
             alt="missing post"
-            src="https://illustrations.popsy.co/gray/graphic-design.svg"
+            src="https://illustrations.popsy.co/gray/digital-nomad.svg"
             width={400}
             height={400}
           />
@@ -178,7 +178,7 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
         currentPage={currentPage}
         onPageChange={onPageChange}
       />
-    </div>
+    </div >
   );
 };
 
