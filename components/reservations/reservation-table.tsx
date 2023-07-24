@@ -160,7 +160,7 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
       {
         (paginatedReservations.length == 0) &&
         <div className="flex flex-col items-center space-x-4">
-          <h1 className="font-cal text-4xl">No Properties Yet</h1>
+          <h1 className="font-cal text-4xl mt-5">No Reservations Yet</h1>
           <Image
             alt="missing post"
             src="https://illustrations.popsy.co/gray/graphic-design.svg"
