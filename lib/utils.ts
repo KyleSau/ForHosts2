@@ -70,7 +70,7 @@ export const calcDateDelta = (refDate: Date, futureDate: Date) => {
   let remainingMilliseconds = Math.abs(diff);
 
   const numDays = Math.floor(remainingMilliseconds / DAY_FACTOR);
-  remainingMilliseconds = remainingMilliseconds - (numDays*DAY_FACTOR);
+  remainingMilliseconds -= (numDays*DAY_FACTOR);
   const numHours = Math.floor(remainingMilliseconds / HOUR_FACTOR);
   remainingMilliseconds -= (numHours * HOUR_FACTOR);
   const numMinutes = Math.floor(remainingMilliseconds / MINUTE_FACTOR);
