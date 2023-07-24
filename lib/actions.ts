@@ -14,7 +14,7 @@ import {
 } from "@/lib/domains";
 import { put } from "@vercel/blob";
 import { customAlphabet } from "nanoid";
-import { calcDaysBetweenDates, getBlurDataURL } from "@/lib/utils";
+import { calcDateDelta, getBlurDataURL } from "@/lib/utils";
 import { RESERVATION_FUTURE_DAYS_THRESHOLD } from "./constants";
 
 const nanoid = customAlphabet(
@@ -551,7 +551,6 @@ export const getCalendarUrls = async (postId: string) => {
 // this will be invoked by the stripe webhook
 // StripeMetaData
 export const createReservation = async (formData: FormData, currentDate: Date) => {
-  
   // FormData
   const postId = formData.get("postId") as string;
   const startDate = new Date(formData.get("start-date") as string);
@@ -559,10 +558,12 @@ export const createReservation = async (formData: FormData, currentDate: Date) =
 
   try {
     //do validation
-    const daysBeforeStartDate = calcDaysBetweenDates(currentDate, startDate);
-    if(daysBeforeStartDate < 0) { 
+    const dateDeltaArray = calcDateDelta(currentDate, startDate);
+
+    if(dateDeltaArray.some((t: number) => t < 0)) { 
       throw new Error("The starting date of your reservation must be on or after today.")
-    } else if (daysBeforeStartDate > RESERVATION_FUTURE_DAYS_THRESHOLD) {
+    } 
+    else if (dateDeltaArray[0] > RESERVATION_FUTURE_DAYS_THRESHOLD) {
       throw new Error(`The starting date of your reservation cannot be more than ${RESERVATION_FUTURE_DAYS_THRESHOLD} days from today.`);
     }
 

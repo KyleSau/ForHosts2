@@ -59,7 +59,25 @@ export const chunkIntoSizeNSubarrays = (arr: Array<number>, subarrySize: number)
   );
 }
 
-export const calcDaysBetweenDates = (refDate: Date, futureDate: Date) => {
-  const deltaMilliseconds = futureDate.getTime() - refDate.getTime();
-  return Math.ceil(deltaMilliseconds / (1000 * 3600 * 24));
+export const calcDateDelta = (refDate: Date, futureDate: Date) => {
+  const DAY_FACTOR = 1000 * 3600 * 24; // ms -> days
+  const HOUR_FACTOR = 1000 * 3600; // ms -> hours
+  const MINUTE_FACTOR = 1000 * 60; //ms -> minutes
+  const SECOND_FACTOR = 1000; // ms -> seconds
+
+  const diff = futureDate.getTime() - refDate.getTime();
+  const sign = (diff < 0)? -1: 1;
+  let remainingMilliseconds = Math.abs(diff);
+
+  const numDays = Math.floor(remainingMilliseconds / DAY_FACTOR);
+  remainingMilliseconds = remainingMilliseconds - (numDays*DAY_FACTOR);
+  const numHours = Math.floor(remainingMilliseconds / HOUR_FACTOR);
+  remainingMilliseconds -= (numHours * HOUR_FACTOR);
+  const numMinutes = Math.floor(remainingMilliseconds / MINUTE_FACTOR);
+  remainingMilliseconds -= (numMinutes * MINUTE_FACTOR);
+  const numSeconds = Math.floor(remainingMilliseconds / SECOND_FACTOR);
+  remainingMilliseconds -= (numSeconds * SECOND_FACTOR);
+
+  const deltaTime = [numDays, numHours, numMinutes, numSeconds, remainingMilliseconds];
+  return deltaTime.map((unit: number) => (unit != 0)? unit * sign : unit);
 };
