@@ -5,8 +5,6 @@ import BlurImage from "@/components/blur-image";
 import MDX from "@/components/mdx";
 import { placeholderBlurhash, toDateString } from "@/lib/utils";
 import ReservationForm from "@/components/booking/reservation-form";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Modal from "@/components/modal";
 import AmenitiesModal from "@/components/amenities/amenities-modal";
 import { amenityDetails } from "@/components/amenities/amenities-data";
 
@@ -54,28 +52,10 @@ export default async function SitePostPage({
   return (
     <>
       <div className="flex flex-col items-center">
-        <div className="grid grid-cols-3 gap-5 md:text-2xl">
-          <div>
-            <h1 className="md:text-1xl font-bold text-stone-800 dark:text-white">
-              {data.title}
-            </h1>
-          </div>
-          <div>
-            <h1 className="md:text-1xl text-stone-600 dark:text-white">
-              {/* {data.location} */}
-            </h1>
-          </div>
-          <div>
-            <h1 className="md:text-1xl text-stone-800 dark:text-white">
-              ${data.price} Per Night
-            </h1>
-          </div>
-        </div>
-
         {/* Make this Photo Gallery? */}
         {/* md:w-7/12 */}
         <div className="m-auto w-full text-center">
-          <div className="relative m-auto mb-10 h-80 w-full max-w-screen-lg overflow-hidden md:mb-20 md:h-150 md:w-5/6 md:rounded-2xl lg:w-2/3">
+          <div className="relative m-auto h-80 w-full max-w-screen-lg overflow-hidden md:mb-5 md:h-150 md:w-5/6 md:rounded-2xl lg:w-2/3">
             <BlurImage
               alt={data.title ?? "Property Image"}
               width={1200}
@@ -86,49 +66,87 @@ export default async function SitePostPage({
               src={data.image ?? "/placeholder.png"}
             />
           </div>
-          {/* Prop for postId */}
-          <p className="text-md m-auto w-10/12 text-stone-600 dark:text-stone-400 md:text-lg">
-            {data.description}
-          </p>
+          <div className="grid grid-cols-5 gap-5 md:text-2xl">
+            <div className="col-span-2">
+              <h1 className="md:text-1xl font-bold text-stone-800 dark:text-white">
+                {data.title}
+              </h1>
+            </div>
+            <div className="col-span-1">
+              <h1 className="md:text-1xl text-stone-600 dark:text-white italic">
+                {data.location}
+              </h1>
+            </div>
+            <div className="col-span-2">
+              <h1 className="md:text-1xl text-stone-800 dark:text-white">
+                ${data.price} Per Night
+              </h1>
+            </div>
+          </div>
 
-          <AmenitiesModal amenityDetails={amenityDetails} />
-
-          <div className="grid w-full grid-cols-1 gap-1 md:grid-cols-2">
-            <div className="flex-row">
+          <div className="grid grid-cols-2 w-full rounded-md bg-white text-black dark:text-black md:border-stone-200 md:shadow dark:md:border-stone-700 items-center m-auto p-4">
+            <div className="flex grid row-span-1">
+              <p className="relative m-auto w-full max-w-screen-lg overflow-hidden md:mb-5 md:w-5/6 md:rounded-2xl lg:w-2/3">
+                {data.description}
+              </p>
+            </div>
+            <div className="h-full max-h-screen overflow-y-auto flex flex-col bg-gray-50">
               <ReservationForm postId={data.id} />
             </div>
-            <div className="flex-row">
-              <h2 className={"text-lg"}>Availability</h2>
+            <AmenitiesModal amenityDetails={amenityDetails} />
+            <div className="flex grid w-full grid-cols-2">
+              <div className="flex grid col-span-2 col-start-1 bg-gray-200">
+                <h2 className={"text-lg"}>Map of Property Location</h2>
+              </div>
+              <div className="flex grid col-span-2 bg-gray-500">
+                <h2 className={"text-lg"}>ggggggg</h2>
+              </div>
             </div>
-            <div className="flex-row">
-              <h2 className={"text-lg"}>Availability</h2>
+
+            <div className="flex grid w-full grid-cols-6 bg-gray-200 mt-5">
+              <div className="flex grid col-span-6 w-full row-start-1">
+                <h2 className={"text-lg"}>Things To Know</h2>
+              </div>
+              <div className="flex grid col-span-2 row-start-2 bg-gray-300">
+                <h2 className={"text-lg"}>House Rules</h2>
+              </div>
+              <div className="flex grid col-span-2 row-start-2 bg-gray-300">
+                <h2 className={"text-lg"}>Safety Considerations</h2>
+              </div>
+              <div className="flex grid col-span-2 row-start-2 bg-gray-300">
+                <h2 className={"text-lg"}>Cancellation Policy</h2>
+              </div>
             </div>
           </div>
         </div>
       </div>
       <MDX source={data.mdxSource} />
-      {data.adjacentPosts.length > 0 && (
-        <div className="relative mb-20 mt-10 sm:mt-20">
-          <div
-            className="absolute inset-0 flex items-center"
-            aria-hidden="true"
-          >
-            <div className="w-full border-t border-stone-300 dark:border-stone-700" />
+      {
+        data.adjacentPosts.length > 0 && (
+          <div className="relative mb-20 mt-10 sm:mt-20">
+            <div
+              className="absolute inset-0 flex items-center"
+              aria-hidden="true"
+            >
+              <div className="w-full border-t border-stone-300 dark:border-stone-700" />
+            </div>
+            <div className="relative flex justify-center">
+              <span className="bg-white px-2 text-sm text-stone-500  dark:text-stone-400">
+                Other Rentals
+              </span>
+            </div>
           </div>
-          <div className="relative flex justify-center">
-            <span className="bg-white px-2 text-sm text-stone-500  dark:text-stone-400">
-              Other Rentals
-            </span>
+        )
+      }
+      {
+        data.adjacentPosts && (
+          <div className="mx-5 mb-20 grid max-w-screen-xl grid-cols-1 gap-x-4 gap-y-8 md:grid-cols-2 xl:mx-auto xl:grid-cols-3">
+            {data.adjacentPosts.map((data, index) => (
+              <BlogCard key={index} data={data} />
+            ))}
           </div>
-        </div>
-      )}
-      {data.adjacentPosts && (
-        <div className="mx-5 mb-20 grid max-w-screen-xl grid-cols-1 gap-x-4 gap-y-8 md:grid-cols-2 xl:mx-auto xl:grid-cols-3">
-          {data.adjacentPosts.map((data, index) => (
-            <BlogCard key={index} data={data} />
-          ))}
-        </div>
-      )}
+        )
+      }
     </>
   );
 }
