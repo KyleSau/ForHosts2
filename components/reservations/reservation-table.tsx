@@ -4,6 +4,7 @@ import { CheckCircle, XCircle, Clock } from "lucide-react";
 import { Reservation } from "@/lib/types";
 import Pagination, { paginate } from "../pagination";
 import { RESERVATION_STATUS } from "@/lib/constants";
+import Image from "next/image";
 
 const getStatusIcon = (status: string) => {
   let icon = null;
@@ -75,12 +76,12 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
     setCurrentPage(page);
   }
 
-  const filteredReservations = (reservations.length > 0)?
-    filterType === "all" ? 
+  const filteredReservations = (reservations.length > 0) ?
+    filterType === "all" ?
       reservations : reservations.filter(reservation => reservation.status === filterType)
     : [];
 
-  const sortedReservations = (filteredReservations.length > 0)?
+  const sortedReservations = (filteredReservations.length > 0) ?
     filteredReservations?.sort((a, b) => {
       if (sortOrder === "asc") {
         return a.createdAt.getTime() - b.createdAt.getTime();
@@ -88,7 +89,7 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
         return b.createdAt.getTime() - a.createdAt.getTime();
       }
     })
-  : filteredReservations;
+    : filteredReservations;
 
   const paginatedReservations = paginate(sortedReservations, currentPage, tableRowLimit);
 
@@ -151,14 +152,25 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
           </tr>
         </thead>
         {
-          (paginatedReservations.length == 0)? 
+          (paginatedReservations.length == 0) ?
             <tbody></tbody> :
             generateTableRows(paginatedReservations)
         }
       </table>
       {
-        (paginatedReservations.length == 0) && 
-          <strong>You currently have no reservations made by guests.</strong>
+        (paginatedReservations.length == 0) &&
+        <div className="flex flex-col items-center space-x-4">
+          <h1 className="font-cal text-4xl">No Properties Yet</h1>
+          <Image
+            alt="missing post"
+            src="https://illustrations.popsy.co/gray/graphic-design.svg"
+            width={400}
+            height={400}
+          />
+          <p className="text-lg text-stone-500">
+            You do not have any reservations yet. Create one to get started.
+          </p>
+        </div>
       }
       <Pagination
         items={sortedReservations.length}
