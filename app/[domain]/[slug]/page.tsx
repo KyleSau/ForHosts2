@@ -70,7 +70,7 @@ export default async function SitePostPage({
           <div className="grid grid-cols-2 w-full rounded-md text-black dark:text-black md:border-stone-200 md:shadow dark:md:border-stone-700 items-center m-auto p-5 bg-gray-50">
 
             <div className="flex grid row-span-1 p-5">
-              <h1 className="text-2xl font-bold">{data.title}</h1>
+              <h1 className="text-2xl font-bold mb-10">{data.title}</h1>
               <p className="text-center">
                 {data.description}
               </p>
@@ -80,7 +80,7 @@ export default async function SitePostPage({
             </div>
             <AmenitiesModal amenityDetails={amenityDetails} />
             <div className="flex grid w-full grid-cols-2">
-              <div className="flex grid col-span-2 col-start-1 bg-gray-200">
+              <div className="flex grid col-span-2 col-start-1 bg-green-300 h-96">
                 <h2 className={"text-lg"}>Map of Property Location</h2>
               </div>
               <div className="flex grid col-span-2 bg-gray-300">
@@ -88,32 +88,35 @@ export default async function SitePostPage({
               </div>
             </div>
 
-            <div className="flex grid w-full grid-cols-6 bg-gray-200 mt-5 rounded-md">
+            <div className="flex grid w-full grid-cols-6 bg-gray-100 mt-5 rounded-md h-full">
               <div className="flex grid col-span-6 w-full row-start-1 rounded-md">
-                <h2 className={"text-lg font-bold"}>Things To Know</h2>
+                <h2 className={"text-lg font-bold p-5"}>Things To Know</h2>
               </div>
-              <div className="flex grid col-span-2 row-start-2 bg-gray-300 p-5">
+              <div className="flex grid col-span-2 row-start-2 bg-gray-50 p-5">
                 <h2 className={"text-md font-bold"}>House Rules</h2>
                 <ul className="list-disc list-inside text-left">
                   <li>Check-in: 3:00 PM - 9:00 PM</li>
                   <li>Checkout before 11:00 AM</li>
                   <li>2 guests maximum</li>
                 </ul>
+                <button className="bg-gray-400 rounded-md p-2 hover:bg-gray-200" />
               </div>
-              <div className="flex grid col-span-2 row-start-2 bg-gray-200 p-5">
+              <div className="flex grid col-span-2 row-start-2 bg-gray-75 p-5">
                 <h2 className={"text-md font-bold"}>Safety Considerations</h2>
                 <ul className="list-disc list-inside text-left">
                   <li>Pool/hot tub without a gate or lock</li>
                   <li>Nearby lake, river, other body of water</li>
                   <li>Carbon monoxide alarm</li>
                 </ul>
+                <button className="bg-gray-400 rounded-md p-2 hover:bg-gray-200" />
               </div>
-              <div className="flex grid col-span-2 row-start-2 bg-gray-300 p-5">
+              <div className="flex grid col-span-2 row-start-2 bg-gray-50 p-5">
                 <h2 className={"text-md font-bold"}>Cancellation Policy</h2>
                 <ul className="list-disc list-inside text-left">
                   <li>Free cancellation before Jan 30.</li>
                   <li>Review the Host’s full cancellation policy.</li>
                 </ul>
+                <button className="bg-gray-400 rounded-md p-2 hover:bg-gray-200" />
               </div>
             </div>
           </div>
