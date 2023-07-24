@@ -14,7 +14,8 @@ import {
 } from "@/lib/domains";
 import { put } from "@vercel/blob";
 import { customAlphabet } from "nanoid";
-import { getBlurDataURL } from "@/lib/utils";
+import { calcDaysBetweenDates, getBlurDataURL } from "@/lib/utils";
+import { RESERVATION_FUTURE_DAYS_THRESHOLD } from "./constants";
 
 const nanoid = customAlphabet(
   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
@@ -547,19 +548,24 @@ export const getCalendarUrls = async (postId: string) => {
   }
 };
 
-
-
-
 // this will be invoked by the stripe webhook
 // StripeMetaData
-export const createReservation = async (formData: FormData) => {
-
+export const createReservation = async (formData: FormData, currentDate: Date) => {
+  
   // FormData
   const postId = formData.get("postId") as string;
   const startDate = new Date(formData.get("start-date") as string);
   const endDate = new Date(formData.get("end-date") as string);
 
   try {
+    //do validation
+    const daysBeforeStartDate = calcDaysBetweenDates(currentDate, startDate);
+    if(daysBeforeStartDate < 0) { 
+      throw new Error("The starting date of your reservation must be on or after today.")
+    } else if (daysBeforeStartDate > RESERVATION_FUTURE_DAYS_THRESHOLD) {
+      throw new Error(`The starting date of your reservation cannot be more than ${RESERVATION_FUTURE_DAYS_THRESHOLD} days from today.`);
+    }
+
     const response = await prisma?.reservation.create({
       data: {
         postId,
@@ -582,3 +588,4 @@ export const createReservation = async (formData: FormData) => {
     }
   }
 };
+

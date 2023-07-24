@@ -52,9 +52,14 @@ export const random = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
-const chunkIntoSizeNSubarrays = (arr: Array<number>, subarrySize: number) => {
+export const chunkIntoSizeNSubarrays = (arr: Array<number>, subarrySize: number) => {
   const n = subarrySize;
   return Array.from({ length: Math.floor(arr.length/n) + arr.length%n }, (_, i) =>
     arr.slice(i * n, i * n + n)
   );
 }
+
+export const calcDaysBetweenDates = (refDate: Date, futureDate: Date) => {
+  const deltaMilliseconds = futureDate.getTime() - refDate.getTime();
+  return Math.ceil(deltaMilliseconds / (1000 * 3600 * 24));
+};
