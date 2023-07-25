@@ -5,6 +5,9 @@ import { Reservation } from "@/lib/types";
 import Pagination, { paginate } from "../pagination";
 import { RESERVATION_STATUS } from "@/lib/constants";
 import Image from "next/image";
+import { Tooltip } from "@mui/material";
+import { useDebounce } from "use-debounce";
+import { createCleanQueryList } from "@/lib/utils";
 
 const getStatusIcon = (status: string) => {
   let icon = null;
@@ -72,17 +75,42 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [tableRowLimit, setTableRowLimit] = useState(10);
 
+  const [listingIdInput, setListingIdInput] = useState("");
+  const [listingIdInputDebounced] = useDebounce(listingIdInput, 1000);
+
+  const [listingNameInput, setListingNameInput] = useState("");
+  const [listingNameInputDebounced] = useDebounce(listingNameInput, 1000);
+
   const onPageChange = (page: number) => {
     setCurrentPage(page);
   }
 
-  const filteredReservations = (reservations.length > 0) ?
-    filterType === "all" ?
-      reservations : reservations.filter(reservation => reservation.status === filterType)
-    : [];
+  let filteredReservations = reservations;
 
+  //filter by status
+  filteredReservations = (filteredReservations.length > 0) ? 
+    filterType === "all" ? reservations : reservations.filter(reservation => reservation.status === filterType)
+    : [];
+  
+  //filter by listing id
+  if(filteredReservations.length > 0) {
+    const queryList = createCleanQueryList(listingIdInputDebounced);
+    filteredReservations = filteredReservations.filter((reservation: Reservation) => 
+      (queryList.length > 0)? queryList.some(query => reservation.id.includes(query))
+      : true);
+  }
+
+  //filter by listing name
+  if(filteredReservations.length > 0) { 
+    const queryList = createCleanQueryList(listingNameInputDebounced);
+    filteredReservations = filteredReservations.filter((reservation: Reservation) => 
+      (queryList.length > 0)? queryList.some(query => reservation.post.title.includes(query))
+      : true);
+  }
+
+  //sort by creation date
   const sortedReservations = (filteredReservations.length > 0) ?
-    filteredReservations?.sort((a, b) => {
+  filteredReservations?.sort((a, b) => {
       if (sortOrder === "asc") {
         return a.createdAt.getTime() - b.createdAt.getTime();
       } else {
@@ -91,31 +119,53 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
     })
     : filteredReservations;
 
+  //paginate
   const paginatedReservations = paginate(sortedReservations, currentPage, tableRowLimit);
 
   return (
     <div className="overflow-x-auto lg:overflow-visible w-full lg:w-auto">
       <div className="flex flex-auto mb-4">
         <div className="justify-start">
-          <label htmlFor="filterSelect" className="mr-2 font-medium text-gray-600">Filter:</label>
-          <select
-            id="filterSelect"
-            className="px-2 py-1 border rounded-md bg-white text-gray-800 w-[120px]"
-            value={filterType}
-            onChange={(e) => setFilterType(e.target.value as "all" | "CONFIRMED" | "PENDING" | "CANCELLED")}
-          >
-            <option value="all">All</option>
-            <option value="CONFIRMED">Confirmed</option>
-            <option value="PENDING">Pending</option>
-            <option value="CANCELLED">Cancelled</option>
-          </select>
-          <button
-            className="ml-4 px-2 py-1 border rounded-md bg-white text-gray-800"
-            onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
-          >
-            {sortOrder === "asc" ? "Sort Ascending" : "Sort Descending"}
-          </button>
+          <label htmlFor="filterSelect" className="mr-2 font-medium text-gray-600">Status:</label>
+          <Tooltip title="Filter by STATUS">
+            <select
+              id="filterSelect"
+              className="px-2 py-1 border rounded-md bg-white text-gray-800 w-[120px]"
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value as "all" | "CONFIRMED" | "PENDING" | "CANCELLED")}
+            >
+              <option value="all">All</option>
+              <option value="CONFIRMED">Confirmed</option>
+              <option value="PENDING">Pending</option>
+              <option value="CANCELLED">Cancelled</option>
+            </select>
+          </Tooltip>
+          <Tooltip title="Sort on CREATED date">
+            <button
+              className="ml-4 px-2 py-1 border rounded-md bg-white text-gray-800"
+              onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
+            >
+              {sortOrder === "asc" ? "Sort Ascending" : "Sort Descending"}
+            </button>
+          </Tooltip>
+
+          {/* <label htmlFor="fname" className="ml-4 mr-2 font-medium text-gray-600">Filter by LISTING ID:</label> */}
+          <Tooltip title="Start typing or paste a LISTING ID">
+            <input id="listing-id-filter-input" type="text" name="listing-id-filter-input" placeholder="Filter by LISTING ID" 
+              className="ml-4 mt-1 px-2 py-1 border rounded-md bg-white text-gray-800 w-64" 
+              onChange={(event) => setListingIdInput(event.target.value)}
+            >
+            </input>
+          </Tooltip>
+
+          <Tooltip title="Start typing or paste a LISTING NAME">
+            <input id="listing-name-filter-input" type="text" name="listing-name-filter-input" placeholder="Filter by LISTING NAME" 
+              className="ml-4 mt-1 px-2 py-1 border rounded-md bg-white text-gray-800 w-64"
+              onChange={(event) => setListingNameInput(event.target.value)}
+            ></input>
+          </Tooltip>
         </div>
+
         <div className="flex flex-auto justify-end">
           <label htmlFor="num-of-items-adjuster" className="mr-2 mt-1 font-medium text-gray-600">Number of Items:</label>
           <select id="num-of-items-adjuster" className="px-2 py-1 border rounded-md bg-white text-gray-800 w-[80px]"

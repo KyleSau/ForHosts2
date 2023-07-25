@@ -81,3 +81,10 @@ export const calcDateDelta = (refDate: Date, futureDate: Date) => {
   const deltaTime = [numDays, numHours, numMinutes, numSeconds, remainingMilliseconds];
   return deltaTime.map((unit: number) => (unit != 0)? unit * sign : unit);
 };
+
+//used for multi text search
+export const createCleanQueryList = (multiQueryString: string) => {
+  let queryList = multiQueryString.split(/(?:,| )+/).filter(query => query !== ""); //remove empty string
+  queryList = queryList.filter((query: string, i: number) => queryList.indexOf(query) === i); //remove duplicates
+  return queryList;
+};
