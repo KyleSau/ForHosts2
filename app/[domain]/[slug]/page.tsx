@@ -67,16 +67,15 @@ export default async function SitePostPage({
             />
           </div>
 
+          <div className="flex grid row-span-1 p-5">
+            <h1 className="text-2xl font-bold mb-10">{data.title}</h1>
+            <p className="text-center">
+              {data.description}
+            </p>
+          </div>
           <div className="grid grid-cols-2 w-full rounded-md text-black dark:text-black md:border-stone-200 md:shadow dark:md:border-stone-700 items-center m-auto p-5 bg-gray-50">
-
-            <div className="flex grid row-span-1 p-5">
-              <h1 className="text-2xl font-bold mb-10">{data.title}</h1>
-              <p className="text-center">
-                {data.description}
-              </p>
-            </div>
             <div className="flex flex-col bg-gray-50 items-center">
-              <ReservationForm postId={data.id} />
+              <ReservationForm post={data} />
             </div>
             <AmenitiesModal amenityDetails={amenityDetails} />
             <div className="flex grid w-full grid-cols-2">
