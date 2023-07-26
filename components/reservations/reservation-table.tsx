@@ -40,25 +40,25 @@ const generateTableRows = (paginatedReservations: Reservation[]) => {
     <tbody className="text-black divide-y divide-gray-200">
       {paginatedReservations.map((reservation: Reservation, idx: number) => (
         <tr className="hover:bg-gray-500" key={idx}>
-          <td className="px-2 sm:px-6 py-4 text-center border-r">
+          <td className="px-2 sm:px-6 py-2 text-center border-r">
             {reservation.post.title}
           </td>
-          <td className="px-2 sm:px-6 py-4 text-center border-r">
+          <td className="px-2 sm:px-6 py-2 text-center border-r">
             {reservation.id}
           </td>
-          <td className="px-2 sm:px-6 py-4 text-center border-r">
+          <td className="px-2 sm:px-6 py-2 text-center border-r">
             {getStatusIcon(reservation.paymentStatus)}
           </td>
-          <td className="px-2 sm:px-6 py-4 text-center border-r">
+          <td className="px-2 sm:px-6 py-2 text-center border-r">
             {reservation.startDate.toUTCString()}
           </td>
-          <td className="px-2 sm:px-6 py-4 text-center border-r">
+          <td className="px-2 sm:px-6 py-2 text-center border-r">
             {reservation.endDate.toUTCString()}
           </td>
-          <td className="px-2 sm:px-6 py-4 text-center border-r">
+          <td className="px-2 sm:px-6 py-2 text-center border-r">
             {reservation.createdAt.toUTCString()}
           </td>
-          <td className="px-2 sm:px-6 py-4 text-center border-r">
+          <td className="px-2 sm:px-6 py-2 text-center border-r">
             {reservation.updatedAt.toUTCString()}
           </td>
         </tr>
@@ -185,8 +185,8 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
               "Listing Name",
               "Listing ID",
               "Status",
-              "Start",
-              "End",
+              "Check-in Time",
+              "Check-out Time",
               "Created",
               "Updated",
             ].map((header, idx) => (
