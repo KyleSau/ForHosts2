@@ -1,11 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { FaUserCircle, FaAngleDown, FaBars, FaTimes } from "react-icons/fa";
+import { FaAngleDown, FaBars, FaTimes } from "react-icons/fa";
 import Logo from "../Logo";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 type NavOption = {
   name: string;
   url?: string;
@@ -44,7 +42,7 @@ const Navbar = () => {
   const handleMobileMenuToggle = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
-  
+
   const handleMobileSubOptionsToggle = (name: string) => {
     if (activeMobileSubOption === name) {
       setActiveMobileSubOption(null);
@@ -52,7 +50,7 @@ const Navbar = () => {
       setActiveMobileSubOption(name);
     }
   };
-  
+
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
   };
@@ -168,7 +166,7 @@ const Navbar = () => {
                   closeMobileMenu();
                 }
               }}
-              className="flex justify-between items-center"
+                className="flex justify-between items-center"
               >
                 <Link
                   href={option.url || "#"}
@@ -181,46 +179,46 @@ const Navbar = () => {
 
               {/* Check if subOptions exist, and if so, map over them */}
               {option.subOptions && activeMobileSubOption === option.name && (
-              <ul className={activeMobileSubOption === option.name ? "slide-down" : ""}>
-                {option.subOptions.map((subOption) => (
-                  <li key={subOption.name} onClick={closeMobileMenu} className="ml-4">
-                    <Link
-                      href={subOption.url || "#"}
-                      className={`block text-xl font-bold text-black`}
-                    >
-                      {subOption.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-              
+                <ul className={activeMobileSubOption === option.name ? "slide-down" : ""}>
+                  {option.subOptions.map((subOption) => (
+                    <li key={subOption.name} onClick={closeMobileMenu} className="ml-4">
+                      <Link
+                        href={subOption.url || "#"}
+                        className={`block text-xl font-bold text-black`}
+                      >
+                        {subOption.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+
               )}
-              
+
             </li>
           ))}
 
         </ul>
         <div className="w-40 mt-24 ">
-            { session ? (
-              <Link href="https://dashboard.forhosts.com">
-                <button
-                  className="hover:bg-sitecolor text-black font-bold w-full border-2 border-black rounded-xl h-12 text-lg hover:border-2 focus:outline-none transition-all ease-in-out duration-150"
-                >
-                  Dashboard
-                </button>
-              </Link>
-            ) : (
-              <Link href="https://dashboard.forhosts.com/login">
-                <button
-                  className="hover:bg-sitecolor text-black font-bold w-full border-2 border-black rounded-xl h-12 text-lg hover:border-2 focus:outline-none transition-all ease-in-out duration-150"
-                >
-                  <span className="text-black"> Login</span>
-                </button>
-              </Link>
-            )}
-          </div>
+          {session ? (
+            <Link href="https://dashboard.forhosts.com">
+              <button
+                className="hover:bg-sitecolor text-black font-bold w-full border-2 border-black rounded-xl h-12 text-lg hover:border-2 focus:outline-none transition-all ease-in-out duration-150"
+              >
+                Dashboard
+              </button>
+            </Link>
+          ) : (
+            <Link href="https://dashboard.forhosts.com/login">
+              <button
+                className="hover:bg-sitecolor text-black font-bold w-full border-2 border-black rounded-xl h-12 text-lg hover:border-2 focus:outline-none transition-all ease-in-out duration-150"
+              >
+                <span className="text-black"> Login</span>
+              </button>
+            </Link>
+          )}
+        </div>
       </div>
-      
+
     </nav>
   );
 };
