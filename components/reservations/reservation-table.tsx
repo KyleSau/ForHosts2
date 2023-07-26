@@ -16,7 +16,7 @@ const getStatusIcon = (status: string) => {
       icon = <CheckCircle color="#00ff40" />;
       break;
     case RESERVATION_STATUS.PENDING:
-      icon = <Clock color="#fffa3c" />;
+      icon = <Clock color="#dbb042" />;
       break;
     case RESERVATION_STATUS.CANCELLED:
       icon = <XCircle color="#ff0000" />;
@@ -26,7 +26,7 @@ const getStatusIcon = (status: string) => {
       icon = null;
       break;
   }
-
+  
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
       {icon}
@@ -41,13 +41,13 @@ const generateTableRows = (paginatedReservations: Reservation[]) => {
       {paginatedReservations.map((reservation: Reservation, idx: number) => (
         <tr className="hover:bg-gray-500" key={idx}>
           <td className="px-2 sm:px-6 py-4 text-center border-r">
-            {reservation.id}
-          </td>
-          <td className="px-2 sm:px-6 py-4 text-center border-r">
             {reservation.post.title}
           </td>
           <td className="px-2 sm:px-6 py-4 text-center border-r">
-            {getStatusIcon(reservation.status)}
+            {reservation.id}
+          </td>
+          <td className="px-2 sm:px-6 py-4 text-center border-r">
+            {getStatusIcon(reservation.paymentStatus)}
           </td>
           <td className="px-2 sm:px-6 py-4 text-center border-r">
             {reservation.startDate.toUTCString()}
@@ -149,20 +149,19 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
             </button>
           </Tooltip>
 
-          {/* <label htmlFor="fname" className="ml-4 mr-2 font-medium text-gray-600">Filter by LISTING ID:</label> */}
+          <Tooltip title="Start typing or paste a LISTING NAME">
+            <input id="listing-name-filter-input" type="text" name="listing-name-filter-input" placeholder="Filter by LISTING NAME" 
+              className="ml-4 mt-1 px-2 py-1 border rounded-md bg-white text-gray-800 w-64"
+              onChange={(event) => setListingNameInput(event.target.value)}
+            ></input>
+          </Tooltip>
+
           <Tooltip title="Start typing or paste a LISTING ID">
             <input id="listing-id-filter-input" type="text" name="listing-id-filter-input" placeholder="Filter by LISTING ID" 
               className="ml-4 mt-1 px-2 py-1 border rounded-md bg-white text-gray-800 w-64" 
               onChange={(event) => setListingIdInput(event.target.value)}
             >
             </input>
-          </Tooltip>
-
-          <Tooltip title="Start typing or paste a LISTING NAME">
-            <input id="listing-name-filter-input" type="text" name="listing-name-filter-input" placeholder="Filter by LISTING NAME" 
-              className="ml-4 mt-1 px-2 py-1 border rounded-md bg-white text-gray-800 w-64"
-              onChange={(event) => setListingNameInput(event.target.value)}
-            ></input>
           </Tooltip>
         </div>
 
@@ -183,8 +182,8 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
         <thead className="bg-gray-50">
           <tr>
             {[
-              "Listing ID",
               "Listing Name",
+              "Listing ID",
               "Status",
               "Start",
               "End",

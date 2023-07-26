@@ -560,7 +560,7 @@ export const createReservation = async (formData: FormData, currentDate: Date) =
     //do validation
     const dateDeltaArray = calcDateDelta(currentDate, startDate);
 
-    if(dateDeltaArray.some((t: number) => t < 0)) { 
+    if (dateDeltaArray.some((t: number) => t < 0)) {
       throw new Error("The starting date of your reservation must be on or after today.")
     } else if (dateDeltaArray[0] > RESERVATION_FUTURE_DAYS_THRESHOLD) {
       throw new Error(`The starting date of your reservation cannot be more than ${RESERVATION_FUTURE_DAYS_THRESHOLD} days from today.`);

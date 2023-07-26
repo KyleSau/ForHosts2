@@ -85,6 +85,8 @@ export const calcDateDelta = (refDate: Date, futureDate: Date) => {
 //used for multi text search
 export const createCleanQueryList = (multiQueryString: string) => {
   let queryList = multiQueryString.split(/(?:,| )+/).filter(query => query !== ""); //remove empty string
+  const compoundQueries = multiQueryString.split(",").map(query => query.trim()).filter(query => query !== "");
+  queryList.concat(compoundQueries);
   queryList = queryList.filter((query: string, i: number) => queryList.indexOf(query) === i); //remove duplicates
   return queryList;
 };
