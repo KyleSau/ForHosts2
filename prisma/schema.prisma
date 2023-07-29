@@ -28,7 +28,7 @@ model User {
   sessions      Session[]
   sites         Site[]
   posts         Post[]
-  Review        Review[]
+  reviews       Review[]
 }
 
 model Account {
@@ -160,6 +160,9 @@ model Reservation {
   totalPrice    Int
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  paymentStatus String
+  bookingStatus String?
+  pricePaid     Int?
   paymentStatus String
   bookingStatus String?
   post          Post?    @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
