@@ -152,20 +152,30 @@ model Site {
   @@index([userId])
 }
 
+model Payment {
+  id         String   @id @default(cuid())
+  postId     String
+  startDate  DateTime
+  endDate    DateTime
+  status     String
+  totalPrice Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
 model Reservation {
-  id            String   @id @default(cuid())
-  postId        String
-  startDate     DateTime
-  endDate       DateTime
-  totalPrice    Int
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  paymentStatus String
-  bookingStatus String?
-  pricePaid     Int?
-  paymentStatus String
-  bookingStatus String?
-  post          Post?    @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id         String   @id @default(cuid())
+  // Meta data
+  postId     String
+  startDate  DateTime
+  endDate    DateTime
+  totalPrice Int
+  // Meta data
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  status     String
+  pricePaid  Int?
+  post       Post?    @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@index([postId])
 }
