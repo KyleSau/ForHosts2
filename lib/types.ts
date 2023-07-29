@@ -69,6 +69,9 @@ export interface Reservation {
   post: Post;
   startDate: Date;
   endDate: Date;
+  // paymentStatus: string;
+  // bookingStatus: string;
+  pricePaid: number;
   createdAt: Date;
   updatedAt: Date;
 }

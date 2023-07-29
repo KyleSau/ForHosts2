@@ -26,7 +26,7 @@ const getStatusIcon = (status: string) => {
       icon = null;
       break;
   }
-  
+
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
       {icon}
@@ -47,7 +47,7 @@ const generateTableRows = (paginatedReservations: Reservation[]) => {
             {reservation.id}
           </td>
           <td className="px-2 sm:px-6 py-2 text-center border-r">
-            {getStatusIcon(reservation.paymentStatus)}
+            {getStatusIcon(reservation.status)}
           </td>
           <td className="px-2 sm:px-6 py-2 text-center border-r">
             {reservation.startDate.toUTCString()}
@@ -88,29 +88,29 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
   let filteredReservations = reservations;
 
   //filter by status
-  filteredReservations = (filteredReservations.length > 0) ? 
+  filteredReservations = (filteredReservations.length > 0) ?
     filterType === "all" ? reservations : reservations.filter(reservation => reservation.status === filterType)
     : [];
-  
+
   //filter by listing id
-  if(filteredReservations.length > 0) {
+  if (filteredReservations.length > 0) {
     const queryList = createCleanQueryList(listingIdInputDebounced);
-    filteredReservations = filteredReservations.filter((reservation: Reservation) => 
-      (queryList.length > 0)? queryList.some(query => reservation.id.includes(query))
-      : true);
+    filteredReservations = filteredReservations.filter((reservation: Reservation) =>
+      (queryList.length > 0) ? queryList.some(query => reservation.id.includes(query))
+        : true);
   }
 
   //filter by listing name
-  if(filteredReservations.length > 0) { 
+  if (filteredReservations.length > 0) {
     const queryList = createCleanQueryList(listingNameInputDebounced);
-    filteredReservations = filteredReservations.filter((reservation: Reservation) => 
-      (queryList.length > 0)? queryList.some(query => reservation.post.title.includes(query))
-      : true);
+    filteredReservations = filteredReservations.filter((reservation: Reservation) =>
+      (queryList.length > 0) ? queryList.some(query => reservation.post.title.includes(query))
+        : true);
   }
 
   //sort by creation date
   const sortedReservations = (filteredReservations.length > 0) ?
-  filteredReservations?.sort((a, b) => {
+    filteredReservations?.sort((a, b) => {
       if (sortOrder === "asc") {
         return a.createdAt.getTime() - b.createdAt.getTime();
       } else {
@@ -150,15 +150,15 @@ const ReservationTable: React.FC<{ reservations: Reservation[] }> = ({
           </Tooltip>
 
           <Tooltip title="Start typing or paste a LISTING NAME">
-            <input id="listing-name-filter-input" type="text" name="listing-name-filter-input" placeholder="Filter by LISTING NAME" 
+            <input id="listing-name-filter-input" type="text" name="listing-name-filter-input" placeholder="Filter by LISTING NAME"
               className="ml-4 mt-1 px-2 py-1 border rounded-md bg-white text-gray-800 w-64"
               onChange={(event) => setListingNameInput(event.target.value)}
             ></input>
           </Tooltip>
 
           <Tooltip title="Start typing or paste a LISTING ID">
-            <input id="listing-id-filter-input" type="text" name="listing-id-filter-input" placeholder="Filter by LISTING ID" 
-              className="ml-4 mt-1 px-2 py-1 border rounded-md bg-white text-gray-800 w-64" 
+            <input id="listing-id-filter-input" type="text" name="listing-id-filter-input" placeholder="Filter by LISTING ID"
+              className="ml-4 mt-1 px-2 py-1 border rounded-md bg-white text-gray-800 w-64"
               onChange={(event) => setListingIdInput(event.target.value)}
             >
             </input>
