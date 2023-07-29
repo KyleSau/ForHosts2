@@ -255,7 +255,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
       >
         <p className="flex items-center">
           <h1 className="mb-12 mt-12 text-3xl font-bold">
-            Check times {showCheckTimes ? "↑" : "↓"}
+            Booking Window {showCheckTimes ? "↑" : "↓"}
           </h1>
         </p>
       </div>
@@ -267,10 +267,10 @@ export default function Editor({ post }: { post: PostWithSite }) {
         }}
       >
         <div className="mb-2">
-          <h2 className="font-cal text-xl font-bold">Check-in time</h2>
+          <h2 className="font-cal text-xl font-bold">Check-In Time</h2>
           <input
             type="time"
-            defaultValue={data.checkInTime}
+            defaultValue={data.checkInTime.toString()}
             onChange={(e) => setData({ ...data, checkInTime: e.target.value })}
             className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
           />
@@ -279,7 +279,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
           <h2 className="font-cal text-xl font-bold">Checkout time</h2>
           <input
             type="time"
-            defaultValue={data.checkOutTime}
+            defaultValue={data.checkOutTime.toString()}
             onChange={(e) => setData({ ...data, checkOutTime: e.target.value })}
             className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
           />

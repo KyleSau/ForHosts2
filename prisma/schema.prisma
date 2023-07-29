@@ -94,8 +94,8 @@ model Post {
   // New fields to include additional features
   propertyType         String // 
   maxGuests            Int?
-  checkInTime          String // Check-in time for the rental property
-  checkOutTime         String // Check-out time for the rental property
+  checkInTime          DateTime   @db.Time() // Check-in time for the rental property
+  checkOutTime         DateTime   @db.Time() // Check-out time for the rental property
   amenities            String[] // List of amenities available at the property
   location             String // Location of the rental property
   instantBooking       Boolean? // Indicates if the property supports instant booking
