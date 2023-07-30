@@ -85,10 +85,12 @@
     "tippy.js": "^6.3.7",
     "tiptap-markdown": "^0.8.1",
     "unist-util-visit": "^4.1.1",
-    "use-debounce": "^9.0.2"
+    "use-debounce": "^9.0.2",
+    "micro-cors": "^0.1.1"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.3",
+    "@types/micro-cors": "^0.1.2",
     "@tailwindcss/typography": "^0.5.8",
     "@types/file-saver": "^2.0.5",
     "@types/ical": "^0.8.0",
