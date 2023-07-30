@@ -20,7 +20,7 @@ const Meta: React.FC<MetaProps> = ({ title = 'WebDev Newz', keywords = 'web deve
 
 Meta.defaultProps = {
   title: 'ForHosts',
-  keywords: 'Rental Properties, Make your own rental site, Rentals',
+  keywords: 'Short Term Rental Properties, Make your own rental site',
   description: 'Generate a dynamic site for your customers that has all your own listings!',
 }
 export default Meta

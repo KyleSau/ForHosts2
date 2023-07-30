@@ -70,7 +70,7 @@ export default function Nav({ children }: { children: ReactNode }) {
           icon: <ArrowLeft width={18} />,
         },
         {
-          name: "Rentals",
+          name: "Listings",
           href: `/site/${id}`,
           isActive: segments.length === 2,
           icon: <Newspaper width={18} />,
@@ -123,9 +123,9 @@ export default function Nav({ children }: { children: ReactNode }) {
         icon: <Layout width={18} />,
       },
       {
-        name: "Rentals",
-        href: "/rentals",
-        isActive: segments[0] === "rentals",
+        name: "Listings",
+        href: "/listings",
+        isActive: segments[0] === "Listings",
         icon: <Home width={18} />,
       },
       {

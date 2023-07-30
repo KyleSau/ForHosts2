@@ -37,7 +37,7 @@ export default async function SiteHomePage({
               />
             </div>
             <div className="mx-auto mt-10 w-5/6 lg:w-full justify-center">
-            {/* dark:text-white */}
+              {/* dark:text-white */}
               <h2 className="my-10 font-title text-4xl  md:text-6xl justify-center">
                 {posts[0].title}
               </h2>
@@ -98,7 +98,7 @@ export default async function SiteHomePage({
       {posts.length > 1 && (
         <div className="mx-5 mb-20 max-w-screen-xl lg:mx-24 2xl:mx-auto">
           <h2 className="mb-10 font-title text-4xl dark:text-white md:text-5xl">
-            Other Rentals
+            Other Listings
           </h2>
           <div className="grid w-full grid-cols-1 gap-x-4 gap-y-8 md:grid-cols-2 xl:grid-cols-3">
             {posts.slice(1).map((metadata, index) => (

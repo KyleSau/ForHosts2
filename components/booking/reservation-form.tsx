@@ -39,7 +39,7 @@ export default function ReservationForm({ post }: { post: any }) {
       <div className="flex-col items-center grid grid-cols-4">
         <div className="grid col-span-4 mb-5">
           <p className="text-s col-span-2 col-start-1">${post.price} per night</p>
-          <p className="text-s text-center col-span-2 col-start-3">Minium stay: {post.minimumStay} days</p>
+          <p className="text-s text-center col-span-2 col-start-3">Minimum stay: {post.minimumStay} days</p>
         </div>
         <div className="grid col-span-2 col-start-2">
           <p className="text-xs text-left"></p>
