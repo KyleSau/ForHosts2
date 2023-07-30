@@ -75,7 +75,7 @@ model VerificationToken {
 model Post {
   id            String        @id @default(cuid())
   title         String        @db.Text
-  price         Int // stored as cents 100 = $1.00
+  price         Int
   description   String?       @db.Text
   content       String?       @db.Text
   slug          String        @default(cuid())
@@ -94,8 +94,8 @@ model Post {
   // New fields to include additional features
   propertyType         String // 
   maxGuests            Int?
-  checkInTime          String // Check-in time for the rental property
-  checkOutTime         String // Check-out time for the rental property
+  checkInTime          String // HH:mm:ss Check-in time for the rental property
+  checkOutTime         String // HH:mm:ss Check-out time for the rental property
   amenities            String[] // List of amenities available at the property
   location             String // Location of the rental property
   instantBooking       Boolean? // Indicates if the property supports instant booking
