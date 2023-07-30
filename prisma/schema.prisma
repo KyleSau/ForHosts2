@@ -75,7 +75,7 @@ model VerificationToken {
 model Post {
   id            String        @id @default(cuid())
   title         String        @db.Text
-  price         Int // stored as cents 100 = $1.00
+  price         Int
   description   String?       @db.Text
   content       String?       @db.Text
   slug          String        @default(cuid())
