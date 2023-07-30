@@ -49,5 +49,4 @@ export default async function Posts({
       </p>
     </div>
   );
-  return (<></>);
 }
