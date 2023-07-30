@@ -16,6 +16,7 @@ import { updatePost, updatePostMetadata } from "@/lib/actions";
 import clsx from "clsx";
 import LoadingDots from "../icons/loading-dots";
 import { ExternalLink } from "lucide-react";
+import DateSlider from "../booking/date-slider";
 
 type PostWithSite = Post & { site: { subdomain: string | null } | null };
 
@@ -27,6 +28,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
   const [hydrated, setHydrated] = useState(false);
   const [showCheckTimes, setShowCheckTimes] = useState(false);
   const [showPropertyDetails, setShowPropertyDetails] = useState(false);
+  // const [availabilityWindowTimes, setAvailabilityWindowTimes] = useState<String[]>(["",""]);
 
   const url = process.env.NEXT_PUBLIC_VERCEL_ENV
     ? `https://${data.site?.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${data.slug}`
@@ -182,6 +184,25 @@ export default function Editor({ post }: { post: PostWithSite }) {
     }
   }, [editor, post, hydrated]);
 
+  const setAvailabilityWindowTimes = (date: string, index: number) => {
+    let availabilityWindow = data.availabilityWindow;
+
+    if(!availabilityWindow || availabilityWindow.length == 0) { 
+      availabilityWindow = ["",""];
+    } else if (availabilityWindow.length < 2) {
+      availabilityWindow.push("");
+    }
+
+    if(index === 0) { //start date
+      availabilityWindow[0] = date;
+    } else if (index === 1) { //end date
+      availabilityWindow[1] = date;
+    }
+    setData({ ...data, availabilityWindow });
+  };
+
+  // console.log("availabityWindow is now set to: ", data.availabilityWindow);
+
   return (
     <div className="relative min-h-[500px] w-full max-w-screen-lg border-stone-200 p-12 px-8 dark:border-stone-700 sm:mb-[calc(20vh)] sm:rounded-lg sm:border sm:px-12 sm:shadow-lg">
       <div className="absolute right-5 top-5 mb-5 flex items-center space-x-3">
@@ -253,11 +274,9 @@ export default function Editor({ post }: { post: PostWithSite }) {
         className="flex cursor-pointer justify-center"
         onClick={() => setShowCheckTimes(!showCheckTimes)}
       >
-        <p className="flex items-center">
-          <h1 className="mb-12 mt-12 text-3xl font-bold">
-            Booking Window {showCheckTimes ? "↑" : "↓"}
-          </h1>
-        </p>
+        <h1 className="flex items-center mb-12 mt-12 text-3xl font-bold">
+          Booking Window {showCheckTimes ? "↑" : "↓"}
+        </h1>
       </div>
       <div
         style={{
@@ -267,20 +286,40 @@ export default function Editor({ post }: { post: PostWithSite }) {
         }}
       >
         <div className="mb-2">
-          <h2 className="font-cal text-xl font-bold">Check-In Time</h2>
+          <h2 className="font-cal text-xl font-bold">In-Service Date</h2>
           <input
-            type="time"
-            defaultValue={data.checkInTime.toString()}
-            onChange={(e) => setData({ ...data, checkInTime: e.target.value })}
+            type="date"
+            defaultValue={"2023-07-29"}
+            onChange={(e) => setAvailabilityWindowTimes(e.target.value, 0)}
             className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
           />
         </div>
         <div className="mb-6">
-          <h2 className="font-cal text-xl font-bold">Checkout time</h2>
+          <h2 className="font-cal text-xl font-bold">Out-of-Service Date</h2>
+          <DateSlider />
+          <input
+            type="date"
+            defaultValue={"2023-07-30"}
+            onChange={(e) => setAvailabilityWindowTimes(e.target.value, 1)}
+            className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
+          />
+        </div>
+
+        <div className="mb-2">
+          <h2 className="font-cal text-xl font-bold">Time of Day for Guest Check-in</h2>
+          <input
+            type="time"
+            defaultValue={data.checkInTime.toString()}
+            onChange={(e) => setData({ ...data, checkInTime: new Date(e.target.value).toLocaleTimeString() })}
+            className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
+          />
+        </div>
+        <div className="mb-6">
+          <h2 className="font-cal text-xl font-bold">Time of Day for Guest Check-out</h2>
           <input
             type="time"
             defaultValue={data.checkOutTime.toString()}
-            onChange={(e) => setData({ ...data, checkOutTime: e.target.value })}
+            onChange={(e) => setData({ ...data, checkOutTime: new Date(e.target.value).toLocaleTimeString() })}
             className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
           />
         </div>
@@ -290,11 +329,9 @@ export default function Editor({ post }: { post: PostWithSite }) {
         className="flex cursor-pointer justify-center"
         onClick={() => setShowPropertyDetails(!showPropertyDetails)}
       >
-        <p className="flex items-center">
-          <h1 className="mb-14 text-3xl font-bold">
-            Property Details {showPropertyDetails ? "↑" : "↓"}
-          </h1>
-        </p>
+        <h1 className="flex items-center mb-14 text-3xl font-bold">
+          Property Details {showPropertyDetails ? "↑" : "↓"}
+        </h1>
       </div>
       <div
         style={{
