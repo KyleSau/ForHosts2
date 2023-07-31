@@ -42,6 +42,7 @@ export async function getPostsForSite(domain: string) {
           image: true,
           imageBlurhash: true,
           createdAt: true,
+          price: true
         },
         orderBy: [
           {
@@ -99,6 +100,7 @@ export async function getPostData(domain: string, slug: string) {
             description: true,
             image: true,
             imageBlurhash: true,
+            price: true
           },
         }),
       ]);

@@ -572,7 +572,7 @@ export const createReservation = async (formData: FormData, currentDate: Date) =
         startDate,
         endDate,
         totalPrice: 100,
-        paymentStatus: 'PENDING',
+        status: 'PENDING',
       }
     });
     return response;
