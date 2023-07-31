@@ -184,7 +184,8 @@ export default function Editor({ post }: { post: PostWithSite }) {
     }
   }, [editor, post, hydrated]);
 
-  const setAvailabilityWindowTimes = (date: string, index: number) => {
+  const setAvailabilityWindowTimes = async (date: string, index: number) => {
+    console.log("entered setAvailabilityWindowTimes");
     let availabilityWindow = data.availabilityWindow;
 
     if(!availabilityWindow || availabilityWindow.length == 0) { 
@@ -197,11 +198,14 @@ export default function Editor({ post }: { post: PostWithSite }) {
       availabilityWindow[0] = date;
     } else if (index === 1) { //end date
       availabilityWindow[1] = date;
-    }
-    setData({ ...data, availabilityWindow });
-  };
 
-  // console.log("availabityWindow is now set to: ", data.availabilityWindow);
+      //set the slider to custom
+
+    }
+    console.log("AAA availabilityWindow: ", availabilityWindow);
+    setData({ ...data, availabilityWindow });
+    console.log("setData called with: avail: ", data.availabilityWindow);
+  };
 
   return (
     <div className="relative min-h-[500px] w-full max-w-screen-lg border-stone-200 p-12 px-8 dark:border-stone-700 sm:mb-[calc(20vh)] sm:rounded-lg sm:border sm:px-12 sm:shadow-lg">
@@ -289,17 +293,17 @@ export default function Editor({ post }: { post: PostWithSite }) {
           <h2 className="font-cal text-xl font-bold">In-Service Date</h2>
           <input
             type="date"
-            defaultValue={"2023-07-29"}
+            value={data?.availabilityWindow[0]}
             onChange={(e) => setAvailabilityWindowTimes(e.target.value, 0)}
             className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
           />
         </div>
         <div className="mb-6">
           <h2 className="font-cal text-xl font-bold">Out-of-Service Date</h2>
-          <DateSlider />
+          <DateSlider availabilityWindow={data?.availabilityWindow} setAvailabilityWindowTimes={setAvailabilityWindowTimes}/>
           <input
             type="date"
-            defaultValue={"2023-07-30"}
+            value={data?.availabilityWindow[1]}
             onChange={(e) => setAvailabilityWindowTimes(e.target.value, 1)}
             className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
           />

@@ -1,3 +1,5 @@
+import { TIME_FACTORS } from "./constants";
+
 export async function fetcher<JSON = any>(
   input: RequestInfo,
   init?: RequestInit,
@@ -60,26 +62,53 @@ export const chunkIntoSizeNSubarrays = (arr: Array<number>, subarrySize: number)
 }
 
 export const calcDateDelta = (refDate: Date, futureDate: Date) => {
-  const DAY_FACTOR = 1000 * 3600 * 24; // ms -> days
-  const HOUR_FACTOR = 1000 * 3600; // ms -> hours
-  const MINUTE_FACTOR = 1000 * 60; //ms -> minutes
-  const SECOND_FACTOR = 1000; // ms -> seconds
-
   const diff = futureDate.getTime() - refDate.getTime();
   const sign = (diff < 0)? -1: 1;
   let remainingMilliseconds = Math.abs(diff);
 
-  const numDays = Math.floor(remainingMilliseconds / DAY_FACTOR);
-  remainingMilliseconds %= DAY_FACTOR;
-  const numHours = Math.floor(remainingMilliseconds / HOUR_FACTOR);
-  remainingMilliseconds %= HOUR_FACTOR;
-  const numMinutes = Math.floor(remainingMilliseconds / MINUTE_FACTOR);
-  remainingMilliseconds %= MINUTE_FACTOR;
-  const numSeconds = Math.floor(remainingMilliseconds / SECOND_FACTOR);
-  remainingMilliseconds %= SECOND_FACTOR;
+  const numDays = Math.floor(remainingMilliseconds / TIME_FACTORS.MS_PER_DAY);
+  remainingMilliseconds %= TIME_FACTORS.MS_PER_DAY;
+  const numHours = Math.floor(remainingMilliseconds / TIME_FACTORS.MS_PER_HOUR);
+  remainingMilliseconds %= TIME_FACTORS.MS_PER_HOUR;
+  const numMinutes = Math.floor(remainingMilliseconds / TIME_FACTORS.MS_PER_MINUTE);
+  remainingMilliseconds %= TIME_FACTORS.MS_PER_MINUTE;
+  const numSeconds = Math.floor(remainingMilliseconds / TIME_FACTORS.MS_PER_SECOND);
+  remainingMilliseconds %= TIME_FACTORS.MS_PER_SECOND;
 
   const deltaTime = [numDays, numHours, numMinutes, numSeconds, remainingMilliseconds];
   return deltaTime.map((unit: number) => (unit != 0)? unit * sign : unit);
+};
+
+export const calcRelativeDate = (refDate: Date, query: string) => {
+  const queryArgs = query.match(/^[\+\-+0-9]+|[A-za-z]+/gm);
+  const queryNum: number = queryArgs && queryArgs.length >= 1? parseInt(queryArgs[0]) : 0;
+  const queryTimeUnit: string = queryArgs && queryArgs.length >= 2? queryArgs[1] : "null";
+
+  if(queryNum === 0 || queryTimeUnit === "null") {
+    return refDate;
+  }
+
+  const resultDate = new Date(refDate);
+
+  switch(queryTimeUnit) {
+    case "hr" || "hour":
+      resultDate.setHours(refDate.getHours() + queryNum);
+      break;
+    case "dy" || "day":
+      resultDate.setHours(refDate.getHours() + queryNum*24);
+      break;
+    case "wk" || "week":
+      resultDate.setDate(refDate.getDate() + queryNum*7);
+      break;
+    case "mo" || "month":
+      resultDate.setMonth(refDate.getMonth() + queryNum);
+      break;
+    case "yr" || "year":
+      resultDate.setFullYear(refDate.getFullYear() + queryNum);
+      break;
+  }
+  
+  return resultDate;
 };
 
 //used for multi text search
