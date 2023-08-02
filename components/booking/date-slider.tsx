@@ -11,7 +11,7 @@ export default function DateSlider({availabilityWindow, setAvailabilityWindowTim
     const query = sliderIntervals[sliderIdxFromEvent];
     const [inServiceDate, _] = availabilityWindow;
 
-    const newOutOfServiceDate = calcRelativeDate(new Date(inServiceDate), query).toISOString().split("T")[0];
+    const newOutOfServiceDate = calcRelativeDate(new Date(inServiceDate), query).toISOString()?.split("T")[0];
     setSliderIdx(sliderIdxFromEvent);
     setAvailabilityWindowTimes(newOutOfServiceDate, 1, false);
   };
@@ -20,7 +20,9 @@ export default function DateSlider({availabilityWindow, setAvailabilityWindowTim
     <div className="flex">
       <input type="range" min={0} max={sliderIntervals.length-1} defaultValue={0} value={sliderIdx} step="1" 
         className="range w-[373px] ml-[6px]" 
-        onChange={(sliderEvent) => calculateOutOfServiceDate(sliderEvent)}/>
+        onChange={(sliderEvent) => calculateOutOfServiceDate(sliderEvent)}
+        disabled={availabilityWindow[0] === undefined || availabilityWindow[0] === ""}
+        />
       <Tooltip title="Time from the In-Service Date until your listing becomes inactive.">
         <Info className="ml-2 opacity-90 stroke-[1px]"/> 
       </Tooltip>

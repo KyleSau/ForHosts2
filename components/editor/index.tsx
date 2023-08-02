@@ -263,7 +263,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
           {isPendingPublishing ? (
             <LoadingDots />
           ) : (
-            <p>{data.published ? "Unpublish" : "Publish"}</p>
+            <p>{data.published ? "Edit Listing" : "Publish Listing"}</p>
           )}
         </button>
       </div>
