@@ -219,6 +219,16 @@ export default function Editor({ post }: { post: PostWithSite }) {
     setData({ ...data, availabilityWindow });
   };
 
+  const setTimeOfDay = async (event: any) => {
+    const inputTimeValue = event.target.value;
+    // console.log("inputTimeValue: ", inputTimeValue);
+    // const inputTime = new Date(inputTimeValue);
+    // console.log("inputTime: ", inputTime);
+    // const inputTimeFormatted = inputTime.toLocaleTimeString();
+    // console.log("inputTimeFormatted: ", inputTimeFormatted);
+    setData({ ...data, checkInTime: event.target.value });
+  };
+
   return (
     <div className="relative min-h-[500px] w-full max-w-screen-lg border-stone-200 p-12 px-8 dark:border-stone-700 sm:mb-[calc(20vh)] sm:rounded-lg sm:border sm:px-12 sm:shadow-lg">
       <div className="absolute right-5 top-5 mb-5 flex items-center space-x-3">
@@ -337,7 +347,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
           <input
             type="time"
             defaultValue={data.checkInTime.toString()}
-            onChange={(e) => setData({ ...data, checkInTime: new Date(e.target.value).toLocaleTimeString() })}
+            onChange={(e) => setData({ ...data, checkInTime: e.target.value })}
             className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
           />
         </div>
@@ -351,7 +361,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
           <input
             type="time"
             defaultValue={data.checkOutTime.toString()}
-            onChange={(e) => setData({ ...data, checkOutTime: new Date(e.target.value).toLocaleTimeString() })}
+            onChange={(e) => setData({ ...data, checkOutTime: e.target.value })}
             className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
           />
         </div>
