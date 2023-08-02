@@ -15,8 +15,9 @@ import { Post } from "@prisma/client";
 import { updatePost, updatePostMetadata } from "@/lib/actions";
 import clsx from "clsx";
 import LoadingDots from "../icons/loading-dots";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Info } from "lucide-react";
 import DateSlider from "../booking/date-slider";
+import { Tooltip } from "@mui/material";
 
 type PostWithSite = Post & { site: { subdomain: string | null } | null };
 
@@ -327,7 +328,12 @@ export default function Editor({ post }: { post: PostWithSite }) {
         </div>
 
         <div className="mb-2">
-          <h2 className="font-cal text-xl font-bold">Time of Day for Guest Check-in</h2>
+          <div className="flex">
+            <h2 className="font-cal text-xl font-bold">Time of Day for Guest Check-in</h2>
+            <Tooltip title="Time of day that the guest is able to check in on their first day.">
+              <Info className="ml-2 opacity-90 stroke-[1px]"/> 
+            </Tooltip>
+          </div>
           <input
             type="time"
             defaultValue={data.checkInTime.toString()}
@@ -336,7 +342,12 @@ export default function Editor({ post }: { post: PostWithSite }) {
           />
         </div>
         <div className="mb-6">
-          <h2 className="font-cal text-xl font-bold">Time of Day for Guest Check-out</h2>
+          <div className="flex">
+            <h2 className="font-cal text-xl font-bold">Time of Day for Guest Check-out</h2>
+            <Tooltip title="Time of day by which the guest must check-out on their last day.">
+              <Info className="ml-2 opacity-90 stroke-[1px]"/> 
+            </Tooltip>
+          </div>
           <input
             type="time"
             defaultValue={data.checkOutTime.toString()}
