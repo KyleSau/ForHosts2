@@ -219,16 +219,6 @@ export default function Editor({ post }: { post: PostWithSite }) {
     setData({ ...data, availabilityWindow });
   };
 
-  const setTimeOfDay = async (event: any) => {
-    const inputTimeValue = event.target.value;
-    // console.log("inputTimeValue: ", inputTimeValue);
-    // const inputTime = new Date(inputTimeValue);
-    // console.log("inputTime: ", inputTime);
-    // const inputTimeFormatted = inputTime.toLocaleTimeString();
-    // console.log("inputTimeFormatted: ", inputTimeFormatted);
-    setData({ ...data, checkInTime: event.target.value });
-  };
-
   return (
     <div className="relative min-h-[500px] w-full max-w-screen-lg border-stone-200 p-12 px-8 dark:border-stone-700 sm:mb-[calc(20vh)] sm:rounded-lg sm:border sm:px-12 sm:shadow-lg">
       <div className="absolute right-5 top-5 mb-5 flex items-center space-x-3">
