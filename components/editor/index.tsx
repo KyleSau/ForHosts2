@@ -413,6 +413,19 @@ export default function Editor({ post }: { post: PostWithSite }) {
             className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
           />
         </div>
+
+        <div className="mb-4">
+          <input
+            type="number"
+            placeholder="Maximum number of guests allowed for stay"
+            defaultValue={post?.price || ""}
+            onChange={(e) =>
+              setData({ ...data, maxGuests: parseInt(e.target.value, 10) })
+            }
+            className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
+          />
+        </div>
+
         <div className="mb-4">
           <input
             type="number"
