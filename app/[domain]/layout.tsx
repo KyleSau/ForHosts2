@@ -9,6 +9,7 @@ import { getSiteData } from "@/lib/fetchers";
 import { fontMapper } from "@/styles/fonts";
 import { Metadata } from "next";
 import Navbar from "@/components/users-sites/navbar";
+import Footer from "@/components/footer";
 
 export async function generateMetadata({
   params,
@@ -112,10 +113,7 @@ export default async function SiteLayout({
 
       {/* Main content */}
       <div className="mt-5">{children}</div>
-
-      {(params.domain == `demo.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}` || params.domain == `platformize.co`) &&
-        <CTA />
-      }
+      <Footer />
     </div>
   );
 }

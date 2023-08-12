@@ -46,7 +46,7 @@ const footerItems: FooterItems = [
 
 function Footer() {
   return (
-    <footer className="pt-2 pb-2 bg-gray-600 text-textSecondary">
+    <footer className="pt-2 pb-2 bg-gray-400 text-textSecondary">
       <Container>
         <div className="flex flex-col justify-center items-center mt-24 md:flex-col">
           <div className="flex space-x-4 justify-center">
