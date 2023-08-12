@@ -18,7 +18,7 @@ export default async function contact({
     return (
         <>
             <div className="mb-20 w-full">
-
+                test
             </div>
 
             <div className="mx-auto w-full max-w-screen-xl md:mb-28 lg:w-5/6">
