@@ -18,7 +18,7 @@ export default function DateSlider({availabilityWindow, setAvailabilityWindowTim
 
   return (<>
     <div className="flex">
-      <input type="range" min={0} max={sliderIntervals.length-1} defaultValue={0} value={sliderIdx} step="1" 
+      <input type="range" min={0} max={sliderIntervals.length-1} value={sliderIdx} step="1" 
         className="range w-[373px] ml-[6px]" 
         onChange={(sliderEvent) => calculateOutOfServiceDate(sliderEvent)}
         disabled={availabilityWindow[0] === undefined || availabilityWindow[0] === ""}
