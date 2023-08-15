@@ -24,7 +24,7 @@ interface SliderCardProps {
 }
 
 const Badge: FC = () => (
-  <div className="absolute top-0 transform -translate-y-1/2 px-3 py-1 bg-red-500 text-white text-xs font-bold rounded-full">
+  <div className="absolute top-0 transform -translate-y-1/2 px-3 py-1 bg-blue-500 text-white text-xs font-bold rounded-full">
     Recommended
   </div>
 );
@@ -54,7 +54,7 @@ const PriceCard: FC<PriceCardProps> = ({
       ))}
     </ul>
     <div className="flex-grow"></div>
-    <button className="mt-6 px-8 py-2 text-white bg-sitecolor rounded-md hover:bg-red-600 active:bg-red-700 transition duration-200 font-bold border border-sitecolor">
+    <button className="mt-6 px-8 py-2 text-white bg-sitecolor rounded-md hover:bg-sky-600 active:bg-red-700 transition duration-200 font-bold border border-sitecolor">
       Choose plan
     </button>
     <small className="text-gray-500">{footnote}</small>
@@ -133,12 +133,15 @@ const Pricing: FC = () => {
         <SliderCard
           title="Basic"
           subtitle="For individuals"
-          basePrice={10}
+          basePrice={0}
           extraPricePerProperty={2}
           benefits={[
             "Website for property",
-            "Up to 5 property listings",
-            "Feature 3",
+            "Custom Domain Name",
+            "Booking System",
+            "Payment System",
+            "Guest Communication",
+            "3% Booking Fee",
           ]}
           footnote="Billed monthly"
           propertyCount={propertyCount}
@@ -146,9 +149,15 @@ const Pricing: FC = () => {
         <SliderCard
           title="Pro"
           subtitle="For professionals"
-          basePrice={59}
+          basePrice={20}
           extraPricePerProperty={2}
-          benefits={["Feature 1", "Feature 2", "Feature 3", "Feature 4"]}
+          benefits={[
+            "Website for property",
+            "Custom Domain Name",
+            "Booking System",
+            "Payment System",
+            "Guest Communication",
+            "3% Booking Fee",]}
           footnote="Billed monthly"
           isFeatured
           isHotOffer
@@ -157,14 +166,15 @@ const Pricing: FC = () => {
         <SliderCard
           title="Premium"
           subtitle="For businesses"
-          basePrice={89}
+          basePrice={30}
           extraPricePerProperty={2}
           benefits={[
-            "Feature 1",
-            "Feature 2",
-            "Feature 3",
-            "Feature 4",
-            "Feature 5",
+            "Website for property",
+            "Custom Domain Name",
+            "Booking System",
+            "Payment System",
+            "Guest Communication",
+            "3% Booking Fee",
           ]}
           footnote="Billed monthly"
           propertyCount={propertyCount}
