@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { Prisma, Post, Site, Reservation } from "@prisma/client";
+import { Prisma, Post, Site, Reservation, PrismaPromise } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { withPostAuth, withSiteAuth } from "./auth";
 import { getSession } from "@/lib/auth";
@@ -354,6 +354,24 @@ export const updatePost = async (data: Post) => {
     };
   }
 };
+
+export const getPosts = async (userId:string, siteId:string|undefined, limit=null) => {
+  const posts = await prisma.post.findMany({
+    where: {
+      userId: userId as string,
+      ...(siteId ? { siteId } : {}),
+    },
+    orderBy: {
+      updatedAt: "desc",
+    },
+    include: {
+      site: true,
+    },
+    ...(limit ? { take: limit } : {}),
+  });
+  return posts;
+};
+
 
 export const updatePostMetadata = withPostAuth(
   async (

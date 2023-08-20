@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import PostCard from "./post-card";
 import Image from "next/image";
+import { getPosts } from "@/lib/actions";
 
 export default async function Posts({
   siteId,
@@ -15,19 +16,8 @@ export default async function Posts({
   if (!session?.user) {
     redirect("/login");
   }
-  const posts = await prisma.post.findMany({
-    where: {
-      userId: session.user.id as string,
-      ...(siteId ? { siteId } : {}),
-    },
-    orderBy: {
-      updatedAt: "desc",
-    },
-    include: {
-      site: true,
-    },
-    ...(limit ? { take: limit } : {}),
-  });
+
+  const posts = await getPosts(session.user.id, siteId);
 
   return posts.length > 0 ? (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">

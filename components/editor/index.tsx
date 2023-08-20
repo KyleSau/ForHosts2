@@ -18,6 +18,7 @@ import LoadingDots from "../icons/loading-dots";
 import { ExternalLink, Info } from "lucide-react";
 import DateSlider from "../booking/date-slider";
 import { Tooltip } from "@mui/material";
+import { FileClickDragDrop } from "./file-drag-drop";
 
 type PostWithSite = Post & { site: { subdomain: string | null } | null };
 
@@ -27,8 +28,9 @@ export default function Editor({ post }: { post: PostWithSite }) {
 
   const [data, setData] = useState<PostWithSite>(post);
   const [hydrated, setHydrated] = useState(false);
-  const [showCheckTimes, setShowCheckTimes] = useState(false);
+  const [showCheckTimes, setShowCheckTimes] = useState(true);
   const [showPropertyDetails, setShowPropertyDetails] = useState(false);
+  const [showAddPhotoArea, setShowAddPhotoArea] = useState(true);
 
   const sliderIntervals = ["1 mo", "2 mo", "3 mo", "4 mo", "5 mo", "6 mo", "1 yr", "custom"];
   const [sliderIdx, setSliderIdx] = useState(0);
@@ -293,7 +295,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
         className="flex cursor-pointer justify-center"
         onClick={() => setShowCheckTimes(!showCheckTimes)}
       >
-        <h1 className="flex items-center mb-12 mt-12 text-3xl font-bold">
+        <h1 className="flex items-center mb-6 mt-12 text-3xl font-bold">
           Booking Window {showCheckTimes ? "↑" : "↓"}
         </h1>
       </div>
@@ -364,7 +366,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
         className="flex cursor-pointer justify-center"
         onClick={() => setShowPropertyDetails(!showPropertyDetails)}
       >
-        <h1 className="flex items-center mb-14 text-3xl font-bold">
+        <h1 className="flex items-center mb-8 mt-8 text-3xl font-bold">
           Property Details {showPropertyDetails ? "↑" : "↓"}
         </h1>
       </div>
@@ -418,7 +420,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
         </div>
 
         <div className="mb-4">
-          <input
+          <input 
             type="number"
             placeholder="Maximum number of guests allowed for stay"
             defaultValue={post?.price || ""}
@@ -504,6 +506,27 @@ export default function Editor({ post }: { post: PostWithSite }) {
             setData({ ...data, securityDeposit: parseInt(e.target.value, 10) })
           }
           className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
+        />
+      </div>
+
+      <div
+        className="flex cursor-pointer justify-center"
+        onClick={() => setShowAddPhotoArea(!showAddPhotoArea)}
+      >
+        <h1 className="flex items-center mb-8 mt-12 text-3xl font-bold">
+          Photos {showAddPhotoArea ? "↑" : "↓"}
+        </h1>
+      </div>
+      <div
+        style={{
+          maxHeight: showAddPhotoArea ? "1000px" : "0",
+          overflow: "hidden",
+          transition: "max-height 0.5s ease-in-out",
+        }}
+      >
+        <FileClickDragDrop 
+          componentId="listing-photos-drag-drop-area"
+          
         />
       </div>
     </div>
