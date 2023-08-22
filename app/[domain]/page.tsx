@@ -45,6 +45,9 @@ export default async function SiteHomePage({
               <p className="w-full text-base md:text-lg lg:w-2/3">
                 {posts[0].description}
               </p>
+              <p>
+                test
+              </p>
               <div className="flex w-full items-center justify-start space-x-4">
                 <div className="relative h-8 w-8 flex-none overflow-hidden rounded-full">
                   {data.user?.image ? (

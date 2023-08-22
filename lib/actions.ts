@@ -250,6 +250,9 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
       minimumStay: 0,
       cleaningFee: 0,
       securityDeposit: 0,
+      bedsNumber: 0,
+      bedRooms: 0,
+      bathRooms: 0,
       amenities: [],  // empty array for amenities
       photoGallery: [],  // empty array for photoGallery
       additionalServices: [],  // empty array for additionalServices
@@ -319,6 +322,9 @@ export const updatePost = async (data: Post) => {
         securityDeposit: data.securityDeposit,
         amenities: data.amenities,
         maxGuests: data.maxGuests,
+        bedRooms: data.bedRooms,
+        bathRooms: data.bathRooms,
+        bedsNumber: data.bedsNumber,
         instantBooking: data.instantBooking,
         rating: data.rating,
         photoGallery: data.photoGallery,
