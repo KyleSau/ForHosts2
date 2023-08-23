@@ -60,7 +60,7 @@ export default async function SitePostPage({
             <ImageGallery image={data.image} imageBlurhash={data.imageBlurhash} />
           </div>
           <div>
-            <DashHeader title={data.title} subtext={data.description} guests={data.maxGuests?.toString()} bedRooms={data.bedrooms} bedsNumber={data.totalBeds} bathRooms={data.bathrooms} />
+            <DashHeader title={data.title} subtext={data.description} guests={data.maxGuests} bedRooms={data.bedrooms} bedsNumber={data.totalBeds} bathRooms={data.bathrooms} />
           </div>
           <hr />
           <div className="flex flex-col bg-gray-50 items-center [-9">

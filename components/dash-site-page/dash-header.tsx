@@ -2,11 +2,11 @@ import React from 'react';
 
 interface TitleSubtextProps {
   title: string;
-  guests: string | undefined;
+  guests: number | null;
   subtext: string | null;
-  bedRooms: string | null;
-  bedsNumber: string | null;
-  bathRooms: string | null;
+  bedRooms: number | null;
+  bedsNumber: number | null;
+  bathRooms: number | null;
 }
 
 
