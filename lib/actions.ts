@@ -486,8 +486,8 @@ export const getReservationsByPostId = async (postId: string) => {
           id: postId,
         },
         OR: [
-          { paymentStatus: 'PENDING' },
-          { paymentStatus: 'CONFIRMED' },
+          { status: 'PENDING' },
+          { status: 'CONFIRMED' },
         ],
       },
       include: {
