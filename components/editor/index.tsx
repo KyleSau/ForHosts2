@@ -55,9 +55,9 @@ export default function Editor({ post }: { post: PostWithSite }) {
       JSON.stringify(debouncedData.amenities) ===
       JSON.stringify(post.amenities) &&
       debouncedData.maxGuests === post.maxGuests &&
-      debouncedData.maxGuests === post.bedRooms &&
-      debouncedData.maxGuests === post.bedsNumber &&
-      debouncedData.maxGuests === post.bathRooms &&
+      debouncedData.maxGuests === post.bedrooms &&
+      debouncedData.maxGuests === post.totalBeds &&
+      debouncedData.maxGuests === post.bathrooms &&
       debouncedData.instantBooking === post.instantBooking &&
       debouncedData.rating === post.rating &&
       JSON.stringify(debouncedData.calendarUrls) ===
@@ -200,18 +200,18 @@ export default function Editor({ post }: { post: PostWithSite }) {
   const setAvailabilityWindowTimes = async (date: string, index: number, scope: boolean) => {
     let availabilityWindow = data.availabilityWindow;
 
-    if(!availabilityWindow || availabilityWindow.length == 0) { 
-      availabilityWindow = ["",""];
+    if (!availabilityWindow || availabilityWindow.length == 0) {
+      availabilityWindow = ["", ""];
     } else if (availabilityWindow.length < 2) {
       availabilityWindow.push("");
     }
 
-    if(scope) { //if function is called from parent component
-      if(index === 0) { //start date
+    if (scope) { //if function is called from parent component
+      if (index === 0) { //start date
         availabilityWindow[0] = date;
       } else if (index === 1) { //end date
         //if called from parent AND is setting the end date, then this means host is setting a custom date
-        setSliderIdx(sliderIntervals.length-1);
+        setSliderIdx(sliderIntervals.length - 1);
         availabilityWindow[1] = date;
       }
     } else { //if function is called from child component via being passed as a callback
@@ -325,8 +325,8 @@ export default function Editor({ post }: { post: PostWithSite }) {
         </div>
         <div className="mb-6">
           <h2 className="font-cal text-xl font-bold">Out-of-Service Date</h2>
-          <DateSlider 
-            availabilityWindow={data?.availabilityWindow} 
+          <DateSlider
+            availabilityWindow={data?.availabilityWindow}
             setAvailabilityWindowTimes={setAvailabilityWindowTimes}
             sliderIntervals={sliderIntervals}
             sliderIdx={sliderIdx}
@@ -344,7 +344,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
           <div className="flex">
             <h2 className="font-cal text-xl font-bold">Time of Day for Guest Check-in</h2>
             <Tooltip title="Time of day that the guest is able to check in on their first day.">
-              <Info className="ml-2 opacity-90 stroke-[1px]"/> 
+              <Info className="ml-2 opacity-90 stroke-[1px]" />
             </Tooltip>
           </div>
           <input
@@ -358,7 +358,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
           <div className="flex">
             <h2 className="font-cal text-xl font-bold">Time of Day for Guest Check-out</h2>
             <Tooltip title="Time of day by which the guest must check-out on their last day.">
-              <Info className="ml-2 opacity-90 stroke-[1px]"/> 
+              <Info className="ml-2 opacity-90 stroke-[1px]" />
             </Tooltip>
           </div>
           <input
@@ -476,7 +476,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
             placeholder="Number of bathrooms"
             defaultValue={post?.bathRooms || ""}
             onChange={(e) =>
-              setData({ ...data, bathRooms: parseInt(e.target.value, 10) })
+              setData({ ...data, bathrooms: parseInt(e.target.value, 10) })
             }
             className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
           />
