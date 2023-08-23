@@ -55,9 +55,9 @@ export default function Editor({ post }: { post: PostWithSite }) {
       JSON.stringify(debouncedData.amenities) ===
       JSON.stringify(post.amenities) &&
       debouncedData.maxGuests === post.maxGuests &&
-      debouncedData.maxGuests === post.bedrooms &&
-      debouncedData.maxGuests === post.totalBeds &&
-      debouncedData.maxGuests === post.bathrooms &&
+      debouncedData.bedrooms === post.bedrooms &&
+      debouncedData.totalBeds === post.totalBeds &&
+      debouncedData.bathrooms === post.bathrooms &&
       debouncedData.instantBooking === post.instantBooking &&
       debouncedData.rating === post.rating &&
       JSON.stringify(debouncedData.calendarUrls) ===
@@ -452,9 +452,9 @@ export default function Editor({ post }: { post: PostWithSite }) {
           <input
             type="number"
             placeholder="Number of Rooms"
-            defaultValue={post?.bedRooms || ""}
+            defaultValue={post?.bedrooms || ""}
             onChange={(e) =>
-              setData({ ...data, bedRooms: parseInt(e.target.value, 10) })
+              setData({ ...data, bedrooms: parseInt(e.target.value, 10) })
             }
             className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
           />
@@ -463,9 +463,9 @@ export default function Editor({ post }: { post: PostWithSite }) {
           <input
             type="number"
             placeholder="Number of avaliable beds"
-            defaultValue={post?.bedsNumber || ""}
+            defaultValue={post?.totalBeds || ""}
             onChange={(e) =>
-              setData({ ...data, bedsNumber: parseInt(e.target.value, 10) })
+              setData({ ...data, totalBeds: parseInt(e.target.value, 10) })
             }
             className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
           />
@@ -474,7 +474,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
           <input
             type="number"
             placeholder="Number of bathrooms"
-            defaultValue={post?.bathRooms || ""}
+            defaultValue={post?.bathrooms || ""}
             onChange={(e) =>
               setData({ ...data, bathrooms: parseInt(e.target.value, 10) })
             }
