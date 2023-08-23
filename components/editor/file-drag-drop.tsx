@@ -13,34 +13,54 @@ export function FileClickDragDrop(
   const [addedFileArray, setAddedFileArray] = useState<(File|null)[]>([]);
   const [addedFileUrlArray, setAddedFileUrlArray] = useState<(string|undefined)[]>([]);
 
+  const addFileAndUrlToState = (newFiles: (File|null)[]) => {
+    setAddedFileArray([...addedFileArray, ...newFiles]);
+    //console.log("addFileAndUrlToState() called, addedFileArray is now: ", addedFileArray);
+
+    const urlsForNewFiles: (string|undefined)[] = newFiles
+      .map((file: File|null, _: number) => {
+        if(file != null && file != undefined) {
+          const fileUrl = URL.createObjectURL(file);
+          //console.log("fileUrl created: ", fileUrl);
+          return fileUrl;
+        }
+    });
+    //console.log("newAddedFileUrlArray is now: ", urlsForNewFiles);
+    setAddedFileUrlArray([...addedFileUrlArray, ...urlsForNewFiles]);
+  };
+
+  const removeFileAndUrlFromState = (idxToRemove: number) => {
+    const addedFileArrayWithItemRemoved = addedFileArray.filter((_: any, itemIdx: number) => itemIdx != idxToRemove);
+    const addedFileUrlArrayWithItemRemoved = addedFileUrlArray.filter((_: any, itemIdx: number) => itemIdx != idxToRemove);
+    setAddedFileArray(addedFileArrayWithItemRemoved);
+    setAddedFileUrlArray(addedFileUrlArrayWithItemRemoved);
+  }
+
   const dropHandler = (event: any) => {
-    console.log("File(s) dropped");
-    console.log("dropped: ", event.target.files);
+    // console.log("File(s) dropped");
+    // console.log("dropped: ", event.target.files);
 
     // Prevent default behavior (Prevent file from being opened)
     event.preventDefault();
     
     const dataTransferItems: DataTransferItemList = event.dataTransfer.items; 
-    console.log("dataTransferItems: ", dataTransferItems);
+    //console.log("dataTransferItems: ", dataTransferItems);
 
-    let validAddedFiles: (File|null)[] = [];
+    let newFiles: (File|null)[] = [];
 
     if (dataTransferItems) {
       // Use DataTransferItemList interface to access the file(s)
-      validAddedFiles = Array.from(dataTransferItems)
+      newFiles = Array.from(dataTransferItems)
         .filter((item: DataTransferItem, _: number) => item.kind === FILE_CONSTS.FILE && PERMITTED_FILE_TYPES.has(item.type))
         .map((item: DataTransferItem, _: number) => item.getAsFile());
     } else {
       // Use DataTransfer interface to access the file(s)
       const dataTransferFiles: FileList = event.dataTransfer.files;
       console.log("dataTransferFiles: ", dataTransferFiles); 
-      validAddedFiles = Array.from(dataTransferFiles);
+      newFiles = Array.from(dataTransferFiles);
     }
     
-    const newAddedFileArray: (File|null)[] = addedFileArray;
-    newAddedFileArray.push(...validAddedFiles)
-    setAddedFileArray(newAddedFileArray);
-    console.log("dropHandler() called, addedFileArray is now: ", addedFileArray);
+    addFileAndUrlToState(newFiles);
   }
 
   const dragOverHandler = (event: any) => {
@@ -51,32 +71,11 @@ export function FileClickDragDrop(
   }
 
   const addFilesFromOpenPopup = (event: any) => {
-    const files: FileList = event.target.files;
-    console.log("addFiles(): files: ", files);
-    const newAddedFileArray = addedFileArray;
-    newAddedFileArray.push(...Array.from(files))
-
-    setAddedFileArray(addedFileArray);
-    console.log("addFiles() called, addedFileArray is now: ", addedFileArray);
-
-    const newAddedFileUrlArray: (string|undefined)[] = newAddedFileArray
-      .map((file: File|null, _: number) => {
-        if(file != null && file != undefined) {
-          const fileUrl = URL.createObjectURL(file);
-          console.log("fileUrl created: ", fileUrl);
-          return fileUrl;
-        }
-    });
-    console.log("newAddedFileUrlArray: ", newAddedFileUrlArray);
-    setAddedFileUrlArray(newAddedFileUrlArray);
+    const newFiles: Array<File> = Array.from(event.target.files as ArrayLike<File>)
+      .filter((file: File, _: number) => PERMITTED_FILE_TYPES.has(file.type));
+    console.log("addFiles(): newFiles: ", newFiles);
+    addFileAndUrlToState(newFiles);
   }
-
-  // const [file, setFile] = useState<string>();
-  // function setOneFile() {
-  //     // console.log(e.target.files);
-  //     // setFile(URL.createObjectURL(e.target.files[0]));
-  //     return URL.createObjectURL(addedFileArray[0]); 
-  // }
 
   return (<>
     <div
@@ -117,7 +116,7 @@ export function FileClickDragDrop(
                   id={componentId + "-remove-item-button" + idx}
                   // className="absolute top-0 right-0 z-50 p-1 bg-white rounded-bl focus:outline-none outline-black" 
                   type="button" 
-                  onClick={() => console.log("remove button clicked")}
+                  onClick={() => removeFileAndUrlFromState(idx)}
                 >
                     <svg className="w-4 h-4 text-gray-700" xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor">
