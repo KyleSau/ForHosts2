@@ -1,59 +1,55 @@
-import { NextApiHandler } from 'next';
+import { NextResponse } from "next/server";
+import createError from '@/lib/utils/createError';
 
-import handleErrors from '@/api/middlewares/handleErrors';
-import createError from '@/api/utils/createError';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-const handler: NextApiHandler = async (req, res) => {
-    const body = req.body;
+export async function POST(
+    req: Request,
+    _params: any,
+): Promise<NextResponse> {
+    // const data = await req.json();
+    // console.log('verifyStripe data: ', data);
+    const body = await req.json();
+    console.log('verifyStripe data: ', body);
+    try {
+        const result = await stripe.oauth
+            .token({
+                grant_type: 'authorization_code',
+                code: body?.code,
+            });
 
-    switch (req.method) {
-        case 'POST':
-            const result = await stripe.oauth
-                .token({
-                    grant_type: 'authorization_code',
-                    code: body?.code,
-                })
-                .catch((err: unknown) => {
-                    throw createError(400, `${(err as any)?.message}`);
-                });
+        const account = await stripe.accounts.retrieve(result?.stripe_user_id);
 
-            const account = await stripe.accounts
-                ?.retrieve(result?.stripe_user_id)
-                ?.catch((err: unknown) => {
-                    throw createError(400, `${(err as any)?.message}`);
-                });
+        const accountAnalysis = {
+            hasConnectedAccount: !!account?.id,
+            accountId: account?.id,
+            hasCompletedProcess: account?.details_submitted,
+            isValid: account?.charges_enabled && account?.payouts_enabled,
+            displayName:
+                account?.settings?.dashboard?.display_name ||
+                account?.display_name ||
+                null,
+            country: account?.country,
+            currency: account?.default_currency,
+        };
 
-            const accountAnalysis = {
-                hasConnectedAccount: !!account?.id,
-                accountId: account?.id,
-                hasCompletedProcess: account?.details_submitted,
-                isValid: account?.charges_enabled && account?.payouts_enabled,
-                displayName:
-                    account?.settings?.dashboard?.display_name ||
-                    account?.display_name ||
-                    null,
-                country: account?.country,
-                currency: account?.default_currency,
-            };
+        const shouldAllowUnlink =
+            accountAnalysis?.hasConnectedAccount &&
+            (!accountAnalysis?.isValid ||
+                !accountAnalysis?.hasCompletedProcess ||
+                !accountAnalysis?.displayName);
 
-            const shouldAllowUnlink =
-                accountAnalysis?.hasConnectedAccount &&
-                (!accountAnalysis?.isValid ||
-                    !accountAnalysis?.hasCompletedProcess ||
-                    !accountAnalysis?.displayName);
+        return NextResponse.json({
+            account,
+            oauth: result,
+            accountAnalysis,
+            shouldAllowUnlink
+        });
 
-            res
-                .status(200)
-                .json({ account, oauth: result, accountAnalysis, shouldAllowUnlink });
-            break;
-
-        default:
-            throw createError(405, 'Method Not Allowed');
+    } catch (err: any) {
+        throw createError(400, `${err?.message}`);
     }
-};
+}
 
 export const config = {
     api: {
@@ -62,5 +58,3 @@ export const config = {
         },
     },
 };
-
-export default handleErrors(handler);
