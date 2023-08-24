@@ -2,7 +2,7 @@
 
 import { Image } from 'lucide-react';
 import { FILE_CONSTS } from '@/lib/constants';
-import { useState } from 'react';
+import React, { SyntheticEvent, useState } from 'react';
 
 export function FileClickDragDrop(
   {componentId}:
@@ -12,6 +12,8 @@ export function FileClickDragDrop(
   const PERMITTED_FILE_TYPES = new Set([FILE_CONSTS.JPEG, FILE_CONSTS.PNG]);
   const [addedFileArray, setAddedFileArray] = useState<(File|null)[]>([]);
   const [addedFileUrlArray, setAddedFileUrlArray] = useState<(string|undefined)[]>([]);
+  //const [dragActive, setDragActive] = useState<boolean>(false);
+  // const [fileDragging, setFileDragging] = useState<any>(null);
 
   const addFileAndUrlToState = (newFiles: (File|null)[]) => {
     setAddedFileArray([...addedFileArray, ...newFiles]);
@@ -36,7 +38,14 @@ export function FileClickDragDrop(
     setAddedFileUrlArray(addedFileUrlArrayWithItemRemoved);
   }
 
-  const dropHandler = (event: any) => {
+  const addFilesFromOpenPopup = (event: any) => {
+    const newFiles: Array<File> = Array.from(event.target.files as ArrayLike<File>)
+      .filter((file: File, _: number) => PERMITTED_FILE_TYPES.has(file.type));
+    console.log("addFiles(): newFiles: ", newFiles);
+    addFileAndUrlToState(newFiles);
+  }
+
+  const dropNewImageHandler = (event: any) => {
     // console.log("File(s) dropped");
     // console.log("dropped: ", event.target.files);
 
@@ -53,14 +62,31 @@ export function FileClickDragDrop(
       newFiles = Array.from(dataTransferItems)
         .filter((item: DataTransferItem, _: number) => item.kind === FILE_CONSTS.FILE && PERMITTED_FILE_TYPES.has(item.type))
         .map((item: DataTransferItem, _: number) => item.getAsFile());
+      
+      // // key of the card to be fetched is passed
+      // Array.from(dataTransferItems).forEach((item: DataTransferItem) => {
+      //   const card_id = item.get('id_card');
+      //   console.log("dropHandler: card_id: ", card_id);
+      //   const card = document.getElementById(card_id);
+      //   console.log("dropHandler: card: ", card);
+      //   event.target.appendChild(card);
+      // });
+      
     } else {
       // Use DataTransfer interface to access the file(s)
       const dataTransferFiles: FileList = event.dataTransfer.files;
       console.log("dataTransferFiles: ", dataTransferFiles); 
       newFiles = Array.from(dataTransferFiles);
     }
-    
+
     addFileAndUrlToState(newFiles);
+  }
+
+  const dragStartHandler = (event: any) => {
+    console.log("dragStartHandler called: event: ", event);
+    const target = event.target;
+    console.log("dragStartHandler target: ", target);
+    event.dataTransfer.setData('card_id', target.id); 
   }
 
   const dragOverHandler = (event: any) => {
@@ -68,15 +94,20 @@ export function FileClickDragDrop(
   
     // Prevent default behavior (Prevent file from being opened)
     event.preventDefault();
+    event.stopPropagation();
   }
 
-  const addFilesFromOpenPopup = (event: any) => {
-    const newFiles: Array<File> = Array.from(event.target.files as ArrayLike<File>)
-      .filter((file: File, _: number) => PERMITTED_FILE_TYPES.has(file.type));
-    console.log("addFiles(): newFiles: ", newFiles);
-    addFileAndUrlToState(newFiles);
-  }
+  const dropForMoveHandler = (event: any) => {
+    event.preventDefault();
 
+    // key of the card to be fetched is passed
+    const card_id = event.dataTransfer.getData('id_card');
+    console.log("dropForMoveHandler: card_id: ", card_id);
+    const card = document.getElementById(card_id);
+    console.log("dropForMoveHandler: card: ", card);
+    event.target.appendChild(card);
+  };
+  
   return (<>
     <div
       id={componentId}
@@ -84,7 +115,7 @@ export function FileClickDragDrop(
     >
       <input accept="image/png, image/jpeg" type="file" title=""  multiple
         className="absolute inset-0 z-50 w-full h-full p-0 m-0 outline-none opacity-0 cursor-pointer"
-        onDrop={dropHandler}
+        onDrop={dropNewImageHandler}
         onDragOver={dragOverHandler}
         onChange={addFilesFromOpenPopup}
       />
@@ -101,6 +132,9 @@ export function FileClickDragDrop(
         // @drop.prevent="drop($event)"
         // onDrop.prevent
         // @dragover.prevent="$event.dataTransfer.dropEffect = 'move'"
+        id = {"asdf_id"}
+        onDrop={dropForMoveHandler}
+        onDragOver={dragOverHandler}
       >
         {
           addedFileUrlArray.map((fileUrl: string|undefined, idx: number) => {
@@ -108,12 +142,17 @@ export function FileClickDragDrop(
             
             return (
               <div 
-                className="flex flex-col items-center text-center"
+                id={componentId + "-image-container" + idx}
                 key={idx}
+                className="flex flex-col items-center text-center"
+                // draggable={true}
+                // onDrop={dropForMoveHandler}
+                onDragStart={dragStartHandler}
+                // onDragOver={dragOverHandler}
               >
 
                 <button 
-                  id={componentId + "-remove-item-button" + idx}
+                  // id={componentId + "-remove-item-button" + idx}
                   // className="absolute top-0 right-0 z-50 p-1 bg-white rounded-bl focus:outline-none outline-black" 
                   type="button" 
                   onClick={() => removeFileAndUrlFromState(idx)}
@@ -125,9 +164,8 @@ export function FileClickDragDrop(
                     </svg>
                 </button>
 
-                <img 
-                  className="relative inset-0 z-0 object-cover w-full h-full border-4 border-black preview" 
-                  src={fileUrl}
+                <img className="relative inset-0 z-0 object-cover w-full h-full border-4 border-black preview" 
+                    src={fileUrl}
                 />
 
               </div>
