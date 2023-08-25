@@ -349,7 +349,7 @@ export const updatePost = async (data: Post) => {
   }
 };
 
-export const getPosts = async (userId:string, siteId:string|undefined, limit=null) => {
+export const getPosts = async (userId: string, siteId: string | undefined, limit = null) => {
   const posts = await prisma.post.findMany({
     where: {
       userId: userId as string,
@@ -498,8 +498,8 @@ export const getReservationsByPostId = async (postId: string) => {
           id: postId,
         },
         OR: [
-          { paymentStatus: 'PENDING' },
-          { paymentStatus: 'CONFIRMED' },
+          { status: 'PENDING' },
+          { status: 'CONFIRMED' },
         ],
       },
       include: {
