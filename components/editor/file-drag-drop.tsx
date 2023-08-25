@@ -1,6 +1,6 @@
 "use client";
 
-import { Image } from 'lucide-react';
+import { Image, Trash2 } from 'lucide-react';
 import { FILE_CONSTS } from '@/lib/constants';
 import React, { SyntheticEvent, useState } from 'react';
 
@@ -9,7 +9,6 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
   const [addedFileArray, setAddedFileArray] = useState<(File | null)[]>([]);
   const [addedFileUrlArray, setAddedFileUrlArray] = useState<(string | undefined)[]>([]);
   const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
-  const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null);
 
   const addFileAndUrlToState = (newFiles: (File | null)[]) => {
     setAddedFileArray([...addedFileArray, ...newFiles]);
@@ -28,13 +27,13 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
     const addedFileUrlArrayWithItemRemoved = addedFileUrlArray.filter((_, itemIdx: number) => itemIdx !== idxToRemove);
     setAddedFileArray(addedFileArrayWithItemRemoved);
     setAddedFileUrlArray(addedFileUrlArrayWithItemRemoved);
-  }
+  };
 
   const addFilesFromOpenPopup = (event: any) => {
     const newFiles: Array<File> = Array.from(event.target.files as ArrayLike<File>)
       .filter((file: File) => PERMITTED_FILE_TYPES.has(file.type));
     addFileAndUrlToState(newFiles);
-  }
+  };
 
   const dropNewImageHandler = (event: any) => {
     event.preventDefault();
@@ -52,7 +51,7 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
     }
 
     addFileAndUrlToState(newFiles);
-  }
+  };
 
   const dragStartHandler = (event: any, idx: number) => {
     setDraggedIdx(idx);
@@ -63,27 +62,8 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
   const dragOverHandler = (event: any) => {
     event.preventDefault();
     event.stopPropagation();
-  }
+  };
 
-  /*const dropForMoveHandler = (event: any, idx: number) => {
-    event.preventDefault();
-
-    const draggedFile = addedFileArray[draggedIdx!];
-    const draggedFileUrl = addedFileUrlArray[draggedIdx!];
-
-    // swap needs to be fixed
-    const updatedFiles = [...addedFileArray];
-    updatedFiles.splice(draggedIdx!, 1);
-    updatedFiles.splice(idx, 0, draggedFile);
-
-    const updatedFileUrls = [...addedFileUrlArray];
-    updatedFileUrls.splice(draggedIdx!, 1);
-    updatedFileUrls.splice(idx, 0, draggedFileUrl);
-
-    setAddedFileArray(updatedFiles);
-    setAddedFileUrlArray(updatedFileUrls);
-    setDraggedIdx(null);
-  };*/
   const dropForMoveHandler = (event: any, idx: number) => {
     event.preventDefault();
 
@@ -128,7 +108,6 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
       <div className="relative flex flex-col items-center justify-center py-20 text-center text-gray-400 border border-black rounded">
         Your Added Pictures Will Appear Here
         <div className="grid grid-cols-2 gap-4 mt-4 md:grid-cols-6 outline-black"
-          id={"asdf_id"}
           onDragOver={dragOverHandler}
         >
           {addedFileUrlArray.map((fileUrl: string | undefined, idx: number) => {
@@ -146,11 +125,7 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
                   type="button"
                   onClick={() => removeFileAndUrlFromState(idx)}
                 >
-                  <svg className="w-4 h-4 text-gray-700" xmlns="http://www.w3.org/2000/svg" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
+                  <Trash2 />
                 </button>
                 <img className="relative inset-0 z-0 object-cover w-full h-full border-4 border-black preview"
                   src={fileUrl}
