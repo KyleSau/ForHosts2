@@ -19,3 +19,5 @@ export const FILE_CONSTS = {
   JPEG: "image/jpeg",
   PNG: "image/png"
 }
+
+export const IMAGE_UPLOAD_QUANTITY_LIMIT = 10;
