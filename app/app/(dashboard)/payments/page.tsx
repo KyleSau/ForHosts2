@@ -13,6 +13,6 @@ type Props = {
 // export default async function PaymentsPage(props: Props) {
 export default function Page({ }) {
 
-    return <HomeView />;
+    return <h1>Test</h1>
 
 }
