@@ -1,90 +1,67 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import createError from "@/components/stripe/createError";
+import { NextRequest, NextResponse } from 'next/server';
+import createError from '@/components/stripe/createError';
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
-) {
-    // Set CORS headers
-    // res.setHeader('Access-Control-Allow-Origin', '*'); // You can set this to your specific origin if you want, but '*' allows any origin
-    res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    res.setHeader('Access-Control-Allow-Origin', 'http://dashboard.localhost:3000');
+export async function POST(req: NextRequest) {
+    const body = await req.json();
 
-    if (req.method === "OPTIONS") {
-        res.status(200).end();
-        return;
-    }
-    if (req.method === "POST") {
-        const body = await req.body;
-        console.log('verifyStripe data: ', body);
-        try {
-            const result = await stripe.oauth
-                .token({
-                    grant_type: 'authorization_code',
-                    code: body?.code,
-                });
+    const result = await stripe.oauth
+        .token({
+            grant_type: 'authorization_code',
+            code: body?.code,
+        })
+        .catch((err: unknown) => {
+            throw createError(400, `${(err as any)?.message}`);
+        });
 
-            const account = await stripe.accounts.retrieve(result?.stripe_user_id);
+    const account: any = await stripe.accounts
+        ?.retrieve(result?.stripe_user_id)
+        ?.catch((err: unknown) => {
+            throw createError(400, `${(err as any)?.message}`);
+        });
 
-            const accountAnalysis = {
-                hasConnectedAccount: !!account?.id,
-                accountId: account?.id,
-                hasCompletedProcess: account?.details_submitted,
-                isValid: account?.charges_enabled && account?.payouts_enabled,
-                displayName:
-                    account?.settings?.dashboard?.display_name ||
-                    account?.display_name ||
-                    null,
-                country: account?.country,
-                currency: account?.default_currency,
-            };
+    const accountAnalysis = {
+        hasConnectedAccount: !!account?.id,
+        accountId: account?.id,
+        hasCompletedProcess: account?.details_submitted,
+        isValid: account?.charges_enabled && account?.payouts_enabled,
+        displayName:
+            account?.settings?.dashboard?.display_name ||
+            account?.display_name ||
+            null,
+        country: account?.country,
+        currency: account?.default_currency,
+    };
 
-            const shouldAllowUnlink =
-                accountAnalysis?.hasConnectedAccount &&
-                (!accountAnalysis?.isValid ||
-                    !accountAnalysis?.hasCompletedProcess ||
-                    !accountAnalysis?.displayName);
+    const shouldAllowUnlink =
+        accountAnalysis?.hasConnectedAccount &&
+        (!accountAnalysis?.isValid ||
+            !accountAnalysis?.hasCompletedProcess ||
+            !accountAnalysis?.displayName);
 
+    console.log('account id: ' + account?.id);
+    console.log('account email: ' + account?.email);
+    console.log('account display name: ' + account?.display_name);
+    console.log('account verification: ' + account?.verification);
 
-            const ads =
-            {
-                account,
-                oauth: result,
-                accountAnalysis,
-                shouldAllowUnlink
-            };
-            res.setHeader('Access-Control-Allow-Origin', '*');
-            res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-            res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-            // ... your existing logic
-
-            res.status(200).json({
-                account,
-                oauth: result,
-                accountAnalysis,
-                shouldAllowUnlink
-            });
-
-
-        } catch (err: any) {
-            console.log('oh no');
-            res.status(400).json({ message: err.message });
+    console.log('oauth access_token: ' + result.access_token);
+    console.log('oauth stripe_publishable_key: ' + result.stripe_publishable_key);
+    console.log('oauth refresh_token: ' + result.refresh_token);
+    // return NextResponse.json({
+    //     account,
+    //     oauth: result,
+    //     accountAnalysis,
+    //     shouldAllowUnlink,
+    // });
+    return new Response('idk', {
+        status: 200,
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         }
-    } else {
-        // Handle methods other than POST (if needed)
-        console.log('hues');
-        res.status(405).json({ message: 'omg' }); // Method Not Allowed
-    }
+    });
 }
 
-export const config = {
-    api: {
-        bodyParser: {
-            sizeLimit: '1mb',
-        },
-    },
-};
+//acct_1NikX0Ib3svAyB45

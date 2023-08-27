@@ -1,44 +1,17 @@
 "use client"
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useSearchParams } from 'next/navigation'
 import { ContainerDiv } from "./Styles";
 
 const YES = <>✅&nbsp;&nbsp;Yes.</>;
 const NO = <>❌&nbsp;&nbsp;No.</>;
 
-const HomeView: React.FC<{}> = () => {
-    const [data, setData] = useState<any>();
+const HomeView: React.FC<{
+    data?: any;
+}> = ({ data }) => {
 
     const searchParams = useSearchParams()
-
-    useEffect(() => {
-        async function fetchData() {
-            const code = searchParams.get("code");
-            const scope = searchParams.get("scope");
-
-            if (code && scope) {
-                try {
-                    const response = await fetch('http://localhost:3000/api/verifyStripe', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ code, scope })
-                    });
-
-                    if (response.ok) {
-                        const result = await response.json();
-                        setData(result);
-                    }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
-                }
-            }
-        }
-
-        fetchData();
-    }, [searchParams]);
 
     return (
         <>
