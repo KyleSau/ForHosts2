@@ -60,17 +60,17 @@ export default async function SitePostPage({
             <ImageGallery image={data.image} imageBlurhash={data.imageBlurhash} />
           </div>
           <div>
-            <DashHeader title={data.title} subtext={data.description} guests={data.maxGuests} bedRooms={data.bedRooms} bedsNumber={data.bedsNumber} bathRooms={data.bathRooms} />
+            <DashHeader title={data.title} subtext={data.description} guests={data.maxGuests} bedrooms={data.bedrooms} totalbeds={data.totalBeds} bathrooms={data.bathrooms} />
           </div>
-       <hr />
-            <div className="flex flex-col bg-gray-50 items-center [-9">
-              {/* <ReservationForm postId={data.id} /> */}
+          <hr />
+          <div className="flex flex-col bg-gray-50 items-center [-9">
+            {/* <ReservationForm postId={data.id} /> */}
           </div>
           <div className="p-8">
             <AmenitiesModal amenityDetails={amenityDetails} />
-            </div>
+          </div>
           <hr />
-            {/* <div className="flex grid w-full grid-cols-2">
+          {/* <div className="flex grid w-full grid-cols-2">
               <div className="flex grid col-span-2 col-start-1 bg-green-300 h-96">
                 <h2 className={"text-lg"}>Map of Property Location</h2>
               </div>
@@ -111,9 +111,9 @@ export default async function SitePostPage({
               </div>
             </div>
             </div>*/}
-          </div>
-        </div> 
-  
+        </div>
+      </div>
+
       <MDX source={data.mdxSource} />
       {
         data.adjacentPosts.length > 0 && (
