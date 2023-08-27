@@ -24,18 +24,17 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
         message: `Only ${IMAGE_UPLOAD_QUANTITY_LIMIT} images may be uploaded for this listing`
       });
       setEditorWarningModalOpen(true);
-      return;
+    } else {
+      setAddedFileArray([...addedFileArray, ...newFiles]);
+
+      const urlsForNewFiles: (string | undefined)[] = newFiles.map((file: File | null) => {
+        if (file) {
+          const fileUrl = URL.createObjectURL(file);
+          return fileUrl;
+        }
+      });
+      setAddedFileUrlArray([...addedFileUrlArray, ...urlsForNewFiles]);
     }
-
-    setAddedFileArray([...addedFileArray, ...newFiles]);
-
-    const urlsForNewFiles: (string | undefined)[] = newFiles.map((file: File | null) => {
-      if (file) {
-        const fileUrl = URL.createObjectURL(file);
-        return fileUrl;
-      }
-    });
-    setAddedFileUrlArray([...addedFileUrlArray, ...urlsForNewFiles]);
   };
 
   const removeFileAndUrlFromState = (idxToRemove: number) => {
