@@ -100,7 +100,9 @@ export async function getPostData(domain: string, slug: string) {
             description: true,
             image: true,
             imageBlurhash: true,
-            price: true
+            price: true,
+            // bedRooms: true,
+
           },
         }),
       ]);

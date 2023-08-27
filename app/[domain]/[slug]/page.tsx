@@ -7,7 +7,8 @@ import { placeholderBlurhash, toDateString } from "@/lib/utils";
 import ReservationForm from "@/components/booking/reservation-form";
 import AmenitiesModal from "@/components/amenities/amenities-modal";
 import { amenityDetails } from "@/components/amenities/amenities-data";
-
+import ImageGallery from "@/components/dash-site-page/image-gallery";
+import DashHeader from "@/components/dash-site-page/dash-header";
 export async function generateMetadata({
   params,
 }: {
@@ -56,29 +57,20 @@ export default async function SitePostPage({
         {/* md:w-7/12 */}
         <div className="m-auto w-full text-center md:w-10/12">
           <div className="relative m-auto h-80 w-full max-w-screen-lg overflow-hidden md:mb-5 md:h-150 md:w-5/6 md:rounded-2xl lg:w-2/3">
-            <BlurImage
-              alt={data.title ?? "Property Image"}
-              width={1200}
-              height={630}
-              className="h-full w-full object-cover"
-              placeholder="blur"
-              blurDataURL={data.imageBlurhash ?? placeholderBlurhash}
-              src={data.image ?? "/placeholder.png"}
-            />
+            <ImageGallery image={data.image} imageBlurhash={data.imageBlurhash} />
           </div>
-
-          <div className="flex grid row-span-1 p-5">
-            <h1 className="text-2xl font-bold mb-10">{data.title}</h1>
-            <p className="text-center">
-              {data.description}
-            </p>
+          <div>
+            <DashHeader title={data.title} subtext={data.description} guests={data.maxGuests} bedrooms={data.bedrooms} totalbeds={data.totalBeds} bathrooms={data.bathrooms} />
           </div>
-          <div className="grid grid-cols-2 w-full rounded-md text-black dark:text-black md:border-stone-200 md:shadow dark:md:border-stone-700 items-center m-auto p-5 bg-gray-50">
-            <div className="flex flex-col bg-gray-50 items-center">
-              <ReservationForm post={data} />
-            </div>
+          <hr />
+          <div className="flex flex-col bg-gray-50 items-center [-9">
+            {/* <ReservationForm postId={data.id} /> */}
+          </div>
+          <div className="p-8">
             <AmenitiesModal amenityDetails={amenityDetails} />
-            <div className="flex grid w-full grid-cols-2">
+          </div>
+          <hr />
+          {/* <div className="flex grid w-full grid-cols-2">
               <div className="flex grid col-span-2 col-start-1 bg-green-300 h-96">
                 <h2 className={"text-lg"}>Map of Property Location</h2>
               </div>
@@ -118,9 +110,10 @@ export default async function SitePostPage({
                 <button className="bg-gray-400 rounded-md p-2 hover:bg-gray-200" />
               </div>
             </div>
-          </div>
+            </div>*/}
         </div>
       </div>
+
       <MDX source={data.mdxSource} />
       {
         data.adjacentPosts.length > 0 && (
