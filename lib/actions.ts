@@ -16,7 +16,6 @@ import { put } from "@vercel/blob";
 import { customAlphabet } from "nanoid";
 import { calcDateDelta, getBlurDataURL } from "@/lib/utils";
 import { RESERVATION_FUTURE_DAYS_THRESHOLD } from "./constants";
-import createError from '@/components/stripe/createError';
 
 const nanoid = customAlphabet(
   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
@@ -46,54 +45,6 @@ export const getReservationsByPostId = async (postId: string) => {
     };
   }
 };
-
-
-export const getStripeAuth = async (code: string, session: any) => {
-  if (!session) {
-    console.log('session undefined');
-    return undefined;
-  }
-  const userId = session.user.id;
-  console.log('get stripe auth: (userId): ' + userId);
-  const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-
-  const oauth = await stripe.oauth
-    .token({
-      grant_type: 'authorization_code',
-      code: code,
-    })
-    .catch((err: unknown) => {
-      throw createError(400, `${(err as any)?.message}`);
-    });
-
-  const account: any = await stripe.accounts
-    ?.retrieve(oauth?.stripe_user_id)
-    ?.catch((err: unknown) => {
-      throw createError(400, `${(err as any)?.message}`);
-    });
-
-  // IMPORTANT: make sure they don't already have this data saved.
-
-  // Save the Stripe data into StripeAccount table
-  await prisma.stripeAccount.create({
-    data: {
-      accountId: account?.id,
-      accountEmail: account?.email,
-      accountDisplayName: account?.display_name,
-      accountVerification: account?.verification,
-      oauthAccessToken: oauth.access_token,
-      oauthStripePublishableKey: oauth.stripe_publishable_key,
-      oauthRefreshToken: oauth.refresh_token,
-      userId: userId // You need to pass the user's ID when calling getStripeAuth to link the Stripe account to a specific user.
-    }
-  });
-
-  const data = {
-    account: account,
-    oauth: oauth
-  };
-  return data;
-}
 
 export const createSite = async (formData: FormData) => {
   const session = await getSession();

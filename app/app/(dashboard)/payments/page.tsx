@@ -1,35 +1,16 @@
-// import { getSession } from "@/lib/auth";
-import HomeView from '@/components/stripe/HomeView';
-
-// export default function PaymentsPage({ }) {
-
-//     return <HomeView />;
-
-// }
-
-// export default function Page({
-//     params,
-//     searchParams,
-// }: {
-//     params: { slug: string }
-//     searchParams: { [key: string]: string | string[] | undefined }
-// }) {
-//     return <pre>{JSON.stringify({ params, searchParams }, null, 2)}</pre>
-// }
-
-
-// app/payments/page.tsx:
-// app/payments/page.server.tsx:
-
-// app/payments/page.server.tsx:
-
-// app/payments/page.tsx:
 import { getSession } from "@/lib/auth";
-import { getStripeAuth } from '@/lib/actions';
+import {
+    getStripeAuthorization,
+    getStripeAccount,
+    linkStripeAccount,
+} from '@/lib/stripe-connect';
 import { redirect } from "next/navigation";
+import StripeLinkButton from "@/components/stripe-connect/stripe-connect-button";
+import StripeUnlinkButton from "@/components/stripe-connect/stripe-disconnect-button";
+const YES = <>✅&nbsp;&nbsp;Yes.</>;
+const NO = <>❌&nbsp;&nbsp;No.</>;
 
 export default async function Page({
-    params,
     searchParams,
 }: {
     params: { slug: string }
@@ -41,22 +22,84 @@ export default async function Page({
         redirect("/login");
     }
 
+    //const unlink = await unlinkStripeAccount(session);
+    const stripeAccount = await getStripeAccount(session);
 
-    const code = typeof searchParams['code'] === 'string' ? searchParams['code'] : '';
-    let data = undefined;
-    if (code) {
-        // authorizeStripeCode
-        data = await getStripeAuth(code, session);
-        // display error if 
-        // Error: This authorization code has already been used. All tokens issued with this code have been revoked.
-        // or
-        // Error: Authorization code does not exist: ac_OWhzK44Dk5ctCxE6gjcmmq8FjJejuu6R
-        // or
-        // Error: Too many attempts. Please try again later.
+    if (!stripeAccount) {
+        const code = typeof searchParams['code'] === 'string' ? searchParams['code'] : '';
+        if (code) {
+            const stripe = await linkStripeAccount(code, session);
+            if (stripe) {
+                return (
+                    <div>
+                        <div className="inline-block bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4 shadow-md">
+                            Stripe Account successfully linked!
+                        </div>
+
+                        <div className="mb-6">
+                            <span className="font-semibold text-lg">Connected:</span>
+                            <span className="text-blue-600 ml-2 text-xl font-medium">{stripe.name}</span>
+                        </div>
+                        <div>
+                            <h3>Payouts Enabled?</h3>
+                            <h2>{stripe.auth.payouts_enabled ? YES : NO}</h2>
+                        </div>
+                        <div>
+                            <h3>Charges Enabled?</h3>
+                            <h2>{stripe.auth.charges_enabled ? YES : NO}</h2>
+                        </div>
+                        <div>
+                            <h3>Details Submitted?</h3>
+                            <h2>{stripe.auth.details_submitted ? YES : NO}</h2>
+                        </div>
+                        {stripe.unlinkable && <StripeUnlinkButton />}
+                    </div>
+                );
+            } else {
+                return (
+                    <div>
+                        Unable to link Stripe Account
+                    </div>
+                );
+            }
+        } else {
+            return (
+                <div>
+                    <StripeLinkButton />
+                </div>
+            );
+        }
+    } else {
+        const stripe = await getStripeAuthorization(stripeAccount);
+        if (stripe) {
+            return (
+                <div>
+                    <div className="mb-6">
+                        <span className="font-semibold text-lg">Connected:</span>
+                        <span className="text-blue-600 ml-2 text-xl font-medium">{stripe.name}</span>
+                    </div>
+                    <div>
+                        <h3>Payouts Enabled?</h3>
+                        <h2>{stripe.auth.payouts_enabled ? YES : NO}</h2>
+                    </div>
+                    <div>
+                        <h3>Charges Enabled?</h3>
+                        <h2>{stripe.auth.charges_enabled ? YES : NO}</h2>
+                    </div>
+                    <div>
+                        <h3>Details Submitted?</h3>
+                        <h2>{stripe.auth.details_submitted ? YES : NO}</h2>
+                    </div>
+                    {stripe.unlinkable && <StripeUnlinkButton />}
+                </div >
+            );
+        } else {
+            return (
+                <div>
+                    Unable to authorize stripe account
+                    {/* Optionally, you can add the unlink button here too */}
+                </div>
+            );
+        }
     }
-
-    // const stripeData = 
-
-    console.log("Received searchParams:", searchParams);
-    return <HomeView data={data} />
 }
