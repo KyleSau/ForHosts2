@@ -63,7 +63,7 @@ export default async function Page({
             } else {
                 return (
                     <div>
-                        Unable to link Stripe Account
+                        Unable to link Stripe Account - Try refreshing this page...
                     </div>
                 );
             }
