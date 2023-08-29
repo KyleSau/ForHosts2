@@ -13,3 +13,11 @@ export const TIME_FACTORS = {
   MS_PER_MINUTE: 1000 * 60, //number of ms -> 1 minute
   MS_PER_SECOND: 1000 // number of ms -> 1 second
 }
+
+export const FILE_CONSTS = {
+  FILE: "file",
+  JPEG: "image/jpeg",
+  PNG: "image/png"
+}
+
+export const IMAGE_UPLOAD_QUANTITY_LIMIT = 10;

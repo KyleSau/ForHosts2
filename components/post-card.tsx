@@ -13,6 +13,7 @@ export default function PostCard({
 
   return (
     <div className="relative rounded-lg border border-stone-200 pb-10 shadow-md transition-all hover:shadow-xl dark:border-stone-700 dark:hover:border-white">
+      TODO: remove this test string
       <Link
         href={`/post/${data.id}`}
         className="flex flex-col overflow-hidden rounded-lg"
