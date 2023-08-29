@@ -22,7 +22,6 @@ export default async function Page({
         redirect("/login");
     }
 
-    //const unlink = await unlinkStripeAccount(session);
     const stripeAccount = await getStripeAccount(session);
 
     if (!stripeAccount) {
