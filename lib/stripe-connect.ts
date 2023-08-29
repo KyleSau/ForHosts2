@@ -113,6 +113,8 @@ export const getStripeAuthorization = async (stripeAccount: any, session: any) =
     } catch (stripeError: any) {
         if (stripeError.message.includes("does not have access to account")) {
             await unlinkStripeAccount(session);
+            console.log('should force unlink!!');
+            return undefined;
         } else {
             throw new Error(`Stripe Error: ${stripeError.message}`);
         }
