@@ -63,6 +63,16 @@ export const linkStripeAccount = async (code: string, session: any) => {
     return data;
 }
 
+export const getTransactions = async (stripeAccountId: any) => {
+    const charges = await stripe.charges.list(
+        { limit: 100 },
+        { stripeAccount: stripeAccountId }
+    );
+
+    // console.log(JSON.stringify(charges.data));
+    return charges.data;
+};
+
 export const unlinkStripeAccount = async (session: any) => {
     if (!session) {
         throw new Error('Invalid Session!');
@@ -94,14 +104,19 @@ export const getStripeAccount = async (session: any) => {
 
 }
 
-export const getStripeAuthorization = async (stripeAccount: any) => {
+export const getStripeAuthorization = async (stripeAccount: any, session: any) => {
     const accountId = stripeAccount.accountId;
 
     let stripeAuthorization;
     try {
         stripeAuthorization = await stripe.accounts.retrieve(accountId);
     } catch (stripeError: any) {
-        throw new Error(`Stripe Error: ${stripeError.message}`);
+        if (stripeError.message.includes("does not have access to account")) {
+            await unlinkStripeAccount(session);
+        } else {
+            throw new Error(`Stripe Error: ${stripeError.message}`);
+        }
+
     }
 
     const name =

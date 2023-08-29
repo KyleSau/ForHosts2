@@ -3,6 +3,7 @@ import {
     getStripeAuthorization,
     getStripeAccount,
     linkStripeAccount,
+    getTransactions,
 } from '@/lib/stripe-connect';
 import { redirect } from "next/navigation";
 import StripeLinkButton from "@/components/stripe-connect/stripe-connect-button";
@@ -23,6 +24,10 @@ export default async function Page({
     }
 
     const stripeAccount = await getStripeAccount(session);
+
+    function formatAmount(amount: any) {
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount / 100);
+    }
 
     if (!stripeAccount) {
         const code = typeof searchParams['code'] === 'string' ? searchParams['code'] : '';
@@ -52,6 +57,7 @@ export default async function Page({
                             <h2>{stripe.auth.details_submitted ? YES : NO}</h2>
                         </div>
                         {stripe.unlinkable && <StripeUnlinkButton />}
+
                     </div>
                 );
             } else {
@@ -69,27 +75,53 @@ export default async function Page({
             );
         }
     } else {
-        const stripe = await getStripeAuthorization(stripeAccount);
+        const stripe = await getStripeAuthorization(stripeAccount, session);
         if (stripe) {
+
+            const transactions = await getTransactions(stripeAccount.accountId);
             return (
                 <div>
-                    <div className="mb-6">
+                    <div className="mt-4 mb-4 px-8">
                         <span className="font-semibold text-lg">Connected:</span>
                         <span className="text-blue-600 ml-2 text-xl font-medium">{stripe.name}</span>
                     </div>
-                    <div>
-                        <h3>Payouts Enabled?</h3>
-                        <h2>{stripe.auth.payouts_enabled ? YES : NO}</h2>
+                    <div className="flex justify-between mb-4">
+                        <div className="px-8">
+                            <h3>Payouts Enabled?</h3>
+                            <h2>{stripe.auth.payouts_enabled ? YES : NO}</h2>
+                        </div>
+                        <div className="px-8">
+                            <h3>Charges Enabled?</h3>
+                            <h2>{stripe.auth.charges_enabled ? YES : NO}</h2>
+                        </div>
+                        <div className="px-8">
+                            <h3>Details Submitted?</h3>
+                            <h2>{stripe.auth.details_submitted ? YES : NO}</h2>
+                        </div>
                     </div>
-                    <div>
-                        <h3>Charges Enabled?</h3>
-                        <h2>{stripe.auth.charges_enabled ? YES : NO}</h2>
-                    </div>
-                    <div>
-                        <h3>Details Submitted?</h3>
-                        <h2>{stripe.auth.details_submitted ? YES : NO}</h2>
-                    </div>
+
                     {stripe.unlinkable && <StripeUnlinkButton />}
+                    <table className="min-w-full table-fixed">
+                        <thead className="bg-blue-100">
+                            <tr>
+                                <th className="px-4 py-2">Amount</th>
+                                <th className="px-4 py-2">Description</th>
+                                <th className="px-4 py-2">Customer</th>
+                                <th className="px-4 py-2">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {transactions.map((transaction: any) => (
+                                <tr key={transaction.id} className="even:bg-gray-100">
+                                    <td className="text-center">{formatAmount(transaction.amount)}</td>
+                                    <td className="text-center">{transaction.description}</td>
+                                    <td className="text-center">{transaction.billing_details.name ? transaction.billing_details.name : 'N/A'}</td>
+                                    <td className="text-center">{new Date(transaction.created * 1000).toLocaleDateString()}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+
                 </div >
             );
         } else {
