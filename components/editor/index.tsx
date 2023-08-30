@@ -524,10 +524,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
           transition: "max-height 0.5s ease-in-out",
         }}
       >
-        <FileClickDragDrop 
-          componentId="listing-photos-drag-drop-area"
-          
-        />
+        <FileClickDragDrop componentId="listing-photos-drag-drop-area" />
       </div>
     </div>
   );
