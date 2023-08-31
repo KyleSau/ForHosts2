@@ -24,7 +24,7 @@ export default function Form({
   inputAttrs: {
     name: string;
     type: string;
-    defaultValue: string;
+    defaultValue: string | string[];
     placeholder?: string;
     maxLength?: number;
     pattern?: string;
