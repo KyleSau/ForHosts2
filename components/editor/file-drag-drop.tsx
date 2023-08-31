@@ -5,6 +5,7 @@ import { FILE_CONSTS, IMAGE_UPLOAD_QUANTITY_LIMIT } from '@/lib/constants';
 import React, { useState } from 'react';
 import EditorWarningModal, 
   { EditorWarningModalDataType, EditorWarningModalDataTemplate } from "@/components/editor/warning-confirmation-modal";
+import { humanReadableFileSize } from '@/lib/utils';
 
 export function FileClickDragDrop({ componentId }: { componentId: string }) {
   const PERMITTED_FILE_TYPES = new Set([FILE_CONSTS.JPEG, FILE_CONSTS.PNG]);
@@ -146,6 +147,8 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
         onDragOver={dragOverHandler}
       >
         {addedFileUrlArray.map((fileUrl: string | undefined, idx: number) => {
+          const fileObj = addedFileArray[idx];
+          const fileObjSize = humanReadableFileSize(fileObj?.size);
           return (
             <div
               id={componentId + "-image-container" + idx}
@@ -169,10 +172,8 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
                 src={fileUrl}
               />
               <div className="absolute bottom-0 left-0 right-0 flex flex-col p-2 text-xs bg-white bg-opacity-50">
-                <span className="w-full font-bold text-gray-900 truncate"
-                    x-text="files[index].name">Loading</span>
-                <span className="text-xs text-gray-900" x-text="humanFileSize(files[index].size)">...</span>
-              </div>
+                <span className="w-full font-bold text-gray-900 truncate">{fileObj?.name}</span>
+                <span className="text-xs text-gray-900" x-text="humanFileSize(files[index].size)">{fileObjSize}</span>              </div>
             </div>
           );
         })}
