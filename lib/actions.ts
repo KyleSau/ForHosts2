@@ -22,6 +22,30 @@ const nanoid = customAlphabet(
   7,
 ); // 7-character random string
 
+export const getReservationsByPostId = async (postId: string) => {
+  try {
+    const reservations = await prisma.reservation.findMany({
+      where: {
+        post: {
+          id: postId,
+        },
+        OR: [
+          { status: 'PENDING' },
+          { status: 'CONFIRMED' },
+        ],
+      },
+      include: {
+        post: true,
+      },
+    });
+    return reservations;
+  } catch (error: any) {
+    return {
+      error: "Failed to fetch reservations",
+    };
+  }
+};
+
 export const createSite = async (formData: FormData) => {
   const session = await getSession();
   if (!session?.user.id) {
@@ -493,30 +517,6 @@ export const editUser = async (
         error: error.message,
       };
     }
-  }
-};
-
-export const getReservationsByPostId = async (postId: string) => {
-  try {
-    const reservations = await prisma.reservation.findMany({
-      where: {
-        post: {
-          id: postId,
-        },
-        OR: [
-          { status: 'PENDING' },
-          { status: 'CONFIRMED' },
-        ],
-      },
-      include: {
-        post: true,
-      },
-    });
-    return reservations;
-  } catch (error: any) {
-    return {
-      error: "Failed to fetch reservations",
-    };
   }
 };
 
