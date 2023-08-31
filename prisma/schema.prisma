@@ -124,6 +124,7 @@ model Post {
   securityDeposit      Int // Refundable security deposit amount
   availabilityCalendar String? // Availability calendar of the property
   photoGallery         String[] // List of images showcasing the property
+  photoGalleryBlurhash String[] @default([])
   additionalServices   String[] // List of additional services offered at the property
   availabilityWindow   String[] // how far out a listing can be booked
   // advanceNotice

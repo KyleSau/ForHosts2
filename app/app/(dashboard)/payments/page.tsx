@@ -23,6 +23,15 @@ export default async function Page({
         redirect("/login");
     }
 
+    const data = {
+        pricePerNight: 399.99,
+        cleaningFee: 125.00,
+        unavailableDates: ['2023-09-05', '2023-09-06', '2023-09-07', '2023-09-12']
+        ,
+        maxGuests: 3,
+        petsAllowed: false
+    }
+
     const stripeAccount = await getStripeAccount(session);
 
     function formatAmount(amount: any) {
