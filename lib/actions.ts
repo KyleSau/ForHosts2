@@ -418,6 +418,10 @@ export const updatePostMetadata = withPostAuth(
           const filename = `${nanoid()}.${file.type.split("/")[1]}`;
           console.log('post filename: ' + filename);
 
+          const SIZE_LIMIT = 50000;
+          if (file.size > SIZE_LIMIT) {
+
+          }
           const { url } = await put(filename, file, {
             access: "public",
           });

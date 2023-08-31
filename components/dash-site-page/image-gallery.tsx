@@ -12,7 +12,7 @@ interface ImageGalleryProps {
   images: string[];
 }
 
-const ImageGallery: React.FC<ImageGalleryProps> = ({ imageBlurhash, images }) => {
+const ImageGallery: React.FC<ImageGalleryProps> = ({ imageBlurhash: imageBlurhashes, images }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
@@ -39,7 +39,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ imageBlurhash, images }) =>
               height={630}
               className="h-full w-full object-cover"
               placeholder="blur"
-              blurDataURL={imageBlurhash[0] ?? placeholderBlurhash}
+              blurDataURL={imageBlurhashes[0] ?? placeholderBlurhash}
               src={images[0] ?? placeholderImage}
             />
           </div>
@@ -57,7 +57,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ imageBlurhash, images }) =>
                   height={400}
                   className="h-full w-full object-cover"
                   placeholder="blur"
-                  blurDataURL={imageBlurhash[index] ?? placeholderBlurhash}
+                  blurDataURL={imageBlurhashes[index] ?? placeholderBlurhash}
                   src={imgSrc}
                 />
               </div>
@@ -69,9 +69,11 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ imageBlurhash, images }) =>
       <ImageModal
         isOpen={isModalOpen}
         onClose={closeModal}
-        images={images}
-        selectedImageIndex={selectedImageIndex}
-        setSelectedImageIndex={setSelectedImageIndex} // Pass the function here
+        // images={images}
+        image={images[selectedImageIndex]}
+        blurImage={imageBlurhashes[selectedImageIndex]}
+      // selectedImageIndex={selectedImageIndex}
+      // setSelectedImageIndex={setSelectedImageIndex} // Pass the function here
       />
     </div>
   );
