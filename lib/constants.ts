@@ -21,3 +21,5 @@ export const FILE_CONSTS = {
 }
 
 export const IMAGE_UPLOAD_QUANTITY_LIMIT = 10;
+export const IMAGE_SIZE_LIMIT_MB = 3.5;
+export const IMAGE_SIZE_LIMIT_BYTES = IMAGE_SIZE_LIMIT_MB * 1e6;

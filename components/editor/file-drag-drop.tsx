@@ -1,7 +1,7 @@
 "use client";
 
 import { Image, Trash2 } from 'lucide-react';
-import { FILE_CONSTS, IMAGE_UPLOAD_QUANTITY_LIMIT } from '@/lib/constants';
+import { FILE_CONSTS, IMAGE_UPLOAD_QUANTITY_LIMIT, IMAGE_SIZE_LIMIT_BYTES, IMAGE_SIZE_LIMIT_MB } from '@/lib/constants';
 import React, { useState } from 'react';
 import EditorWarningModal, 
   { EditorWarningModalDataType, EditorWarningModalDataTemplate } from "@/components/editor/warning-confirmation-modal";
@@ -17,7 +17,7 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
   const [editorWarningModalOpen, setEditorWarningModalOpen] = useState<boolean>(false);
   const [editorWarningModalData, setEditorWarningModalData] = useState<EditorWarningModalDataType>(EditorWarningModalDataTemplate)
 
-  const addFileAndUrlToState = (newFiles: (File | null)[]) => {
+  const addFilesAndUrlsToState = (newFiles: (File | null)[]) => {
     //first check if adding the new files causes currently uploaded pics to surpass the upload threshold; show modal if so
     if (addedFileArray.length > IMAGE_UPLOAD_QUANTITY_LIMIT || addedFileArray.length+newFiles.length > IMAGE_UPLOAD_QUANTITY_LIMIT) {
       setEditorWarningModalData({
@@ -27,15 +27,38 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
       });
       setEditorWarningModalOpen(true);
     } else {
-      setAddedFileArray([...addedFileArray, ...newFiles]);
+      const newFilesAboveSizeLimit: (File | null)[] = [];
+      const newFilesBelowSizeLimit: (File | null)[] = [];
 
-      const urlsForNewFiles: (string | undefined)[] = newFiles.map((file: File | null) => {
+      newFiles.forEach((file: File|null) => {
+        const fileSizeBytes = file?.size ? file.size : IMAGE_SIZE_LIMIT_BYTES + 100;
+        if (fileSizeBytes > IMAGE_SIZE_LIMIT_BYTES) {
+          newFilesAboveSizeLimit.push(file);
+        } else {
+          newFilesBelowSizeLimit.push(file);
+        }
+      });
+
+      setAddedFileArray([...addedFileArray, ...newFilesBelowSizeLimit]);
+
+      const urlsForNewFiles: (string | undefined)[] = newFilesBelowSizeLimit.map((file: File | null) => {
         if (file) {
           const fileUrl = URL.createObjectURL(file);
           return fileUrl;
         }
       });
       setAddedFileUrlArray([...addedFileUrlArray, ...urlsForNewFiles]);
+
+      //if needed, throw up modal informing user that files above the size limit were not added
+      if(newFilesAboveSizeLimit.length > 0) {
+        const filesAndSizes = newFilesAboveSizeLimit.map((file: File|null) => `${file?.name} (${humanReadableFileSize(file?.size)})`).join("\n");
+        setEditorWarningModalData({
+          ...editorWarningModalData,
+          idxToRemove: -2,
+          message: `The following files were not uploaded because they exceed the file size limit of ${IMAGE_SIZE_LIMIT_MB} MB:\n` + filesAndSizes
+        });
+        setEditorWarningModalOpen(true);
+      }
     }
   };
 
@@ -62,7 +85,7 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
   const addFilesFromOpenPopup = (event: any) => {
     const newFiles: Array<File> = Array.from(event.target.files as ArrayLike<File>)
       .filter((file: File) => PERMITTED_FILE_TYPES.has(file.type));
-    addFileAndUrlToState(newFiles);
+      addFilesAndUrlsToState(newFiles);
   };
 
   const dropNewImageHandler = (event: any) => {
@@ -80,7 +103,7 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
       newFiles = Array.from(dataTransferFiles);
     }
 
-    addFileAndUrlToState(newFiles);
+    addFilesAndUrlsToState(newFiles);
   };
 
   const dragStartHandler = (event: any, idx: number) => {
@@ -164,7 +187,7 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
                 className="absolute top-0 right-0 z-50 p-1 bg-white rounded-bl focus:outline-none"
                 onClick={() => handleImageDeleteIconClicked(idx)}
               >
-                <Trash2 />
+                <Trash2 className="hover:stroke-rose-600"/>
               </button>
               <img 
                 // className="relative inset-0 z-0 object-cover w-full h-full border preview"
@@ -173,7 +196,8 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
               />
               <div className="absolute bottom-0 left-0 right-0 flex flex-col p-2 text-xs bg-white bg-opacity-50">
                 <span className="w-full font-bold text-gray-900 truncate">{fileObj?.name}</span>
-                <span className="text-xs text-gray-900" x-text="humanFileSize(files[index].size)">{fileObjSize}</span>              </div>
+                <span className="text-xs text-gray-900" x-text="humanFileSize(files[index].size)">{fileObjSize}</span>
+              </div>
             </div>
           );
         })}
