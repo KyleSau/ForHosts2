@@ -131,18 +131,15 @@ export default function Uploader() {
             }}
           />
           <div
-            className={`${
-              dragActive ? "border-2 border-black" : ""
-            } absolute z-[3] flex h-full w-full flex-col items-center justify-center rounded-md px-10 transition-all ${
-              data.image
+            className={`${dragActive ? "border-2 border-black" : ""
+              } absolute z-[3] flex h-full w-full flex-col items-center justify-center rounded-md px-10 transition-all ${data.image
                 ? "bg-white/80 opacity-0 hover:opacity-100 hover:backdrop-blur-md"
                 : "bg-white opacity-100 hover:bg-gray-50"
-            }`}
+              }`}
           >
             <svg
-              className={`${
-                dragActive ? "scale-110" : "scale-100"
-              } h-7 w-7 text-gray-500 transition-all duration-75 group-hover:scale-110 group-active:scale-95`}
+              className={`${dragActive ? "scale-110" : "scale-100"
+                } h-7 w-7 text-gray-500 transition-all duration-75 group-hover:scale-110 group-active:scale-95`}
               xmlns="http://www.w3.org/2000/svg"
               width="24"
               height="24"
@@ -179,6 +176,7 @@ export default function Uploader() {
             id="image-upload"
             name="image"
             type="file"
+            multiple
             accept="image/*"
             className="sr-only"
             onChange={onChangePicture}
@@ -188,11 +186,10 @@ export default function Uploader() {
 
       <button
         disabled={saveDisabled}
-        className={`${
-          saveDisabled
-            ? "cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400"
-            : "border-black bg-black text-white hover:bg-white hover:text-black"
-        } flex h-10 w-full items-center justify-center rounded-md border text-sm transition-all focus:outline-none`}
+        className={`${saveDisabled
+          ? "cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400"
+          : "border-black bg-black text-white hover:bg-white hover:text-black"
+          } flex h-10 w-full items-center justify-center rounded-md border text-sm transition-all focus:outline-none`}
       >
         {saving ? (
           <LoadingDots color="#808080" />

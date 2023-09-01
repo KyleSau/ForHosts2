@@ -1,27 +1,32 @@
 import Image from "next/image";
 import React, { useEffect } from "react";
+import BlurImage from '@/components/blur-image';
 interface ImageModalProps {
   isOpen: boolean;
   onClose: () => void;
-  images: string[];
-  selectedImageIndex: number;
-  setSelectedImageIndex: (index: number) => void;
+  image: string;
+  blurHash: string;
+  // selectedImageIndex: number;
+  // setSelectedImageIndex: (index: number) => void;
 }
+const placeholderBlurhash = '...';
+const placeholderImage = '/placeholder.png';
 const ImageModal: React.FC<ImageModalProps> = ({
   isOpen,
   onClose,
-  images,
-  selectedImageIndex,
-  setSelectedImageIndex,
+  image,
+  blurHash,
+  // selectedImageIndex,
+  // setSelectedImageIndex,
 }) => {
   const handlePrev = () => {
-    const newIndex = (selectedImageIndex - 1 + images.length) % images.length;
-    setSelectedImageIndex(newIndex);
+    // const newIndex = (selectedImageIndex - 1 + images.length) % images.length;
+    // setSelectedImageIndex(newIndex);
   };
 
   const handleNext = () => {
-    const newIndex = (selectedImageIndex + 1) % images.length;
-    setSelectedImageIndex(newIndex);
+    // const newIndex = (selectedImageIndex + 1) % images.length;
+    // setSelectedImageIndex(newIndex);
   };
 
   useEffect(() => {
@@ -66,13 +71,22 @@ const ImageModal: React.FC<ImageModalProps> = ({
             </svg>
           </button>
           <div className="flex justify-center">
-          <Image
+            {/* <Image
               src={images[selectedImageIndex]}
               alt={`Property Image ${selectedImageIndex}`}
               width={0}
               height={0}
               sizes="100vw"
               style={{ width: '100%', height: 'auto' }} // optional
+            /> */}
+            <BlurImage
+              alt="Property Image"
+              width={800}
+              height={630}
+              className="h-full w-full object-cover"
+              placeholder="blur"
+              blurDataURL={blurHash ?? placeholderBlurhash}
+              src={image ?? placeholderImage}
             />
           </div>
           <button
