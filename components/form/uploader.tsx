@@ -8,35 +8,41 @@ export default function Uploader({
   defaultValue,
   name,
 }: {
-  defaultValue: string | null;
+  defaultValue: string[];
   name: "image" | "logo";
 }) {
   const aspectRatio = name === "image" ? "aspect-video" : "aspect-square";
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [data, setData] = useState({
-    [name]: defaultValue,
+    [name]: Array.isArray(defaultValue) ? defaultValue : [],
   });
+
 
   const [dragActive, setDragActive] = useState(false);
 
-  const handleUpload = (file: File | null) => {
-    if (file) {
-      if (file.size / 1024 / 1024 > 50) {
-        toast.error("File size too big (max 50MB)");
-      } else if (
-        !file.type.includes("png") &&
-        !file.type.includes("jpg") &&
-        !file.type.includes("jpeg")
-      ) {
-        toast.error("Invalid file type (must be .png, .jpg, or .jpeg)");
-      } else {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          setData((prev) => ({ ...prev, [name]: e.target?.result as string }));
-        };
-        reader.readAsDataURL(file);
-      }
+  const handleUpload = (files: FileList | null) => {
+    if (files) {
+      Array.from(files).forEach((file) => {
+        if (file.size / 1024 / 1024 > 50) {
+          toast.error("File size too big (max 50MB)");
+        } else if (
+          !file.type.includes("png") &&
+          !file.type.includes("jpg") &&
+          !file.type.includes("jpeg")
+        ) {
+          toast.error("Invalid file type (must be .png, .jpg, or .jpeg)");
+        } else {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            setData((prev) => ({
+              ...prev,
+              [name]: [...prev[name], e.target?.result as string],
+            }));
+          };
+          reader.readAsDataURL(file);
+        }
+      });
     }
   };
 
@@ -50,7 +56,7 @@ export default function Uploader({
           {
             "max-w-screen-md": aspectRatio === "aspect-video",
             "max-w-xs": aspectRatio === "aspect-square",
-          },
+          }
         )}
       >
         <div
@@ -74,25 +80,20 @@ export default function Uploader({
             e.preventDefault();
             e.stopPropagation();
             setDragActive(false);
-
-            const file = e.dataTransfer.files && e.dataTransfer.files[0];
-            inputRef.current!.files = e.dataTransfer.files; // set input file to dropped file
-            handleUpload(file);
+            inputRef.current!.files = e.dataTransfer.files;
+            handleUpload(e.dataTransfer.files);
           }}
         />
         <div
-          className={`${
-            dragActive ? "border-2 border-black" : ""
-          } absolute z-[3] flex h-full w-full flex-col items-center justify-center rounded-md px-10 transition-all ${
-            data[name]
+          className={`${dragActive ? "border-2 border-black" : ""
+            } absolute z-[3] flex h-full w-full flex-col items-center justify-center rounded-md px-10 transition-all ${data[name]
               ? "bg-white/80 opacity-0 hover:opacity-100 hover:backdrop-blur-md"
               : "bg-white opacity-100 hover:bg-gray-50"
-          }`}
+            }`}
         >
           <svg
-            className={`${
-              dragActive ? "scale-110" : "scale-100"
-            } h-7 w-7 text-gray-500 transition-all duration-75 group-hover:scale-110 group-active:scale-95`}
+            className={`${dragActive ? "scale-110" : "scale-100"
+              } h-7 w-7 text-gray-500 transition-all duration-75 group-hover:scale-110 group-active:scale-95`}
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
@@ -115,14 +116,16 @@ export default function Uploader({
           </p>
           <span className="sr-only">Photo upload</span>
         </div>
-        {data[name] && (
+        {Array.isArray(data[name]) && data[name].map((imgSrc, index) => (
+
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={data[name] as string}
-            alt="Preview"
+            key={index}
+            src={imgSrc}
+            alt={`Preview ${index + 1}`}
             className="h-full w-full rounded-md object-cover"
           />
-        )}
+        ))}
       </label>
       <div className="mt-1 flex rounded-md shadow-sm">
         <input
@@ -130,11 +133,11 @@ export default function Uploader({
           ref={inputRef}
           name={name}
           type="file"
+          multiple
           accept="image/*"
           className="sr-only"
           onChange={(e) => {
-            const file = e.currentTarget.files && e.currentTarget.files[0];
-            handleUpload(file);
+            handleUpload(e.currentTarget.files);
           }}
         />
       </div>

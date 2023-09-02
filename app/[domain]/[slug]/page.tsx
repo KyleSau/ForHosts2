@@ -57,7 +57,7 @@ export default async function SitePostPage({
         {/* md:w-7/12 */}
         <div className="m-auto w-full text-center md:w-10/12">
           <div className="relative m-auto h-80 w-full max-w-screen-lg overflow-hidden md:mb-5 md:h-150 md:w-5/6 md:rounded-2xl lg:w-2/3">
-            <ImageGallery image={data.image} imageBlurhash={data.imageBlurhash} />
+            <ImageGallery images={data.photoGallery} imageBlurhash={data.photoGalleryBlurhash} />
           </div>
           <div>
             <DashHeader title={data.title} subtext={data.description} guests={data.maxGuests} bedrooms={data.bedrooms} totalbeds={data.totalBeds} bathrooms={data.bathrooms} />
