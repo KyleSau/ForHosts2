@@ -71,7 +71,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ imageBlurhash: imageBlurhas
         onClose={closeModal}
         // images={images}
         image={images[selectedImageIndex]}
-        blurImage={imageBlurhashes[selectedImageIndex]}
+        blurHash={imageBlurhashes[selectedImageIndex]}
       // selectedImageIndex={selectedImageIndex}
       // setSelectedImageIndex={setSelectedImageIndex} // Pass the function here
       />
