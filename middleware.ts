@@ -17,6 +17,8 @@ export const config = {
 export default async function middleware(req: NextRequest) {
   const url = req.nextUrl;
 
+  //console.log("Original URL:", req.nextUrl);
+
   // Get hostname of request (e.g. demo.vercel.pub, demo.localhost:3000)
   const hostname = req.headers
     .get("host")!
@@ -31,11 +33,17 @@ export default async function middleware(req: NextRequest) {
     if (!session && path !== "/login") {
       return NextResponse.redirect(new URL("/login", req.url));
     } else if (session && path == "/login") {
+
       return NextResponse.redirect(new URL("/", req.url));
     }
+    // return NextResponse.rewrite(
+
+    //   new URL(`/app${path === "/" ? "" : path}`, req.url),
+    // );
     return NextResponse.rewrite(
-      new URL(`/app${path === "/" ? "" : path}`, req.url),
+      new URL(`/app${path === "/" ? "" : path}${url.search}`, req.url),
     );
+
   }
 
   // rewrite root application to `/home` folder

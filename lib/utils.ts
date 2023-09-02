@@ -119,3 +119,16 @@ export const createCleanQueryList = (multiQueryString: string) => {
   queryList = queryList.filter((query: string, i: number) => queryList.indexOf(query) === i); //remove duplicates
   return queryList;
 };
+
+export const humanReadableFileSize = (size: number | undefined) => {
+  // file.size unit is in bytes
+  if (size !== undefined) {
+    const i = Math.floor(Math.log(size) / Math.log(1024));
+    return (
+        (size / Math.pow(1024, i)).toFixed(2) +
+        " " +
+        ["B", "kB", "MB", "GB", "TB"][i]
+    );
+  }
+  return 0.0;
+};

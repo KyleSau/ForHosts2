@@ -22,6 +22,30 @@ const nanoid = customAlphabet(
   7,
 ); // 7-character random string
 
+export const getReservationsByPostId = async (postId: string) => {
+  try {
+    const reservations = await prisma.reservation.findMany({
+      where: {
+        post: {
+          id: postId,
+        },
+        OR: [
+          { status: 'PENDING' },
+          { status: 'CONFIRMED' },
+        ],
+      },
+      include: {
+        post: true,
+      },
+    });
+    return reservations;
+  } catch (error: any) {
+    return {
+      error: "Failed to fetch reservations",
+    };
+  }
+};
+
 export const createSite = async (formData: FormData) => {
   const session = await getSession();
   if (!session?.user.id) {
@@ -147,6 +171,8 @@ export const updateSite = withSiteAuth(
 
         const file = formData.get(key) as File;
         const filename = `${nanoid()}.${file.type.split("/")[1]}`;
+
+        console.log('filename: ' + filename);
 
         const { url } = await put(filename, file, {
           access: "public",
@@ -369,6 +395,7 @@ export const getPosts = async (userId: string, siteId: string | undefined, limit
     },
     ...(limit ? { take: limit } : {}),
   });
+
   return posts;
 };
 
@@ -386,24 +413,34 @@ export const updatePostMetadata = withPostAuth(
     try {
       let response;
       if (key === "image") {
-        const file = formData.get("image") as File;
-        const filename = `${nanoid()}.${file.type.split("/")[1]}`;
+        const files = formData.getAll("image") as File[]; // This will retrieve all the files
+        const urls = await Promise.all(files.map(async (file) => {
+          const filename = `${nanoid()}.${file.type.split("/")[1]}`;
+          console.log('post filename: ' + filename);
 
-        const { url } = await put(filename, file, {
-          access: "public",
-        });
+          const SIZE_LIMIT = 50000;
+          if (file.size > SIZE_LIMIT) {
 
-        const blurhash = await getBlurDataURL(url);
+          }
+          const { url } = await put(filename, file, {
+            access: "public",
+          });
+
+          const blurhash = await getBlurDataURL(url);
+          return { url, blurhash };
+        }));
 
         response = await prisma.post.update({
           where: {
             id: post.id,
           },
           data: {
-            image: url,
-            imageBlurhash: blurhash,
+            image: urls[0]?.url,  // Take the first image URL as the main image
+            imageBlurhash: urls[0]?.blurhash, // Same for the blurhash
+            photoGallery: urls.map(u => u.url), // Store all the URLs in the photoGallery
+            photoGalleryBlurhash: urls.map(u => u.blurhash), // Store all the blurhashes
           },
-        });
+        })
       } else {
         response = await prisma.post.update({
           where: {
@@ -414,6 +451,36 @@ export const updatePostMetadata = withPostAuth(
           },
         });
       }
+      // if (key === "image") {
+      //   const file = formData.get("image") as File;
+      //   const filename = `${nanoid()}.${file.type.split("/")[1]}`;
+      //   console.log('post filename: ' + filename);
+
+      //   const { url } = await put(filename, file, {
+      //     access: "public",
+      //   });
+
+      //   const blurhash = await getBlurDataURL(url);
+
+      //   response = await prisma.post.update({
+      //     where: {
+      //       id: post.id,
+      //     },
+      //     data: {
+      //       image: url,
+      //       imageBlurhash: blurhash,
+      //     },
+      //   });
+      // } else {
+      //   response = await prisma.post.update({
+      //     where: {
+      //       id: post.id,
+      //     },
+      //     data: {
+      //       [key]: key === "published" ? value === "true" : value,
+      //     },
+      //   });
+      // }
 
       await revalidateTag(
         `${post.site?.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}-posts`,
@@ -493,30 +560,6 @@ export const editUser = async (
         error: error.message,
       };
     }
-  }
-};
-
-export const getReservationsByPostId = async (postId: string) => {
-  try {
-    const reservations = await prisma.reservation.findMany({
-      where: {
-        post: {
-          id: postId,
-        },
-        OR: [
-          { status: 'PENDING' },
-          { status: 'CONFIRMED' },
-        ],
-      },
-      include: {
-        post: true,
-      },
-    });
-    return reservations;
-  } catch (error: any) {
-    return {
-      error: "Failed to fetch reservations",
-    };
   }
 };
 
