@@ -2,10 +2,12 @@
 
 import { Image, Trash2 } from 'lucide-react';
 import { FILE_CONSTS, IMAGE_UPLOAD_QUANTITY_LIMIT, IMAGE_SIZE_LIMIT_BYTES, IMAGE_SIZE_LIMIT_MB } from '@/lib/constants';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import EditorWarningModal, 
   { EditorWarningModalDataType, EditorWarningModalDataTemplate } from "@/components/editor/warning-confirmation-modal";
 import { humanReadableFileSize } from '@/lib/utils';
+
+import { put, type BlobResult } from '@vercel/blob'; // test
 
 export function FileClickDragDrop({ componentId }: { componentId: string }) {
   const PERMITTED_FILE_TYPES = new Set([FILE_CONSTS.JPEG, FILE_CONSTS.PNG]);
@@ -16,6 +18,10 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
   //states for confirmation modal for deleting pictures
   const [editorWarningModalOpen, setEditorWarningModalOpen] = useState<boolean>(false);
   const [editorWarningModalData, setEditorWarningModalData] = useState<EditorWarningModalDataType>(EditorWarningModalDataTemplate)
+
+  //TEST
+  const inputFileRef = useRef<HTMLInputElement>(null); // test
+  const [blob, setBlob] = useState<BlobResult | null>(null); // test
 
   const addFilesAndUrlsToState = (newFiles: (File | null)[]) => {
     //first check if adding the new files causes currently uploaded pics to surpass the upload threshold; show modal if so
@@ -210,5 +216,35 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
       handleDeletePressed={removeFileAndUrlFromState}
       modalData={editorWarningModalData}
     />
+
+    <h1>Upload Your Avatar</h1>
+    <form
+      onSubmit={async (event) => {
+        event.preventDefault();
+        
+        if(inputFileRef.current?.files !== null) {
+          const file: File | null = inputFileRef.current? inputFileRef.current.files[0] : null;
+          
+          if(file !== null) {
+            const newBlob = await put(file.name, file, {
+              access: 'public',
+              handleBlobUploadUrl: '/api/upload',
+            });
+            console.log("newBlob: ", newBlob);
+            setBlob(newBlob);
+          }
+        }
+      }}
+    >
+      <input name="file" ref={inputFileRef} type="file" required />
+      <br />
+      <button type="submit" className='border border-black'>Upload</button>
+    </form>
+    {blob && (
+      <div>
+        Blob url: <a href={blob.url}>{blob.url}</a>
+      </div>
+    )}
+
   </>);
 };
