@@ -49,7 +49,7 @@ function formatAmountForStripe(
 }
 
 async function getStripeAccountForHostId(hostId: string) {
-    const stripeAccount = await prisma.stripeAccount.findUnique({
+    const stripeAccount = await prisma?.stripeAccount.findUnique({
         where: {
             userId: hostId
         }
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
 
     console.log('body: ', JSON.stringify(body));
 
-    const post = await prisma.post.findUnique({
+    const post = await prisma?.post.findUnique({
         where: {
             id: body.listingId,
         }
