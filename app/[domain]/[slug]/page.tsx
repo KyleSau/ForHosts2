@@ -9,6 +9,7 @@ import AmenitiesModal from "@/components/amenities/amenities-modal";
 import { amenityDetails } from "@/components/amenities/amenities-data";
 import ImageGallery from "@/components/dash-site-page/image-gallery";
 import DashHeader from "@/components/dash-site-page/dash-header";
+import BookingComponent from "@/components/booking/booking-component";
 export async function generateMetadata({
   params,
 }: {
@@ -53,6 +54,7 @@ export default async function SitePostPage({
   return (
     <>
       <div className="flex flex-col items-center">
+        <BookingComponent listing={data} />
         {/* Make this Photo Gallery? */}
         {/* md:w-7/12 */}
         <div className="m-auto w-full text-center md:w-10/12">
@@ -135,7 +137,7 @@ export default async function SitePostPage({
       {
         data.adjacentPosts && (
           <div className="mx-5 mb-20 grid max-w-screen-xl grid-cols-1 gap-x-4 gap-y-8 md:grid-cols-2 xl:mx-auto xl:grid-cols-3">
-            {data.adjacentPosts.map((data, index) => (
+            {data.adjacentPosts.map((data: any, index: number) => (
               <BlogCard key={index} data={data} />
             ))}
           </div>
