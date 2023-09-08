@@ -21,7 +21,8 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
 
   //TEST
   const inputFileRef = useRef<HTMLInputElement>(null); // test
-  const [blob, setBlob] = useState<BlobResult | null>(null); // test
+  // const [blob, setBlob] = useState<BlobResult | null>(null); // test
+  const [blobList, setBlobList] = useState<(BlobResult | null)[]>([]);
 
   const addFilesAndUrlsToState = (newFiles: (File | null)[]) => {
     //first check if adding the new files causes currently uploaded pics to surpass the upload threshold; show modal if so
@@ -223,26 +224,49 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
         event.preventDefault();
         
         if(inputFileRef.current?.files !== null) {
-          const file: File | null = inputFileRef.current? inputFileRef.current.files[0] : null;
-          
-          if(file !== null) {
-            const newBlob = await put(file.name, file, {
+          //---- Multi file upload ----
+          const selectedFiles: FileList | undefined = inputFileRef.current?.files;
+          console.log("selectedFiles: ", selectedFiles);
+
+          Array.from(selectedFiles as ArrayLike<File>).forEach((file: File) => {
+            const newBlob = put(file.name, file, {
               access: 'public',
               handleBlobUploadUrl: '/api/upload',
             });
-            console.log("newBlob: ", newBlob);
-            setBlob(newBlob);
-          }
+            newBlob.then((br: BlobResult) => {
+              console.log("newBlob: ", newBlob);
+              setBlobList([...blobList, br]);
+            });
+          });
+          
+          //---- Single file upload ----
+          // const file: File | null = inputFileRef.current? inputFileRef.current.files[0] : null;
+          // console.log("file: ", file);
+          // if(file !== null) {
+            // const newBlob = await put(file.name, file, {
+            //   access: 'public',
+            //   handleBlobUploadUrl: '/api/upload',
+            // });
+            // console.log("newBlob: ", newBlob);
+            // setBlob(newBlob);
+          // }
         }
       }}
     >
-      <input name="file" ref={inputFileRef} type="file" required />
+      <input name="file" ref={inputFileRef} type="file" required multiple />
       <br />
       <button type="submit" className='border border-black'>Upload</button>
     </form>
-    {blob && (
+    {blobList && (
       <div>
-        Blob url: <a href={blob.url}>{blob.url}</a>
+        Blob url: <br />
+        {
+          blobList.map((blob: BlobResult | null, idx: number) => (
+            <p>
+              <a key={idx} href={blob?.url}>{blob?.url}</a><br />
+            </p>
+          ))
+        }
       </div>
     )}
 
