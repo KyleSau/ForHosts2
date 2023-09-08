@@ -106,7 +106,7 @@ async function createCheckoutSession(request: any, post: any, body: any) { // Ac
 
     const product_description = post.title;
 
-    const applicationFee = Math.round(totalPrice * 0.03); // 3% of totalPrice
+    const applicationFee = Math.round(totalPrice * .03); // 3% of totalPrice
 
     const params: Stripe.Checkout.SessionCreateParams = {
         submit_type: 'pay',
@@ -127,7 +127,7 @@ async function createCheckoutSession(request: any, post: any, body: any) { // Ac
         success_url: `${request.headers.get('origin')}/result?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${request.headers.get('origin')}/donate-with-checkout`,
         payment_intent_data: {
-            application_fee_amount: applicationFee, // This is the fee you want to take
+            application_fee_amount: applicationFee * 100, // This is the fee you want to take
             transfer_data: {
                 destination: accountId, // This should be the ID of the connected account
             },
