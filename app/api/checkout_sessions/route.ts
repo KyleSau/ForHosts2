@@ -29,7 +29,7 @@ function calculateTotalCost(startDate: Date, endDate: Date, pricePerNight: numbe
 // Remember this is just a helper. Always do the final calculations on the server.
 
 
-export function formatAmountForStripe(
+function formatAmountForStripe(
     amount: number,
     currency: string
 ): number {

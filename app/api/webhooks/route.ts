@@ -12,7 +12,7 @@ const webhookSecret: string = process.env.STRIPE_WEBHOOK_SECRET!
 export async function POST(request: Request) {
 
     const text = await request.text();
-    const stripeSignature = request.headers.get("Stripe-Signature");
+    const stripeSignature = request.headers.get("Stripe-Signature")!;
 
     let event: Stripe.Event
 
