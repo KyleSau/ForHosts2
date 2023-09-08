@@ -1,9 +1,6 @@
 import { NextResponse } from 'next/server'
-import { NextApiRequest, NextApiResponse } from 'next'
 
-import Cors from 'micro-cors'
 import Stripe from 'stripe'
-import { buffer } from 'micro'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
     // https://github.com/stripe/stripe-node#configuration
@@ -12,39 +9,15 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 const webhookSecret: string = process.env.STRIPE_WEBHOOK_SECRET!
 
-// Stripe requires the raw body to construct the event.
-export const config = {
-    api: {
-        bodyParser: false,
-    },
-}
+export async function POST(request: Request) {
 
-const cors = Cors({
-    allowMethods: ['POST', 'HEAD'],
-})
-
-const getRawBody = (req: any): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        let data = '';
-        req.on('data', (chunk: any) => {
-            data += chunk;
-        });
-        req.on('end', () => resolve(data));
-        req.on('error', (error: any) => reject(error));
-    });
-};
-
-
-
-export async function POST(req: NextApiRequest) {
-
-    const buf = await buffer(req);
-    const sig = req.headers['stripe-signature']!
+    const text = await request.text();
+    const stripeSignature = request.headers.get("Stripe-Signature");
 
     let event: Stripe.Event
 
     try {
-        event = stripe.webhooks.constructEvent(buf.toString(), sig, webhookSecret)
+        event = stripe.webhooks.constructEvent(text, stripeSignature, webhookSecret)
     } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Unknown error'
         // On error, log and return the error message.
