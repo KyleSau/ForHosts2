@@ -1,4 +1,4 @@
-
+'use client';
 import React from 'react'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -11,16 +11,14 @@ const validationSchema = Yup.object().shape({
     description: Yup.string().required('Description is required'),
 });
 
-export default function PropertyDescription({ data }) {
+export default function PropertyDetails({ data }) {
   const id = data['id'];
   const [siteData, setSiteData] = useState(id);
   
 
     const formik = useFormik({
         initialValues: {
-        id: id,
-        site: data.site,
-          siteId: data.siteId,
+
           title: '',
           description: '',
           // Initialize other form fields here
@@ -41,10 +39,10 @@ export default function PropertyDescription({ data }) {
       });
       return (
         <div className="mt-8 p-4">
-
+        
           <div>
-            <div className="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
-              Property Details
+            <div className="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3 ">
+              Property Settings
             </div>
             <form onSubmit={formik.handleSubmit}> {/* Add onSubmit to the form */}
               <div className="flex flex-col md:flex-row">
@@ -89,10 +87,26 @@ export default function PropertyDescription({ data }) {
                 <div className="flex-auto flex flex-row-reverse">
                   <button
                     type="submit" // Specify the button type as "submit" to trigger form submission
-                    className="rounded-md hover:scale-110 duration-200 ease-in-out transition bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    className="text-base ml-2 hover:scale-110 focus:outline-none flex justify-center px-4 py-2 rounded font-bold cursor-pointer 
+                    hover:bg-teal-600  
+                    bg-teal-600 
+                    text-teal-100 
+                    border duration-200 ease-in-out 
+                    border-teal-600 transition"
+                  >
                     Next
                   </button>
-
+                  <button
+                    type="button" // Specify the button type as "button" for skipping
+                    className="text-base hover:scale-110 focus:outline-none flex justify-center px-4 py-2 rounded font-bold cursor-pointer 
+                    hover:bg-teal-200  
+                    bg-teal-100 
+                    text-teal-700 
+                    border duration-200 ease-in-out 
+                    border-teal-600 transition"
+                  >
+                    Skip
+                  </button>
                 </div>
               </div>
             </form>

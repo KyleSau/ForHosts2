@@ -14,6 +14,8 @@ import { Post } from "@prisma/client";
 import { updatePost, updatePostMetadata } from "@/lib/actions";
 
 import PropertyDescription from "./property-descript-tab";
+import PropertyDetails from "./prop-details-tab";
+import SomeSettings from "./some-settings";
 
 type PostWithSite = Post & { site: { subdomain: string | null } | null };
 
@@ -46,43 +48,43 @@ export default function Editor({ post }: { post: PostWithSite }) {
     : `http://${data.site?.subdomain}.localhost:3000/${data.slug}`;
 
   const [debouncedData] = useDebounce(data, 1000);
-  useEffect(() => {
-    // compare the title, description and content only
-    if (
-      debouncedData.title === post.title &&
-      debouncedData.price === post.price &&
-      debouncedData.description === post.description &&
-      debouncedData.content === post.content &&
-      debouncedData.checkInTime === post.checkInTime &&
-      debouncedData.checkOutTime === post.checkOutTime &&
-      debouncedData.location === post.location &&
-      debouncedData.currency === post.currency &&
-      debouncedData.minimumStay === post.minimumStay &&
-      debouncedData.cleaningFee === post.cleaningFee &&
-      debouncedData.securityDeposit === post.securityDeposit &&
-      JSON.stringify(debouncedData.amenities) ===
-        JSON.stringify(post.amenities) &&
-      debouncedData.maxGuests === post.maxGuests &&
-      debouncedData.bedrooms === post.bedrooms &&
-      debouncedData.totalBeds === post.totalBeds &&
-      debouncedData.bathrooms === post.bathrooms &&
-      debouncedData.instantBooking === post.instantBooking &&
-      debouncedData.rating === post.rating &&
-      JSON.stringify(debouncedData.calendarUrls) ===
-        JSON.stringify(post.calendarUrls) &&
-      JSON.stringify(debouncedData.photoGallery) ===
-        JSON.stringify(post.photoGallery) &&
-      JSON.stringify(debouncedData.additionalServices) ===
-        JSON.stringify(post.additionalServices) &&
-      JSON.stringify(debouncedData.availabilityWindow) ===
-        JSON.stringify(post.availabilityWindow)
-    ) {
-      return;
-    }
-    startTransitionSaving(async () => {
-      await updatePost(debouncedData);
-    });
-  }, [debouncedData, post]);
+  // useEffect(() => {
+  //   // compare the title, description and content only
+  //   if (
+  //     debouncedData.title === post.title &&
+  //     debouncedData.price === post.price &&
+  //     debouncedData.description === post.description &&
+  //     debouncedData.content === post.content &&
+  //     debouncedData.checkInTime === post.checkInTime &&
+  //     debouncedData.checkOutTime === post.checkOutTime &&
+  //     debouncedData.location === post.location &&
+  //     debouncedData.currency === post.currency &&
+  //     debouncedData.minimumStay === post.minimumStay &&
+  //     debouncedData.cleaningFee === post.cleaningFee &&
+  //     debouncedData.securityDeposit === post.securityDeposit &&
+  //     JSON.stringify(debouncedData.amenities) ===
+  //       JSON.stringify(post.amenities) &&
+  //     debouncedData.maxGuests === post.maxGuests &&
+  //     debouncedData.bedrooms === post.bedrooms &&
+  //     debouncedData.totalBeds === post.totalBeds &&
+  //     debouncedData.bathrooms === post.bathrooms &&
+  //     debouncedData.instantBooking === post.instantBooking &&
+  //     debouncedData.rating === post.rating &&
+  //     JSON.stringify(debouncedData.calendarUrls) ===
+  //       JSON.stringify(post.calendarUrls) &&
+  //     JSON.stringify(debouncedData.photoGallery) ===
+  //       JSON.stringify(post.photoGallery) &&
+  //     JSON.stringify(debouncedData.additionalServices) ===
+  //       JSON.stringify(post.additionalServices) &&
+  //     JSON.stringify(debouncedData.availabilityWindow) ===
+  //       JSON.stringify(post.availabilityWindow)
+  //   ) {
+  //     return;
+  //   }
+  //   startTransitionSaving(async () => {
+  //     await updatePost(debouncedData);
+  //   });
+  // }, [debouncedData, post]);
 
   const prev = useRef("");
 
@@ -130,7 +132,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
 
   return (
     <div className="relative min-h-[500px] w-full max-w-screen-lg border-stone-200 p-12 px-8 dark:border-stone-700 sm:mb-[calc(20vh)] sm:rounded-lg sm:border sm:px-12 sm:shadow-lg">
-      <div className="relative">
+      <div className="relative bg-gray-100 rounded-xl">
         <ul
           className="relative flex list-none flex-wrap rounded-xl bg-transparent p-1"
           nav-pills
@@ -139,8 +141,8 @@ export default function Editor({ post }: { post: PostWithSite }) {
           <li
             className={` flex-auto text-center ${
               activeTab === "app"
-                ? "rounded-xl bg-gray-200 text-gray-600 shadow-md"
-                : "w- rounded-xl bg-transparent text-slate-700"
+                ? "rounded-xl bg-white text-gray-600 shadow-md  transition ease-in-out duration-100  "
+                : "w- rounded-xl bg-transparent text-slate-700  transition ease-in-out duration-100  "
             }`}
           >
             <a
@@ -189,16 +191,16 @@ export default function Editor({ post }: { post: PostWithSite }) {
             </a>
           </li>
           <li
-            className={`z-30 flex-auto text-center ${
-              activeTab === "HomeInfo"
-                ? "rounded-xl bg-gray-200 text-gray-600 shadow-md"
-                : "w- rounded-xl bg-transparent text-slate-700"
+            className={`z-30 flex-auto text-center  ${
+              activeTab === "PropDetails"
+                ? "rounded-xl bg-white text-gray-600 shadow-md transition ease-in-out duration-100  "
+                : " rounded-xl bg-transparent text-slate-700 transition ease-in-out duration-100  "
             }`}
           >
             <a
               className="ease-soft-in-out mb-0 flex w-full flex-col items-center rounded-lg border-0 bg-inherit px-0 py-1 text-slate-700 transition-all"
               href="javascript:;"
-              onClick={() => handleTabClick("HomeInfo")} // Set the active tab when clicking
+              onClick={() => handleTabClick("PropDetails")} // Set the active tab when clicking
             >
               <svg
                 className="text-slate-700"
@@ -335,10 +337,10 @@ export default function Editor({ post }: { post: PostWithSite }) {
       </div> */}
       {activeTab === "app" && (
         <div>
-          <PropertyDescription post={post?.id} />
+          <PropertyDescription data={data} />
         </div>
       )}
-      {activeTab === "HomeInfo" && <div>test</div>}
+      {activeTab === "PropDetails" && <SomeSettings />}
       {/* {editor && <EditorBubbleMenu editor={editor} />} */}
       {/* <EditorContent editor={editor} /> */}
       {/* <div

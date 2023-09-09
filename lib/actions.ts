@@ -29,10 +29,7 @@ export const getReservationsByPostId = async (postId: string) => {
         post: {
           id: postId,
         },
-        OR: [
-          { status: 'PENDING' },
-          { status: 'CONFIRMED' },
-        ],
+        OR: [{ status: "PENDING" }, { status: "CONFIRMED" }],
       },
       include: {
         post: true,
@@ -172,7 +169,7 @@ export const updateSite = withSiteAuth(
         const file = formData.get(key) as File;
         const filename = `${nanoid()}.${file.type.split("/")[1]}`;
 
-        console.log('filename: ' + filename);
+        console.log("filename: " + filename);
 
         const { url } = await put(filename, file, {
           access: "public",
@@ -267,23 +264,23 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
 
   const response = await prisma.post.create({
     data: {
-      title: '',
+      title: "",
       price: 0,
-      checkInTime: '0:00',
-      checkOutTime: '0:00',
-      location: 'location',
-      currency: 'USD',
+      checkInTime: "0:00",
+      checkOutTime: "0:00",
+      location: "location",
+      currency: "USD",
       minimumStay: 0,
       cleaningFee: 0,
       securityDeposit: 0,
       totalBeds: 0,
       bedrooms: 0,
       bathrooms: 0,
-      amenities: [],  // empty array for amenities
-      photoGallery: [],  // empty array for photoGallery
-      additionalServices: [],  // empty array for additionalServices
+      amenities: [], // empty array for amenities
+      photoGallery: [], // empty array for photoGallery
+      additionalServices: [], // empty array for additionalServices
       calendarUrls: [],
-      propertyType: 'idk',
+      propertyType: "idk",
       site: {
         connect: {
           id: site.id,
@@ -296,7 +293,6 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
       },
     },
   });
-
 
   await revalidateTag(
     `${site.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}-posts`,
@@ -335,12 +331,12 @@ export const updatePropertyDescript = async (data: Post) => {
         title: data.title,
         description: data.description,
       },
-    
     });
+    return response;
   } catch (e) {
     console.error(e);
   }
-}
+};
 // creating a separate function for this because we're not using FormData
 export const updatePost = async (data: Post) => {
   const session = await getSession();
@@ -404,7 +400,7 @@ export const updatePost = async (data: Post) => {
     // if the site has a custom domain, we need to revalidate those tags too
     post.site?.customDomain &&
       (await revalidateTag(`${post.site?.customDomain}-posts`),
-        await revalidateTag(`${post.site?.customDomain}-${post.slug}`));
+      await revalidateTag(`${post.site?.customDomain}-${post.slug}`));
 
     return response;
   } catch (error: any) {
@@ -414,7 +410,11 @@ export const updatePost = async (data: Post) => {
   }
 };
 
-export const getPosts = async (userId: string, siteId: string | undefined, limit = null) => {
+export const getPosts = async (
+  userId: string,
+  siteId: string | undefined,
+  limit = null,
+) => {
   const posts = await prisma.post.findMany({
     where: {
       userId: userId as string,
@@ -432,7 +432,6 @@ export const getPosts = async (userId: string, siteId: string | undefined, limit
   return posts;
 };
 
-
 export const updatePostMetadata = withPostAuth(
   async (
     formData: FormData,
@@ -447,33 +446,34 @@ export const updatePostMetadata = withPostAuth(
       let response;
       if (key === "image") {
         const files = formData.getAll("image") as File[]; // This will retrieve all the files
-        const urls = await Promise.all(files.map(async (file) => {
-          const filename = `${nanoid()}.${file.type.split("/")[1]}`;
-          console.log('post filename: ' + filename);
+        const urls = await Promise.all(
+          files.map(async (file) => {
+            const filename = `${nanoid()}.${file.type.split("/")[1]}`;
+            console.log("post filename: " + filename);
 
-          const SIZE_LIMIT = 50000;
-          if (file.size > SIZE_LIMIT) {
+            const SIZE_LIMIT = 50000;
+            if (file.size > SIZE_LIMIT) {
+            }
+            const { url } = await put(filename, file, {
+              access: "public",
+            });
 
-          }
-          const { url } = await put(filename, file, {
-            access: "public",
-          });
-
-          const blurhash = await getBlurDataURL(url);
-          return { url, blurhash };
-        }));
+            const blurhash = await getBlurDataURL(url);
+            return { url, blurhash };
+          }),
+        );
 
         response = await prisma.post.update({
           where: {
             id: post.id,
           },
           data: {
-            image: urls[0]?.url,  // Take the first image URL as the main image
+            image: urls[0]?.url, // Take the first image URL as the main image
             imageBlurhash: urls[0]?.blurhash, // Same for the blurhash
-            photoGallery: urls.map(u => u.url), // Store all the URLs in the photoGallery
-            photoGalleryBlurhash: urls.map(u => u.blurhash), // Store all the blurhashes
+            photoGallery: urls.map((u) => u.url), // Store all the URLs in the photoGallery
+            photoGalleryBlurhash: urls.map((u) => u.blurhash), // Store all the blurhashes
           },
-        })
+        });
       } else {
         response = await prisma.post.update({
           where: {
@@ -525,7 +525,7 @@ export const updatePostMetadata = withPostAuth(
       // if the site has a custom domain, we need to revalidate those tags too
       post.site?.customDomain &&
         (await revalidateTag(`${post.site?.customDomain}-posts`),
-          await revalidateTag(`${post.site?.customDomain}-${post.slug}`));
+        await revalidateTag(`${post.site?.customDomain}-${post.slug}`));
 
       return response;
     } catch (error: any) {
@@ -596,7 +596,6 @@ export const editUser = async (
   }
 };
 
-
 export const getReservations = async (limit: number = 10) => {
   const session = await getSession();
 
@@ -650,7 +649,10 @@ export const getCalendarUrls = async (postId: string) => {
 
 // this will be invoked by the stripe webhook
 // StripeMetaData
-export const createReservation = async (formData: FormData, currentDate: Date) => {
+export const createReservation = async (
+  formData: FormData,
+  currentDate: Date,
+) => {
   // FormData
   const postId = formData.get("postId") as string;
   const startDate = new Date(formData.get("start-date") as string);
@@ -661,9 +663,13 @@ export const createReservation = async (formData: FormData, currentDate: Date) =
     const dateDeltaArray = calcDateDelta(currentDate, startDate);
 
     if (dateDeltaArray.some((t: number) => t < 0)) {
-      throw new Error("The starting date of your reservation must be on or after today.")
+      throw new Error(
+        "The starting date of your reservation must be on or after today.",
+      );
     } else if (dateDeltaArray[0] > RESERVATION_FUTURE_DAYS_THRESHOLD) {
-      throw new Error(`The starting date of your reservation cannot be more than ${RESERVATION_FUTURE_DAYS_THRESHOLD} days from today.`);
+      throw new Error(
+        `The starting date of your reservation cannot be more than ${RESERVATION_FUTURE_DAYS_THRESHOLD} days from today.`,
+      );
     }
 
     const response = await prisma?.reservation.create({
@@ -672,8 +678,8 @@ export const createReservation = async (formData: FormData, currentDate: Date) =
         startDate,
         endDate,
         totalPrice: 100,
-        status: 'PENDING',
-      }
+        status: "PENDING",
+      },
     });
     return response;
   } catch (error: any) {
@@ -688,4 +694,3 @@ export const createReservation = async (formData: FormData, currentDate: Date) =
     }
   }
 };
-
