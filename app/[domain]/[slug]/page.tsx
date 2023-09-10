@@ -9,6 +9,13 @@ import ImageGallery from "@/components/dash-site-page/image-gallery";
 import DashHeader from "@/components/dash-site-page/dash-header";
 import BookingComponent from "@/components/booking/booking-component";
 import ListingDescription from "@/components/users-sites/listing-description";
+// import OpenStreetMap from "@/components/users-sites/open-street-map";
+
+import dynamic from 'next/dynamic'
+// import OpenStreetMap from '../component/OpenStreetMap'
+const Map = dynamic(() => import('@/components/users-sites/open-street-map'), {
+  ssr: false,
+})
 
 export async function generateMetadata({
   params,
@@ -94,6 +101,8 @@ export default async function SitePostPage({
         <div className="bg-slate-500 col-span-1 md:col-span-full">
           <div className="">
             Where youll be, map here
+            <><Map /></>
+
           </div>
         </div>
         <div className="bg-slate-500 col-span-1 md:col-span-full">
