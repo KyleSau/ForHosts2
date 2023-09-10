@@ -65,7 +65,7 @@ export default async function SitePostPage({
           <ImageGallery images={data.photoGallery} imageBlurhash={data.photoGalleryBlurhash} />
         </div>
         <div className="bg-grey-500 col-span-1 md:col-span-full">
-          <DashHeader title={data.title} subtext={data.description} guests={data.maxGuests} bedrooms={data.bedrooms} totalbeds={data.totalBeds} bathrooms={data.bathrooms} />
+          <DashHeader title={data.title} guests={data.maxGuests} bedrooms={data.bedrooms} totalbeds={data.totalBeds} bathrooms={data.bathrooms} />
         </div>
         <div className="relative bg-amber-500 col-span-1 md:col-span-2 md:min-w-[400px] m-2 row-span-4 row-start-3">
           <div className="sticky top-0 pt-[50px] pb-[50px]">
