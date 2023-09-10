@@ -1,4 +1,7 @@
 import { TIME_FACTORS } from "./constants";
+import { type ClassValue, clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
+
 
 export async function fetcher<JSON = any>(
   input: RequestInfo,
@@ -13,6 +16,10 @@ export const capitalize = (s: string) => {
   if (typeof s !== "string") return "";
   return s.charAt(0).toUpperCase() + s.slice(1);
 };
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
 
 export const truncate = (str: string, num: number) => {
   if (!str) return "";
@@ -56,14 +63,14 @@ export const random = (min: number, max: number) => {
 
 export const chunkIntoSizeNSubarrays = (arr: Array<number>, subarrySize: number) => {
   const n = subarrySize;
-  return Array.from({ length: Math.floor(arr.length/n) + arr.length%n }, (_, i) =>
+  return Array.from({ length: Math.floor(arr.length / n) + arr.length % n }, (_, i) =>
     arr.slice(i * n, i * n + n)
   );
 }
 
 export const calcDateDelta = (refDate: Date, futureDate: Date) => {
   const diff = futureDate.getTime() - refDate.getTime();
-  const sign = (diff < 0)? -1: 1;
+  const sign = (diff < 0) ? -1 : 1;
   let remainingMilliseconds = Math.abs(diff);
 
   const numDays = Math.floor(remainingMilliseconds / TIME_FACTORS.MS_PER_DAY);
@@ -76,29 +83,29 @@ export const calcDateDelta = (refDate: Date, futureDate: Date) => {
   remainingMilliseconds %= TIME_FACTORS.MS_PER_SECOND;
 
   const deltaTime = [numDays, numHours, numMinutes, numSeconds, remainingMilliseconds];
-  return deltaTime.map((unit: number) => (unit != 0)? unit * sign : unit);
+  return deltaTime.map((unit: number) => (unit != 0) ? unit * sign : unit);
 };
 
 export const calcRelativeDate = (refDate: Date, query: string) => {
   const queryArgs = query.match(/^[\+\-+0-9]+|[A-za-z]+/gm);
-  const queryNum: number = queryArgs && queryArgs.length >= 1? parseInt(queryArgs[0]) : 0;
-  const queryTimeUnit: string = queryArgs && queryArgs.length >= 2? queryArgs[1] : "null";
+  const queryNum: number = queryArgs && queryArgs.length >= 1 ? parseInt(queryArgs[0]) : 0;
+  const queryTimeUnit: string = queryArgs && queryArgs.length >= 2 ? queryArgs[1] : "null";
 
-  if(queryNum === 0 || queryTimeUnit === "null") {
+  if (queryNum === 0 || queryTimeUnit === "null") {
     return refDate;
   }
 
   const resultDate = new Date(refDate);
 
-  switch(queryTimeUnit) {
+  switch (queryTimeUnit) {
     case "hr" || "hour":
       resultDate.setHours(refDate.getHours() + queryNum);
       break;
     case "dy" || "day":
-      resultDate.setHours(refDate.getHours() + queryNum*24);
+      resultDate.setHours(refDate.getHours() + queryNum * 24);
       break;
     case "wk" || "week":
-      resultDate.setDate(refDate.getDate() + queryNum*7);
+      resultDate.setDate(refDate.getDate() + queryNum * 7);
       break;
     case "mo" || "month":
       resultDate.setMonth(refDate.getMonth() + queryNum);
@@ -107,7 +114,7 @@ export const calcRelativeDate = (refDate: Date, query: string) => {
       resultDate.setFullYear(refDate.getFullYear() + queryNum);
       break;
   }
-  
+
   return resultDate;
 };
 
@@ -125,9 +132,9 @@ export const humanReadableFileSize = (size: number | undefined) => {
   if (size !== undefined) {
     const i = Math.floor(Math.log(size) / Math.log(1024));
     return (
-        (size / Math.pow(1024, i)).toFixed(2) +
-        " " +
-        ["B", "kB", "MB", "GB", "TB"][i]
+      (size / Math.pow(1024, i)).toFixed(2) +
+      " " +
+      ["B", "kB", "MB", "GB", "TB"][i]
     );
   }
   return 0.0;

@@ -50,19 +50,19 @@ function Footer() {
             <Container>
                 <div className="flex flex-col justify-center items-center mt-24 md:flex-col">
                     <div className="flex space-x-4 justify-center">
-                        <NextLink href="https://www.twitter.com/my-saas-startup" passHref legacyBehavior>
+                        <NextLink href="#" passHref legacyBehavior>
                             <a>
                                 <TwitterIcon size={50} round={true} />
                             </a>
                         </NextLink>
 
-                        <NextLink href="https://www.facebook.com/profile.php?id=100091349487748" passHref legacyBehavior>
+                        <NextLink href="#" passHref legacyBehavior>
                             <a>
                                 <FacebookIcon size={50} round={true} />
                             </a>
                         </NextLink>
 
-                        <NextLink href="https://www.linkedin.com/my-saas-startup" passHref legacyBehavior>
+                        <NextLink href="#" passHref legacyBehavior>
                             <a>
                                 <LinkedinIcon size={50} round={true} />
                             </a>

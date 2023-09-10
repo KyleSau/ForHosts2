@@ -14,7 +14,7 @@ const DashHeader: React.FC<TitleSubtextProps> = ({ title, guests, subtext, bedro
   return (
     <div className="text-center p-5">
       <h1 className="text-2xl font-bold mb-4">{title}</h1>
-      <p className="text-lg text-gray-600">{guests} guests &#8226; {bedrooms} bedrooms &#8226; {totalbeds} beds &#8226; {bathrooms} bath {subtext}</p>
+      <p className="text-lg text-gray-600">{guests} Guests Maximum &#8226; {bedrooms} Bedrooms &#8226; {totalbeds} Beds &#8226; {bathrooms} Baths {subtext}</p>
     </div>
   );
 };

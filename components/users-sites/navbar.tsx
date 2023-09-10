@@ -16,7 +16,7 @@ const navOptions: NavOption[] = [
         url: "/",
     },
     {
-        name: "Book",
+        name: "Properties",
         subOptions: [
             { name: "Property 1", url: "/p1" },
             { name: "Property 2", url: "/p2" },

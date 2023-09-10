@@ -1,8 +1,18 @@
 "use client"
 import React, { useState } from 'react';
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Stripe, loadStripe } from '@stripe/stripe-js'
+import { addDays, format } from "date-fns"
+import { DateRange } from 'react-day-picker';
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import { cn } from "@/lib/utils"
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
 
 let stripePromise: Promise<Stripe | null>
 const getStripe = () => {
@@ -42,10 +52,13 @@ type BookingProps = {
 }
 
 // get listingId from prop
-const BookingComponent: React.FC<BookingProps> = ({ listing }) => {
+const BookingComponent: React.FC<BookingProps> = ({ listing, className }: any) => {
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
-
+    const [date, setDate] = React.useState<DateRange | undefined>({
+        from: new Date(),
+        to: addDays(new Date(), 20),
+    })
     const handleCheckout = async () => {
         const response = await fetchPostJSON('/api/checkout_sessions', {
             startDate: startDate,
@@ -73,28 +86,140 @@ const BookingComponent: React.FC<BookingProps> = ({ listing }) => {
     }
 
     return (
-        <div>
-            <div>
-                Listing Id: {listing.id}
+        <div className="p-5 bg-gray-200 text-slate-600 rounded-sm items-center shadow-[0_3px_10px_rgb(0,0,0,0.2)] min-w-[350px] border border-slate-300 max-w-[375px] m-auto">
+            <div className="mb-5">
+                <p className="text-lg text-bold">${listing.price} Per Night</p>
             </div>
-            <div>
-                <label>Start Date: </label>
-                <DatePicker
-                    selected={startDate}
-                    onChange={(date: Date) => setStartDate(date)}
-                />
-            </div>
+            <div className={cn("grid", className)}>
+                <Popover>
+                    <PopoverTrigger asChild>
+                        <Button
+                            id="date"
+                            variant={"outline"}
+                            className={cn(
+                                "w-full text-center font-normal",
+                                !date && "text-muted-foreground"
+                            )}
+                        >
 
-            <div>
-                <label>End Date: </label>
-                <DatePicker
-                    selected={endDate}
-                    onChange={(date: Date) => setEndDate(date)}
-                />
+                            {date?.from ? (
+                                date.to ? (
+                                    <>
+                                        {format(date.from, "LLL dd, y")} | {" "}
+                                        {format(date.to, "LLL dd, y")}
+                                    </>
+                                ) : (
+                                    format(date.from, "LLL dd, y")
+                                )
+                            ) : (
+                                <span>Pick a date</span>
+                            )}
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                            initialFocus
+                            mode="range"
+                            defaultMonth={date?.from}
+                            selected={date}
+                            onSelect={setDate}
+                            numberOfMonths={2}
+                        />
+                    </PopoverContent>
+                </Popover>
+                <Popover>
+                    <PopoverTrigger className="bg-white rounded-b-sm p-2 w-full border-t-[1px] border-gray-200">Guests</PopoverTrigger>
+                    <PopoverContent>
+                        <div className="m-2">
+                            <label>Adults</label>
+                            <Input
+                                type="number"
+                                className=""
+                                defaultValue={1}
+                                min={1}
+                                max={listing.maxGuests}
+                            />
+                        </div>
+                        <div className="m-2">
+                            <label>Children</label>
+                            <Input
+                                type="number"
+                                className=""
+                                defaultValue={0}
+                                min={0}
+                                max={listing.maxGuests}
+                            />
+                        </div>
+                        <div className="m-2">
+                            <label>Infants</label>
+                            <Input
+                                type="number"
+                                className=""
+                                defaultValue={0}
+                                min={0}
+                                max={listing.maxGuests}
+                            />
+                        </div>
+                        <div className="m-2">
+                            <label>Pets</label>
+                            <Input
+                                type="number"
+                                className=""
+                                defaultValue={0}
+                                min={0}
+                                max={listing.Pets}
+                            />
+                            {/* Pets Allowed? */}
+                        </div>
+                    </PopoverContent>
+                </Popover>
             </div>
-
-            <button onClick={handleCheckout}>Checkout</button>
-        </div>
+            <br />
+            {/* <div>
+                Display Date Range Selected: {date?.from && date?.to ? (
+                    `${format(date.from, "LLL dd, y")} - ${format(date.to, "LLL dd, y")}`
+                ) : (
+                    "Pick a date"
+                )}
+            </div> */}
+            <div className="w-full grid-cols-2">
+                <Popover>
+                    <div className="">
+                        <p className="underline"><PopoverTrigger className="underline">${listing.price} X Total Days </PopoverTrigger>
+                            <span className="float-right">$XXXX.XX</span>
+                        </p>
+                    </div>
+                    <PopoverContent>Display individual dates selected in a list</PopoverContent>
+                </Popover>
+                <Popover>
+                    <div className="">
+                        <p className="underline"><PopoverTrigger className="underline">Cleaning Fee </PopoverTrigger>
+                            <span className="float-right">$XXX.XX</span>
+                        </p>
+                    </div>
+                    <PopoverContent>This fee covers the costs of cleaning and turning over the space.</PopoverContent>
+                </Popover>
+                <Popover>
+                    <div className="">
+                        <p className="underline"><PopoverTrigger className="underline">Service Fee</PopoverTrigger>
+                            <span className="float-right">$XX.XX</span>
+                        </p>
+                    </div>
+                    <PopoverContent>This fee covers the platform provider (2%)</PopoverContent>
+                </Popover>
+                <hr className="border-slate-300 m w-full mt-5 mb-2" />
+                <Popover>
+                    <div className="">
+                        <p className="underline"><PopoverTrigger className="underline">Total before taxes</PopoverTrigger>
+                            <span className="float-right">$XXXX.XX</span>
+                        </p>
+                    </div>
+                    <PopoverContent>Total costs and a breakdown.</PopoverContent>
+                </Popover>
+                <br />
+            </div>
+            <button className="bg-green-300 p-2 rounded-sm justify-center w-full text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2" onClick={handleCheckout}>Book</button>
+        </div >
     );
 }
 
