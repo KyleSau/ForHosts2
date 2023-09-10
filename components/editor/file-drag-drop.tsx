@@ -7,7 +7,7 @@ import EditorWarningModal,
 { EditorWarningModalDataType, EditorWarningModalDataTemplate } from "@/components/editor/warning-confirmation-modal";
 import { humanReadableFileSize } from '@/lib/utils';
 
-import { put, type BlobResult } from '@vercel/blob'; // test
+import { put, list, type BlobResult } from '@vercel/blob'; // test
 
 export function FileClickDragDrop({ componentId }: { componentId: string }) {
   const PERMITTED_FILE_TYPES = new Set([FILE_CONSTS.JPEG, FILE_CONSTS.PNG]);
@@ -23,6 +23,7 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
   const inputFileRef = useRef<HTMLInputElement>(null); // test
   // const [blob, setBlob] = useState<BlobResult | null>(null); // test
   const [blobList, setBlobList] = useState<(BlobResult | null)[]>([]);
+  const [allBlobs, setAllBlobs] = useState<BlobResult[]>([]);
 
   const addFilesAndUrlsToState = (newFiles: (File | null)[]) => {
     //first check if adding the new files causes currently uploaded pics to surpass the upload threshold; show modal if so
@@ -148,6 +149,41 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
     setDraggedIdx(null); // Reset the dragged item index
   };
 
+  const listAllBlobsInStore = async () => { 
+    console.log("listAllBlobsInStore called");
+
+    const response = await fetch("/api/blob/get-blobs", {
+      method: "GET",
+      mode: "cors",
+      headers: {
+          "Content-Type": "application/json"
+      }
+    });
+    const data = await response.json();
+    console.log("listCurrentBlobsInStore: data: ", data);
+    setAllBlobs(data);
+  };
+
+  const deleteAllBlobsInStore = async () => {
+    console.log("deleteAllBlobsInStore called");
+    
+    const blob = allBlobs[allBlobs.length - 1];
+
+    // allBlobs.forEach((blob: BlobResult) => {
+
+    // });
+    const url = blob.url;
+    console.log("url: ", url);
+    const response = await fetch(`/api/blob/delete-blob?url=${url}`, {
+      method: "DELETE"
+    });
+
+    console.log("deleteAllBlobsInStore: response: ", response);
+    // const data = await response.json();
+    // console.log("listCurrentBlobsInStore: data: ", data);
+    // setAllBlobs(data);
+  };
+
   return (<>
     <div
       id={componentId}
@@ -228,19 +264,6 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
           const selectedFiles: FileList | undefined = inputFileRef.current?.files;
           console.log("selectedFiles: ", selectedFiles);
 
-          // Array.from(selectedFiles as ArrayLike<File>).forEach((file: File) => {
-          //   const newBlob = put(file.name, file, {
-          //     access: 'public',
-          //     handleBlobUploadUrl: '/api/upload',
-          //   });
-          //   newBlob.then((br: BlobResult) => {
-          //     console.log("newBlob: ", newBlob);
-          //     // setBlobList([...blobList, br]);
-          //     setBlobList(prevBlobList => [...prevBlobList, br]);
-
-          //   });
-          // });
-
           Array.from(selectedFiles as ArrayLike<File>).forEach((file: File) => {
             const newBlob = put(file.name, file, {
               access: 'public',
@@ -251,7 +274,6 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
               setBlobList(prevBlobList => [...prevBlobList, br]);
             });
           });
-
 
           //---- Single file upload ----
           // const file: File | null = inputFileRef.current? inputFileRef.current.files[0] : null;
@@ -271,6 +293,8 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
       <br />
       <button type="submit" className='border border-black'>Upload</button>
     </form>
+    <button type="submit" className='border border-black' onClick={listAllBlobsInStore}>List All Blobs</button>
+    <button type="submit" className='border border-black' onClick={deleteAllBlobsInStore}>Delete All Blobs</button>
     {blobList && (
       <div>
         Blob url: <br />
@@ -283,6 +307,5 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
         }
       </div>
     )}
-
   </>);
 };
