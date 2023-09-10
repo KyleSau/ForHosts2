@@ -24,6 +24,7 @@
     "@nextui-org/react": "1.0.0-beta.13",
     "@prisma/client": "^4.15.0",
     "@radix-ui/react-popover": "^1.0.6",
+    "@radix-ui/react-select": "^1.2.2",
     "@radix-ui/react-slot": "^1.0.2",
     "@stripe/react-stripe-js": "^2.1.1",
     "@stripe/stripe-js": "^1.54.1",
