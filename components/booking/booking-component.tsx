@@ -87,7 +87,7 @@ const BookingComponent: React.FC<BookingProps> = ({ listing, className }: any) =
     }
 
     return (
-        <div className="p-5 bg-gray-200 text-slate-600 rounded-sm items-center shadow-[0_3px_10px_rgb(0,0,0,0.2)] min-w-[350px] border border-slate-300 max-w-[375px] m-auto">
+        <div className="p-5 bg-white text-slate-600 rounded-sm items-center shadow-[0_3px_10px_rgb(0,0,0,0.2)] min-w-[350px] border border-slate-300 max-w-[375px] m-auto">
             <div className="mb-5">
                 <p className="text-lg text-bold">${listing.price} Per Night</p>
             </div>
@@ -98,7 +98,7 @@ const BookingComponent: React.FC<BookingProps> = ({ listing, className }: any) =
                             id="date"
                             variant={"outline"}
                             className={cn(
-                                "w-full text-center font-normal",
+                                "w-full text-center font-normal bg-gray-100 border-[1px] border-gray-200",
                                 !date && "text-muted-foreground"
                             )}
                         >
@@ -129,7 +129,7 @@ const BookingComponent: React.FC<BookingProps> = ({ listing, className }: any) =
                     </PopoverContent>
                 </Popover>
                 <Popover>
-                    <PopoverTrigger className="bg-white rounded-b-sm p-2 w-full border-t-[1px] border-gray-200">Guests</PopoverTrigger>
+                    <PopoverTrigger className="bg-gray-100 rounded-b-sm p-2 w-full border-[1px] border-gray-200">Guests</PopoverTrigger>
                     <PopoverContent>
                         <div className="m-2">
                             <label>Adults</label>
@@ -219,7 +219,7 @@ const BookingComponent: React.FC<BookingProps> = ({ listing, className }: any) =
                 </Popover>
                 <br />
             </div>
-            <button className="bg-green-300 p-2 rounded-sm justify-center w-full text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2" onClick={handleCheckout}>Book</button>
+            <button className="p-2 rounded-sm justify-center w-full text-white bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 hover:bg-gradient-to-br focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2" onClick={handleCheckout}>Book</button>
         </div >
     );
 }
