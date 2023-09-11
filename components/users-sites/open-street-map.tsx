@@ -54,7 +54,6 @@ function approximateLocation(lat: number, lng: number, maxOffsetInKm: number) {
     return { lat: newLat, lng: newLng };
 }
 
-const logo = <Image src="/ForHostsLogoWithoutSlug.svg" alt="Logo" width={160} height={50} />;
 
 export default function Map() {
 
@@ -63,15 +62,14 @@ export default function Map() {
     // const center = [geoData.lat, geoData.lng];
 
     return (
-        <MapContainer center={geoData} zoom={12} style={{ height: '100vh' }}>
+        <MapContainer center={geoData} zoom={13} style={{ height: '500px' }}>
             <TileLayer
-                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                attribution=''
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             {geoData.lat && geoData.lng && (
                 <Marker icon={newicon} position={[geoData.lat, geoData.lng]} />
             )}
-            {/* <ChangeView coords={center} /> */}
         </MapContainer>
     );
 }

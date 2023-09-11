@@ -9,9 +9,10 @@ import ImageGallery from "@/components/dash-site-page/image-gallery";
 import DashHeader from "@/components/dash-site-page/dash-header";
 import BookingComponent from "@/components/booking/booking-component";
 import ListingDescription from "@/components/users-sites/listing-description";
-// import OpenStreetMap from "@/components/users-sites/open-street-map";
+import { Calendar } from "@/components/ui/calendar"
 
 import dynamic from 'next/dynamic'
+import { CalendarDemo } from "@/components/ui/uicalendar";
 // import OpenStreetMap from '../component/OpenStreetMap'
 const Map = dynamic(() => import('@/components/users-sites/open-street-map'), {
   ssr: false,
@@ -93,18 +94,17 @@ export default async function SitePostPage({
             <AmenitiesModal amenityDetails={amenityDetails} />
           </div>
         </div>
-        <div className="bg-yellow-500 col-start-1 md:col-start-3 md:col-span-3 p-8 m-2">
-          <div className="">
-            Availability Calendar
+        <div className="bg-yellow-500 col-start-1 md:col-start-3 md:col-span-3 m-2">
+          <div className="w-full mx-auto">
+            <CalendarDemo />
           </div>
         </div>
-        <div className="bg-slate-500 col-span-1 md:col-span-full">
+        <div className="bg-slate-500 col-span-1 md:col-span-full m-2">
           <div className="">
-            Where youll be, map here
-            <><Map /></>
-
+            <Map />
           </div>
         </div>
+        <hr className="m-5 col-span-1 md:col-span-full" />
         <div className="bg-slate-500 col-span-1 md:col-span-full">
           <div className="">
             Host Description
