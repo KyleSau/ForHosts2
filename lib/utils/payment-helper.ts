@@ -5,6 +5,9 @@ export default function calculateTotalCost(startDate: Date, endDate: Date, price
         throw new Error('Invalid input');
     }
 
+    console.log('start:', startDate);
+    console.log('end:', endDate);
+
     const start = DateTime.fromISO(startDate);
     const end = DateTime.fromISO(endDate);
 
@@ -13,6 +16,7 @@ export default function calculateTotalCost(startDate: Date, endDate: Date, price
     }
 
     const daysDiff = Math.round(end.diff(start, 'days').days);
+    console.log('daysDiff:' + daysDiff);
 
     return {
         price: daysDiff * pricePerNight,

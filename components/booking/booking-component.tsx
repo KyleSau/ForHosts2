@@ -55,16 +55,17 @@ type BookingProps = {
 
 // get listingId from prop
 const BookingComponent: React.FC<BookingProps> = ({ listing, className }: any) => {
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
+    // const [startDate, setStartDate] = useState(new Date());
+    // const [endDate, setEndDate] = useState(new Date());
     const [date, setDate] = React.useState<DateRange | undefined>({
         from: new Date(),
-        to: addDays(new Date(), 20),
+        to: undefined//addDays(new Date(), 20),
     })
     const handleCheckout = async () => {
         const response = await fetchPostJSON('/api/checkout_sessions', {
-            startDate: startDate,
-            endDate: endDate,
+            startDate: date?.from,
+            endDate: date?.to,
+            // this will need to be changed when testing stripe stuff again
             listingId: listing.id
         })
 
@@ -88,7 +89,7 @@ const BookingComponent: React.FC<BookingProps> = ({ listing, className }: any) =
     }
 
     return (
-        <div className="p-5 bg-white text-slate-600 rounded-sm items-center shadow-[0_3px_10px_rgb(0,0,0,0.2)] min-w-[275px] border border-slate-300 max-w-[375px] m-2">
+        <div className="p-5 bg-white text-slate-600 rounded-sm items-center shadow-[0_3px_10px_rgb(0,0,0,0.2)] min-w-[350px] border border-slate-300 max-w-[375px] m-auto">
             <div className="mb-5">
                 <p className="text-lg text-bold">${listing.price} Per Night</p>
             </div>
@@ -187,13 +188,13 @@ const BookingComponent: React.FC<BookingProps> = ({ listing, className }: any) =
             <div className="w-full grid-cols-2">
                 <Popover>
                     <div className="">
-                        {startDate && endDate && listing.price ? (
+                        {date?.to ? (
                             <p className="underline">
                                 <PopoverTrigger className="underline">
-                                    ${listing.price} X {calculateTotalCost(startDate, endDate, listing.price).nights}
+                                    ${listing.price} X {calculateTotalCost(date.from!, date.to!, listing.price).nights}
                                 </PopoverTrigger>
                                 <span className="float-right">
-                                    ${calculateTotalCost(startDate, endDate, listing.price).price}
+                                    ${calculateTotalCost(date.from!, date.to!, listing.price).price}
                                 </span>
                             </p>
                         ) : null}
