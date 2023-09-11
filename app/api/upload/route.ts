@@ -70,7 +70,7 @@
 //https://vercel.com/docs/storage/vercel-blob/quickstart#browser-uploads
 
 import { handleBlobUpload, type HandleBlobUploadBody } from '@vercel/blob';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 

@@ -169,19 +169,15 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
     
     const blob = allBlobs[allBlobs.length - 1];
 
-    // allBlobs.forEach((blob: BlobResult) => {
-
-    // });
-    const url = blob.url;
-    console.log("url: ", url);
-    const response = await fetch(`/api/blob/delete-blob?url=${url}`, {
-      method: "DELETE"
+    allBlobs.forEach((blob: BlobResult) => {
+      const url = blob.url;
+      console.log("url: ", url);
+      const response = fetch(`/api/blob/delete-blob?url=${url}`, {
+        method: "DELETE"
+      });
+  
+      console.log("deleteAllBlobsInStore: response: ", response);
     });
-
-    console.log("deleteAllBlobsInStore: response: ", response);
-    // const data = await response.json();
-    // console.log("listCurrentBlobsInStore: data: ", data);
-    // setAllBlobs(data);
   };
 
   return (<>
@@ -265,13 +261,17 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
           console.log("selectedFiles: ", selectedFiles);
 
           Array.from(selectedFiles as ArrayLike<File>).forEach((file: File) => {
+            console.log("file.name: ", file.name);
             const newBlob = put(file.name, file, {
               access: 'public',
               handleBlobUploadUrl: '/api/upload',
+              contentType: "multipart/form-data"
             });
             newBlob.then((br: BlobResult) => {
               console.log("newBlob: ", newBlob);
               setBlobList(prevBlobList => [...prevBlobList, br]);
+
+              //put image table request here???
             });
           });
 
