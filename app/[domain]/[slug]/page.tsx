@@ -61,58 +61,87 @@ export default async function SitePostPage({
 
   return (
     <>
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-5 grid-rows-10">
-        <div className="bg-slate-500 col-span-1 md:col-span-full justify-center m-2">
+      <div className="container mx-auto grid grid-cols-1 md:grid-cols-5 grid-rows-10 bg-gradient-to-b from-gray-50 via-gray-100 to-gray-50 shadow-[0_3px_10px_rgb(0,0,0,0.2)] rounded-2xl">
+        <div className="col-span-1 md:col-span-full justify-center m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
           <ImageGallery images={data.photoGallery} imageBlurhash={data.photoGalleryBlurhash} />
         </div>
-        <div className="bg-gray-300 col-span-1 md:col-span-full m-2">
+        <div className="bg-white col-span-1 md:col-span-full m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
           <DashHeader title={data.title} guests={data.maxGuests} bedrooms={data.bedrooms} totalbeds={data.totalBeds} bathrooms={data.bathrooms} />
+          <hr />
         </div>
-        <div className="relative bg-amber-500 col-span-1 md:col-span-2 md:min-w-[400px] m-2 row-span-4 row-start-3">
+        <div className="relative bg-white col-span-1 md:col-span-2 md:min-w-[400px] m-2 row-span-4 row-start-3 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
           <div className="sticky top-0 pt-[50px] pb-[50px]">
             <BookingComponent listing={data} />
           </div>
         </div>
-        <div className="bg-yellow-500 col-start-1 md:col-start-3 md:col-span-3 p-8 m-2">
+        <div className="bg-white rounded-sm col-start-1 md:col-start-3 md:col-span-3 p-8 m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
           <div className="">
             Notable Features
           </div>
         </div>
-        <div className="bg-yellow-500 col-start-1 md:col-start-3 md:col-span-3 p-8 m-2">
+        <div className="bg-white col-start-1 md:col-start-3 md:col-span-3 p-8 m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
           <div className="">
             Listing Description
           </div>
           <ListingDescription description={data.description} />
         </div>
-        <div className="bg-yellow-500 col-start-1 md:col-start-3 md:col-span-3 p-8 m-2">
+        <div className="bg-white col-start-1 md:col-start-3 md:col-span-3 p-8 m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
           <div className="">
             Sleeping quarters and beds
           </div>
         </div>
-        <div className="bg-yellow-500 col-start-1 md:col-start-3 md:col-span-3 p-8 m-2">
-          <div className="">
+        <div className="bg-white col-start-1 md:col-start-3 md:col-span-3 p-8 m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+          <div className="flex justify-center">
             <AmenitiesModal amenityDetails={amenityDetails} />
           </div>
         </div>
-        <div className="bg-yellow-500 col-start-1 md:col-start-3 md:col-span-3 m-2">
-          <div className="w-full mx-auto">
+        <div className="bg-white col-start-1 md:col-start-3 md:col-span-3 m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+          <div className="w-full mx-auto flex justify-center">
             <CalendarDemo />
           </div>
         </div>
-        <div className="bg-slate-500 col-span-1 md:col-span-full m-2">
+        <hr className="m-5 col-span-1 md:col-span-full" />
+        <div className="col-span-1 md:col-span-full m-2">
           <div className="">
             <Map />
           </div>
         </div>
         <hr className="m-5 col-span-1 md:col-span-full" />
-        <div className="bg-slate-500 col-span-1 md:col-span-full">
+        <div className="bg-white col-span-1 md:col-span-full m-2">
           <div className="">
             Host Description
           </div>
         </div>
-        <div className="bg-slate-500 col-span-1 md:col-span-full">
-          <div className="">
-            Things to know, rules, cancellation info, safety/safety devices etc
+        <div className="bg-white col-span-1 md:col-span-full m-2 rounded-sm">
+          <p className="text-xl font-bold flex justify-center mb-5">What To Know About Where You&apos;re Staying</p>
+          <div className="grid grid-cols-3">
+            <div className="m-2">
+              <p className="text-lg font-bold flex justify-center">House Rules</p>
+              <hr />
+              <p className=" flex justify-center">Check-in after 3:00 PM<br />
+                Checkout before 11:00 AM<br />
+                No pets
+
+              </p>
+            </div>
+            <div className="m-2">
+              <p className="text-lg font-bold flex justify-center">Cancellation Info</p>
+              <hr />
+              <p className="flex justify-center">Check-in after 3:00 PM<br />
+                Checkout before 11:00 AM<br />
+                No pets
+
+              </p>
+            </div>
+            <div className="m-2">
+              <p className="text-lg font-bold flex justify-center">Safety</p>
+              <hr />
+              <p className=" flex justify-center">Check-in after 3:00 PM<br />
+                Checkout before 11:00 AM<br />
+                No pets
+
+              </p>
+            </div>
           </div>
         </div>
       </div >

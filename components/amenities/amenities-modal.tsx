@@ -17,9 +17,9 @@ function AmenitiesModal({ amenityDetails }: AmenitiesModalProps) {
   const amenities = Object.keys(amenityDetails);  // get amenity names
 
   const ModalContent = () => (
-    <div className=" relative border border-gray-400 bg-white p-6">
+    <div className="border border-gray-400 bg-white p-6 z-[210]">
       <button
-        className="absolute top-1 right-4 text-2xl"
+        className="top-1 right-4 text-2xl"
         onClick={() => setModalOpen(false)}
       >
         &#10005;
@@ -46,23 +46,34 @@ function AmenitiesModal({ amenityDetails }: AmenitiesModalProps) {
   return (
     <div className="w-full">
       <ul className="grid grid-cols-2 w-full">
-        {amenities.slice(0, 10).map((amenity, index) => (  // Display up to 10 amenities initially
+        {amenities.slice(0, 10).map((amenity, index) => (
           <li
-            className="text-sm grid items-center text-black h-full w-full"
+            className="text-sm text-black align-middle"
             key={index}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              textAlign: 'center',
+            }}
           >
-            <div className={`justify-center`}>
+            <div className="m-2">
               <FontAwesomeIcon icon={amenityDetails[amenity].icon} />
-              <br />
-              <span className="text-sm font-medium m-5">{amenity}<br /></span>
-              {amenityDetails[amenity].description}
             </div>
+            <span className="text-sm font-medium">
+              {amenity}
+            </span>
+            <span className="font-normal">
+              {amenityDetails[amenity].description}
+            </span>
           </li>
         ))}
       </ul>
 
+
       {amenities.length > 10 &&  // Show the modal button if there are more than 10 amenities
-        <div className="justify-center">
+        <div className="flex justify-center">
+          <br />
           <button onClick={() => setModalOpen(true)} className="bg-gray-400 rounded-md p-2 hover:bg-gray-200 mx-auto">
             Show all ({amenities.length}) amenities
           </button>
