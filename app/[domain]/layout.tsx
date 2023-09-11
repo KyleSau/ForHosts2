@@ -10,6 +10,7 @@ import { fontMapper } from "@/styles/fonts";
 import { Metadata } from "next";
 import Navbar from "@/components/users-sites/navbar";
 import Footer from "@/components/footer";
+import { DatePickerWithRange } from "@/components/booking/booking-card";
 
 export async function generateMetadata({
   params,

@@ -31,6 +31,7 @@ model User {
   reviews       Review[]
   // stripe_account_id
   stripeAccount StripeAccount? // add relation?
+  Image         Image[]
 }
 
 model StripeAccount {
@@ -86,6 +87,26 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model Image {
+  id         String   @id @default(cuid())
+  url        String
+  uploadedAt DateTime
+  size       Bytes
+
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String?
+
+  site   Site?   @relation(fields: [siteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  siteId String?
+
+  postId String
+  post   Post?  @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([userId])
+  @@index([siteId])
+  @@index([postId])
+}
+
 model Post {
   id            String        @id @default(cuid())
   title         String        @db.Text
@@ -129,6 +150,7 @@ model Post {
   availabilityWindow   String[] // how far out a listing can be booked
   // advanceNotice
   // cancellationPolicy   String? // Cancellation policy for bookings
+  Image                Image[]
 
   @@unique([slug, siteId])
   @@index([siteId])
@@ -166,6 +188,7 @@ model Site {
   user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId        String?
   posts         Post[]
+  Image         Image[]
 
   @@index([userId])
 }
