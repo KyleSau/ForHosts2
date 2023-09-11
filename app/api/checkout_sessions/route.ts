@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import prisma from "@/lib/prisma";
+import calculateTotalCost from "@/lib/utils/payment-helper"
 
 const { DateTime } = require('luxon');
 
@@ -8,24 +9,6 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
     // https://github.com/stripe/stripe-node#configuration
     apiVersion: '2022-11-15',
 })
-
-function calculateTotalCost(startDate: Date, endDate: Date, pricePerNight: number) {
-    // Input validation
-    if (!startDate || !endDate || !pricePerNight) {
-        throw new Error('Invalid input');
-    }
-
-    const start = DateTime.fromISO(startDate);
-    const end = DateTime.fromISO(endDate);
-
-    if (end <= start) {
-        throw new Error('End date must be after start date');
-    }
-
-    const daysDiff = Math.round(end.diff(start, 'days').days);
-
-    return daysDiff * pricePerNight;
-}
 
 // Remember this is just a helper. Always do the final calculations on the server.
 
@@ -100,7 +83,7 @@ async function createCheckoutSession(request: any, post: any, body: any) { // Ac
 
     const { startDate, endDate } = body; // Use the body directly
 
-    const totalPrice = calculateTotalCost(startDate, endDate, post.price);
+    const totalPrice = calculateTotalCost(startDate, endDate, post.price).price;
 
     console.log('total price: ', totalPrice);
 

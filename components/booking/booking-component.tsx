@@ -7,6 +7,7 @@ import { DateRange } from 'react-day-picker';
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
+import calculateTotalCost from "@/lib/utils/payment-helper"
 import { cn } from "@/lib/utils"
 
 import {
@@ -186,9 +187,17 @@ const BookingComponent: React.FC<BookingProps> = ({ listing, className }: any) =
             <div className="w-full grid-cols-2">
                 <Popover>
                     <div className="">
-                        <p className="underline"><PopoverTrigger className="underline">${listing.price} X Total Days </PopoverTrigger>
-                            <span className="float-right">$XXXX.XX</span>
-                        </p>
+                        {startDate && endDate && listing.price ? (
+                            <p className="underline">
+                                <PopoverTrigger className="underline">
+                                    ${listing.price} X {calculateTotalCost(startDate, endDate, listing.price).nights}
+                                </PopoverTrigger>
+                                <span className="float-right">
+                                    ${calculateTotalCost(startDate, endDate, listing.price).price}
+                                </span>
+                            </p>
+                        ) : null}
+
                     </div>
                     <PopoverContent>Display individual dates selected in a list</PopoverContent>
                 </Popover>
