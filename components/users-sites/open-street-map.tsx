@@ -62,7 +62,7 @@ export default function Map() {
     // const center = [geoData.lat, geoData.lng];
 
     return (
-        <MapContainer center={geoData} zoom={13} style={{ height: '500px' }}>
+        <MapContainer center={geoData} zoom={13} style={{ height: '500px' }} scrollWheelZoom={false} >
             <TileLayer
                 attribution=''
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
