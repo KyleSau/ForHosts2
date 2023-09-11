@@ -13,7 +13,7 @@ export function CalendarDemo() {
                 mode="single"
                 selected={date}
                 onSelect={setDate}
-                className="m-auto"
+                className="m-auto w-full"
                 numberOfMonths={2}
             />
         </div>
