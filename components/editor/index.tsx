@@ -16,7 +16,7 @@ import { updatePost, updatePostMetadata } from "@/lib/actions";
 import PropertyDescription from "./property-descript-tab";
 import PropertyDetails from "./prop-details-tab";
 import SomeSettings from "./some-settings";
-
+import PriceSpecifications from "./home-price-specifications";
 type PostWithSite = Post & { site: { subdomain: string | null } | null };
 
 export default function Editor({ post }: { post: PostWithSite }) {
@@ -340,7 +340,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
           <PropertyDescription data={data} />
         </div>
       )}
-      {activeTab === "PropDetails" && <SomeSettings />}
+      {activeTab === "PropDetails" && <PriceSpecifications data={data} />}
       {/* {editor && <EditorBubbleMenu editor={editor} />} */}
       {/* <EditorContent editor={editor} /> */}
       {/* <div
