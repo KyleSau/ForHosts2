@@ -37,6 +37,19 @@ export default function Modal({
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [onKeyDown]);
 
+  useEffect(() => {
+    if (showModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [showModal]);
+
+
   const { isMobile, isDesktop } = useWindowSize();
 
   return (
@@ -50,7 +63,7 @@ export default function Modal({
                 <motion.div
                   ref={desktopModalRef}
                   key="desktop-modal"
-                  className="fixed inset-0 z-40 hidden min-h-screen items-center justify-center md:flex"
+                  className="fixed inset-0 z-40 hidden min-h-screen flex items-center justify-center md:flex"
                   initial={{ scale: 0.95 }}
                   animate={{ scale: 1 }}
                   exit={{ scale: 0.95 }}
@@ -60,7 +73,9 @@ export default function Modal({
                     }
                   }}
                 >
-                  {children}
+                  <div className="max-h-[80vh] overflow-y-auto max-w-[80vw] bg-white p-5 rounded-lg shadow-xl">
+                    {children}
+                  </div>
                 </motion.div>
               </FocusTrap>
               <motion.div
