@@ -38,17 +38,21 @@ export default function Map() {
     const [geoData, setGeoData] = useState(approximateLocation(34.442270, -119.842010, 2));
 
     return (
-        <MapContainer center={geoData} zoom={13} style={{ height: '500px' }} scrollWheelZoom={false} className="rounded-lg z-20">
-            <TileLayer
-                attribution=''
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            {geoData.lat && geoData.lng && (
-                <>
-                    {/* <Marker icon={newicon} position={[geoData.lat, geoData.lng]} /> */}
-                    <Circle center={[geoData.lat, geoData.lng]} radius={1000} /> {/* Added radius */}
-                </>
-            )}
-        </MapContainer>
+        <div className="col-span-1 md:col-span-full m-2">
+            <hr className="m-5 col-span-1 md:col-span-full" />
+            <MapContainer center={geoData} zoom={13} style={{ height: '500px' }} scrollWheelZoom={false} className="rounded-lg z-20">
+                <TileLayer
+                    attribution=''
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                {geoData.lat && geoData.lng && (
+                    <>
+                        {/* <Marker icon={newicon} position={[geoData.lat, geoData.lng]} /> */}
+                        <Circle center={[geoData.lat, geoData.lng]} radius={1000} /> {/* Added radius */}
+                    </>
+                )}
+            </MapContainer>
+            <hr className="m-5 col-span-1 md:col-span-full" />
+        </div>
     );
 }

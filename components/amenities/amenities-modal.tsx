@@ -44,47 +44,51 @@ function AmenitiesModal({ amenityDetails }: AmenitiesModalProps) {
 
 
   return (
-    <div className="w-full">
-      <ul className="grid grid-cols-2 w-full">
-        {amenities.slice(0, 10).map((amenity, index) => (
-          <li
-            className="text-sm text-black align-middle"
-            key={index}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              textAlign: 'center',
-            }}
-          >
-            <div className="m-2">
-              <FontAwesomeIcon icon={amenityDetails[amenity].icon} />
+    <div className="bg-white col-start-1 md:col-start-3 md:col-span-3 p-8 m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+      <div className="flex justify-center">
+        <div className="w-full">
+          <ul className="grid grid-cols-2 w-full">
+            {amenities.slice(0, 10).map((amenity, index) => (
+              <li
+                className="text-sm text-black align-middle"
+                key={index}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  textAlign: 'center',
+                }}
+              >
+                <div className="m-2">
+                  <FontAwesomeIcon icon={amenityDetails[amenity].icon} />
+                </div>
+                <span className="text-sm font-medium">
+                  {amenity}
+                </span>
+                <span className="font-normal">
+                  {amenityDetails[amenity].description}
+                </span>
+              </li>
+            ))}
+          </ul>
+
+
+          {amenities.length > 10 &&  // Show the modal button if there are more than 10 amenities
+            <div className="flex justify-center">
+              <br />
+              <button onClick={() => setModalOpen(true)} className="bg-gray-400 rounded-md p-2 hover:bg-gray-200 mx-auto">
+                Show all ({amenities.length}) amenities
+              </button>
             </div>
-            <span className="text-sm font-medium">
-              {amenity}
-            </span>
-            <span className="font-normal">
-              {amenityDetails[amenity].description}
-            </span>
-          </li>
-        ))}
-      </ul>
+          }
 
-
-      {amenities.length > 10 &&  // Show the modal button if there are more than 10 amenities
-        <div className="flex justify-center">
-          <br />
-          <button onClick={() => setModalOpen(true)} className="bg-gray-400 rounded-md p-2 hover:bg-gray-200 mx-auto">
-            Show all ({amenities.length}) amenities
-          </button>
+          {isModalOpen &&
+            <Modal showModal={isModalOpen} setShowModal={setModalOpen}>
+              <ModalContent />
+            </Modal>
+          }
         </div>
-      }
-
-      {isModalOpen &&
-        <Modal showModal={isModalOpen} setShowModal={setModalOpen}>
-          <ModalContent />
-        </Modal>
-      }
+      </div>
     </div>
   );
 }
