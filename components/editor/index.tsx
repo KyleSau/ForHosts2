@@ -20,7 +20,9 @@ import DateSlider from "../booking/date-slider";
 import { Tooltip } from "@mui/material";
 import { FileClickDragDrop } from "./file-drag-drop";
 
-type PostWithSite = Post & { site: { subdomain: string | null } | null };
+type PostWithSite = Post & { 
+  site: { id: string | null, subdomain: string | null } 
+  | null };
 
 export default function Editor({ post }: { post: PostWithSite }) {
   let [isPendingSaving, startTransitionSaving] = useTransition();
@@ -524,7 +526,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
           transition: "max-height 0.5s ease-in-out",
         }}
       >
-        <FileClickDragDrop componentId="listing-photos-drag-drop-area" />
+        <FileClickDragDrop componentId="listing-photos-drag-drop-area" data={data} />
       </div>
     </div>
   );

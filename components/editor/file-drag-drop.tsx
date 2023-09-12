@@ -1,15 +1,16 @@
 "use client";
 
-import { Image, Trash2 } from 'lucide-react';
+import { File, Image, Trash2 } from 'lucide-react';
 import { FILE_CONSTS, IMAGE_UPLOAD_QUANTITY_LIMIT, IMAGE_SIZE_LIMIT_BYTES, IMAGE_SIZE_LIMIT_MB } from '@/lib/constants';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, FormEvent } from 'react';
 import EditorWarningModal,
 { EditorWarningModalDataType, EditorWarningModalDataTemplate } from "@/components/editor/warning-confirmation-modal";
 import { humanReadableFileSize } from '@/lib/utils';
 
 import { put, list, type BlobResult } from '@vercel/blob'; // test
+import { uploadBlobMetadataToStore } from '@/lib/actions';
 
-export function FileClickDragDrop({ componentId }: { componentId: string }) {
+export function FileClickDragDrop({ componentId, data }: { componentId: string, data: any }) {
   const PERMITTED_FILE_TYPES = new Set([FILE_CONSTS.JPEG, FILE_CONSTS.PNG]);
   const [addedFileArray, setAddedFileArray] = useState<(File | null)[]>([]);
   const [addedFileUrlArray, setAddedFileUrlArray] = useState<(string | undefined)[]>([]);
@@ -149,9 +150,40 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
     setDraggedIdx(null); // Reset the dragged item index
   };
 
+  const uploadBlobsToStore = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (inputFileRef.current?.files !== null) {
+      //---- Multi file upload ----
+
+      // print data
+      const dataStr = JSON.stringify(data);
+      console.log("dataStr: ", dataStr);
+
+      const selectedFiles: FileList | undefined = inputFileRef.current?.files;
+      console.log("selectedFiles: ", selectedFiles);
+
+      Array.from(selectedFiles as ArrayLike<File>).forEach((file: File) => {
+        console.log("file.name: ", file.name);
+        // Using this: https://vercel.com/docs/storage/vercel-blob/quickstart#browser-uploads 
+        const newBlob = put(file.name, file, {
+          access: 'public',
+          handleBlobUploadUrl: '/api/upload'
+        });
+        newBlob.then((br: BlobResult) => {
+          console.log("newBlob: ", newBlob);
+          setBlobList(prevBlobList => [...prevBlobList, br]);
+
+          //put image table request here???
+          const uploadBlobMetadataResponse = uploadBlobMetadataToStore(br, data["id"], data["site"]["id"]);
+          console.log("uploadBlobMetadataResponse: ", uploadBlobMetadataResponse);
+        });
+      });
+    }
+  };
+
   const listAllBlobsInStore = async () => { 
     console.log("listAllBlobsInStore called");
-
     const response = await fetch("/api/blob/get-blobs", {
       method: "GET",
       mode: "cors",
@@ -159,24 +191,23 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
           "Content-Type": "application/json"
       }
     });
-    const data = await response.json();
-    console.log("listCurrentBlobsInStore: data: ", data);
-    setAllBlobs(data);
+    const blobsInStore = await response.json();
+    console.log("listCurrentBlobsInStore: blobsInStore: ", blobsInStore);
+    setAllBlobs(blobsInStore);
   };
 
   const deleteAllBlobsInStore = async () => {
     console.log("deleteAllBlobsInStore called");
-    
-    const blob = allBlobs[allBlobs.length - 1];
-
     allBlobs.forEach((blob: BlobResult) => {
-      const url = blob.url;
-      console.log("url: ", url);
-      const response = fetch(`/api/blob/delete-blob?url=${url}`, {
-        method: "DELETE"
-      });
-  
-      console.log("deleteAllBlobsInStore: response: ", response);
+      // const url = blob.url;
+      // console.log("url: ", url);
+      // const response = fetch(`/api/blob/delete-blob?url=${url}`, {
+      //   method: "DELETE"
+      // });
+
+      const formData = new FormData();
+      // formData.append()
+      // console.log("deleteAllBlobsInStore: response: ", response);
     });
   };
 
@@ -251,44 +282,7 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
     />
 
     <h1>Upload Your Avatar</h1>
-    <form
-      onSubmit={async (event) => {
-        event.preventDefault();
-
-        if (inputFileRef.current?.files !== null) {
-          //---- Multi file upload ----
-          const selectedFiles: FileList | undefined = inputFileRef.current?.files;
-          console.log("selectedFiles: ", selectedFiles);
-
-          Array.from(selectedFiles as ArrayLike<File>).forEach((file: File) => {
-            console.log("file.name: ", file.name);
-            const newBlob = put(file.name, file, {
-              access: 'public',
-              handleBlobUploadUrl: '/api/upload',
-              contentType: "multipart/form-data"
-            });
-            newBlob.then((br: BlobResult) => {
-              console.log("newBlob: ", newBlob);
-              setBlobList(prevBlobList => [...prevBlobList, br]);
-
-              //put image table request here???
-            });
-          });
-
-          //---- Single file upload ----
-          // const file: File | null = inputFileRef.current? inputFileRef.current.files[0] : null;
-          // console.log("file: ", file);
-          // if(file !== null) {
-          // const newBlob = await put(file.name, file, {
-          //   access: 'public',
-          //   handleBlobUploadUrl: '/api/upload',
-          // });
-          // console.log("newBlob: ", newBlob);
-          // setBlob(newBlob);
-          // }
-        }
-      }}
-    >
+    <form onSubmit={uploadBlobsToStore}>
       <input name="file" ref={inputFileRef} type="file" required multiple />
       <br />
       <button type="submit" className='border border-black'>Upload</button>

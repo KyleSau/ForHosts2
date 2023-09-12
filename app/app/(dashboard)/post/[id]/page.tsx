@@ -15,6 +15,7 @@ export default async function PostPage({ params }: { params: { id: string } }) {
     include: {
       site: {
         select: {
+          id: true,
           subdomain: true,
         },
       },

@@ -1,4 +1,4 @@
-import { BlobResult, del } from '@vercel/blob';
+import { del } from '@vercel/blob';
  
 export const runtime = 'edge';
  
