@@ -13,6 +13,7 @@ import { Calendar } from "@/components/ui/calendar"
 
 import dynamic from 'next/dynamic'
 import { CalendarDemo } from "@/components/ui/uicalendar";
+import ShowMoreModal from "@/components/users-sites/show-more-modal"
 // import OpenStreetMap from '../component/OpenStreetMap'
 const Map = dynamic(() => import('@/components/users-sites/open-street-map'), {
   ssr: false,
@@ -83,7 +84,12 @@ export default async function SitePostPage({
           <div className="">
             Listing Description
           </div>
-          <ListingDescription description={data.description} />
+          {/* <ListingDescription description={data.description} /> */}
+          {data.description && (
+            <div>
+              <ShowMoreModal text={data.content} />
+            </div>
+          )}
         </div>
         <div className="bg-white col-start-1 md:col-start-3 md:col-span-3 p-8 m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
           <div className="">
@@ -107,11 +113,6 @@ export default async function SitePostPage({
           </div>
         </div>
         <hr className="m-5 col-span-1 md:col-span-full" />
-        <div className="bg-white col-span-1 md:col-span-full m-2">
-          <div className="">
-            Host Description
-          </div>
-        </div>
         <div className="bg-white col-span-1 md:col-span-full m-2 rounded-sm">
           <p className="text-xl font-bold flex justify-center mb-5">What To Know About Where You&apos;re Staying</p>
           <div className="grid grid-cols-3">
