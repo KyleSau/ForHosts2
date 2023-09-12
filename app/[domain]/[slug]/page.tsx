@@ -82,14 +82,9 @@ export default async function SitePostPage({
         </div>
         <div className="bg-white col-start-1 md:col-start-3 md:col-span-3 p-8 m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
           <div className="">
-            Listing Description
+            {data.content != null && <ShowMoreModal text={data.content} />}
           </div>
           {/* <ListingDescription description={data.description} /> */}
-          {data.description && (
-            <div>
-              <ShowMoreModal text={data.content} />
-            </div>
-          )}
         </div>
         <div className="bg-white col-start-1 md:col-start-3 md:col-span-3 p-8 m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
           <div className="">
@@ -140,14 +135,13 @@ export default async function SitePostPage({
               <p className=" flex justify-center">Check-in after 3:00 PM<br />
                 Checkout before 11:00 AM<br />
                 No pets
-
               </p>
             </div>
           </div>
         </div>
       </div >
 
-      <MDX source={data.mdxSource} />
+      {/* <MDX source={data.mdxSource} /> */}
       {
         data.adjacentPosts.length > 0 && (
           <div className="relative mb-20 mt-10 sm:mt-20">

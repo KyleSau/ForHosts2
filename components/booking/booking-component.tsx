@@ -216,7 +216,7 @@ const BookingComponent: React.FC<BookingProps> = ({ listing, className }: any) =
                             <span className="float-right">$XX.XX</span>
                         </p>
                     </div>
-                    <PopoverContent>This fee covers the platform provider (2%)</PopoverContent>
+                    <PopoverContent>This fee covers the platform provider (3%)</PopoverContent>
                 </Popover>
                 <hr className="border-slate-300 m w-full mt-5 mb-2" />
                 <Popover>

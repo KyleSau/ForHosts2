@@ -111,11 +111,6 @@ export default async function SiteLayout({
 
       {/* Main content */}
       <div className="mt-5">{children}</div>
-      <div>
-        <Head>
-          <script src="https://embed.tawk.to/64a6e01c94cf5d49dc61f524" async />
-        </Head>
-      </div>
       <Footer />
     </div>
   );
