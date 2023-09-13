@@ -10,7 +10,7 @@ type PostWithSite = Post & { site: { subdomain: string | null } | null };
 export default function Editor({ post }: { post: PostWithSite }) {
   const [data, setData] = useState<PostWithSite>(post);
 
-  const [activeTab, setActiveTab] = useState("app"); // Initialize the active tab state
+  const [activeTab, setActiveTab] = useState("TitleInfo"); // Initialize the active tab state
 
   const handleTabClick = (tab) => {
     setActiveTab(tab); // Set the active tab when a button is clicked
@@ -79,7 +79,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
         >
           <li
             className={` flex-auto text-center ${
-              activeTab === "app"
+              activeTab === "TitleInfo"
                 ? "rounded-xl bg-white text-gray-600 shadow-md  transition duration-100 ease-in-out  "
                 : "w- rounded-xl bg-transparent text-slate-700  transition duration-100 ease-in-out  "
             }`}
@@ -87,8 +87,8 @@ export default function Editor({ post }: { post: PostWithSite }) {
             <a
               className="ease-soft-in-out mb-0 flex w-full flex-col items-center rounded-lg border-0 bg-inherit px-0 py-1 text-slate-700 transition-all"
               href="javascript:;"
-              onClick={() => handleTabClick("app")} // Set the active tab when clicking
-              aria-selected={activeTab === "app" ? "true" : "false"}
+              onClick={() => handleTabClick("TitleInfo")} // Set the active tab when clicking
+              aria-selected={activeTab === "TitleInfo" ? "true" : "false"}
             >
               <svg
                 className="text-slate-700"
@@ -227,11 +227,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
         </ul>
       </div>
       <hr />
-      {activeTab === "app" && (
-        <div>
-          <PropertyDescription data={data} />
-        </div>
-      )}
+      {activeTab === "TitleInfo" && <PropertyDescription data={data} />}
       {activeTab === "PropDetails" && <PriceSpecifications data={data} />}
     </div>
   );
