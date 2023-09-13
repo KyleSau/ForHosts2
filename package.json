@@ -111,7 +111,8 @@
     "tippy.js": "^6.3.7",
     "tiptap-markdown": "^0.8.1",
     "unist-util-visit": "^4.1.1",
-    "use-debounce": "^9.0.2"
+    "use-debounce": "^9.0.2",
+    "yup": "^1.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.22.17",
