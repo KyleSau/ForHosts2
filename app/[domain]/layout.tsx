@@ -109,7 +109,7 @@ export default async function SiteLayout({
     <div className={fontMapper[data.font]}>
       <Navbar />
       <div className="m-2">
-        <div className="container mx-auto grid grid-cols-1 md:grid-cols-5 grid-rows-10 bg-gradient-to-b from-gray-50 via-gray-100 to-gray-50 shadow-[0_3px_10px_rgb(0,0,0,0.2)] rounded-br-2xl rounded-bl-2xl">
+        <div className="container mx-auto grid grid-cols-1 md:grid-cols-5 grid-rows-10 shadow-[0_3px_10px_rgb(0,0,0,0.2)] rounded-br-2xl rounded-bl-2xl">
           {children}
         </div>
       </div>

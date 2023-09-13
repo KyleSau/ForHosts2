@@ -9,9 +9,12 @@ import dynamic from 'next/dynamic'
 import { CalendarDemo } from "@/components/ui/uicalendar";
 import ShowMoreModal from "@/components/users-sites/show-more-modal"
 import Beds from "@/components/users-sites/beds";
-import Features from "@/components/users-sites/features";
 import WhereStaying from "@/components/users-sites/where-staying";
-import OtherRentals from "@/components/users-sites/other-rentals";
+import Highlights from "@/components/highlights/highlights";
+import HighlightsData from "@/components/highlights/highlights-data";
+import SleepingSection from "@/components/sleeping-options/sleeping-section";
+import SleepingOptions from "@/components/sleeping-options/sleeping-section";
+import { sleepingOptions } from "@/components/sleeping-options/sleeping-data";
 
 const Map = dynamic(() => import('@/components/users-sites/open-street-map'), {
   ssr: false,
@@ -63,11 +66,11 @@ export default async function SitePostPage({
       <ImageGallery images={data.photoGallery} imageBlurhash={data.photoGalleryBlurhash} />
       <DashHeader title={data.title} guests={data.maxGuests} bedrooms={data.bedrooms} totalbeds={data.totalBeds} bathrooms={data.bathrooms} />
       <BookingComponent listing={data} />
+      <HighlightsData>{(highlightsData) => (<Highlights highlightsData={highlightsData} />)}</HighlightsData>
       {data.content != null && <ShowMoreModal text={data.content} mdxSource={data.mdxSource} />}
       <AmenitiesModal amenityDetails={amenityDetails} />
       <CalendarDemo />
-      <Features />
-      <Beds />
+      <SleepingOptions sleepingOptions={sleepingOptions} />
       <Map />
       <WhereStaying />
     </>

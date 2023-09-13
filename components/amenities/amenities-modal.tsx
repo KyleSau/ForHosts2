@@ -76,8 +76,8 @@ function AmenitiesModal({ amenityDetails }: AmenitiesModalProps) {
           {amenities.length > 10 &&  // Show the modal button if there are more than 10 amenities
             <div className="flex justify-center">
               <br />
-              <button onClick={() => setModalOpen(true)} className="bg-gray-400 rounded-md p-2 hover:bg-gray-200 mx-auto">
-                Show all ({amenities.length}) amenities
+              <button onClick={() => setModalOpen(true)} className="p-2 m-2 mx-auto rounded-sm justify-center w-[25%] text-white bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 hover:bg-gradient-to-brfont-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                Show More
               </button>
             </div>
           }

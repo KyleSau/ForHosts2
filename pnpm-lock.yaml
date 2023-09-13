@@ -26,6 +26,12 @@ dependencies:
   '@material-ui/core':
     specifier: ^4.12.4
     version: 4.12.4(@types/react@18.2.14)(react-dom@18.2.0)(react@18.2.0)
+  '@mdx-js/mdx':
+    specifier: ^2.3.0
+    version: 2.3.0
+  '@mdx-js/react':
+    specifier: ^2.3.0
+    version: 2.3.0(react@18.2.0)
   '@mui/icons-material':
     specifier: ^5.14.0
     version: 5.14.0(@mui/material@5.14.0)(@types/react@18.2.14)(react@18.2.0)
@@ -40,7 +46,7 @@ dependencies:
     version: 1.0.6(@prisma/client@4.15.0)(next-auth@4.22.1)
   '@next/mdx':
     specifier: ^13.4.10
-    version: 13.4.10
+    version: 13.4.10(@mdx-js/react@2.3.0)
   '@nextui-org/react':
     specifier: 1.0.0-beta.13
     version: 1.0.0-beta.13(react-dom@18.2.0)(react@18.2.0)
@@ -206,6 +212,9 @@ dependencies:
   postcss-import:
     specifier: ^15.1.0
     version: 15.1.0(postcss@8.4.24)
+  prop-types:
+    specifier: ^15.8.1
+    version: 15.8.1
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -233,6 +242,12 @@ dependencies:
   react-map-gl:
     specifier: ^7.1.5
     version: 7.1.5(react-dom@18.2.0)(react@18.2.0)
+  react-markdown:
+    specifier: ^8.0.7
+    version: 8.0.7(@types/react@18.2.14)(react@18.2.0)
+  react-responsive-carousel:
+    specifier: ^3.2.23
+    version: 3.2.23
   react-share:
     specifier: ^4.4.1
     version: 4.4.1(react@18.2.0)
@@ -2591,7 +2606,7 @@ packages:
       glob: 7.1.7
     dev: true
 
-  /@next/mdx@13.4.10:
+  /@next/mdx@13.4.10(@mdx-js/react@2.3.0):
     resolution: {integrity: sha512-0ZbUIr3yuFFfkaYth2kNFAT0fbyylJTMqZy5zTdb7YGqvYjKFD8n75L3UYAX0g5mibGp3iETJ0I7730sW13PKQ==}
     peerDependencies:
       '@mdx-js/loader': '>=0.15.0'
@@ -2602,6 +2617,7 @@ packages:
       '@mdx-js/react':
         optional: true
     dependencies:
+      '@mdx-js/react': 2.3.0(react@18.2.0)
       source-map: 0.7.4
     dev: false
 
@@ -9483,6 +9499,13 @@ packages:
       react: 18.2.0
       scheduler: 0.23.0
 
+  /react-easy-swipe@0.0.21:
+    resolution: {integrity: sha512-OeR2jAxdoqUMHIn/nS9fgreI5hSpgGoL5ezdal4+oO7YSSgJR8ga+PkYGJrSrJ9MKlPcQjMQXnketrD7WNmNsg==}
+    engines: {node: '>= 6'}
+    dependencies:
+      prop-types: 15.8.1
+    dev: false
+
   /react-fast-compare@3.2.2:
     resolution: {integrity: sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==}
 
@@ -9543,6 +9566,33 @@ packages:
       '@types/mapbox-gl': 2.7.13
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /react-markdown@8.0.7(@types/react@18.2.14)(react@18.2.0):
+    resolution: {integrity: sha512-bvWbzG4MtOU62XqBx3Xx+zB2raaFFsq4mYiAzfjXJMEz2sixgeAfraA3tvzULF02ZdOMUOKTBFFaZJDDrq+BJQ==}
+    peerDependencies:
+      '@types/react': '>=16'
+      react: '>=16'
+    dependencies:
+      '@types/hast': 2.3.4
+      '@types/prop-types': 15.7.5
+      '@types/react': 18.2.14
+      '@types/unist': 2.0.6
+      comma-separated-tokens: 2.0.3
+      hast-util-whitespace: 2.0.1
+      prop-types: 15.8.1
+      property-information: 6.2.0
+      react: 18.2.0
+      react-is: 18.2.0
+      remark-parse: 10.0.2
+      remark-rehype: 10.1.0
+      space-separated-tokens: 2.0.2
+      style-to-object: 0.4.1
+      unified: 10.1.2
+      unist-util-visit: 4.1.2
+      vfile: 5.3.7
+    transitivePeerDependencies:
+      - supports-color
     dev: false
 
   /react-onclickoutside@6.13.0(react-dom@18.2.0)(react@18.2.0):
@@ -9630,6 +9680,14 @@ packages:
       lodash: 4.17.21
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /react-responsive-carousel@3.2.23:
+    resolution: {integrity: sha512-pqJLsBaKHWJhw/ItODgbVoziR2z4lpcJg+YwmRlSk4rKH32VE633mAtZZ9kDXjy4wFO+pgUZmDKPsPe1fPmHCg==}
+    dependencies:
+      classnames: 2.3.2
+      prop-types: 15.8.1
+      react-easy-swipe: 0.0.21
     dev: false
 
   /react-share@4.4.1(react@18.2.0):

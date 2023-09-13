@@ -1,37 +1,40 @@
-import Image from "next/image";
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 import BlurImage from '@/components/blur-image';
+
+const placeholderBlurhash = '...';
+const placeholderImage = '/placeholder.png';
+
 interface ImageModalProps {
   isOpen: boolean;
   onClose: () => void;
   image: string;
   blurHash: string;
-  // selectedImageIndex: number;
-  // setSelectedImageIndex: (index: number) => void;
+  selectedImageIndex: number;
+  setSelectedImageIndex: (index: number) => void;
+  images: string[]; // Add the images prop here
 }
-const placeholderBlurhash = '...';
-const placeholderImage = '/placeholder.png';
+
 const ImageModal: React.FC<ImageModalProps> = ({
   isOpen,
   onClose,
   image,
   blurHash,
-  // selectedImageIndex,
-  // setSelectedImageIndex,
+  selectedImageIndex,
+  setSelectedImageIndex,
+  images, // Add the images prop here
 }) => {
   const handlePrev = () => {
-    // const newIndex = (selectedImageIndex - 1 + images.length) % images.length;
-    // setSelectedImageIndex(newIndex);
+    const newIndex = (selectedImageIndex - 1 + images.length) % images.length;
+    setSelectedImageIndex(newIndex);
   };
 
   const handleNext = () => {
-    // const newIndex = (selectedImageIndex + 1) % images.length;
-    // setSelectedImageIndex(newIndex);
+    const newIndex = (selectedImageIndex + 1) % images.length;
+    setSelectedImageIndex(newIndex);
   };
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
-      // Specify the event type here
       const target = event.target as HTMLElement;
       if (isOpen && target && !target.closest(".relative")) {
         onClose();
@@ -48,9 +51,9 @@ const ImageModal: React.FC<ImageModalProps> = ({
   }, [isOpen, onClose]);
 
   return isOpen ? (
-    <div className="relative inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="relative inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-lg">
       <div className="modal-container">
-        <div className="modal-content mx-auto max-h-screen w-full max-w-screen-lg overflow-hidden rounded-lg bg-white shadow-lg">
+        <div className="modal-content mx-auto max-h-screen w-full max-w-screen-lg overflow-hidden rounded-lg shadow-lg">
           <button
             className="absolute right-2 top-2 text-gray-800 hover:text-black"
             onClick={onClose}
@@ -71,19 +74,11 @@ const ImageModal: React.FC<ImageModalProps> = ({
             </svg>
           </button>
           <div className="flex justify-center">
-            {/* <Image
-              src={images[selectedImageIndex]}
-              alt={`Property Image ${selectedImageIndex}`}
-              width={0}
-              height={0}
-              sizes="100vw"
-              style={{ width: '100%', height: 'auto' }} // optional
-            /> */}
             <BlurImage
               alt="Property Image"
               width={800}
               height={630}
-              className="h-full w-full object-cover"
+              className="h-[500px] w-[700px] object-cover"
               placeholder="blur"
               blurDataURL={blurHash ?? placeholderBlurhash}
               src={image ?? placeholderImage}
