@@ -315,7 +315,7 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
         Blob url: <br />
         {
           blobList.map((blob: BlobResult | null, idx: number) => (
-            <p>
+            <p key={idx}>
               <a key={idx} href={blob?.url}>{blob?.url}</a><br />
             </p>
           ))
