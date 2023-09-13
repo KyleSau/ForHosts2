@@ -51,11 +51,19 @@ export async function POST(request: Request) {
 
     const body = await request.json()
 
-    console.log('body: ', JSON.stringify(body));
+    const { listingId, guests, startDate, endDate } = body;
+
+    if (!listingId || !guests || !startDate || !endDate) {
+        return NextResponse.error();  // Provide a meaningful response
+    }
+
+    if (startDate >= endDate) {
+        return NextResponse.error();  // Provide a meaningful response
+    }
 
     const post = await prisma?.post.findUnique({
         where: {
-            id: body.listingId,
+            id: listingId,
         }
     });
 
@@ -63,13 +71,28 @@ export async function POST(request: Request) {
         return NextResponse.error();  // Provide a meaningful response
     }
 
-    console.log('post name: ', post.title);
-    console.log('price: ' + post.price);
-    console.log('hostId: ' + post.userId);
+    const { price, maxGuests, calendarUrls } = post;
+
+    if (!price || !maxGuests || !calendarUrls) {
+        return NextResponse.error(); // Provide a meaningful response
+    }
+
+    if (guests > maxGuests) {
+        return NextResponse.error();  // Provide a meaningful response
+    }
+
+    /* Advance notice (days) from today before being able to book? */
+
+    /* Check if date range is within booking window */
+
+    /* Check if number of nights is less than or equal to minimum night stays */
+
+    /* Check if date range conflicts with any of the other calendarUrls */
+
+    /* check if payment conflicts with any other payments with status of 'success' or 'pending' within this date range */
 
     // Create Stripe Checkout Session
     const checkoutSession = await createCheckoutSession(request, post, body); // Pass parsed body here
-
     return NextResponse.json(checkoutSession);
 }
 
@@ -114,16 +137,11 @@ async function createCheckoutSession(request: any, post: any, body: any) { // Ac
             transfer_data: {
                 destination: accountId, // This should be the ID of the connected account
             },
-            // metadata: {
-            //     listingId: post.id,
-            //     guests: 4,
-            //     // ... you can add more key-value pairs as needed
-            // },
-        },
-        metadata: {
-            listingId: post.id,
-            guests: 4,
-            // ... you can add more key-value pairs as needed
+            metadata: {
+                listingId: post.id,
+                guests: 4,
+                // ... you can add more key-value pairs as needed
+            },
         },
     };
 
