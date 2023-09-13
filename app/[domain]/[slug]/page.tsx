@@ -8,13 +8,14 @@ import BookingComponent from "@/components/booking/booking-component";
 import dynamic from 'next/dynamic'
 import { CalendarDemo } from "@/components/ui/uicalendar";
 import ShowMoreModal from "@/components/users-sites/show-more-modal"
-import Beds from "@/components/users-sites/beds";
 import WhereStaying from "@/components/users-sites/where-staying";
 import Highlights from "@/components/highlights/highlights";
 import HighlightsData from "@/components/highlights/highlights-data";
-import SleepingSection from "@/components/sleeping-options/sleeping-section";
 import SleepingOptions from "@/components/sleeping-options/sleeping-section";
 import { sleepingOptions } from "@/components/sleeping-options/sleeping-data";
+import SleepingSection from "@/components/sleeping-options/sleeping-section";
+import { faBed, faCouch } from "@fortawesome/free-solid-svg-icons";
+import { Bedroom } from "@/components/sleeping-options/types";
 
 const Map = dynamic(() => import('@/components/users-sites/open-street-map'), {
   ssr: false,
@@ -48,6 +49,54 @@ export async function generateMetadata({
   };
 }
 
+const bedrooms: Bedroom[] = [
+  {
+    name: 'Bedroom 1',
+    description: 'Master Bedroom with lake views',
+    beds: [
+      {
+        name: 'King Bed',
+        icon: faBed,
+      },
+      {
+        name: 'Couch',
+        icon: faCouch,
+      },
+      // Add more single beds if needed
+    ],
+  },
+  {
+    name: 'Bedroom 2',
+    description: 'Guest Room',
+    beds: [
+      {
+        name: 'Double Bed',
+        icon: faBed,
+      },
+      {
+        name: 'Double Bed',
+        icon: faBed,
+      },
+      // Add more double beds if needed
+    ],
+  },
+  // Add more bedrooms if needed
+  {
+    name: 'Living Room',
+    description: 'Description for Living Room',
+    beds: [
+      {
+        name: 'Couch',
+        icon: faCouch,
+      },
+      {
+        name: 'Couch',
+        icon: faCouch,
+      },
+      // Add more couches if needed
+    ],
+  },
+];
 
 export default async function SitePostPage({
   params,
@@ -70,7 +119,7 @@ export default async function SitePostPage({
       {data.content != null && <ShowMoreModal text={data.content} mdxSource={data.mdxSource} />}
       <AmenitiesModal amenityDetails={amenityDetails} />
       <CalendarDemo />
-      <SleepingOptions sleepingOptions={sleepingOptions} />
+      <SleepingSection bedrooms={bedrooms} />
       <Map />
       <WhereStaying />
     </>
