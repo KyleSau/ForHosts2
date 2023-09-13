@@ -9,7 +9,6 @@ import ImageGallery from "@/components/dash-site-page/image-gallery";
 import DashHeader from "@/components/dash-site-page/dash-header";
 import BookingComponent from "@/components/booking/booking-component";
 import ListingDescription from "@/components/users-sites/listing-description";
-import { Calendar } from "@/components/ui/calendar"
 
 import dynamic from 'next/dynamic'
 import { CalendarDemo } from "@/components/ui/uicalendar";
