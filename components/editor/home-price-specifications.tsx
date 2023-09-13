@@ -81,7 +81,7 @@ export default function PriceSpecifications({data}) {
             Vital information regarding your property.
           </p>
 
-          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-4">
             <div className="sm:col-span-2">
               <label htmlFor="price" className="block text-sm font-medium leading-6 text-gray-900">
                 Price per night of listing
@@ -218,14 +218,17 @@ export default function PriceSpecifications({data}) {
             {/* Add similar input fields for other form fields with appropriate names */}
           </div>
         </div>
-        <div className="flex justify-end">
-          <button
-            type="submit"
-            className="text-base px-4 py-2 rounded font-bold cursor-pointer bg-teal-600 text-teal-100 hover:bg-teal-700 focus:outline-none focus:bg-teal-700 transition duration-200 ease-in-out"
-          >
-            Next
-          </button>
-        </div>
+        <div className="flex p-2 mt-4">
+
+<div className="flex-auto flex flex-row-reverse">
+  <button
+    type="submit" // Specify the button type as "submit" to trigger form submission
+    className="rounded-md hover:scale-110 duration-200 ease-in-out transition bg-indigo-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+    Next
+  </button>
+
+</div>
+</div>
       </div>
     </form>
   );

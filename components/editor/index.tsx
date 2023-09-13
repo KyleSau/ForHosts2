@@ -1,29 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useEditor, EditorContent } from "@tiptap/react";
-import { TiptapEditorProps } from "./props";
-import { TiptapExtensions } from "./extensions";
 import { useDebounce } from "use-debounce";
-import { useCompletion } from "ai/react";
-
-import va from "@vercel/analytics";
-import { useTransition } from "react";
-
 import { Post } from "@prisma/client";
-import { updatePost, updatePostMetadata } from "@/lib/actions";
-
 import PropertyDescription from "./property-descript-tab";
-import PropertyDetails from "./prop-details-tab";
-import SomeSettings from "./some-settings";
 import PriceSpecifications from "./home-price-specifications";
 type PostWithSite = Post & { site: { subdomain: string | null } | null };
 
 export default function Editor({ post }: { post: PostWithSite }) {
-
-
   const [data, setData] = useState<PostWithSite>(post);
-
 
   const [activeTab, setActiveTab] = useState("app"); // Initialize the active tab state
 
@@ -48,55 +33,9 @@ export default function Editor({ post }: { post: PostWithSite }) {
     : `http://${data.site?.subdomain}.localhost:3000/${data.slug}`;
 
   const [debouncedData] = useDebounce(data, 1000);
-  // useEffect(() => {
-  //   // compare the title, description and content only
-  //   if (
-  //     debouncedData.title === post.title &&
-  //     debouncedData.price === post.price &&
-  //     debouncedData.description === post.description &&
-  //     debouncedData.content === post.content &&
-  //     debouncedData.checkInTime === post.checkInTime &&
-  //     debouncedData.checkOutTime === post.checkOutTime &&
-  //     debouncedData.location === post.location &&
-  //     debouncedData.currency === post.currency &&
-  //     debouncedData.minimumStay === post.minimumStay &&
-  //     debouncedData.cleaningFee === post.cleaningFee &&
-  //     debouncedData.securityDeposit === post.securityDeposit &&
-  //     JSON.stringify(debouncedData.amenities) ===
-  //       JSON.stringify(post.amenities) &&
-  //     debouncedData.maxGuests === post.maxGuests &&
-  //     debouncedData.bedrooms === post.bedrooms &&
-  //     debouncedData.totalBeds === post.totalBeds &&
-  //     debouncedData.bathrooms === post.bathrooms &&
-  //     debouncedData.instantBooking === post.instantBooking &&
-  //     debouncedData.rating === post.rating &&
-  //     JSON.stringify(debouncedData.calendarUrls) ===
-  //       JSON.stringify(post.calendarUrls) &&
-  //     JSON.stringify(debouncedData.photoGallery) ===
-  //       JSON.stringify(post.photoGallery) &&
-  //     JSON.stringify(debouncedData.additionalServices) ===
-  //       JSON.stringify(post.additionalServices) &&
-  //     JSON.stringify(debouncedData.availabilityWindow) ===
-  //       JSON.stringify(post.availabilityWindow)
-  //   ) {
-  //     return;
-  //   }
-  //   startTransitionSaving(async () => {
-  //     await updatePost(debouncedData);
-  //   });
-  // }, [debouncedData, post]);
 
   const prev = useRef("");
 
-  // Hydrate the editor with the content
-
-  /**
-   * Sets the availability window array (2 string dates in yyyy-MM-dd format) eg. ['2023-07-18', '2023-09-18']
-   * to be passed into data. Also contains callbacks for setting the slider based on conditions.
-   * @param date The date string to set
-   * @param index Declare which date it is, 0 for starting date, 1 for ending date
-   * @param scope Determines slider behavior. Set to true if being called from parent, false if being called from a child component.
-   */
   const setAvailabilityWindowTimes = async (
     date: string,
     index: number,
@@ -132,7 +71,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
 
   return (
     <div className="relative min-h-[500px] w-full max-w-screen-lg border-stone-200 p-12 px-8 dark:border-stone-700 sm:mb-[calc(20vh)] sm:rounded-lg sm:border sm:px-12 sm:shadow-lg">
-      <div className="relative bg-gray-100 rounded-xl">
+      <div className="relative rounded-xl bg-gray-100">
         <ul
           className="relative flex list-none flex-wrap rounded-xl bg-transparent p-1"
           nav-pills
@@ -141,8 +80,8 @@ export default function Editor({ post }: { post: PostWithSite }) {
           <li
             className={` flex-auto text-center ${
               activeTab === "app"
-                ? "rounded-xl bg-white text-gray-600 shadow-md  transition ease-in-out duration-100  "
-                : "w- rounded-xl bg-transparent text-slate-700  transition ease-in-out duration-100  "
+                ? "rounded-xl bg-white text-gray-600 shadow-md  transition duration-100 ease-in-out  "
+                : "w- rounded-xl bg-transparent text-slate-700  transition duration-100 ease-in-out  "
             }`}
           >
             <a
@@ -193,8 +132,8 @@ export default function Editor({ post }: { post: PostWithSite }) {
           <li
             className={`z-30 flex-auto text-center  ${
               activeTab === "PropDetails"
-                ? "rounded-xl bg-white text-gray-600 shadow-md transition ease-in-out duration-100  "
-                : " rounded-xl bg-transparent text-slate-700 transition ease-in-out duration-100  "
+                ? "rounded-xl bg-white text-gray-600 shadow-md transition duration-100 ease-in-out  "
+                : " rounded-xl bg-transparent text-slate-700 transition duration-100 ease-in-out  "
             }`}
           >
             <a
@@ -282,307 +221,18 @@ export default function Editor({ post }: { post: PostWithSite }) {
                   </g>
                 </g>
               </svg>
-              <span className="ml-1">Listing Settings</span>
+              <span className="ml-1">Listing settings</span>
             </a>
           </li>
         </ul>
       </div>
       <hr />
-      {/* <div className="absolute right-5 top-5 mb-5 flex items-center space-x-3">
-        
-        {data.published && (
-          <a
-            href={url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center space-x-1 text-sm text-stone-400 hover:text-stone-500"
-          >
-            <ExternalLink className="h-4 w-4" />
-          </a>
-        )}
-        <div className="rounded-lg bg-stone-100 px-2 py-1 text-sm text-stone-400 dark:bg-stone-800 dark:text-stone-500">
-          {isPendingSaving ? "Saving..." : "Saved"}
-        </div>
-        <button
-          onClick={() => {
-            const formData = new FormData();
-            console.log(data.published, typeof data.published);
-            formData.append("published", String(!data.published));
-            startTransitionPublishing(async () => {
-              await updatePostMetadata(formData, post.id, "published").then(
-                () => {
-                  toast.success(
-                    `Successfully ${data.published ? "unpublished" : "published"
-                    } your post.`,
-                  );
-                  setData((prev) => ({ ...prev, published: !prev.published }));
-                },
-              );
-            });
-          }}
-          className={clsx(
-            "flex h-7 w-24 items-center justify-center space-x-2 rounded-lg border text-sm transition-all focus:outline-none",
-            isPendingPublishing
-              ? "cursor-not-allowed border-stone-200 bg-stone-100 text-stone-400 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-300"
-              : "border border-black bg-black text-white hover:bg-sitecolor hover:text-black active:bg-stone-100 dark:border-stone-700 dark:hover:border-stone-200",
-          )}
-          disabled={isPendingPublishing}
-        >
-          {isPendingPublishing ? (
-            <LoadingDots />
-          ) : (
-            <p>{data.published ? "Edit Listing" : "Publish Listing"}</p>
-          )}
-        </button>
-      </div> */}
       {activeTab === "app" && (
         <div>
           <PropertyDescription data={data} />
         </div>
       )}
       {activeTab === "PropDetails" && <PriceSpecifications data={data} />}
-      {/* {editor && <EditorBubbleMenu editor={editor} />} */}
-      {/* <EditorContent editor={editor} /> */}
-      {/* <div
-        className="flex cursor-pointer justify-center"
-        onClick={() => setShowCheckTimes(!showCheckTimes)}
-      >
-        <h1 className="flex items-center mb-6 mt-12 text-3xl font-bold">
-          Booking Window {showCheckTimes ? "↑" : "↓"}
-        </h1>
-      </div>
-      <div
-        style={{
-          maxHeight: showCheckTimes ? "1000px" : "0",
-          overflow: "hidden",
-          transition: "max-height 0.5s ease-in-out",
-        }}
-      >
-      
-        <div className="mb-2">
-          <h2 className="font-cal text-xl font-bold">In-Service Date</h2>
-          <input
-            type="date"
-            value={data?.availabilityWindow[0]}
-            onChange={(e) => setAvailabilityWindowTimes(e.target.value, 0, true)}
-            className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
-          />
-        </div>
-        <div className="mb-6">
-          <h2 className="font-cal text-xl font-bold">Out-of-Service Date</h2>
-          <DateSlider
-            availabilityWindow={data?.availabilityWindow}
-            setAvailabilityWindowTimes={setAvailabilityWindowTimes}
-            sliderIntervals={sliderIntervals}
-            sliderIdx={sliderIdx}
-            setSliderIdx={setSliderIdx}
-          />
-          <input
-            type="date"
-            value={data?.availabilityWindow[1]}
-            onChange={(e) => setAvailabilityWindowTimes(e.target.value, 1, true)}
-            className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
-          />
-        </div>
-
-        <div className="mb-2">
-          <div className="flex">
-            <h2 className="font-cal text-xl font-bold">Time of Day for Guest Check-in</h2>
-            <Tooltip title="Time of day that the guest is able to check in on their first day.">
-              <Info className="ml-2 opacity-90 stroke-[1px]" />
-            </Tooltip>
-          </div>
-          <input
-            type="time"
-            defaultValue={data.checkInTime.toString()}
-            onChange={(e) => setData({ ...data, checkInTime: e.target.value })}
-            className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
-          />
-        </div>
-        <div className="mb-6">
-          <div className="flex">
-            <h2 className="font-cal text-xl font-bold">Time of Day for Guest Check-out</h2>
-            <Tooltip title="Time of day by which the guest must check-out on their last day.">
-              <Info className="ml-2 opacity-90 stroke-[1px]" />
-            </Tooltip>
-          </div>
-          <input
-            type="time"
-            defaultValue={data.checkOutTime.toString()}
-            onChange={(e) => setData({ ...data, checkOutTime: e.target.value })}
-            className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
-          />
-        </div>
-      </div>
-
-      <div
-        className="flex cursor-pointer justify-center"
-        onClick={() => setShowPropertyDetails(!showPropertyDetails)}
-      >
-        <h1 className="flex items-center mb-8 mt-8 text-3xl font-bold">
-          Property Details {showPropertyDetails ? "↑" : "↓"}
-        </h1>
-      </div>
-      <div
-        style={{
-          maxHeight: showPropertyDetails ? "1000px" : "0",
-          overflow: "hidden",
-          transition: "max-height 0.5s ease-in-out",
-        }}
-      >
-        <input
-          type="text"
-          placeholder="Amenities (comma separated)"
-          defaultValue={post?.amenities?.join(", ") || ""}
-          onChange={(e) =>
-            setData({ ...data, amenities: e.target.value.split(", ") })
-          }
-          className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
-        />
-        <div className="mb-2 mt-4">
-          <input
-            type="text"
-            placeholder="iCal Calendar URLs (comma separated)"
-            defaultValue={post?.calendarUrls?.join(", ") || ""}
-            onChange={(e) =>
-              setData({ ...data, calendarUrls: e.target.value.split(", ") })
-            }
-            className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
-          />
-        </div>
-        <div className="mb-4">
-          <h2 className="font-cal text-xl font-bold"> Currency</h2>
-          <select
-            defaultValue={post?.currency || "USD"}
-            onChange={(e) => setData({ ...data, currency: e.target.value })}
-            className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
-          >
-            <option value="USD">USD</option>
-          </select>
-        </div>
-        <div className="mb-4">
-          <input
-            type="number"
-            placeholder="Price per night at property"
-            defaultValue={post?.price || ""}
-            onChange={(e) =>
-              setData({ ...data, price: parseInt(e.target.value, 10) })
-            }
-            className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
-          />
-        </div>
-  
-        <div className="mb-4">
-          <input 
-            type="number"
-            placeholder="Maximum number of guests allowed for stay"
-            defaultValue={post?.price || ""}
-            onChange={(e) =>
-              setData({ ...data, maxGuests: parseInt(e.target.value, 10) })
-            }
-            className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
-          />
-        </div>
-
-        <div className="mb-4">
-          <input
-            type="number"
-            placeholder="Minimum stay required at property (days)"
-            defaultValue={post?.minimumStay || ""}
-            onChange={(e) =>
-              setData({ ...data, minimumStay: parseInt(e.target.value, 10) })
-            }
-            className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
-          />
-        </div>
-        <div className="mb-4">
-          <input
-            type="number"
-            placeholder="Maximum number of guests that can stay at property"
-            defaultValue={post?.maxGuests || ""}
-            onChange={(e) =>
-              setData({ ...data, maxGuests: parseInt(e.target.value, 10) })
-            }
-            className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
-          />
-        </div>
-        <div className="mb-4">
-          <input
-            type="number"
-            placeholder="Number of Rooms"
-            defaultValue={post?.bedrooms || ""}
-            onChange={(e) =>
-              setData({ ...data, bedrooms: parseInt(e.target.value, 10) })
-            }
-            className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
-          />
-        </div>
-        <div className="mb-4">
-          <input
-            type="number"
-            placeholder="Number of avaliable beds"
-            defaultValue={post?.totalBeds || ""}
-            onChange={(e) =>
-              setData({ ...data, totalBeds: parseInt(e.target.value, 10) })
-            }
-            className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
-          />
-        </div>
-        <div className="mb-4">
-          <input
-            type="number"
-            placeholder="Number of bathrooms"
-            defaultValue={post?.bathrooms || ""}
-            onChange={(e) =>
-              setData({ ...data, bathrooms: parseInt(e.target.value, 10) })
-            }
-            className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
-          />
-        </div>
-        <div className="mb-4">
-          <input
-            type="number"
-            placeholder="Cleaning fee"
-            defaultValue={post?.cleaningFee || ""}
-            onChange={(e) =>
-              setData({ ...data, cleaningFee: parseInt(e.target.value, 10) })
-            }
-            className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
-          />
-        </div>
- 
-        <input
-          type="number"
-          placeholder="Security deposit"
-          defaultValue={post?.securityDeposit || ""}
-          onChange={(e) =>
-            setData({ ...data, securityDeposit: parseInt(e.target.value, 10) })
-          }
-          className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
-        />
-      </div>
-
-      <div
-        className="flex cursor-pointer justify-center"
-        onClick={() => setShowAddPhotoArea(!showAddPhotoArea)}
-      >
-        <h1 className="flex items-center mb-8 mt-12 text-3xl font-bold">
-          Photos {showAddPhotoArea ? "↑" : "↓"}
-        </h1>
-      </div>
-      <div
-        style={{
-          maxHeight: showAddPhotoArea ? "1000px" : "0",
-          overflow: "hidden",
-          transition: "max-height 0.5s ease-in-out",
-        }}
-      >
-        <FileClickDragDrop 
-          componentId="listing-photos-drag-drop-area"
-          
-        />
-      
-      </div> */}
     </div>
   );
 }
