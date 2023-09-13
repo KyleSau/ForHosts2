@@ -52,7 +52,8 @@ export default function PriceSpecifications({data}) {
             console.error(result.error);
           } else {
             // Handle success, e.g., navigate to a success page or show a success message
-            console.log('Post updated successfully:', result);
+              console.log('Post updated successfully:', result);
+              
           }
       // You can add your logic to send this data to the server or handle it as needed
     },
@@ -78,7 +79,7 @@ export default function PriceSpecifications({data}) {
             Home Information
           </h2>
           <p className="mt-1 text-sm leading-6 text-gray-600">
-            Vital information regarding your property.
+            Vital pricing information regarding your property.
           </p>
 
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-4">
@@ -215,7 +216,7 @@ export default function PriceSpecifications({data}) {
               )}
             </div>
 
-            {/* Add similar input fields for other form fields with appropriate names */}
+           
           </div>
         </div>
         <div className="flex p-2 mt-4">

@@ -227,7 +227,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
         </ul>
       </div>
       <hr />
-      {activeTab === "TitleInfo" && <PropertyDescription data={data} />}
+      {activeTab === "TitleInfo" && <PropertyDescription data={data} setActive={setActiveTab} />}
       {activeTab === "PropDetails" && <PriceSpecifications data={data} />}
     </div>
   );
