@@ -1,15 +1,13 @@
-import Image from "next/image";
-import Link from "next/link";
 import { ReactNode } from "react";
 import prisma from "@/lib/prisma";
-import CTA from "@/components/cta";
-import ReportAbuse from "@/components/report-abuse";
 import { notFound, redirect } from "next/navigation";
 import { getSiteData } from "@/lib/fetchers";
 import { fontMapper } from "@/styles/fonts";
 import { Metadata } from "next";
 import Navbar from "@/components/users-sites/navbar";
 import Footer from "@/components/footer";
+import Script from "next/script";
+import Head from "next/head";
 
 export async function generateMetadata({
   params,
@@ -113,6 +111,11 @@ export default async function SiteLayout({
 
       {/* Main content */}
       <div className="mt-5">{children}</div>
+      <div>
+        <Head>
+          <script src="https://embed.tawk.to/64a6e01c94cf5d49dc61f524" async />
+        </Head>
+      </div>
       <Footer />
     </div>
   );

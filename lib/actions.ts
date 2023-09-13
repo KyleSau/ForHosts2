@@ -715,8 +715,8 @@ export const uploadBlobMetadataToStore = async (blobResult: BlobResult, postId: 
 export const listAllBlobsInStoreAction = async () => { 
   console.log("listAllBlobsInStoreAction called");
   const { blobs } = await list();
-  console.log("type of blobs: ", typeof(blobs));
-  console.log("blobs: ", blobs);
+  // console.log("type of blobs: ", typeof(blobs));
+  // console.log("blobs: ", blobs);
   // return NextResponse.json(blobs);
   return blobs;
 };

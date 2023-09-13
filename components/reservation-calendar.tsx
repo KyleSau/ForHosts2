@@ -41,7 +41,6 @@ export default function ReservationCalendar({ reservations }: any) {
 
     return (
         <div>
-            <h1>Reservation Calendar</h1>
             <div className="flex max-w-screen-xl flex-col">
                 <div className="flex flex-col">
                     <div style={styles.container}>
