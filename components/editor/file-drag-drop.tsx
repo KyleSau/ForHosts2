@@ -3,11 +3,7 @@
 import { File, Image, Trash2 } from 'lucide-react';
 import { FILE_CONSTS, IMAGE_UPLOAD_QUANTITY_LIMIT, IMAGE_SIZE_LIMIT_BYTES, IMAGE_SIZE_LIMIT_MB } from '@/lib/constants';
 import React, { useState, useRef, FormEvent } from 'react';
-import EditorWarningModal,
-{ EditorWarningModalDataType, EditorWarningModalDataTemplate } from "@/components/editor/warning-confirmation-modal";
-import React, { useState, useRef } from 'react';
-import EditorWarningModal,
-{ EditorWarningModalDataType, EditorWarningModalDataTemplate } from "@/components/editor/warning-confirmation-modal";
+import EditorWarningModal, { EditorWarningModalDataType, EditorWarningModalDataTemplate } from "@/components/editor/warning-confirmation-modal";
 import { humanReadableFileSize } from '@/lib/utils';
 
 import { put, list, type BlobResult } from '@vercel/blob'; // test
@@ -32,7 +28,6 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
   const addFilesAndUrlsToState = (newFiles: (File | null)[]) => {
     //first check if adding the new files causes currently uploaded pics to surpass the upload threshold; show modal if so
     if (addedFileArray.length > IMAGE_UPLOAD_QUANTITY_LIMIT || addedFileArray.length + newFiles.length > IMAGE_UPLOAD_QUANTITY_LIMIT) {
-    if (addedFileArray.length > IMAGE_UPLOAD_QUANTITY_LIMIT || addedFileArray.length + newFiles.length > IMAGE_UPLOAD_QUANTITY_LIMIT) {
       setEditorWarningModalData({
         ...editorWarningModalData,
         idxToRemove: -1,
@@ -43,7 +38,6 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
       const newFilesAboveSizeLimit: (File | null)[] = [];
       const newFilesBelowSizeLimit: (File | null)[] = [];
 
-      newFiles.forEach((file: File | null) => {
       newFiles.forEach((file: File | null) => {
         const fileSizeBytes = file?.size ? file.size : IMAGE_SIZE_LIMIT_BYTES + 100;
         if (fileSizeBytes > IMAGE_SIZE_LIMIT_BYTES) {
@@ -64,8 +58,6 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
       setAddedFileUrlArray([...addedFileUrlArray, ...urlsForNewFiles]);
 
       //if needed, throw up modal informing user that files above the size limit were not added
-      if (newFilesAboveSizeLimit.length > 0) {
-        const filesAndSizes = newFilesAboveSizeLimit.map((file: File | null) => `${file?.name} (${humanReadableFileSize(file?.size)})`).join("\n");
       if (newFilesAboveSizeLimit.length > 0) {
         const filesAndSizes = newFilesAboveSizeLimit.map((file: File | null) => `${file?.name} (${humanReadableFileSize(file?.size)})`).join("\n");
         setEditorWarningModalData({
@@ -207,7 +199,7 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
     const blobsInStore = await listAllBlobsInStoreAction();
     console.log("listCurrentBlobsInStore: blobsInStore: ", blobsInStore);
     // setAllBlobs(blobsInStore);
-  }
+  };
 
   const deleteAllBlobsInStore = async () => {
     console.log("deleteAllBlobsInStore called");
@@ -263,12 +255,7 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
           :
           <p>Your Added Pictures Will Appear Here. <br />
             You may upload a maximum of {IMAGE_UPLOAD_QUANTITY_LIMIT} images</p>
-          <p>You may add {IMAGE_UPLOAD_QUANTITY_LIMIT - addedFileArray.length} more images</p>
-          :
-          <p>Your Added Pictures Will Appear Here. <br />
-            You may upload a maximum of {IMAGE_UPLOAD_QUANTITY_LIMIT} images</p>
       }
-      <div
       <div
         className="grid grid-cols-2 gap-4 mt-4 md:grid-cols-2"
         onDragOver={dragOverHandler}
@@ -292,9 +279,7 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
                 onClick={() => handleImageDeleteIconClicked(idx)}
               >
                 <Trash2 className="hover:stroke-rose-600" />
-                <Trash2 className="hover:stroke-rose-600" />
               </button>
-              <img
               <img
                 // className="relative inset-0 z-0 object-cover w-full h-full border preview"
                 className="relative inset-0 z-0 object-cover w-full h-full border-4 border-white preview"
@@ -309,9 +294,7 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
         })}
       </div>
     </div>
-
-    <EditorWarningModal
-
+    
     <EditorWarningModal
       modalOpen={editorWarningModalOpen}
       setModalOpen={setEditorWarningModalOpen}
