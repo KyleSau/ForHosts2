@@ -8,11 +8,9 @@ import BookingComponent from "@/components/booking/booking-component";
 import dynamic from 'next/dynamic'
 import { CalendarDemo } from "@/components/ui/uicalendar";
 import ShowMoreModal from "@/components/users-sites/show-more-modal"
-import Beds from "@/components/users-sites/beds";
 import WhereStaying from "@/components/users-sites/where-staying";
 import Highlights from "@/components/highlights/highlights";
 import HighlightsData from "@/components/highlights/highlights-data";
-import SleepingSection from "@/components/sleeping-options/sleeping-section";
 import SleepingOptions from "@/components/sleeping-options/sleeping-section";
 import { sleepingOptions } from "@/components/sleeping-options/sleeping-data";
 
