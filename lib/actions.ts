@@ -656,6 +656,11 @@ export const createReservation = async (formData: FormData, currentDate: Date) =
   }
 };
 
+
+//////////////////// Blob Metadata Endpoints ////////////////////
+import { list } from '@vercel/blob';
+import { NextResponse } from 'next/server';
+
 export const uploadBlobMetadataToStore = async (blobResult: BlobResult, postId: string, siteId: string) => {
   console.log("entered uploadBlobMetadataToStore");
   try {
@@ -704,4 +709,14 @@ export const uploadBlobMetadataToStore = async (blobResult: BlobResult, postId: 
     console.log("error: ", error);
     throw new Error('Could not update user');
   }
+};
+
+
+export const listAllBlobsInStoreAction = async () => { 
+  console.log("listAllBlobsInStoreAction called");
+  const { blobs } = await list();
+  console.log("type of blobs: ", typeof(blobs));
+  console.log("blobs: ", blobs);
+  // return NextResponse.json(blobs);
+  return blobs;
 };

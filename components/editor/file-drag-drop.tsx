@@ -8,7 +8,7 @@ import EditorWarningModal,
 import { humanReadableFileSize } from '@/lib/utils';
 
 import { put, list, type BlobResult } from '@vercel/blob'; // test
-import { uploadBlobMetadataToStore } from '@/lib/actions';
+import { uploadBlobMetadataToStore, listAllBlobsInStoreAction } from '@/lib/actions';
 
 export function FileClickDragDrop({ componentId, data }: { componentId: string, data: any }) {
   const PERMITTED_FILE_TYPES = new Set([FILE_CONSTS.JPEG, FILE_CONSTS.PNG]);
@@ -184,30 +184,35 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
 
   const listAllBlobsInStore = async () => { 
     console.log("listAllBlobsInStore called");
-    const response = await fetch("/api/blob/get-blobs", {
-      method: "GET",
-      mode: "cors",
-      headers: {
-          "Content-Type": "application/json"
-      }
-    });
-    const blobsInStore = await response.json();
+    //DO NOT DELETE!!!
+    // const response = await fetch("/api/blob/get-blobs", {
+    //   method: "GET",
+    //   mode: "cors",
+    //   headers: {
+    //       "Content-Type": "application/json"
+    //   }
+    // });
+    // const blobsInStore = await response.json();
+    // console.log("listCurrentBlobsInStore: blobsInStore: ", blobsInStore);
+    // setAllBlobs(blobsInStore);
+    
+    const blobsInStore = await listAllBlobsInStoreAction();
     console.log("listCurrentBlobsInStore: blobsInStore: ", blobsInStore);
-    setAllBlobs(blobsInStore);
+    // setAllBlobs(blobsInStore);
   };
 
   const deleteAllBlobsInStore = async () => {
     console.log("deleteAllBlobsInStore called");
     allBlobs.forEach((blob: BlobResult) => {
-      // const url = blob.url;
-      // console.log("url: ", url);
-      // const response = fetch(`/api/blob/delete-blob?url=${url}`, {
-      //   method: "DELETE"
-      // });
+      const url = blob.url;
+      console.log("url: ", url);
+      const response = fetch(`/api/blob/delete-blob?url=${url}`, {
+        method: "DELETE"
+      });
+      console.log("deleteAllBlobsInStore: response: ", response);
 
-      const formData = new FormData();
+      // const formData = new FormData();
       // formData.append()
-      // console.log("deleteAllBlobsInStore: response: ", response);
     });
   };
 
