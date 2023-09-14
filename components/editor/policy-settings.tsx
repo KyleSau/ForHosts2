@@ -3,7 +3,6 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import TabTitle from './tab-title';
 import EditorSaveButton from './editor-save-button';
-import $ from 'jquery';
 import { Switch } from "@/components/ui/switch"
 import {
     Accordion,
@@ -12,11 +11,20 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion"
 
+const hours = [
+    'None',
+    '12:00 AM', '01:00 AM', '02:00 AM', '03:00 AM',
+    '04:00 AM', '05:00 AM', '06:00 AM', '07:00 AM',
+    '08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM',
+    '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM',
+    '04:00 PM', '05:00 PM', '06:00 PM', '07:00 PM',
+    '08:00 PM', '09:00 PM', '10:00 PM', '11:00 PM',
+];
+
 export default function PolicySettings({ data }) {
 
     const id = data["id"];
     const desc = data["description"];
-    const $boxes = $('#my-details-modal .modal-dialog .modal-content .modal-body form label input[type="checkbox"]');
 
     const validationSchema = Yup.object().shape({
         maxGuests: Yup.number().required('Maximum guests is required').min(1, 'Must be at least 1'),
@@ -31,28 +39,27 @@ export default function PolicySettings({ data }) {
             title: '',
             description: '',
             maxGuests: '',
+            checkinWindowStart: '03:00 PM',
+            checkinWindowEnd: '09:00 PM',
+            checkoutTime: '11:00 AM',
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
         },
     });
 
-    $boxes.each(function (this: HTMLInputElement) {
-        if ($(this).attr('checked')) {
-            $(this).prop('checked', true);
-            $(this).parent().addClass('checked-checkbox-parent');
-        }
-    });
+    const handleHourIncrement = (field, increment) => {
+        const currentHourIndex = hours.indexOf(formik.values[field]);
+        let newHourIndex = currentHourIndex + increment;
 
-    $boxes.on('click', function (this: HTMLInputElement, e) {
-        const $box = $(this);
-        if ($box.is(':checked')) {
-            $boxes.prop('checked', false);
-            $boxes.parent().removeClass('checked-checkbox-parent');
-            $box.prop('checked', true);
-            $box.parent().addClass('checked-checkbox-parent');
+        if (newHourIndex < 0) {
+            newHourIndex = 0;
+        } else if (newHourIndex >= hours.length) {
+            newHourIndex = 0;
         }
-    });
+
+        formik.setFieldValue(field, hours[newHourIndex]);
+    };
 
     return (
         <div>
@@ -239,13 +246,79 @@ export default function PolicySettings({ data }) {
             <div className="text-sm font-medium leading-6 text-gray-900 mt-5 mb-5">
                 Quiet Hours
             </div>
+            <div className="flex items-center">
+                <label className="text-sm font-medium leading-6 text-gray-900">Start Time:</label>
+                <select
+                    name="quietHoursStart"
+                    value={formik.values.quietHoursStart}
+                    onChange={formik.handleChange}
+                >
+                    {hours.map((hour) => (
+                        <option key={hour} value={hour}>
+                            {hour}
+                        </option>
+                    ))}
+                </select>
+                <label className="text-sm font-medium leading-6 text-gray-900 ml-4">End Time:</label>
+                <select
+                    name="quietHoursEnd"
+                    value={formik.values.quietHoursEnd}
+                    onChange={formik.handleChange}
+                >
+                    {hours.map((hour) => (
+                        <option key={hour} value={hour}>
+                            {hour}
+                        </option>
+                    ))}
+                </select>
+            </div>
             <hr />
             <div className="text-sm font-medium leading-6 text-gray-900 mt-5 mb-5">
                 Check-in Window
             </div>
+            <div className="flex items-center">
+                <label className="text-sm font-medium leading-6 text-gray-900">Start Time:</label>
+                <select
+                    name="checkinWindowStart"
+                    value={formik.values.checkinWindowStart}
+                    onChange={formik.handleChange}
+                >
+                    {hours.map((hour) => (
+                        <option key={hour} value={hour}>
+                            {hour}
+                        </option>
+                    ))}
+                </select>
+                <label className="text-sm font-medium leading-6 text-gray-900 ml-4">End Time:</label>
+                <select
+                    name="checkinWindowEnd"
+                    value={formik.values.checkinWindowEnd}
+                    onChange={formik.handleChange}
+                >
+                    {hours.map((hour) => (
+                        <option key={hour} value={hour}>
+                            {hour}
+                        </option>
+                    ))}
+                </select>
+            </div>
             <hr />
             <div className="text-sm font-medium leading-6 text-gray-900 mt-5 mb-5">
                 Checkout Time
+            </div>
+            <div className="flex items-center">
+                <label className="text-sm font-medium leading-6 text-gray-900">Time:</label>
+                <select
+                    name="checkoutTime"
+                    value={formik.values.checkoutTime}
+                    onChange={formik.handleChange}
+                >
+                    {hours.map((hour) => (
+                        <option key={hour} value={hour}>
+                            {hour}
+                        </option>
+                    ))}
+                </select>
             </div>
             <hr />
             <div className="text-sm font-medium leading-6 text-gray-900 mt-5 mb-5">
@@ -260,7 +333,7 @@ export default function PolicySettings({ data }) {
             <hr />
             <div className="flex-auto flex flex-row-reverse">
                 <button
-                    type="submit" // Specify the button type as "submit" to trigger form submission
+                    type="submit"
                     className="rounded-md hover:scale-110 duration-200 ease-in-out transition bg-indigo-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                     Save
                 </button>
