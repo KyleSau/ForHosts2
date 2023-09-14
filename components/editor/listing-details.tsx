@@ -9,7 +9,7 @@ import DeletePostForm from '../form/delete-post-form';
 
 
 
-export default function ListingDetails({ data, setActive }) {
+export default function ListingDetails({ data }) {
 
   const id = data['id'];
   const [siteData, setSiteData] = useState(id);
