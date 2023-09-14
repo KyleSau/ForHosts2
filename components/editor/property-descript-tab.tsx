@@ -8,7 +8,7 @@ import { useState } from 'react';
 
 
 
-export default function PropertyDescription({ data, setActive }) {
+export default function PropertyDescription({ data }) {
   const id = data['id'];
   const [siteData, setSiteData] = useState(id);
 
@@ -95,14 +95,16 @@ export default function PropertyDescription({ data, setActive }) {
             )}
           </div>
       </div>
-      <div className="flex-auto flex flex-row-reverse">
-  <button
-    type="submit" // Specify the button type as "submit" to trigger form submission
-    className="rounded-md hover:scale-110 duration-200 ease-in-out transition bg-indigo-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-    Next
-  </button>
-
-      </div>
+      <div className="mt-4 flex p-2">
+          <div className="flex flex-auto flex-row-reverse">
+            <button
+              type="submit" // Specify the button type as "submit" to trigger form submission
+              className="rounded-md bg-indigo-600 px-5 py-2 text-sm font-semibold text-white shadow-sm transition duration-200 ease-in-out hover:scale-110 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Next
+            </button>
+          </div>
+        </div>
       </form>
  
 
