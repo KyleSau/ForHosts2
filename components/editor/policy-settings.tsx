@@ -58,6 +58,7 @@ export default function PolicySettings({ data }) {
         <div>
             <Accordion type="single" collapsible>
                 <AccordionItem value="item-1">
+                    <TabTitle title="Policies" desc="" />
                     <AccordionTrigger className="text-sm font-medium leading-6  text-gray-900">Cancellation Policy</AccordionTrigger>
                     <AccordionContent className="border p-2">
                         <div id="my-details-modal">
@@ -192,6 +193,69 @@ export default function PolicySettings({ data }) {
                     </AccordionContent>
                 </AccordionItem>
             </Accordion>
+            <div className="text-sm font-medium leading-6 text-gray-900 flex justify-between items-center mt-5 mb-5">
+                <span>Instant Book</span>
+                <Switch
+                    checked={formik.values.instantBook}
+                    onChange={() => formik.setFieldValue("instantBook", !formik.values.instantBook)}
+                />
+            </div>
+            <hr />
+            <TabTitle title="House Rules" desc="" />
+            <div className="text-sm font-medium leading-6 text-gray-900 flex justify-between items-center mt-5 mb-5">
+                <span>Pets Allowed</span>
+                <Switch
+                    checked={formik.values.petsAllowed}
+                    onChange={() => formik.setFieldValue("petsAllowed", !formik.values.petsAllowed)}
+                />
+            </div>
+            <hr />
+            <div className="text-sm font-medium leading-6 text-gray-900 flex justify-between items-center mt-5 mb-5">
+                <span>Events Allowed</span>
+                <Switch
+                    checked={formik.values.eventsAllowed}
+                    onChange={() => formik.setFieldValue("eventsAllowed", !formik.values.eventsAllowed)}
+                />
+            </div>
+            <hr />
+            <div className="text-sm font-medium leading-6 text-gray-900 flex justify-between items-center mt-5 mb-5">
+                <span>Smoking, vaping, e‑cigarettes allowed</span>
+                <Switch
+                    checked={formik.values.smokingAllowed}
+                    onChange={() => formik.setFieldValue("smokingAllowed", !formik.values.smokingAllowed)}
+                />
+            </div>
+            <hr />
+            <div className="text-sm font-medium leading-6 text-gray-900 flex justify-between items-center mt-5 mb-5">
+                <span>Commercial photography and filming allowed</span>
+                <Switch
+                    checked={formik.values.commercialPhotographyAllowed}
+                    onChange={() => formik.setFieldValue("commercialPhotographyAllowed", !formik.values.commercialPhotographyAllowed)}
+                />
+            </div>
+            <hr />
+            <div className="text-sm font-medium leading-6 text-gray-900 mt-5 mb-5">
+                Quiet Hours
+            </div>
+            <hr />
+            <div className="text-sm font-medium leading-6 text-gray-900 mt-5 mb-5">
+                Check-in Window
+            </div>
+            <hr />
+            <div className="text-sm font-medium leading-6 text-gray-900 mt-5 mb-5">
+                Checkout Time
+            </div>
+            <hr />
+            <div className="text-sm font-medium leading-6 text-gray-900 mt-5 mb-5">
+                Additional Rules
+            </div>
+            <hr />
+            <div className="text-sm font-medium leading-6 text-gray-900 mt-5 mb-5">
+                Primary Use For Listing
+                <br />
+                Are they renting the whole place or just a room?
+            </div>
+            <hr />
             <div className="flex-auto flex flex-row-reverse">
                 <button
                     type="submit" // Specify the button type as "submit" to trigger form submission
@@ -199,6 +263,6 @@ export default function PolicySettings({ data }) {
                     Save
                 </button>
             </div>
-        </div>
+        </div >
     )
 }
