@@ -14,7 +14,7 @@ export default function EditorTabs({ data }) {
   return (
     <div className="flex justify-center w-full">
       <Tabs defaultValue="ListingDetails" className="w-full">
-        <TabsList className="w-full">
+        <TabsList className="w-full shadow-md">
           <TabsTrigger value="ListingDetails">Listing Details</TabsTrigger>
           <TabsTrigger value="PricingAvailability">Pricing & Availability</TabsTrigger>
           <TabsTrigger value="PolicySettings">Policies & Rules</TabsTrigger>

@@ -94,6 +94,48 @@ export default function PropertyDescription({ data }) {
               <div className="text-red-600 text-sm mt-2">{formik.errors.description}</div>
             )}
           </div>
+  
+      <div className="sm:col-span-2 mt-10">
+            <label htmlFor="price" className="block text-sm font-medium leading-6 text-gray-900">
+              Price per night of listing
+            </label>
+            <div className="mt-2">
+              <input
+                type="text"
+                name="title"
+                id="title"
+                className={`block w-50 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                  formik.touched.title && formik.errors.title ? 'border-red-500' : ''
+                }`}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.title}
+              />
+            </div>
+            {formik.touched.title && formik.errors.title && (
+              <div className="text-red-600 text-sm mt-2">{formik.errors.title}</div>
+          )}
+                      <label htmlFor="price" className="block text-sm font-medium leading-6 text-gray-900">
+              Price per night of listing
+            </label>
+            <div className="mt-2">
+              <input
+                type="text"
+                name="title"
+                id="title"
+                className={`block w-50 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                  formik.touched.title && formik.errors.title ? 'border-red-500' : ''
+                }`}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.title}
+              />
+            </div>
+            {formik.touched.title && formik.errors.title && (
+              <div className="text-red-600 text-sm mt-2">{formik.errors.title}</div>
+            )}
+      
+      </div>
       </div>
       <div className="mt-4 flex p-2">
           <div className="flex flex-auto flex-row-reverse">
