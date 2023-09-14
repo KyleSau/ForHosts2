@@ -65,6 +65,7 @@ export default function PolicySettings({ data }) {
                             <div className="modal-dialog">
                                 <div className="modal-content">
                                     <div className="modal-body">
+                                        <TabTitle title="Standard cancellation policy" desc="Choose the policy that will apply to stays under 28 nights." />
                                         <form>
                                             <label className="text-sm font-medium leading-6 text-gray-900">
                                                 <input
@@ -163,6 +164,7 @@ export default function PolicySettings({ data }) {
                             <div className="modal-dialog">
                                 <div className="modal-content">
                                     <div className="modal-body">
+                                        <TabTitle title="Long-term stay cancellation policy" desc="Choose the policy that will apply to stays 28 nights or longer." />
                                         <form>
                                             <label className="text-sm font-medium leading-6 text-gray-900">
                                                 <input
