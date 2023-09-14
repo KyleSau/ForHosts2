@@ -4,7 +4,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
-export default function EditorSaveButton({ submitted }) {
+export default function EditorSaveButton({ submitted, isLoading }) {
   return (
     <div className="flex p-2 mt-4">
       <div className="flex-auto flex flex-row-reverse">

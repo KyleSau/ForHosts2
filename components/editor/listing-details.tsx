@@ -8,6 +8,7 @@ import { updateListingDetails } from '@/lib/actions';
 export default function ListingDetails({ data }) {
   const id = data['id'];
   const [submitted, setSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const validationSchema = Yup.object().shape({
     title: Yup.string().required('Title is required'),
     description: Yup.string().required('Description is required'),
@@ -41,7 +42,7 @@ export default function ListingDetails({ data }) {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-     
+      setIsLoading(true);
       // Your form submission logic
       const result = await updateListingDetails(values);
            
@@ -53,6 +54,8 @@ export default function ListingDetails({ data }) {
       // Handle success, e.g., navigate to a success page or show a success message
         console.log('Post updated successfully:', result);
         setSubmitted(true);
+        setIsLoading(false);
+
     }
 // You can add your logic to send this data to the server or handle it as needed
 },
@@ -254,7 +257,7 @@ export default function ListingDetails({ data }) {
       </div>
       <hr className='mt-10' />
       <div className='mt-4'>
-        <EditorSaveButton submitted={submitted} />
+        <EditorSaveButton submitted={submitted} isLoading={isLoading} />
       </div>
     </form>
   );
