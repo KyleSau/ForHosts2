@@ -49,22 +49,7 @@ export default function PolicySettings({ data }) {
         },
     });
 
-    $boxes.each(function (this: HTMLInputElement) {
-        if ($(this).attr('checked')) {
-            $(this).prop('checked', true);
-            $(this).parent().addClass('checked-checkbox-parent');
-        }
-    });
 
-    $boxes.on('click', function (this: HTMLInputElement, e) {
-        const $box = $(this);
-        if ($box.is(':checked')) {
-            $boxes.prop('checked', false);
-            $boxes.parent().removeClass('checked-checkbox-parent');
-            $box.prop('checked', true);
-            $box.parent().addClass('checked-checkbox-parent');
-        }
-    });
 
     return (
         <div>
