@@ -658,8 +658,9 @@ export const createReservation = async (formData: FormData, currentDate: Date) =
 
 
 //////////////////// Blob Metadata Endpoints ////////////////////
-import { list } from '@vercel/blob';
+import { list, del } from '@vercel/blob';
 import { NextResponse } from 'next/server';
+import { ChatCompletionResponseMessageRoleEnum } from "openai-edge";
 
 export const uploadBlobMetadataToStore = async (blobResult: BlobResult, postId: string, siteId: string) => {
   console.log("entered uploadBlobMetadataToStore");
@@ -712,11 +713,36 @@ export const uploadBlobMetadataToStore = async (blobResult: BlobResult, postId: 
 };
 
 
-export const listAllBlobsInStoreAction = async () => { 
+export const listAllBlobsInStore = async () => { 
   console.log("listAllBlobsInStoreAction called");
   const { blobs } = await list();
   // console.log("type of blobs: ", typeof(blobs));
   // console.log("blobs: ", blobs);
   // return NextResponse.json(blobs);
   return blobs;
+};
+
+
+export const deleteBlobFromStore = async (urlToDelete: string) => {
+  console.log("deleteBlobFromStore called");
+
+  if(urlToDelete !== null) {
+    const deletedBlob: any = await del(urlToDelete);
+    console.log("deletedBlob: ", deletedBlob);
+
+    const blobUrl = deletedBlob?.url;
+    console.log("blobUrl: ", blobUrl);
+
+    if(urlToDelete === blobUrl) {
+      const successJson = {
+        message: 'Success'
+      };
+      return successJson;
+    }
+  }
+
+  const errorJson = {
+    message: 'An error occurred on the server.'
+  };
+  return errorJson;
 };
