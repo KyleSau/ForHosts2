@@ -1,24 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import TabTitle from './tab-title';
 import EditorSaveButton from './editor-save-button';
+import { updateListingDetails } from '@/lib/actions';
 
 export default function ListingDetails({ data }) {
   const id = data['id'];
-
+  const [submitted, setSubmitted] = useState(false);
   const validationSchema = Yup.object().shape({
     title: Yup.string().required('Title is required'),
     description: Yup.string().required('Description is required'),
     maxGuests: Yup.number().required('Maximum guests is required').min(1, 'Must be at least 1'),
-    minDays: Yup.number().required('Minimum stay is required').min(1, 'Must be at least 1'),
-    numRooms: Yup.number().required('Number of bedrooms is required').min(1, 'Must be at least 1'),
-    numBathrooms: Yup.number().required('Number of bathrooms is required').min(1, 'Must be at least 1'),
-    country: Yup.string().required('Country is required'),
-    streetAddress: Yup.string().required('Street address is required'),
-    city: Yup.string().required('City is required'),
-    region: Yup.string().required('State / Province is required'),
-    postalCode: Yup.string().required('ZIP / Postal code is required'),
+    minimumStay: Yup.number().required('Minimum stay is required').min(1, 'Must be at least 1'),
+    bedrooms: Yup.number().required('Number of bedrooms is required').min(1, 'Must be at least 1'),
+    bathrooms: Yup.number().required('Number of bathrooms is required').min(1, 'Must be at least 1'),
+    // country: Yup.string().required('Country is required'),
+    // streetAddress: Yup.string().required('Street address is required'),
+    // city: Yup.string().required('City is required'),
+    // region: Yup.string().required('State / Province is required'),
+    // postalCode: Yup.string().required('ZIP / Postal code is required'),
   });
 
   const formik = useFormik({
@@ -29,20 +30,33 @@ export default function ListingDetails({ data }) {
       title: '',
       description: '',
       maxGuests: '',
-      minDays: '',
-      numRooms: '',
-      numBathrooms: '',
-      country: '',
-      streetAddress: '',
-      city: '',
-      region: '',
-      postalCode: '',
+      minimumStay: '',
+      bedrooms: '',
+      bathrooms: '',
+      // country: '',
+      // streetAddress: '',
+      // city: '',
+      // region: '',
+      // postalCode: '',
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
+     
       // Your form submission logic
-    },
-  });
+      const result = await updateListingDetails(values);
+           
+      if (result?.error) {
+      // Handle the error, e.g., display an error message
+        console.error(result.error);
+        setSubmitted(false);
+    } else {
+      // Handle success, e.g., navigate to a success page or show a success message
+        console.log('Post updated successfully:', result);
+        setSubmitted(true);
+    }
+// You can add your logic to send this data to the server or handle it as needed
+},
+});
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -106,59 +120,59 @@ export default function ListingDetails({ data }) {
         </div>
 
         <div>
-          <label htmlFor="minDays" className="block text-sm font-medium leading-6 text-gray-900">
+          <label htmlFor="minimumStay" className="block text-sm font-medium leading-6 text-gray-900">
             Minimum stay required (in days)
           </label>
           <input
             type="number"
-            name="minDays"
-            id="minDays"
-            className={`block w-[50px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.minDays && formik.errors.minDays ? 'border-red-500' : ''
+            name="minimumStay"
+            id="minimumStay"
+            className={`block w-[50px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.minimumStay && formik.errors.minimumStay ? 'border-red-500' : ''
               }`}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            value={formik.values.minDays}
+            value={formik.values.minimumStay}
           />
-          {formik.touched.minDays && formik.errors.minDays && (
-            <div className="text-red-600 text-sm mt-2">{formik.errors.minDays}</div>
+          {formik.touched.minimumStay && formik.errors.minimumStay && (
+            <div className="text-red-600 text-sm mt-2">{formik.errors.minimumStay}</div>
           )}
         </div>
 
         <div>
-          <label htmlFor="numRooms" className="block text-sm font-medium leading-6 text-gray-900">
+          <label htmlFor="bedrooms" className="block text-sm font-medium leading-6 text-gray-900">
             Number of Bedrooms
           </label>
           <input
             type="number"
-            name="numRooms"
-            id="numRooms"
-            className={`block w-[50px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.numRooms && formik.errors.numRooms ? 'border-red-500' : ''
+            name="bedrooms"
+            id="bedrooms"
+            className={`block w-[50px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.bedrooms && formik.errors.bedrooms ? 'border-red-500' : ''
               }`}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            value={formik.values.numRooms}
+            value={formik.values.bedrooms}
           />
-          {formik.touched.numRooms && formik.errors.numRooms && (
-            <div className="text-red-600 text-sm mt-2">{formik.errors.numRooms}</div>
+          {formik.touched.bedrooms && formik.errors.bedrooms && (
+            <div className="text-red-600 text-sm mt-2">{formik.errors.bedrooms}</div>
           )}
         </div>
 
         <div>
-          <label htmlFor="numBathrooms" className="block text-sm font-medium leading-6 text-gray-900">
+          <label htmlFor="bathrooms" className="block text-sm font-medium leading-6 text-gray-900">
             Number of Bathrooms
           </label>
           <input
             type="number"
-            name="numBathrooms"
-            id="numBathrooms"
-            className={`block w-[50px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.numBathrooms && formik.errors.numBathrooms ? 'border-red-500' : ''
+            name="bathrooms"
+            id="bathrooms"
+            className={`block w-[50px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.bathrooms && formik.errors.bathrooms ? 'border-red-500' : ''
               }`}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            value={formik.values.numBathrooms}
+            value={formik.values.bathrooms}
           />
-          {formik.touched.numBathrooms && formik.errors.numBathrooms && (
-            <div className="text-red-600 text-sm mt-2">{formik.errors.numBathrooms}</div>
+          {formik.touched.bathrooms && formik.errors.bathrooms && (
+            <div className="text-red-600 text-sm mt-2">{formik.errors.bathrooms}</div>
           )}
         </div>
       </div>
@@ -240,7 +254,7 @@ export default function ListingDetails({ data }) {
       </div>
       <hr className='mt-10' />
       <div className='mt-4'>
-        <EditorSaveButton />
+        <EditorSaveButton submitted={submitted} />
       </div>
     </form>
   );

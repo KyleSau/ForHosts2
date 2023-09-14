@@ -376,6 +376,51 @@ export const updatePropertyPriceInfo = async (data: Post) => {
     console.error(e);
   }
 };
+export const updateListingDetails = async (data: Post) => {
+  const session = await getSession();
+  if (!session?.user.id) {
+    return {
+      error: "Not authenticated",
+    };
+  }
+  const post = await prisma.post.findUnique({
+    where: {
+      id: data.id,
+    },
+    include: {
+      site: true,
+    },
+  });
+  if (!post || post.userId !== session.user.id) {
+    return {
+      error: "Post not found",
+    };
+  }
+  try {
+    const response = await prisma.post.update({
+      where: {
+        id: data.id,
+      },
+      data: {
+        title: data.title,
+        description: data.description,
+        maxGuests: data.maxGuests,
+        minimumStay: data.minimumStay,
+        bedrooms: data.bedrooms,
+        bathrooms: data.bathrooms,
+        // country: data.country,
+        // address: data.address,
+        // state: data.state,
+        // zip: data.zip,
+        // city: data.city
+
+      },
+    });
+    return response;
+  } catch (e) {
+    console.error(e);
+  }
+};
 // creating a separate function for this because we're not using FormData
 export const updatePost = async (data: Post) => {
   const session = await getSession();

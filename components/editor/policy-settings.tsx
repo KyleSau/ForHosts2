@@ -16,7 +16,7 @@ export default function PolicySettings({ data }) {
 
     const id = data["id"];
     const desc = data["description"];
-    const $boxes = $('#my-details-modal .modal-dialog .modal-content .modal-body form label input[type="checkbox"]');
+
 
     const validationSchema = Yup.object().shape({
         maxGuests: Yup.number().required('Maximum guests is required').min(1, 'Must be at least 1'),
@@ -37,22 +37,7 @@ export default function PolicySettings({ data }) {
         },
     });
 
-    $boxes.each(function (this: HTMLInputElement) {
-        if ($(this).attr('checked')) {
-            $(this).prop('checked', true);
-            $(this).parent().addClass('checked-checkbox-parent');
-        }
-    });
 
-    $boxes.on('click', function (this: HTMLInputElement, e) {
-        const $box = $(this);
-        if ($box.is(':checked')) {
-            $boxes.prop('checked', false);
-            $boxes.parent().removeClass('checked-checkbox-parent');
-            $box.prop('checked', true);
-            $box.parent().addClass('checked-checkbox-parent');
-        }
-    });
 
     return (
         <div>
