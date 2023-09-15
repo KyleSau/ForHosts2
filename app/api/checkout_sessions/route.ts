@@ -109,6 +109,10 @@ async function createCheckoutSession(request: any, post: any, body: any) { // Ac
     const applicationFee = Math.round(totalPrice * .03); // 3% of totalPrice
 
     const params: Stripe.Checkout.SessionCreateParams = {
+        metadata: {
+            listingId: post.id,
+            guests: 4,
+        },
         submit_type: 'pay',
         payment_method_types: ['card'],
         mode: 'payment',
