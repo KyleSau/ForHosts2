@@ -8,6 +8,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Toggle } from "@/components/ui/toggle"
 import CalendarImportForm from "./calendar-import";
+import { CalendarModal } from "./calendar-editor-modal";
 
 const validationSchema = Yup.object().shape({
   price: Yup.number()
@@ -216,6 +217,7 @@ export default function PricingAvailability({ data }) {
       <hr />
       <TabTitle title="Calendar Sync" desc="" />
       <CalendarImportForm />
+      <CalendarModal data={data} />
       <hr />
       <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
         <Label htmlFor="AdvancedNotice" className="col-span-1 col-start-1 flex items-center">Calendar Export</Label>

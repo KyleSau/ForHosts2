@@ -16,13 +16,13 @@ import { faPlus, faCopy } from '@fortawesome/free-solid-svg-icons';
 export function CalendarModal({ data }) {
   const handleCopyExportLink = () => {
     const exportLinkInput = document.getElementById('username');
-    
+
     // Create a range to select text within the input field
     const range = document.createRange();
     range.selectNode(exportLinkInput);
     window.getSelection().removeAllRanges();
     window.getSelection().addRange(range);
-    
+
     try {
       // Attempt to copy the selected text to the clipboard
       document.execCommand('copy');
@@ -50,7 +50,7 @@ export function CalendarModal({ data }) {
               Import Link
             </Label>
             <div className="relative col-span-3">
-              <Input id="name" value="" />
+              <Input id="name" value="" type="text" />
               <button className="absolute right-4 top-2">
                 <FontAwesomeIcon icon={faPlus} />
               </button>
