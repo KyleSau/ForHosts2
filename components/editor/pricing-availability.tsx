@@ -84,7 +84,7 @@ export default function PricingAvailability({ data }) {
   }, [formik.dirty]);
   return (
     <form onSubmit={formik.handleSubmit}>
-      <TabTitle title="Pricing Details" desc="Pricing and avalibality details regarding your Property" />
+      <TabTitle title="Pricing Details" desc="Pricing and availability details regarding your Property" />
       <div className="space-y-12">
         <div className="border-b border-gray-900/10 pb-12">
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-4">
