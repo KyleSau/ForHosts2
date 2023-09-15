@@ -64,7 +64,7 @@ export function CalendarModal({ data }) {
               <Input
                 id="username"
                 disabled
-                value={`https://forhosts.com/api/post/${data.siteId}/calendar.ics`}
+                value={`https://forhosts.com/api/post/${data.id}/calendar.ics`}
               />
               <button className="absolute right-4 top-2" onClick={handleCopyExportLink}>
                 <FontAwesomeIcon icon={faCopy} />
