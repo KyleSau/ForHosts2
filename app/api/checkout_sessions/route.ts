@@ -63,10 +63,12 @@ async function getStripeAccountForHostId(hostId: string) {
     return stripeAccount;
 }
 
+// ... [keep other helper functions unchanged, e.g. calculateTotalCost, formatAmountForStripe, getStripeAccountForHostId]
+
 export async function POST(request: Request) {
     console.log('/checkout_sessions POST called!');
 
-    const body = await request.json()
+    const body = await request.json();
 
     console.log('body: ', JSON.stringify(body));
 
@@ -84,70 +86,48 @@ export async function POST(request: Request) {
     console.log('price: ' + post.price);
     console.log('hostId: ' + post.userId);
 
-    // Create Stripe Checkout Session
-    const checkoutSession = await createCheckoutSession(request, post, body); // Pass parsed body here
+    // Create Stripe Payment Intent
+    const paymentIntent = await createPaymentIntent(post, body);
 
-    return NextResponse.json(checkoutSession);
+    return NextResponse.json(paymentIntent);
 }
 
-async function createCheckoutSession(request: any, post: any, body: any) { // Accept parsed body as parameter
+async function createPaymentIntent(post: any, body: any) {
     const hostId = post.userId;
-
     const stripeAccount = await getStripeAccountForHostId(hostId);
     const accountId = stripeAccount.accountId;
 
     console.log('stripe account id: ', accountId);
 
-    const { startDate, endDate } = body; // Use the body directly
+    const { startDate, endDate } = body;
 
     const totalPrice = calculateTotalCost(startDate, endDate, post.price);
 
     console.log('total price: ', totalPrice);
 
     const product_description = post.title;
-
     const applicationFee = Math.round(totalPrice * .03); // 3% of totalPrice
 
-    const params: Stripe.Checkout.SessionCreateParams = {
+    const params: Stripe.PaymentIntentCreateParams = {
+        amount: formatAmountForStripe(totalPrice, 'usd'),
+        currency: 'usd',
+        payment_method_types: ['card'],
+        description: product_description,
+        application_fee_amount: applicationFee * 100,
+        transfer_data: {
+            destination: accountId,
+        },
         metadata: {
             listingId: post.id,
             guests: 4,
         },
-        submit_type: 'pay',
-        payment_method_types: ['card'],
-        mode: 'payment',
-        line_items: [
-            {
-                quantity: 1,
-                price_data: {
-                    currency: 'usd',
-                    product_data: {
-                        name: product_description,
-                    },
-                    unit_amount: formatAmountForStripe(totalPrice, 'usd'),
-                },
-            },
-        ],
-        success_url: `${request.headers.get('origin')}/result?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${request.headers.get('origin')}/donate-with-checkout`,
-        payment_intent_data: {
-            application_fee_amount: applicationFee * 100, // This is the fee you want to take
-            transfer_data: {
-                destination: accountId, // This should be the ID of the connected account
-            },
-            // metadata: {
-            //     listingId: post.id,
-            //     guests: 4,
-            //     // ... you can add more key-value pairs as needed
-            // },
-        },
     };
 
     try {
-        const session = await stripe.checkout.sessions.create(params);
-        return session;
+        const intent = await stripe.paymentIntents.create(params);
+        return intent;
     } catch (error: any) {
-        console.error("Error creating Stripe session:", error.message);
-        return Response.error;
+        console.error("Error creating Stripe payment intent:", error.message);
+        throw new Error("Unable to create payment intent");
     }
 }
