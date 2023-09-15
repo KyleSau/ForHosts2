@@ -19,7 +19,7 @@ export default function EditorSaveButton({ submitted, isLoading }) {
         ) : (
           <button
             type="submit"
-            className={`rounded-md hover:scale-110 duration-50 ease-in-out transition px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
+            className={`rounded-md hover:scale-110 duration-50 ease-in-out transition px-5 py-2 text-sm font-semibold text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
               isLoading ? 'bg-blue-300  hover:bg-blue-300' : 'bg-indigo-600'
             }`}
           >
