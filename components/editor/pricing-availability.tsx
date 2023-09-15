@@ -5,6 +5,10 @@ import * as Yup from 'yup';
 import { updatePropertyPriceInfo } from "@/lib/actions";
 import EditorSaveButton from "./editor-save-button";
 import TabTitle from "./tab-title";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+import { Toggle } from "@/components/ui/toggle"
+import CalendarImportForm from "./calendar-import";
 
 const validationSchema = Yup.object().shape({
   price: Yup.number()
@@ -56,19 +60,19 @@ export default function PricingAvailability({ data }) {
         console.log('Post updated successfully:', result);
         setSubmitted(true);
         setIsLoading(false);
-           }
+      }
       if (result?.error) {
         // Handle the error, e.g., display an error message
         console.error(result.error);
       } else {
         // Handle success, e.g., navigate to a success page or show a success message
- 
+
 
       }
       // You can add your logic to send this data to the server or handle it as needed
     },
   });
-  
+
   const handleBeforeUnload = (e: any) => {
     if (formik.dirty) {
       e.preventDefault();
@@ -83,135 +87,172 @@ export default function PricingAvailability({ data }) {
     };
   }, [formik.dirty]);
   return (
-    <form onSubmit={formik.handleSubmit}>
-      <TabTitle title="Pricing Details" desc="Pricing and availability details regarding your Property" />
-      <div className="space-y-12">
-        <div className="border-b border-gray-900/10 pb-12">
-          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-4">
-            <div className="sm:col-span-2">
-              <label htmlFor="price" className="block text-sm font-medium leading-6 text-gray-900">
-                Price per night
-              </label>
-              <div className="mt-2">
-                <input type="number" name="price" id="price"
-                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.price && formik.errors.price ? 'border-red-500' : ''}`}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.price}
-                />
-              </div>
-              {formik.touched.price && formik.errors.price && (
-                <div className="text-red-600 text-sm mt-2">{formik.errors.price}</div>
-              )}
-            </div>
-
-            <div className="sm:col-span-2">
-              <label htmlFor="securityDeposit" className="block text-sm font-medium leading-6 text-gray-900">
-                Security Deposit required by client
-              </label>
-              <div className="mt-2">
-                <input
-                  type="number"
-                  name="securityDeposit"
-                  id="securityDeposit"
-                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.securityDeposit && formik.errors.securityDeposit ? 'border-red-500' : ''
-                    }`}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.securityDeposit}
-                />
-              </div>
-              {formik.touched.securityDeposit && formik.errors.securityDeposit && (
-                <div className="text-red-600 text-sm mt-2">{formik.errors.securityDeposit}</div>
-              )}
-            </div>
-
-            <div className="sm:col-span-2">
-              <label htmlFor="maxGuests" className="block text-sm font-medium leading-6 text-gray-900">
-                Max guests allowed
-              </label>
-              <div className="mt-2">
-                <input
-                  type="number"
-                  name="maxGuests"
-                  id="maxGuests"
-                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.maxGuests && formik.errors.maxGuests ? 'border-red-500' : ''
-                    }`}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.maxGuests}
-                />
-              </div>
-              {formik.touched.maxGuests && formik.errors.maxGuests && (
-                <div className="text-red-600 text-sm mt-2">{formik.errors.maxGuests}</div>
-              )}
-            </div>
-
-            <div className="sm:col-span-2">
-              <label htmlFor="minimumStay" className="block text-sm font-medium leading-6 text-gray-900">
-                Minimum stay required (in days)
-              </label>
-              <div className="mt-2">
-                <input
-                  type="number"
-                  name="minimumStay"
-                  id="minimumStay"
-                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.minimumStay && formik.errors.minimumStay ? 'border-red-500' : ''
-                    }`}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.minimumStay}
-                />
-              </div>
-              {formik.touched.minimumStay && formik.errors.minimumStay && (
-                <div className="text-red-600 text-sm mt-2">{formik.errors.minimumStay}</div>
-              )}
-            </div>
-
-            <div className="sm:col-span-2">
-              <label htmlFor="bedrooms" className="block text-sm font-medium leading-6 text-gray-900">
-                Number of rooms in listing
-              </label>
-              <div className="mt-2">
-                <input
-                  type="number"
-                  name="bedrooms"
-                  id="bedrooms"
-                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.bedrooms && formik.errors.bedrooms ? 'border-red-500' : ''
-                    }`}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.bedrooms}
-                />
-              </div>
-              {formik.touched.bedrooms && formik.errors.bedrooms && (
-                <div className="text-red-600 text-sm mt-2">{formik.errors.bedrooms}</div>
-              )}
-            </div>
-
-            <div className="sm:col-span-2">
-              <label htmlFor="cleaningFee" className="block text-sm font-medium leading-6 text-gray-900">
-                Cleaning Fee
-              </label>
-              <div className="mt-2">
-                <input
-                  type="number"
-                  name="cleaningFee"
-                  id="cleaningFee"
-                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.cleaningFee && formik.errors.cleaningFee ? 'border-red-500' : ''
-                    }`}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.cleaningFee} />
-              </div>
-              {formik.touched.cleaningFee && formik.errors.cleaningFee && (
-                <div className="text-red-600 text-sm mt-2">{formik.errors.cleaningFee}</div>
-              )}
-            </div>
-          </div>
+    <div>
+      <TabTitle title="Pricing" desc="" />
+      <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+        <Label htmlFor="PricePerNight" className="col-span-1 col-start-1 flex items-center">Price Per Night</Label>
+        <div className="col-span-1 col-start-5 flex items-center">
+          <span className="mr-2">$</span>
+          <Input type="number" className="w-full" />
         </div>
-       <EditorSaveButton submitted={submitted} isLoading={isLoading} />
       </div>
-    </form>
+      <hr />
+      <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+        <Label htmlFor="PricePerNight" className="col-span-1 col-start-1 flex items-center">Weekend Price (fri/sat)</Label>
+        <div className="col-span-1 col-start-5 flex items-center">
+          <span className="mr-2">$</span>
+          <Input type="number" className="w-full" />
+        </div>
+      </div>
+      <hr />
+      <TabTitle title="Discounts" desc="" />
+      <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+        <Label htmlFor="WeeklyDiscount" className="col-span-1 col-start-1 flex items-center">Weekly</Label>
+        <div className="col-span-1 col-start-5 flex items-center">
+          <span className="mr-2">%</span>
+          <Input type="number" className="w-full" />
+        </div>
+      </div>
+      <hr />
+      <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+        <Label htmlFor="MonthlyDiscount" className="col-span-1 col-start-1 flex items-center">Monthly</Label>
+        <div className="col-span-1 col-start-5 flex items-center">
+          <span className="mr-2">%</span>
+          <Input type="number" className="w-full" />
+        </div>
+      </div>
+      <hr />
+      <TabTitle title="Additional Fees" desc="" />
+      <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+        <Label htmlFor="CleaningFee" className="col-span-1 col-start-1 flex items-center">Cleaning Fee</Label>
+        <div className="col-span-1 col-start-5 flex items-center">
+          <span className="mr-2">$</span>
+          <Input type="number" className="w-full" />
+        </div>
+      </div>
+      <hr />
+      <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+        <Label htmlFor="PetFee" className="col-span-1 col-start-1 flex items-center">Pet Fee</Label>
+        <div className="col-span-1 col-start-5 flex items-center">
+          <span className="mr-2">$</span>
+          <Input type="number" className="w-full" />
+        </div>
+      </div>
+      <hr />
+      <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+        <Label htmlFor="ExtraGuestFee" className="col-span-1 col-start-1 flex items-center">Extra Guest Fee</Label>
+        <div className="col-span-1 col-start-4 flex items-center">
+          <span className="mr-2">After</span>
+          <Input type="number" className="w-full" />
+          <span className="ml-2">Guest(s)</span>
+        </div>
+        <div className="col-span-1 col-start-5 flex items-center">
+          <span className="mr-2">$</span>
+          <Input type="number" className="w-full" />
+          <span className="ml-2">Per Guest</span>
+        </div>
+      </div>
+      <hr />
+      <TabTitle title="Trip Length" desc="" />
+      <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+        <Label htmlFor="MinimumStay" className="col-span-1 col-start-1 flex items-center">Minimum Stay</Label>
+        <div className="col-span-1 col-start-5 flex items-center">
+          <Input type="number" className="w-full" />
+        </div>
+      </div>
+      <hr />
+      <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+        <Label htmlFor="MaximumStay" className="col-span-1 col-start-1 flex items-center">Maximum Stay</Label>
+        <div className="col-span-1 col-start-5 flex items-center">
+          <Input type="number" className="w-full" />
+        </div>
+      </div>
+      <hr />
+      <TabTitle title="Availability" desc="" />
+      <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+        <Label htmlFor="AdvancedNotice" className="col-span-1 col-start-1 flex items-center">Advanced Notice</Label>
+        <div className="col-span-1 col-start-5 flex items-center">
+          <Input type="number" className="w-full" />
+        </div>
+      </div>
+      <hr />
+      <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+        <Label htmlFor="SameDayAdvancedNotice" className="col-span-1 col-start-1 flex items-center">Same Day Advanced Notice</Label>
+        <div className="col-span-1 col-start-5 flex items-center">
+          <Input type="number" className="w-full" />
+        </div>
+      </div>
+      <hr />
+      <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+        <Label htmlFor="PreperationTime" className="col-span-1 col-start-1 flex items-center">Preperation Time</Label>
+        <div className="col-span-1 col-start-5 flex items-center">
+          <Input type="number" className="w-full" />
+        </div>
+      </div>
+      <hr />
+      <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+        <Label htmlFor="AvailabilityWindow" className="col-span-1 col-start-1 flex items-center">Availability Window</Label>
+        <div className="col-span-1 col-start-5 flex items-center">
+          <Input type="number" className="w-full" />
+        </div>
+      </div>
+      <hr />
+      <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+        <Label htmlFor="AdvancedNotice" className="col-span-1 col-start-1 flex items-center">Restricted Check-In</Label>
+        <div className="col-span-2 col-start-3 flex items-center w-full">
+          <Toggle>Monday</Toggle>
+          <Toggle>Tuesday</Toggle>
+          <Toggle>Wednesday</Toggle>
+          <Toggle>Thursday</Toggle>
+          <Toggle>Friday</Toggle>
+          <Toggle>Saturday</Toggle>
+          <Toggle>Sunday</Toggle>
+        </div>
+      </div>
+      <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+        <Label htmlFor="AdvancedNotice" className="col-span-1 col-start-1 flex items-center">Restricted Check-Out</Label>
+        <div className="col-span-2 col-start-3 flex items-center">
+          <Toggle>Monday</Toggle>
+          <Toggle>Tuesday</Toggle>
+          <Toggle>Wednesday</Toggle>
+          <Toggle>Thursday</Toggle>
+          <Toggle>Friday</Toggle>
+          <Toggle>Saturday</Toggle>
+          <Toggle>Sunday</Toggle>
+        </div>
+      </div>
+      <hr />
+      <TabTitle title="Calendar Sync" desc="" />
+      <CalendarImportForm />
+      <hr />
+      <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+        <Label htmlFor="AdvancedNotice" className="col-span-1 col-start-1 flex items-center">Calendar Export</Label>
+        <div className="col-span-3 col-start-3 flex items-center relative">
+          <Input type="text" className="w-full pr-10" />
+          <button
+            type="button"
+            className="absolute top-0 right-0 h-full w-10 flex items-center justify-center bg-gray-200 hover:bg-gray-300 cursor-pointer"
+            onClick={() => {
+              // Implement copy functionality here
+              const input = document.querySelector('input[type="text"]');
+              if (input) {
+                input.select();
+                document.execCommand("copy");
+              }
+            }}
+          >
+            Copy
+          </button>
+        </div>
+      </div>
+      <hr className="mb-5" />
+      <div className="flex-auto flex flex-row-reverse">
+        <button
+          type="submit"
+          className="rounded-md hover:scale-110 duration-200 ease-in-out transition bg-indigo-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+          Save
+        </button>
+      </div>
+    </div>
   );
 }

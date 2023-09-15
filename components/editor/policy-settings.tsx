@@ -194,9 +194,9 @@ export default function PolicySettings({ data }) {
             </div>
             <hr />
             <div className="text-sm font-medium text-gray-900 mt-5 mb-5 grid grid-cols-5 gap-4">
-                <span className="col-span-1 col-start-1">Quiet Hours</span>
+                <span className="col-span-1 col-start-1 flex items-center">Quiet Hours</span>
                 <Select>
-                    <SelectTrigger className="col-span-1 col-start-4">
+                    <SelectTrigger className="col-span-1 col-start-4 flex items-center">
                         <SelectValue
                             placeholder={formik.values.quietHoursStart}
                             onChange={formik.handleChange}
@@ -215,7 +215,7 @@ export default function PolicySettings({ data }) {
                     </SelectContent>
                 </Select>
                 <Select>
-                    <SelectTrigger className="col-span-1 col-start-5">
+                    <SelectTrigger className="col-span-1 col-start-5 flex items-center">
                         <SelectValue
                             placeholder={formik.values.quietHoursEnd}
                             onChange={formik.handleChange}
@@ -236,9 +236,9 @@ export default function PolicySettings({ data }) {
             </div>
             <hr />
             <div className="text-sm font-medium text-gray-900 mt-5 mb-5 grid grid-cols-5 gap-4">
-                <span className="col-span-1 col-start-1">Check-in Window</span>
+                <span className="col-span-1 col-start-1 flex items-center">Check-in Window</span>
                 <Select>
-                    <SelectTrigger className="col-span-1 col-start-4">
+                    <SelectTrigger className="col-span-1 col-start-4 flex items-center">
                         <SelectValue
                             placeholder={formik.values.checkinWindowStart}
                             onChange={formik.handleChange}
@@ -257,7 +257,7 @@ export default function PolicySettings({ data }) {
                     </SelectContent>
                 </Select>
                 <Select>
-                    <SelectTrigger className="col-span-1 col-start-5">
+                    <SelectTrigger className="col-span-1 col-start-5 flex items-center">
                         <SelectValue
                             placeholder={formik.values.checkinWindowEnd}
                             onChange={formik.handleChange}
@@ -278,9 +278,9 @@ export default function PolicySettings({ data }) {
             </div>
             <hr />
             <div className="text-sm font-medium text-gray-900 mt-5 mb-5 grid grid-cols-5 gap-4">
-                <span className="col-span-1 col-start-1">Checkout Time</span>
+                <span className="col-span-1 col-start-1 flex items-center">Checkout Time</span>
                 <Select>
-                    <SelectTrigger className="col-span-1 col-start-5">
+                    <SelectTrigger className="col-span-1 col-start-5 flex items-center">
                         <SelectValue
                             placeholder={formik.values.checkoutTime}
                             onChange={formik.handleChange}
@@ -306,9 +306,10 @@ export default function PolicySettings({ data }) {
             </div>
             <hr />
             <TabTitle title="Taxes" desc="" />
-            <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4">
-                <Label htmlFor="taxRate" className="col-span-1 col-start-1">Tax Rate</Label>
-                <div className='col-span-1 col-start-5 flex'>
+            <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+                <Label htmlFor="TaxRate" className="col-span-1 col-start-1 flex items-center">Tax Rate</Label>
+                <div className="col-span-1 col-start-5 flex items-center">
+                    <span className="mr-2">%</span>
                     <Input type="number" className="w-full" />
                 </div>
             </div>
