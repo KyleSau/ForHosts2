@@ -212,7 +212,6 @@ export default function PolicySettings({ data }) {
                         ))}
                     </SelectContent>
                 </Select>
-
                 <Select className="">
                     <SelectTrigger className="w-[180px] col-span-1 col-start-5">
                         <SelectValue
@@ -233,7 +232,7 @@ export default function PolicySettings({ data }) {
                     </SelectContent>
                 </Select>
             </div>
-
+            <hr />
             <div className="text-sm font-medium text-gray-900 mt-5 mb-5 grid grid-cols-5 gap-4">
                 <span className="col-span-1 col-start-1">Check-in Window</span>
                 <Select>
