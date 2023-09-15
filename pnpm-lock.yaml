@@ -251,6 +251,9 @@ dependencies:
   react-icons:
     specifier: ^4.10.1
     version: 4.10.1(react@18.2.0)
+  react-label:
+    specifier: ^0.0.6
+    version: 0.0.6
   react-leaflet:
     specifier: ^4.2.1
     version: 4.2.1(leaflet@1.9.4)(react-dom@18.2.0)(react@18.2.0)
@@ -9731,6 +9734,10 @@ packages:
 
   /react-is@18.2.0:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
+    dev: false
+
+  /react-label@0.0.6:
+    resolution: {integrity: sha512-r5me9xsCZuJJSl09tn95+FBsDsvCrJ92QFCS9Ww1x2QelRYymNjFVdaFhHhkLe2STr8Wbs1nlHV0ByBzKFAznA==}
     dev: false
 
   /react-leaflet@4.2.1(leaflet@1.9.4)(react-dom@18.2.0)(react@18.2.0):

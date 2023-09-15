@@ -4,6 +4,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { updatePropertyPriceInfo } from "@/lib/actions";
 import EditorSaveButton from "./editor-save-button";
+import TabTitle from "./tab-title";
 
 const validationSchema = Yup.object().shape({
   price: Yup.number()
@@ -83,6 +84,7 @@ export default function PricingAvailability({ data }) {
   }, [formik.dirty]);
   return (
     <form onSubmit={formik.handleSubmit}>
+      <TabTitle title="Pricing Details" desc="Pricing and availability details regarding your Property" />
       <div className="space-y-12">
         <div className="border-b border-gray-900/10 pb-12">
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-4">

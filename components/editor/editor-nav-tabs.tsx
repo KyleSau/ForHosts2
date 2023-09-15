@@ -22,7 +22,7 @@ export default function EditorTabs({ data }) {
           <TabsTrigger value="ListingDetails">
             <div className="text-center">
               <div>
-              <FontAwesomeIcon icon={faPaperclip} beat />
+              <FontAwesomeIcon icon={faPaperclip}  />
               </div>
               <div>
                 Listing Details
@@ -33,7 +33,7 @@ export default function EditorTabs({ data }) {
             <div className="text-center">
               <div>
             
-                <FontAwesomeIcon icon={faMoneyCheckDollar} className="mx-auto" beat/>
+                <FontAwesomeIcon icon={faMoneyCheckDollar} className="mx-auto" />
               </div>
               <div>
               Pricing & Availability
@@ -44,7 +44,7 @@ export default function EditorTabs({ data }) {
           <div className="text-center">
               <div>
             
-              <FontAwesomeIcon icon={faScaleBalanced} beat />
+              <FontAwesomeIcon icon={faScaleBalanced}  />
               </div>
               <div>
               Policies & Rules
@@ -55,7 +55,7 @@ export default function EditorTabs({ data }) {
             <div className="text-center">
               <div>
             
-              <FontAwesomeIcon icon={faCircleInfo} beat />
+              <FontAwesomeIcon icon={faCircleInfo}  />
               </div>
               <div>
               Info For Guests
@@ -66,7 +66,7 @@ export default function EditorTabs({ data }) {
           <div className="text-center">
               <div>
             
-              <FontAwesomeIcon icon={faImage} beat />
+              <FontAwesomeIcon icon={faImage}  />
               </div>
               <div>
              Image Gallery
