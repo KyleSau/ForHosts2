@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import TabTitle from './tab-title';
 import EditorSaveButton from './editor-save-button';
 import { updateListingDetails } from '@/lib/actions';
-
+import { CalendarModal } from './calendar-editor-modal';
 export default function ListingDetails({ data }) {
   const id = data['id'];
   const [submitted, setSubmitted] = useState(false);
@@ -68,6 +68,8 @@ export default function ListingDetails({ data }) {
 
   return (
     <form onSubmit={formik.handleSubmit}>
+      
+      <CalendarModal data={data} />
       <TabTitle title="Basic Details" desc="Basic Listing Details About Your Property" />
       <div className="mt-10">
         <label htmlFor="title" className="block text-sm font-medium leading-6  text-gray-900">
@@ -104,6 +106,7 @@ export default function ListingDetails({ data }) {
         {formik.touched.description && formik.errors.description && (
           <div className="text-red-600 text-sm mt-2">{formik.errors.description}</div>
         )}
+      
       </div>
       <hr className='mt-10' />
       <TabTitle title="Facilities" desc="Choose the amount for various facilities in your property" />
