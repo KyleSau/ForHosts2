@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { updatePropertyPriceInfo } from "@/lib/actions";
+import EditorSaveButton from "./editor-save-button";
 
 const validationSchema = Yup.object().shape({
   price: Yup.number()
@@ -29,6 +30,8 @@ const validationSchema = Yup.object().shape({
 export default function PricingAvailability({ data }) {
   const id = data['id'];
   const [siteData, setSiteData] = useState(id);
+  const [submitted, setSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const formik = useFormik({
     initialValues: {
       id: id,
@@ -44,20 +47,27 @@ export default function PricingAvailability({ data }) {
     },
     validationSchema: validationSchema,
     onSubmit: async (values: any) => {
+      setSubmitted(false);
+      setIsLoading(true);
       // Handle form submission logic here
       const result = await updatePropertyPriceInfo(values);
-
+      if (result) {
+        console.log('Post updated successfully:', result);
+        setSubmitted(true);
+        setIsLoading(false);
+           }
       if (result?.error) {
         // Handle the error, e.g., display an error message
         console.error(result.error);
       } else {
         // Handle success, e.g., navigate to a success page or show a success message
-        console.log('Post updated successfully:', result);
+ 
 
       }
       // You can add your logic to send this data to the server or handle it as needed
     },
   });
+  
   const handleBeforeUnload = (e: any) => {
     if (formik.dirty) {
       e.preventDefault();
@@ -198,15 +208,7 @@ export default function PricingAvailability({ data }) {
             </div>
           </div>
         </div>
-        <div className="flex p-2 mt-4">
-          <div className="flex-auto flex flex-row-reverse">
-            <button
-              type="submit" // Specify the button type as "submit" to trigger form submission
-              className="rounded-md hover:scale-110 duration-200 ease-in-out transition bg-indigo-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-              Save
-            </button>
-          </div>
-        </div>
+       <EditorSaveButton submitted={submitted} isLoading={isLoading} />
       </div>
     </form>
   );
