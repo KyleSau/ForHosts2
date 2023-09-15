@@ -141,11 +141,6 @@ async function createCheckoutSession(request: any, post: any, body: any) { // Ac
             //     // ... you can add more key-value pairs as needed
             // },
         },
-        metadata: {
-            listingId: post.id,
-            guests: 4,
-            // ... you can add more key-value pairs as needed
-        },
     };
 
     try {
