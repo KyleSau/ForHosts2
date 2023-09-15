@@ -1,4 +1,7 @@
 "use client"
+import Form from "@/components/form";
+import { updatePostMetadata } from "@/lib/actions";
+
 export default function ListingImages({ data }) {
 
     return (
@@ -21,7 +24,19 @@ export default function ListingImages({ data }) {
                     </div>
                 </div>
             </div>
-
+            <div className="mt-5">
+                <Form
+                    title="Thumbnail image"
+                    description="The thumbnail image for your post. Accepted formats: .png, .jpg, .jpeg"
+                    helpText="Max file size 50MB. Recommended size 1200x630."
+                    inputAttrs={{
+                        name: "image",
+                        type: "file",
+                        defaultValue: data?.image!,
+                    }}
+                    handleSubmit={updatePostMetadata}
+                />
+            </div>
 
         </div>
     )

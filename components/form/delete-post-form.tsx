@@ -14,7 +14,7 @@ export default function DeletePostForm({ postName }: { postName: string }) {
   return (
     <form
       action={async (data: FormData) =>
-        window.confirm("Are you sure you want to delete your post?") &&
+        window.confirm("Are you sure you want to delete your listing??") &&
         deletePost(data, id, "delete").then((res) => {
           if (res.error) {
             toast.error(res.error);
@@ -29,9 +29,9 @@ export default function DeletePostForm({ postName }: { postName: string }) {
       className="rounded-lg border border-red-600 bg-white dark:bg-black"
     >
       <div className="relative flex flex-col space-y-4 p-5 sm:p-10">
-        <h2 className="font-cal text-xl dark:text-white">Delete Post</h2>
+        <h2 className="font-cal text-xl dark:text-white">Delete Listing</h2>
         <p className="text-sm text-stone-500 dark:text-stone-400">
-          Deletes your post permanently. Type in the name of your post{" "}
+          Deletes your listing permanently. Type in the name of your listing{" "}
           <b>{postName}</b> to confirm.
         </p>
 

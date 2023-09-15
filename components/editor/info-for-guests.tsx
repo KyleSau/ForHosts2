@@ -122,37 +122,62 @@ export default function InfoForGuests({ data }) {
                     <hr />
                     <div className="text-sm font-medium text-gray-900 mt-5 mb-5 grid grid-cols-5 gap-4">
                         <span className="col-span-1 col-start-1 flex items-center">Interaction Preferences</span>
-                        <RadioGroup
-                            name="interactionPreferences"
-                            defaultValue={formik.values.interactionPreferences}
-                            onChange={(value) => formik.setFieldValue("interactionPreferences", value)}
-                        >
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="appCommunication" id="appCommunication" />
-                                <Label htmlFor="appCommunication">
-                                    I won’t be available in person, and prefer communicating through the app.
-                                </Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="sayHello" id="sayHello" />
-                                <Label htmlFor="sayHello">
-                                    I like to say hello in person, but keep to myself otherwise.
-                                </Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="socializeWithGuests" id="socializeWithGuests" />
-                                <Label htmlFor="socializeWithGuests">
-                                    I like socializing and spending time with guests.
-                                </Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="noPreference" id="noPreference" />
-                                <Label htmlFor="noPreference">
-                                    No preference. I’ll follow my guests’ lead.
-                                </Label>
-                            </div>
-                        </RadioGroup>
+                        <div className="col-span-4 col-start-2 flex items-center space-x-4">
+                            <RadioGroup
+                                name="interactionPreferences"
+                                defaultValue={formik.values.interactionPreferences}
+                                onChange={(value) => formik.setFieldValue("interactionPreferences", value)}
+                            >
+                                <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="appCommunication" id="appCommunication" />
+                                    <Label htmlFor="appCommunication">
+                                        I won’t be available in person, and prefer communicating through the app.
+                                    </Label>
+                                </div>
+                                {/* Other RadioGroupItems */}
+                            </RadioGroup>
+                            <RadioGroup
+                                name="interactionPreferences"
+                                defaultValue={formik.values.interactionPreferences}
+                                onChange={(value) => formik.setFieldValue("interactionPreferences", value)}
+                            >
+                                <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="sayHello" id="sayHello" />
+                                    <Label htmlFor="sayHello">
+                                        I like to say hello in person, but keep to myself otherwise.
+                                    </Label>
+                                </div>
+                                {/* Other RadioGroupItems */}
+                            </RadioGroup>
+                            <RadioGroup
+                                name="interactionPreferences"
+                                defaultValue={formik.values.interactionPreferences}
+                                onChange={(value) => formik.setFieldValue("interactionPreferences", value)}
+                            >
+                                <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="socializeWithGuests" id="socializeWithGuests" />
+                                    <Label htmlFor="socializeWithGuests">
+                                        I like socializing and spending time with guests.
+                                    </Label>
+                                </div>
+                                {/* Other RadioGroupItems */}
+                            </RadioGroup>
+                            <RadioGroup
+                                name="interactionPreferences"
+                                defaultValue={formik.values.interactionPreferences}
+                                onChange={(value) => formik.setFieldValue("interactionPreferences", value)}
+                            >
+                                <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="noPreference" id="noPreference" />
+                                    <Label htmlFor="noPreference">
+                                        No preference. I’ll follow my guests’ lead.
+                                    </Label>
+                                </div>
+                                {/* Other RadioGroupItems */}
+                            </RadioGroup>
+                        </div>
                     </div>
+
                     <TabTitle title="After Booking" desc="" />
                     <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
                         <Label htmlFor="Address" className="col-span-1 col-start-1 flex items-center">Address</Label>
@@ -171,8 +196,8 @@ export default function InfoForGuests({ data }) {
                     <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
                         <Label htmlFor="Wifi" className="col-span-1 col-start-1 flex items-center">Wifi Details</Label>
                         <div className="col-span-3 col-start-3 flex items-center">
-                            Network Name<Input type="text" className="w-full mr-10" />
-                            Password<Input type="text" className="w-full" />
+                            <p className="p-2">Network Name</p><Input type="text" className="w-full mr-10" />
+                            <p className="p-2">Password</p><Input type="text" className="w-full" />
                         </div>
                     </div>
                     <hr />
@@ -186,39 +211,72 @@ export default function InfoForGuests({ data }) {
                     <TabTitle title="Check-In Method" desc="" />
                     <br />
                     <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
-                        <RadioGroup
-                            name="checkInMethod"
-                            defaultValue={formik.values.checkInMethod}
-                            onChange={(value) => formik.setFieldValue("checkInMethod", value)}
-                        >
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="selfCheckIn" id="selfCheckIn" />
-                                <Label htmlFor="selfCheckIn">Self check-in</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="smartLock" id="smartLock" />
-                                <Label htmlFor="smartLock">
-                                    Smart lock - A lock guests open with a mobile app or keypad
-                                </Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="keypad" id="keypad" />
-                                <Label htmlFor="keypad">Keypad - Guests can open the door with a code</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="lockbox" id="lockbox" />
-                                <Label htmlFor="lockbox">
-                                    Lockbox - The key is stored in a small safe, which guests can open with a code
-                                </Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="buildingStaff" id="buildingStaff" />
-                                <Label htmlFor="buildingStaff">
-                                    Building staff - Someone will be available 24 hours a day to let guests in.
-                                </Label>
-                            </div>
-                        </RadioGroup>
+                        <div className="col-span-1 col-start-1 flex items-center">Check-In Method</div>
+                        <div className="col-span-4 col-start-2 flex items-center space-x-4">
+                            <RadioGroup
+                                name="checkInMethod"
+                                defaultValue={formik.values.checkInMethod}
+                                onChange={(value) => formik.setFieldValue("checkInMethod", value)}
+                            >
+                                <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="selfCheckIn" id="selfCheckIn" />
+                                    <Label htmlFor="selfCheckIn">Self check-in</Label>
+                                </div>
+                                {/* Other RadioGroupItems */}
+                            </RadioGroup>
+                            <RadioGroup
+                                name="checkInMethod"
+                                defaultValue={formik.values.checkInMethod}
+                                onChange={(value) => formik.setFieldValue("checkInMethod", value)}
+                            >
+                                <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="smartLock" id="smartLock" />
+                                    <Label htmlFor="smartLock">
+                                        Smart lock - A lock guests open with a mobile app or keypad
+                                    </Label>
+                                </div>
+                                {/* Other RadioGroupItems */}
+                            </RadioGroup>
+                            <RadioGroup
+                                name="checkInMethod"
+                                defaultValue={formik.values.checkInMethod}
+                                onChange={(value) => formik.setFieldValue("checkInMethod", value)}
+                            >
+                                <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="keypad" id="keypad" />
+                                    <Label htmlFor="keypad">Keypad - Guests can open the door with a code</Label>
+                                </div>
+                                {/* Other RadioGroupItems */}
+                            </RadioGroup>
+                            <RadioGroup
+                                name="checkInMethod"
+                                defaultValue={formik.values.checkInMethod}
+                                onChange={(value) => formik.setFieldValue("checkInMethod", value)}
+                            >
+                                <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="lockbox" id="lockbox" />
+                                    <Label htmlFor="lockbox">
+                                        Lockbox - The key is stored in a small safe, which guests can open with a code
+                                    </Label>
+                                </div>
+                                {/* Other RadioGroupItems */}
+                            </RadioGroup>
+                            <RadioGroup
+                                name="checkInMethod"
+                                defaultValue={formik.values.checkInMethod}
+                                onChange={(value) => formik.setFieldValue("checkInMethod", value)}
+                            >
+                                <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="buildingStaff" id="buildingStaff" />
+                                    <Label htmlFor="buildingStaff">
+                                        Building staff - Someone will be available 24 hours a day to let guests in.
+                                    </Label>
+                                </div>
+                                {/* Other RadioGroupItems */}
+                            </RadioGroup>
+                        </div>
                     </div>
+
                     <hr />
                     <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
                         <Label htmlFor="Directions" className="col-span-1 col-start-1 flex items-center">Checkout Instructions</Label>
