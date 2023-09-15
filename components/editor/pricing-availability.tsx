@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { updatePropertyPriceInfo } from "@/lib/actions";
-import EditorSaveButton from "./editor-save-button";
 import TabTitle from "./tab-title";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
@@ -29,7 +28,6 @@ const validationSchema = Yup.object().shape({
   cleaningFee: Yup.number()
     .required('Cleaning Fee is required')
     .positive('Cleaning Fee must be a positive number'),
-  // Add validation for other fields here
 });
 
 export default function PricingAvailability({ data }) {
@@ -48,13 +46,11 @@ export default function PricingAvailability({ data }) {
       minimumStay: '',
       bedrooms: '',
       cleaningFee: '',
-      // Initialize other fields here
     },
     validationSchema: validationSchema,
     onSubmit: async (values: any) => {
       setSubmitted(false);
       setIsLoading(true);
-      // Handle form submission logic here
       const result = await updatePropertyPriceInfo(values);
       if (result) {
         console.log('Post updated successfully:', result);
@@ -62,14 +58,10 @@ export default function PricingAvailability({ data }) {
         setIsLoading(false);
       }
       if (result?.error) {
-        // Handle the error, e.g., display an error message
         console.error(result.error);
       } else {
-        // Handle success, e.g., navigate to a success page or show a success message
-
 
       }
-      // You can add your logic to send this data to the server or handle it as needed
     },
   });
 
