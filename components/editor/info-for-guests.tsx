@@ -1,8 +1,14 @@
-import React from 'react';
+"use client"
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import TabTitle from './tab-title';
 import EditorSaveButton from './editor-save-button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
+import { Label } from '../ui/label';
+import { Input } from '../ui/input';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 
 export default function InfoForGuests({ data }) {
 
@@ -22,6 +28,11 @@ export default function InfoForGuests({ data }) {
             title: '',
             description: '',
             maxGuests: '',
+            checkinWindowStart: '03:00 PM',
+            checkinWindowEnd: '09:00 PM',
+            checkoutTime: '11:00 AM',
+            quietHoursStart: '10:00 PM',
+            quietHoursEnd: '08:00 AM',
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
@@ -29,29 +40,195 @@ export default function InfoForGuests({ data }) {
         },
     });
 
+    const hours = [
+        'None',
+        '12:00 AM', '01:00 AM', '02:00 AM', '03:00 AM',
+        '04:00 AM', '05:00 AM', '06:00 AM', '07:00 AM',
+        '08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM',
+        '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM',
+        '04:00 PM', '05:00 PM', '06:00 PM', '07:00 PM',
+        '08:00 PM', '09:00 PM', '10:00 PM', '11:00 PM',
+    ];
 
     return (
         <div>
             <form onSubmit={formik.handleSubmit}>
-                <TabTitle title="Propery Description" desc="Title and Description for your property listing" />
+                <TabTitle title="Before Booking" desc="" />
                 <div className="mt-10">
-                    <label htmlFor="title" className="block text-sm font-medium leading-6  text-gray-900">
-                        Listing Title
-                    </label>
-                    <input
-                        type="text"
-                        name="title"
-                        id="title"
-                        className={`block w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.title && formik.errors.title ? 'border-red-500' : ''
-                            }`}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.title}
-                    />
-                    {formik.touched.title && formik.errors.title && (
-                        <div className="text-red-600 text-sm mt-2">{formik.errors.title}</div>
-                    )}
+                    <div className="text-sm font-medium text-gray-900 mt-5 mb-5 grid grid-cols-5 gap-4">
+                        <span className="col-span-1 col-start-1 flex items-center">Check-in Window</span>
+                        <Select>
+                            <SelectTrigger className="col-span-1 col-start-4 flex items-center">
+                                <SelectValue
+                                    placeholder={formik.values.checkinWindowStart}
+                                    onChange={formik.handleChange}
+                                ></SelectValue>
+                            </SelectTrigger>
+                            <SelectContent className="h-[200px]">
+                                {hours.map((hour) => (
+                                    <SelectItem
+                                        value="checkinWindowStart"
+                                        key={hour}
+                                        value={hour}
+                                    >
+                                        {hour}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <Select>
+                            <SelectTrigger className="col-span-1 col-start-5 flex items-center">
+                                <SelectValue
+                                    placeholder={formik.values.checkinWindowEnd}
+                                    onChange={formik.handleChange}
+                                ></SelectValue>
+                            </SelectTrigger>
+                            <SelectContent className="h-[200px]">
+                                {hours.map((hour) => (
+                                    <SelectItem
+                                        value="CheckinWindowEnd"
+                                        key={hour}
+                                        value={hour}
+                                    >
+                                        {hour}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <hr />
+                    <div className="text-sm font-medium text-gray-900 mt-5 mb-5 grid grid-cols-5 gap-4">
+                        <span className="col-span-1 col-start-1 flex items-center">Checkout Time</span>
+                        <Select>
+                            <SelectTrigger className="col-span-1 col-start-5 flex items-center">
+                                <SelectValue
+                                    placeholder={formik.values.checkoutTime}
+                                    onChange={formik.handleChange}
+                                ></SelectValue>
+                            </SelectTrigger>
+                            <SelectContent className="h-[200px]">
+                                {hours.map((hour) => (
+                                    <SelectItem
+                                        value="checkoutTime"
+                                        key={hour}
+                                        value={hour}
+                                    >
+                                        {hour}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <hr />
+                    <div className="text-sm font-medium text-gray-900 mt-5 mb-5 grid grid-cols-5 gap-4">
+                        <span className="col-span-1 col-start-1 flex items-center">Interaction Preferences</span>
+                        <RadioGroup
+                            name="interactionPreferences"
+                            defaultValue={formik.values.interactionPreferences}
+                            onChange={(value) => formik.setFieldValue("interactionPreferences", value)}
+                        >
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="appCommunication" id="appCommunication" />
+                                <Label htmlFor="appCommunication">
+                                    I won’t be available in person, and prefer communicating through the app.
+                                </Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="sayHello" id="sayHello" />
+                                <Label htmlFor="sayHello">
+                                    I like to say hello in person, but keep to myself otherwise.
+                                </Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="socializeWithGuests" id="socializeWithGuests" />
+                                <Label htmlFor="socializeWithGuests">
+                                    I like socializing and spending time with guests.
+                                </Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="noPreference" id="noPreference" />
+                                <Label htmlFor="noPreference">
+                                    No preference. I’ll follow my guests’ lead.
+                                </Label>
+                            </div>
+                        </RadioGroup>
+                    </div>
+                    <TabTitle title="After Booking" desc="" />
+                    <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+                        <Label htmlFor="Address" className="col-span-1 col-start-1 flex items-center">Address</Label>
+                        <div className="col-span-3 col-start-3 flex items-center relative">
+                            <Input type="text" className="w-full pr-10" />
+                        </div>
+                    </div>
+                    <hr />
+                    <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+                        <Label htmlFor="Directions" className="col-span-1 col-start-1 flex items-center">Directions</Label>
+                        <div className="col-span-3 col-start-3 flex items-center relative">
+                            <Input type="text" className="w-full pr-10" />
+                        </div>
+                    </div>
+                    <hr />
+                    <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+                        <Label htmlFor="Wifi" className="col-span-1 col-start-1 flex items-center">Wifi Details</Label>
+                        <div className="col-span-3 col-start-3 flex items-center">
+                            Network Name<Input type="text" className="w-full mr-10" />
+                            Password<Input type="text" className="w-full" />
+                        </div>
+                    </div>
+                    <hr />
+                    <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+                        <Label htmlFor="HouseManual" className="col-span-1 col-start-1 flex items-center">House Manual</Label>
+                        <div className="col-span-3 col-start-3 flex items-center">
+                            <Input type="text" className="w-full" />
+                        </div>
+                    </div>
+                    <hr />
+                    <TabTitle title="Check-In Method" desc="" />
+                    <br />
+                    <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+                        <RadioGroup
+                            name="checkInMethod"
+                            defaultValue={formik.values.checkInMethod}
+                            onChange={(value) => formik.setFieldValue("checkInMethod", value)}
+                        >
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="selfCheckIn" id="selfCheckIn" />
+                                <Label htmlFor="selfCheckIn">Self check-in</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="smartLock" id="smartLock" />
+                                <Label htmlFor="smartLock">
+                                    Smart lock - A lock guests open with a mobile app or keypad
+                                </Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="keypad" id="keypad" />
+                                <Label htmlFor="keypad">Keypad - Guests can open the door with a code</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="lockbox" id="lockbox" />
+                                <Label htmlFor="lockbox">
+                                    Lockbox - The key is stored in a small safe, which guests can open with a code
+                                </Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="buildingStaff" id="buildingStaff" />
+                                <Label htmlFor="buildingStaff">
+                                    Building staff - Someone will be available 24 hours a day to let guests in.
+                                </Label>
+                            </div>
+                        </RadioGroup>
+                    </div>
+                    <hr />
+                    <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+                        <Label htmlFor="Directions" className="col-span-1 col-start-1 flex items-center">Checkout Instructions</Label>
+                        <div className="col-span-3 col-start-3 flex items-center relative">
+                            <Input type="text" className="w-full pr-10" />
+                        </div>
+                    </div>
                 </div>
+                <hr />
+                <br />
                 <div className="flex-auto flex flex-row-reverse">
                     <button
                         type="submit" // Specify the button type as "submit" to trigger form submission
@@ -60,7 +237,7 @@ export default function InfoForGuests({ data }) {
                     </button>
 
                 </div>
-            </form>
-        </div>
+            </form >
+        </div >
     )
 }

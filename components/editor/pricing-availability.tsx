@@ -9,6 +9,27 @@ import { Input } from "../ui/input";
 import { Toggle } from "@/components/ui/toggle"
 import CalendarImportForm from "./calendar-import";
 import { CalendarModal } from "./calendar-editor-modal";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+
+const hourAN = [
+  '6:00 AM', '7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
+  '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM', '7:00 PM',
+  '8:00 PM', '9:00 PM', '10:00 PM', '11:00 PM', '12:00 AM',
+];
+
+const preparationTimeOptions = [
+  'None',
+  '1 night before and after each reservation',
+  '2 nights before and after each reservation',
+];
+
+const availabilityWindowOptions = [
+  '24 months in advance',
+  '12 months in advance',
+  '9 months in advance',
+  '6 months in advance',
+  '3 months in advance',
+];
 
 const validationSchema = Yup.object().shape({
   price: Yup.number()
@@ -165,28 +186,108 @@ export default function PricingAvailability({ data }) {
       <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
         <Label htmlFor="AdvancedNotice" className="col-span-1 col-start-1 flex items-center">Advanced Notice</Label>
         <div className="col-span-1 col-start-5 flex items-center">
-          <Input type="number" className="w-full" />
+          <Select>
+            <SelectTrigger className="col-span-1 col-start-5 flex items-center">
+              <SelectValue
+                placeholder={formik.values.AdvancedNotice}
+                onChange={formik.handleChange}
+              ></SelectValue>
+            </SelectTrigger>
+            <SelectContent className="">
+              <SelectItem value="AdvancedNotice" key="same-day" value="SameDay">
+                Same Day
+              </SelectItem>
+              <SelectItem value="AdvancedNotice" key="at-least-1-day" value="1Day">
+                At Least 1 Day
+              </SelectItem>
+              <SelectItem value="AdvancedNotice" key="at-least-2-days" value="2Day">
+                At Least 2 Days
+              </SelectItem>
+              <SelectItem value="AdvancedNotice" key="at-least-3-days" value="3Day">
+                At Least 3 Days
+              </SelectItem>
+              <SelectItem value="AdvancedNotice" key="at-least-7-days" value="7Day">
+                At Least 7 Days
+              </SelectItem>
+            </SelectContent>
+          </Select>
+
         </div>
       </div>
       <hr />
       <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
         <Label htmlFor="SameDayAdvancedNotice" className="col-span-1 col-start-1 flex items-center">Same Day Advanced Notice</Label>
         <div className="col-span-1 col-start-5 flex items-center">
-          <Input type="number" className="w-full" />
+          <Select>
+            <SelectTrigger className="col-span-1 col-start-5 flex items-center">
+              <SelectValue
+                placeholder={formik.values.SameDayAdvancedNotice}
+                onChange={formik.handleChange}
+              ></SelectValue>
+            </SelectTrigger>
+            <SelectContent className="h-[200px]">
+              {hourAN.map((hour) => (
+                <SelectItem
+                  value="SameDayAdvancedNotice"
+                  key={hour}
+                  value={hour}
+                >
+                  {hour}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
         </div>
       </div>
       <hr />
       <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
         <Label htmlFor="PreperationTime" className="col-span-1 col-start-1 flex items-center">Preperation Time</Label>
         <div className="col-span-1 col-start-5 flex items-center">
-          <Input type="number" className="w-full" />
+          <Select>
+            <SelectTrigger className="col-span-1 col-start-5 flex items-center">
+              <SelectValue
+                placeholder={formik.values.PreparationTime}
+                onChange={formik.handleChange}
+                name="PreparationTime">
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent className="">
+              {preparationTimeOptions.map((option) => (
+                <SelectItem
+                  key={option}
+                  value={option}
+                >
+                  {option}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
       <hr />
       <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
         <Label htmlFor="AvailabilityWindow" className="col-span-1 col-start-1 flex items-center">Availability Window</Label>
         <div className="col-span-1 col-start-5 flex items-center">
-          <Input type="number" className="w-full" />
+          <Select>
+            <SelectTrigger className="col-span-1 col-start-5 flex items-center">
+              <SelectValue
+                placeholder={formik.values.AvailabilityWindow}
+                onChange={formik.handleChange}
+                name="AvailabilityWindow"
+              ></SelectValue>
+            </SelectTrigger>
+            <SelectContent className="">
+              {availabilityWindowOptions.map((option) => (
+                <SelectItem
+                  key={option}
+                  value={option}
+                >
+                  {option}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
       <hr />
@@ -217,7 +318,9 @@ export default function PricingAvailability({ data }) {
       <hr />
       <TabTitle title="Calendar Sync" desc="" />
       <CalendarImportForm />
-      <CalendarModal data={data} />
+      <br />
+      <br />
+      {/* <CalendarModal data={data} /> */}
       <hr />
       <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
         <Label htmlFor="AdvancedNotice" className="col-span-1 col-start-1 flex items-center">Calendar Export</Label>
@@ -227,7 +330,6 @@ export default function PricingAvailability({ data }) {
             type="button"
             className="absolute top-0 right-0 h-full w-10 flex items-center justify-center bg-gray-200 hover:bg-gray-300 cursor-pointer"
             onClick={() => {
-              // Implement copy functionality here
               const input = document.querySelector('input[type="text"]');
               if (input) {
                 input.select();
