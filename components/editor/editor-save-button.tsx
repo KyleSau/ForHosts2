@@ -1,6 +1,4 @@
 import React from 'react';
-
-// Assuming you are using Font Awesome icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
@@ -13,14 +11,23 @@ export default function EditorSaveButton({ submitted, isLoading }) {
             type="submit"
             className="rounded-md hover:scale-110 duration-200 ease-in-out transition bg-green-500 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
           >
-            <FontAwesomeIcon icon={faCheck} className="mr-2" /> Saved
+            <div className="flex items-center">
+              <div>Saved</div>
+              <FontAwesomeIcon icon={faCheck} className="ml-2" />
+            </div>
           </button>
         ) : (
           <button
             type="submit"
-            className="rounded-md hover:scale-110 duration-200 ease-in-out transition bg-indigo-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className={`rounded-md hover:scale-110 duration-50 ease-in-out transition px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
+              isLoading ? 'bg-blue-300  hover:bg-blue-300' : 'bg-indigo-600'
+            }`}
           >
-            Save
+            {isLoading ? (
+              <div>Saving...</div>
+            ) : (
+              <div>Save</div>
+            )}
           </button>
         )}
       </div>

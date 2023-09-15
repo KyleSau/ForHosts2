@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useDebounce } from "use-debounce";
+import { useState } from "react";
+
 import { Post } from "@prisma/client";
-import PropertyDescription from "./property-descript-tab";
-import PriceSpecifications from "./home-price-specifications";
+
 import EditorTabs from "./editor-nav-tabs";
 type PostWithSite = Post & { site: { subdomain: string | null } | null };
 

@@ -41,20 +41,25 @@ export default function ListingDetails({ data }) {
       // postalCode: '',
     },
     validationSchema: validationSchema,
-    onSubmit: async (values) => {
+    onSubmit: async (values : any) => {
+      setSubmitted(false);
       setIsLoading(true);
       // Your form submission logic
       const result = await updateListingDetails(values);
-           
+      
+
+      if (result) {
+        console.log('Post updated successfully:', result);
+        setSubmitted(true);
+        setIsLoading(false);
+           }
       if (result?.error) {
       // Handle the error, e.g., display an error message
         console.error(result.error);
         setSubmitted(false);
     } else {
       // Handle success, e.g., navigate to a success page or show a success message
-        console.log('Post updated successfully:', result);
-        setSubmitted(true);
-        setIsLoading(false);
+
 
     }
 // You can add your logic to send this data to the server or handle it as needed
