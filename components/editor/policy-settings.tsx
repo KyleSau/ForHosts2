@@ -20,6 +20,7 @@ import {
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { TextareaAutosize } from '@mui/material';
+import { Input } from '../ui/input';
 
 const hours = [
     'None',
@@ -62,6 +63,7 @@ export default function PolicySettings({ data }) {
 
     return (
         <div>
+            <TabTitle title="Policies" desc="" />
             <Accordion type="single" collapsible>
                 <AccordionItem value="item-1">
                     <AccordionTrigger className="text-sm font-medium leading-6  text-gray-900">Cancellation Policy</AccordionTrigger>
@@ -212,7 +214,7 @@ export default function PolicySettings({ data }) {
                         ))}
                     </SelectContent>
                 </Select>
-                <Select className="">
+                <Select>
                     <SelectTrigger className="w-[180px] col-span-1 col-start-5">
                         <SelectValue
                             placeholder={formik.values.quietHoursEnd}
@@ -254,8 +256,7 @@ export default function PolicySettings({ data }) {
                         ))}
                     </SelectContent>
                 </Select>
-
-                <Select className="">
+                <Select>
                     <SelectTrigger className="w-[180px] col-span-1 col-start-5">
                         <SelectValue
                             placeholder={formik.values.checkinWindowEnd}
@@ -278,7 +279,7 @@ export default function PolicySettings({ data }) {
             <hr />
             <div className="text-sm font-medium text-gray-900 mt-5 mb-5 grid grid-cols-5 gap-4">
                 <span className="col-span-1 col-start-1">Checkout Time</span>
-                <Select className="">
+                <Select>
                     <SelectTrigger className="w-[180px] col-span-1 col-start-5">
                         <SelectValue
                             placeholder={formik.values.checkoutTime}
@@ -304,6 +305,11 @@ export default function PolicySettings({ data }) {
                 <TextareaAutosize />
             </div>
             <hr />
+            <TabTitle title="Taxes" desc="" />
+            <div className="text-sm font-medium leading-6 text-gray-900 mt-5 mb-5">
+                <Label htmlFor="taxRate">Tax Rate</Label>
+                <Input type="number" />
+            </div>
             <div className="flex-auto flex flex-row-reverse">
                 <button
                     type="submit"
