@@ -54,16 +54,14 @@ type BookingProps = {
 
 // get listingId from prop
 const BookingComponent: React.FC<BookingProps> = ({ listing, className }: any) => {
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
     const [date, setDate] = React.useState<DateRange | undefined>({
         from: new Date(),
         to: addDays(new Date(), 20),
     })
     const handleCheckout = async () => {
         const response = await fetchPostJSON('/api/checkout_sessions', {
-            startDate: startDate,
-            endDate: endDate,
+            startDate: date?.from,
+            endDate: date?.to,
             listingId: listing.id
         })
 
