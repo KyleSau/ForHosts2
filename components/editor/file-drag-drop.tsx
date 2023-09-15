@@ -7,13 +7,17 @@ import EditorWarningModal, { EditorWarningModalDataType, EditorWarningModalDataT
 import { humanReadableFileSize } from '@/lib/utils';
 
 import { put, list, type BlobResult } from '@vercel/blob'; // test
-import { uploadBlobMetadataToStore, listAllBlobsInStore, deleteBlobFromStore } from '@/lib/actions';
+import { uploadBlobMetadata, listAllBlobsInStore, deleteBlobFromStore } from '@/lib/actions';
+import { Image as ImagePrismaSchema } from "@prisma/client";
 
 //abstract data type used to handle file operations in this editor
+// interface FileDataObject extends ImagePrismaSchema {
 interface FileDataObject {
-  file: File | null,
-  localBlobUrl: string,
-  inBlobStore: boolean
+  file?: File | null,
+  localBlobUrl?: string,
+  inBlobStore: boolean,
+  blobResult?: BlobResult,
+  orderIdx?: number
 }
 
 export function FileClickDragDrop({ componentId, data }: { componentId: string, data: any }) {
@@ -36,7 +40,15 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
     const allCurrentBlobsPromise = listAllBlobsInStore();
     allCurrentBlobsPromise.then((allCurrentBlobs: BlobResult[]) => {
       console.log("allCurrentBlobs: ", allCurrentBlobs);
-      setAllBlobs(allCurrentBlobs);
+      
+      const currentBlobsFromStore: FileDataObject[] = allCurrentBlobs.map((br: BlobResult) => {
+        const storedFdo: FileDataObject = {
+          inBlobStore: true,
+          blobResult: br
+        }
+        return storedFdo;
+      });
+      setFileDataObjects([...fileDataObjects, ...currentBlobsFromStore]);
     });
   }, []);
 
@@ -183,7 +195,7 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
           setBlobList(prevBlobList => [...prevBlobList, br]);
 
           //put image table request here???
-          const uploadBlobMetadataResponse = uploadBlobMetadataToStore(br, data["id"], data["site"]["id"]);
+          const uploadBlobMetadataResponse = uploadBlobMetadata(br, data["id"], data["site"]["id"]);
           console.log("uploadBlobMetadataResponse: ", uploadBlobMetadataResponse);
         });
       });
@@ -266,8 +278,12 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
         onDragOver={dragOverHandler}
       >
         {fileDataObjects.map((fdo: FileDataObject, idx: number) => {
+          console.log("fdo: ", fdo);
+          const inBlobStore = fdo?.inBlobStore;
+          
           const fileObj = fdo.file;
-          const fileObjSize = humanReadableFileSize(fileObj?.size);
+          console.log("fileObj: ", fileObj);
+          const fileObjSize = humanReadableFileSize(inBlobStore? parseInt(fdo.blobResult? fdo.blobResult?.size: "0") : fileObj?.size);
           return (
             <div
               id={componentId + "-image-container" + idx}
@@ -288,11 +304,15 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
               <img
                 // className="relative inset-0 z-0 object-cover w-full h-full border preview"
                 className="relative inset-0 z-0 object-cover w-full h-full border-4 border-white preview"
-                src={fdo.localBlobUrl}
+                src={inBlobStore? fdo.blobResult?.url: fdo.localBlobUrl}
               />
               <div className="absolute bottom-0 left-0 right-0 flex flex-col p-2 text-xs bg-white bg-opacity-50">
-                <span className="w-full font-bold text-gray-900 truncate">{fileObj?.name}</span>
-                <span className="text-xs text-gray-900" x-text="humanFileSize(files[index].size)">{fileObjSize}</span>
+                <span className="w-full font-bold text-gray-900 truncate">
+                  {inBlobStore? fdo.blobResult?.pathname: fileObj?.name}
+                </span>
+                <span className="text-xs text-gray-900" x-text="humanFileSize(files[index].size)">
+                  {fileObjSize}
+                </span>
               </div>
             </div>
           );
