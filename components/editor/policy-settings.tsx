@@ -66,8 +66,8 @@ export default function PolicySettings({ data }) {
             <TabTitle title="Policies" desc="" />
             <Accordion type="single" collapsible>
                 <AccordionItem value="item-1">
-                    <AccordionTrigger className="text-sm font-medium leading-6  text-gray-900">Cancellation Policy</AccordionTrigger>
-                    <AccordionContent className="border p-2">
+                    <AccordionTrigger className="text-sm font-medium leading-6 text-gray-900">Cancellation Policy</AccordionTrigger>
+                    <AccordionContent className="p-2">
                         <div id="my-details-modal">
                             <div className="modal-dialog">
                                 <div className="modal-content">
@@ -196,7 +196,7 @@ export default function PolicySettings({ data }) {
             <div className="text-sm font-medium text-gray-900 mt-5 mb-5 grid grid-cols-5 gap-4">
                 <span className="col-span-1 col-start-1">Quiet Hours</span>
                 <Select>
-                    <SelectTrigger className="w-[180px] col-span-1 col-start-4">
+                    <SelectTrigger className="col-span-1 col-start-4">
                         <SelectValue
                             placeholder={formik.values.quietHoursStart}
                             onChange={formik.handleChange}
@@ -215,7 +215,7 @@ export default function PolicySettings({ data }) {
                     </SelectContent>
                 </Select>
                 <Select>
-                    <SelectTrigger className="w-[180px] col-span-1 col-start-5">
+                    <SelectTrigger className="col-span-1 col-start-5">
                         <SelectValue
                             placeholder={formik.values.quietHoursEnd}
                             onChange={formik.handleChange}
@@ -238,7 +238,7 @@ export default function PolicySettings({ data }) {
             <div className="text-sm font-medium text-gray-900 mt-5 mb-5 grid grid-cols-5 gap-4">
                 <span className="col-span-1 col-start-1">Check-in Window</span>
                 <Select>
-                    <SelectTrigger className="w-[180px] col-span-1 col-start-4">
+                    <SelectTrigger className="col-span-1 col-start-4">
                         <SelectValue
                             placeholder={formik.values.checkinWindowStart}
                             onChange={formik.handleChange}
@@ -257,7 +257,7 @@ export default function PolicySettings({ data }) {
                     </SelectContent>
                 </Select>
                 <Select>
-                    <SelectTrigger className="w-[180px] col-span-1 col-start-5">
+                    <SelectTrigger className="col-span-1 col-start-5">
                         <SelectValue
                             placeholder={formik.values.checkinWindowEnd}
                             onChange={formik.handleChange}
@@ -280,7 +280,7 @@ export default function PolicySettings({ data }) {
             <div className="text-sm font-medium text-gray-900 mt-5 mb-5 grid grid-cols-5 gap-4">
                 <span className="col-span-1 col-start-1">Checkout Time</span>
                 <Select>
-                    <SelectTrigger className="w-[180px] col-span-1 col-start-5">
+                    <SelectTrigger className="col-span-1 col-start-5">
                         <SelectValue
                             placeholder={formik.values.checkoutTime}
                             onChange={formik.handleChange}
@@ -299,17 +299,20 @@ export default function PolicySettings({ data }) {
                     </SelectContent>
                 </Select>
             </div>
-            <hr className='' />
+            <hr />
             <div className="text-sm font-medium leading-6 text-gray-900 mt-5 mb-5">
                 Additional Rules
                 <TextareaAutosize />
             </div>
             <hr />
             <TabTitle title="Taxes" desc="" />
-            <div className="text-sm font-medium leading-6 text-gray-900 mt-5 mb-5">
-                <Label htmlFor="taxRate">Tax Rate</Label>
-                <Input type="number" />
+            <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4">
+                <Label htmlFor="taxRate" className="col-span-1 col-start-1">Tax Rate</Label>
+                <div className='col-span-1 col-start-5 flex'>
+                    <Input type="number" className="w-full" />
+                </div>
             </div>
+            <hr className="mt-5 mb-5" />
             <div className="flex-auto flex flex-row-reverse">
                 <button
                     type="submit"
