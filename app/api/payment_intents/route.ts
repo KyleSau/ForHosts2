@@ -154,6 +154,7 @@ async function createPaymentIntent(post: any, body: any) {
 
     if (conflictingPayments.length > 0) {
         throw new Error('Conflicting reservation dates detected. Please choose different dates.');
+        // return a response here
     }
 
     const totalPrice = calculateTotalCost(startDate, endDate, post.price);
