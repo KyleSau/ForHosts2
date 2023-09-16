@@ -25,10 +25,10 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
             postId: metadata.listingId,
             startDate: metadata.startDate,
             endDate: metadata.endDate,
-            adults: metadata.adults,
-            children: metadata.children,
-            infants: metadata.infants,
-            pets: metadata.pets,
+            adults: parseInt(metadata.adults),
+            children: parseInt(metadata.children),
+            infants: parseInt(metadata.infants),
+            pets: parseInt(metadata.pets),
             status: instantBooking ? 'CONFIRMED' : 'PENDING',
             totalPrice: paymentIntent.amount
         }
