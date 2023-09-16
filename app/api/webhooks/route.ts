@@ -29,7 +29,8 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
             children: parseInt(metadata.children, 10),
             infants: parseInt(metadata.infants, 10),
             pets: parseInt(metadata.pets, 10),
-            status: instantBooking ? 'CONFIRMED' : 'CANCELLED'
+            status: instantBooking ? 'CONFIRMED' : 'CANCELLED',
+            totalPrice: paymentIntent.amount
         }
     });
 }
