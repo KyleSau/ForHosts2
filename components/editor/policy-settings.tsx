@@ -22,6 +22,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { TextareaAutosize } from '@mui/material';
 import { Input } from '../ui/input';
 
+
 const hours = [
     'None',
     '12:00 AM', '01:00 AM', '02:00 AM', '03:00 AM',
@@ -40,6 +41,7 @@ export default function PolicySettings({ data }) {
     const validationSchema = Yup.object().shape({
         maxGuests: Yup.number().required('Maximum guests is required').min(1, 'Must be at least 1'),
         postalCode: Yup.string().required('ZIP / Postal code is required'),
+        instantBook: Yup.boolean().required(''),
     });
 
     const formik = useFormik({
@@ -55,6 +57,7 @@ export default function PolicySettings({ data }) {
             checkoutTime: '11:00 AM',
             quietHoursStart: '10:00 PM',
             quietHoursEnd: '08:00 AM',
+            instantBook: false,
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
@@ -156,8 +159,12 @@ export default function PolicySettings({ data }) {
                 <span>Instant Book</span>
                 <Switch
                     checked={formik.values.instantBook}
-                    onChange={() => formik.setFieldValue("instantBook", !formik.values.instantBook)}
+                    onChange={() => {
+                        formik.setFieldValue("instantBook", !formik.values.instantBook);
+                    }}
                 />
+
+
             </div>
             <hr />
             <TabTitle title="House Rules" desc="" />
