@@ -86,8 +86,8 @@ export async function POST(request: Request) {
                         data: {
                             stripePaymentIntentId: current_intent.id,
                             postId: current_intent.metadata.listingId,
-                            startDate: Date.parse(current_intent.metadata.startDate),
-                            endDate: Date.parse(current_intent.metadata.endDate),
+                            startDate: current_intent.metadata.startDate,
+                            endDate: current_intent.metadata.endDate,
                             status: 'PROCESSING',
                             totalPrice: current_intent.amount,
                         }
