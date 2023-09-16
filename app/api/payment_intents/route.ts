@@ -82,6 +82,7 @@ export async function POST(request: Request) {
             )
             if (current_intent) {
                 try {
+                    console.log('time to create payment entry');
                     const payment = await prisma.payment.create({
                         data: {
                             stripePaymentIntentId: current_intent.id,
@@ -92,7 +93,7 @@ export async function POST(request: Request) {
                             totalPrice: current_intent.amount,
                         }
                     });
-                    console.log('time to create payment entry');
+                    console.log(JSON.stringify(payment));
                     return NextResponse.json(current_intent);
                 } catch (e) {
                     console.log('prisma payment create error');

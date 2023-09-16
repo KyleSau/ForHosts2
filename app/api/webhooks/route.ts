@@ -20,19 +20,20 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
     const metadata = paymentIntent.metadata;
     const instantBooking = true;
 
-    await prisma.reservation.create({
+    const reservation = await prisma.reservation.create({
         data: {
             postId: metadata.listingId,
-            startDate: Date.parse(metadata.startDate),
-            endDate: Date.parse(metadata.endDate),
+            startDate: metadata.startDate,
+            endDate: metadata.endDate,
             adults: parseInt(metadata.adults, 10),
             children: parseInt(metadata.children, 10),
             infants: parseInt(metadata.infants, 10),
             pets: parseInt(metadata.pets, 10),
-            status: instantBooking ? 'CONFIRMED' : 'CANCELLED',
+            status: instantBooking ? 'CONFIRMED' : 'PENDING',
             totalPrice: paymentIntent.amount
         }
     });
+    console.log('reservation created: ' + JSON.stringify(reservation));
 }
 
 async function handlePaymentFailure(paymentIntent: Stripe.PaymentIntent) {
