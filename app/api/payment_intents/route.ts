@@ -135,7 +135,26 @@ async function createPaymentIntent(post: any, body: any) {
 
     console.log('stripe account id: ', accountId);
 
-    const { startDate, endDate } = body;
+    const { startDate, endDate, adults, children, infants, pets } = body;
+
+    const conflictingPayments = await prisma.payment.findMany({
+        where: {
+            postId: post.listingId,
+            startDate: {
+                lte: endDate
+            },
+            endDate: {
+                gte: startDate
+            },
+            status: {
+                in: ['PROCESSING', 'SUCCEEDED']
+            }
+        }
+    });
+
+    if (conflictingPayments.length > 0) {
+        throw new Error('Conflicting reservation dates detected. Please choose different dates.');
+    }
 
     const totalPrice = calculateTotalCost(startDate, endDate, post.price);
 
@@ -158,12 +177,27 @@ async function createPaymentIntent(post: any, body: any) {
         },
         metadata: {
             listingId: post.id,
-            guests: 4,
+            startDate,
+            endDate,
+            adults,
+            children,
+            infants,
+            pets
         },
     };
 
     try {
         const intent = await stripe.paymentIntents.create(params);
+        await prisma.payment.create({
+            data: {
+                stripePaymentIntentId: intent.id,
+                postId: post.listingId,
+                startDate: startDate,
+                endDate: endDate,
+                status: 'PROCESSING',
+                totalPrice: intent.amount,
+            }
+        });
         return intent;
     } catch (error: any) {
         console.error("Error creating Stripe payment intent:", error.message);
