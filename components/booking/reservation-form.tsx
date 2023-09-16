@@ -2,30 +2,30 @@
 import React, { useState } from 'react';
 import { toast } from "sonner";
 import va from "@vercel/analytics";
-import { createReservation } from '@/lib/actions';
+// import { createReservation } from '@/lib/actions';
 import { useRouter } from 'next/navigation';
 
 export default function ReservationForm({ post }: { post: any }) {
   const router = useRouter();
 
   // Delegate to Stripe checkout.
-  const handleFinalizeReservation = async (data: FormData) => {
+  // const handleFinalizeReservation = async (data: FormData) => {
 
-    // This will be invoked by payment intent webhook.
-    data.append("postId", post.id);
-    await createReservation(data, new Date()).then((res: any) => {
-      if (res.error) {
-        console.log("Getting res.error: ", res.error);
-        toast.error(res.error);
-      } else {
-        va.track("Created Reservation");
-        const { id } = res;
-        router.refresh();
-        router.push(`/reservations`);
-        toast.success(`Successfully created reservation!`);
-      }
-    });
-  };
+  //   // This will be invoked by payment intent webhook.
+  //   data.append("postId", post.id);
+  //   await createReservation(data, new Date()).then((res: any) => {
+  //     if (res.error) {
+  //       console.log("Getting res.error: ", res.error);
+  //       toast.error(res.error);
+  //     } else {
+  //       va.track("Created Reservation");
+  //       const { id } = res;
+  //       router.refresh();
+  //       router.push(`/reservations`);
+  //       toast.success(`Successfully created reservation!`);
+  //     }
+  //   });
+  // };
 
   return (<>
     {/* Date Ranger Picker from AirBnB */}
