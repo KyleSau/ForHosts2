@@ -124,7 +124,7 @@ export default async function Page({
                                 <tr key={transaction.id} className="even:bg-gray-100">
                                     <td className="text-center">{formatAmount(transaction.amount)}</td>
                                     <td className="text-center">{transaction.description}</td>
-                                    <td className="text-center">{transaction.billing_details.name ? transaction.billing_details.name : 'N/A'}</td>
+                                    <td className="text-center">{transaction.billing_details.name}</td>
                                     <td className="text-center">{new Date(transaction.created * 1000).toLocaleDateString()}</td>
                                 </tr>
                             ))}

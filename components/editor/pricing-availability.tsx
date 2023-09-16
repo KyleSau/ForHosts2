@@ -10,7 +10,7 @@ import { Toggle } from "@/components/ui/toggle"
 import CalendarImportForm from "./calendar-import";
 import { CalendarModal } from "./calendar-editor-modal";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-
+import EditorSaveButton from "./editor-save-button";
 const hourAN = [
   '6:00 AM', '7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
   '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM', '7:00 PM',
@@ -101,6 +101,7 @@ export default function PricingAvailability({ data }) {
     };
   }, [formik.dirty]);
   return (
+    <form onSubmit={formik.handleSubmit}>
     <div>
       <TabTitle title="Pricing" desc="" />
       <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
@@ -342,13 +343,8 @@ export default function PricingAvailability({ data }) {
         </div>
       </div>
       <hr className="mb-5" />
-      <div className="flex-auto flex flex-row-reverse">
-        <button
-          type="submit"
-          className="rounded-md hover:scale-110 duration-200 ease-in-out transition bg-indigo-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-          Save
-        </button>
+      <EditorSaveButton submitted={submitted} isLoading={isLoading} />
       </div>
-    </div>
+      </form>
   );
 }
