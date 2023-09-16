@@ -12,7 +12,7 @@ import {
   // removeDomainFromVercelTeam,
   validDomainRegex,
 } from "@/lib/domains";
-import { BlobResult, put } from "@vercel/blob";
+import { put } from "@vercel/blob";
 import { customAlphabet } from "nanoid";
 import { calcDateDelta, getBlurDataURL } from "@/lib/utils";
 import { RESERVATION_FUTURE_DAYS_THRESHOLD } from "./constants";
@@ -654,95 +654,4 @@ export const createReservation = async (formData: FormData, currentDate: Date) =
       };
     }
   }
-};
-
-
-//////////////////// Blob Metadata Endpoints ////////////////////
-import { list, del } from '@vercel/blob';
-import { NextResponse } from 'next/server';
-import { ChatCompletionResponseMessageRoleEnum } from "openai-edge";
-
-export const uploadBlobMetadataToStore = async (blobResult: BlobResult, postId: string, siteId: string) => {
-  console.log("entered uploadBlobMetadataToStore");
-  try {
-    console.log("uploadBlobMetadataToStore: postId: ", postId);
-    console.log("uploadBlobMetadataToStore: siteId: ", siteId);
-
-    const session = await getSession();
-
-    // Run any logic after the file upload completed
-    // const { userId } = JSON.parse(metadata);
-    // await db.update({ avatar: blob.url, userId });
-    const response = await prisma.image.create({
-      // site: {
-      //   connect: {
-      //     id: site.id,
-      //   },
-      // },
-      // post: {
-      //   connect: {
-      //     id: post.id,
-      //   },
-      // },
-      data: {
-        url: blobResult.url,
-        uploadedAt: blobResult.uploadedAt,
-        size: blobResult.size.toString(),
-        user: {
-          connect: {
-            id: session?.user.id,
-          },
-        },
-        site: {
-          connect: {
-            id: siteId
-          }
-        },
-        post: {
-          connect: {
-            id: postId
-          }
-        }
-      }
-    });
-    return response;
-  } catch (error) {
-    console.log("error: ", error);
-    throw new Error('Could not update user');
-  }
-};
-
-
-export const listAllBlobsInStore = async () => { 
-  console.log("listAllBlobsInStoreAction called");
-  const { blobs } = await list();
-  // console.log("type of blobs: ", typeof(blobs));
-  // console.log("blobs: ", blobs);
-  // return NextResponse.json(blobs);
-  return blobs;
-};
-
-
-export const deleteBlobFromStore = async (urlToDelete: string) => {
-  console.log("deleteBlobFromStore called");
-
-  if(urlToDelete !== null) {
-    const deletedBlob: any = await del(urlToDelete);
-    console.log("deletedBlob: ", deletedBlob);
-
-    const blobUrl = deletedBlob?.url;
-    console.log("blobUrl: ", blobUrl);
-
-    if(urlToDelete === blobUrl) {
-      const successJson = {
-        message: 'Success'
-      };
-      return successJson;
-    }
-  }
-
-  const errorJson = {
-    message: 'An error occurred on the server.'
-  };
-  return errorJson;
 };
