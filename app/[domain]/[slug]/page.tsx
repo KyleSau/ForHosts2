@@ -103,7 +103,7 @@ export default async function SitePostPage({
         <hr className="m-5 col-span-1 md:col-span-full" />
         <div className="col-span-1 md:col-span-full m-2">
           <div className="">
-            <Map />
+            {/* <Map /> */}
           </div>
         </div>
         <hr className="m-5 col-span-1 md:col-span-full" />

@@ -28,6 +28,18 @@ export async function POST(request: Request) {
 
     // Successfully constructed event.
     console.log('✅ Success:', event.id)
+    if (event.type === 'payment_intent.succeeded') {
+        const paymentIntent = event.data.object as Stripe.PaymentIntent;
+        const metadata = paymentIntent.metadata; // Now TypeScript knows about the metadata property.
+        console.log(`💰 PaymentIntent status: ${paymentIntent.status}`);
+        console.log(`Metadata:`, JSON.stringify(metadata));
+        /*const bla = await prisma.reservation.create({
+            postId: metadata.listingId,
+        });*/
+    }
+
+
+    // CREATE RESERVATION
 
     // Cast event data to Stripe object.
     if (event.type === 'payment_intent.succeeded') {

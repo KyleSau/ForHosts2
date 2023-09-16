@@ -66,11 +66,47 @@ async function getStripeAccountForHostId(hostId: string) {
 // ... [keep other helper functions unchanged, e.g. calculateTotalCost, formatAmountForStripe, getStripeAccountForHostId]
 
 export async function POST(request: Request) {
-    console.log('/checkout_sessions POST called!');
+    console.log('/payment_intents POST called!');
+
 
     const body = await request.json();
 
     console.log('body: ', JSON.stringify(body));
+    // payment_intent_id
+    console.log('has payment intent: ' + body.payment_intent_id);
+
+    if (body.payment_intent_id) {
+        console.log('there is a payment_intent.id: ' + body.payment_intent_id);
+        try {
+            const current_intent = await stripe.paymentIntents.retrieve(
+                body.payment_intent_id
+            )
+            if (current_intent) {
+                return NextResponse.json(current_intent);
+            }
+
+            // return NextResponse.json(current_intent);
+            // If PaymentIntent has been created, just update the amount.
+            // if (current_intent) {
+            //     const updated_intent = await stripe.paymentIntents.update(
+            //         body.payment_intent_id,
+            //         {
+
+            //         }
+            //     )
+            //     console.log('good stuff');
+            //     return NextResponse.json(updated_intent);
+            // }
+        } catch (e) {
+            if ((e as any).code !== 'resource_missing') {
+                console.log('bad stuff');
+                const errorMessage =
+                    e instanceof Error ? e.message : 'Internal server error'
+                NextResponse.error();
+                return
+            }
+        }
+    }
 
     const post = await prisma?.post.findUnique({
         where: {
@@ -107,6 +143,9 @@ async function createPaymentIntent(post: any, body: any) {
 
     const product_description = post.title;
     const applicationFee = Math.round(totalPrice * .03); // 3% of totalPrice
+
+
+
 
     const params: Stripe.PaymentIntentCreateParams = {
         amount: formatAmountForStripe(totalPrice, 'usd'),
