@@ -365,9 +365,7 @@ export const updatePropertyPriceInfo = async (data: Post) => {
       data: {
         price: data.price,
         securityDeposit: data.securityDeposit,
-        maxGuests: data.maxGuests,
         minimumStay: data.minimumStay,
-        bedrooms: data.bedrooms,
         cleaningFee: data.cleaningFee,
       },
     });
