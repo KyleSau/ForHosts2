@@ -72,7 +72,6 @@ export async function POST(request: Request) {
     const body = await request.json();
 
     console.log('body: ', JSON.stringify(body));
-    // payment_intent_id
     console.log('has payment intent: ' + body.payment_intent_id);
 
     if (body.payment_intent_id) {
@@ -82,28 +81,31 @@ export async function POST(request: Request) {
                 body.payment_intent_id
             )
             if (current_intent) {
-                return NextResponse.json(current_intent);
+                try {
+                    const payment = await prisma.payment.create({
+                        data: {
+                            stripePaymentIntentId: current_intent.id,
+                            postId: current_intent.metadata.listingId,
+                            startDate: current_intent.metadata.startDate,
+                            endDate: current_intent.metadata.endDate,
+                            status: 'PROCESSING',
+                            totalPrice: current_intent.amount,
+                        }
+                    });
+                    console.log('time to create payment entry');
+                    return NextResponse.json(current_intent);
+                } catch (e) {
+                    console.log('prisma payment create error');
+                    return NextResponse.error();
+                }
             }
-
-            // return NextResponse.json(current_intent);
-            // If PaymentIntent has been created, just update the amount.
-            // if (current_intent) {
-            //     const updated_intent = await stripe.paymentIntents.update(
-            //         body.payment_intent_id,
-            //         {
-
-            //         }
-            //     )
-            //     console.log('good stuff');
-            //     return NextResponse.json(updated_intent);
-            // }
         } catch (e) {
             if ((e as any).code !== 'resource_missing') {
                 console.log('bad stuff');
                 const errorMessage =
                     e instanceof Error ? e.message : 'Internal server error'
-                NextResponse.error();
-                return
+                return NextResponse.error();
+
             }
         }
     }
@@ -187,18 +189,10 @@ async function createPaymentIntent(post: any, body: any) {
         },
     };
 
+    console.log('params metadata: ' + JSON.stringify(params.metadata));
+
     try {
         const intent = await stripe.paymentIntents.create(params);
-        await prisma.payment.create({
-            data: {
-                stripePaymentIntentId: intent.id,
-                postId: post.listingId,
-                startDate: startDate,
-                endDate: endDate,
-                status: 'PROCESSING',
-                totalPrice: intent.amount,
-            }
-        });
         return intent;
     } catch (error: any) {
         console.error("Error creating Stripe payment intent:", error.message);
