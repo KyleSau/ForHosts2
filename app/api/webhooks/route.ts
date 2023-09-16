@@ -23,8 +23,8 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
     await prisma.reservation.create({
         data: {
             postId: metadata.listingId,
-            startDate: metadata.startDate,
-            endDate: metadata.endDate,
+            startDate: Date.parse(metadata.startDate),
+            endDate: Date.parse(metadata.endDate),
             adults: parseInt(metadata.adults, 10),
             children: parseInt(metadata.children, 10),
             infants: parseInt(metadata.infants, 10),
