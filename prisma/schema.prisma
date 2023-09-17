@@ -92,6 +92,8 @@ model Image {
   url        String
   uploadedAt DateTime
   size       String
+  fileName   String
+  orderIndex Int
 
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String?

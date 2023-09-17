@@ -13,6 +13,8 @@ export const uploadBlobMetadata = async (blobResult: BlobResult, postId: string,
     console.log("blobSize: ", blobResult.size);
     console.log("size type: ", typeof blobResult.size);
 
+    const tempOrderIndex = 0;
+
     const session = await getSession();
 
     // Run any logic after the file upload completed
@@ -23,6 +25,8 @@ export const uploadBlobMetadata = async (blobResult: BlobResult, postId: string,
         url: blobResult.url,
         uploadedAt: blobResult.uploadedAt,
         size: blobResult.size.toString(),
+        fileName: blobResult.pathname,
+        orderIndex: tempOrderIndex,
         user: {
           connect: {
             id: session?.user.id,
@@ -113,4 +117,14 @@ export const deleteBlobFromStore = async (urlToDelete: string) => {
     message: 'An error occurred on the server.'
   };
   return errorJson;
+};
+
+export const listAllBlobMetadata = async () => {
+  try {
+    const response = await prisma.image.findMany();
+    return response;
+  } catch (error) {
+    console.log("error: ", error);
+    throw new Error('Could not update user');
+  }
 };
