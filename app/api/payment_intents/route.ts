@@ -140,6 +140,7 @@ async function createPaymentIntent(post: any, body: any) {
 
     const { startDate, endDate, adults, children, infants, pets } = body;
 
+    // filter out any status' after 10 minutes of createdAt date
     const conflictingPayments = await prisma.payment.findMany({
         where: {
             postId: post.listingId,

@@ -194,6 +194,7 @@ model Site {
 }
 
 // check if there are any other payment's for postId with status = (PENDING | SUCCESS) in range of(startDate, endDate)
+// model StripePaymentIntent
 model Payment {
   id                    String   @id @default(cuid())
   stripePaymentIntentId String   @unique
