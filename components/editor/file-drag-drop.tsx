@@ -2,16 +2,15 @@
 
 import { Image, Trash2 } from 'lucide-react';
 import { FILE_CONSTS, IMAGE_UPLOAD_QUANTITY_LIMIT, IMAGE_SIZE_LIMIT_BYTES, IMAGE_SIZE_LIMIT_MB } from '@/lib/constants';
-import React, { useState, useRef, useEffect, FormEvent } from 'react';
+import React, { useState, useEffect } from 'react';
 import EditorWarningModal, { EditorWarningModalDataType, EditorWarningModalDataTemplate } from "@/components/editor/warning-confirmation-modal";
 import { humanReadableFileSize } from '@/lib/utils';
 
-import { put, list, type BlobResult } from '@vercel/blob'; // test
+import { put, type BlobResult } from '@vercel/blob'; // test
 import { uploadBlobMetadata, listAllBlobsInStore, deleteBlobFromStore, getBlobMetadata, deleteBlobMetadata,
   listAllBlobMetadata
 } from '@/lib/blob_actions';
 import { Image as ImagePrismaSchema, Post } from "@prisma/client";
-import { responsiveFontSizes } from '@mui/material';
 
 //DEV MODE
 // const DEBUG_TOGGLE = false;
@@ -153,7 +152,8 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
   };
 
   const handleImageDeleteIconClicked = (idxToRemove: number) => {
-    const fileName = fileDataObjects[idxToRemove]?.file?.name;
+    const fdoToRemove = fileDataObjects[idxToRemove];
+    const fileName = fdoToRemove.inBlobStore? fdoToRemove.fileName: fdoToRemove.file?.name;
     setEditorWarningModalData({
       ...editorWarningModalData,
       idxToRemove,
