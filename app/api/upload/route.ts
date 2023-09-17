@@ -58,28 +58,28 @@ export async function POST(request: Request): Promise<NextResponse> {
           // Run any logic after the file upload completed
           // const { userId } = JSON.parse(metadata);
           // await db.update({ avatar: blob.url, userId });
-          const response = await prisma.image.create({
-            // site: {
-            //   connect: {
-            //     id: site.id,
-            //   },
-            // },
-            // post: {
-            //   connect: {
-            //     id: post.id,
-            //   },
-            // },
-            data: {
-              url: blob.url,
-              uploadedAt: blob.uploadedAt,
-              size: blob.size,
-              user: {
-                connect: {
-                  id: session.user.id,
-                },
-              }
-            }
-          });
+          // const response = await prisma.image.create({
+          //   // site: {
+          //   //   connect: {
+          //   //     id: site.id,
+          //   //   },
+          //   // },
+          //   // post: {
+          //   //   connect: {
+          //   //     id: post.id,
+          //   //   },
+          //   // },
+          //   data: {
+          //     url: blob.url,
+          //     uploadedAt: blob.uploadedAt,
+          //     size: blob.size,
+          //     user: {
+          //       connect: {
+          //         id: session.user.id,
+          //       },
+          //     }
+          //   }
+          // });
 
           /*          const listingId = body.listingId;
 
