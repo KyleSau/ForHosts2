@@ -5,7 +5,7 @@ import prisma from "@/lib/prisma";
 import { list, del, put, BlobResult } from '@vercel/blob';
 // import { NextResponse } from 'next/server';
 
-export const uploadBlobMetadata = async (blobResult: BlobResult, postId: string, siteId: string) => {
+export const uploadBlobMetadata = async (blobResult: BlobResult, orderIndex: number, postId: string, siteId: string) => {
   console.log("entered uploadBlobMetadata");
   try {
     console.log("uploadBlobMetadata: postId: ", postId);
@@ -26,7 +26,7 @@ export const uploadBlobMetadata = async (blobResult: BlobResult, postId: string,
         uploadedAt: blobResult.uploadedAt,
         size: blobResult.size.toString(),
         fileName: blobResult.pathname,
-        orderIndex: tempOrderIndex,
+        orderIndex,
         user: {
           connect: {
             id: session?.user.id,
@@ -51,14 +51,28 @@ export const uploadBlobMetadata = async (blobResult: BlobResult, postId: string,
   }
 };
 
+export const updateBlobMetadata = async (cuid: string, updatedFields: any) => {
+  console.log("entered updateBlobMetadata");
+  try {
+    console.log("cuid: ", cuid);
+    const response = await prisma.image.update({
+      where: {
+        id: cuid    
+      },
+      data: {
+        orderIndex: updatedFields.orderIndex
+      }
+    });
+    return response;
+  } catch (error) {
+    console.log("error: ", error);
+    throw new Error('Could not update user');
+  }
+};
 
 export const getBlobMetadata = async (siteId: string, postId: string) => {
   try {
     const session = await getSession();
-
-    // Run any logic after the file upload completed
-    // const { userId } = JSON.parse(metadata);
-    // await db.update({ avatar: blob.url, userId });
     const response = await prisma.image.findMany({
       where: {
         userId: session?.user.id,
@@ -68,6 +82,9 @@ export const getBlobMetadata = async (siteId: string, postId: string) => {
       include: {
         post: true,
       },
+      orderBy: {
+        orderIndex: "asc"
+      }
     });
     return response;
   } catch (error) {
@@ -121,7 +138,11 @@ export const deleteBlobFromStore = async (urlToDelete: string) => {
 
 export const listAllBlobMetadata = async () => {
   try {
-    const response = await prisma.image.findMany();
+    const response = await prisma.image.findMany({
+      orderBy: {
+        orderIndex: "asc"
+      }
+    });
     return response;
   } catch (error) {
     console.log("error: ", error);

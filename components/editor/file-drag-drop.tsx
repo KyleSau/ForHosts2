@@ -8,7 +8,8 @@ import { humanReadableFileSize } from '@/lib/utils';
 
 import { put, type BlobResult } from '@vercel/blob'; // test
 import { uploadBlobMetadata, listAllBlobsInStore, deleteBlobFromStore, getBlobMetadata, deleteBlobMetadata,
-  listAllBlobMetadata
+  listAllBlobMetadata,
+  updateBlobMetadata
 } from '@/lib/blob_actions';
 import { Image as ImagePrismaSchema, Post } from "@prisma/client";
 
@@ -19,8 +20,7 @@ import { Image as ImagePrismaSchema, Post } from "@prisma/client";
 interface FileDataObject extends Partial<ImagePrismaSchema> {
   file?: File | null, //for handling local-only files
   localBlobUrl?: string,
-  inBlobStore: boolean,
-  // blobResult?: BlobResult,
+  inBlobStore: boolean
 }
 
 export function FileClickDragDrop({ componentId, data }: { componentId: string, data: any }) {
@@ -31,6 +31,7 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
   const PERMITTED_FILE_TYPES = new Set([FILE_CONSTS.JPEG, FILE_CONSTS.PNG]);
   const [fileDataObjects, setFileDataObjects] = useState<FileDataObject[]>([]);
   const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
+  // const [swapIdxMemo, setSwapIdxMemo] = useState<Array<number>>([]); //tracks reordering of images
 
   //states for confirmation modal for deleting pictures
   const [editorWarningModalOpen, setEditorWarningModalOpen] = useState<boolean>(false);
@@ -40,9 +41,13 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
   const [blobsFromStore, setBlobsFromStore] = useState<BlobResult[]>([]);
   const [blobMetadata, setBlobMetadata] = useState<ImagePrismaSchema[]>([]);
 
+  // const resetSwapIdxMemo = async () => {
+  //   ;
+  // };
+
   const refreshMetadata = async () => {
     const currentBlobMetadataForPost = await getBlobMetadata(SITE_ID, POST_ID);
-    const currentBlobFileDataObjects = currentBlobMetadataForPost.map(
+    const currentFileDataObjects = currentBlobMetadataForPost.map(
       (blobMetadata: ImagePrismaSchema & { post: Post | null }) => {
         const fileDataObject: FileDataObject = {
           inBlobStore: true,
@@ -51,8 +56,9 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
         return fileDataObject;
       }
     );
-    console.log("currentBlobFileDataObjects: ", currentBlobFileDataObjects);
-    setFileDataObjects([...currentBlobFileDataObjects]);
+    console.log("currentFileDataObjects: ", currentFileDataObjects);
+    setFileDataObjects([...currentFileDataObjects]);
+    // setSwapIdxMemo(Array.from({length: currentFileDataObjects.length}, (_, i) => i));
   };
 
   useEffect(() => {
@@ -73,7 +79,7 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
       const newFilesAboveSizeLimit: (File | null)[] = [];
       const newFilesBelowSizeLimit: FileDataObject[] = [];
 
-      newFiles.forEach((file: File|null) => {
+      newFiles.forEach((file: File|null, fileIdx: number) => {
         console.log("new file: ", file);
         if (file) {
           const fileSizeBytes = file?.size ? file.size : IMAGE_SIZE_LIMIT_BYTES; 
@@ -86,15 +92,18 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
             const newFileNotStored: FileDataObject = {
               file,
               localBlobUrl,
-              inBlobStore: false
+              inBlobStore: false,
+              orderIndex: fileDataObjects.length + fileIdx
             }
             newFilesBelowSizeLimit.push(newFileNotStored);
             console.log("newFilesBelowSizeLimit: ", newFilesBelowSizeLimit);
           }
         }
-      })
-      setFileDataObjects([...fileDataObjects, ...newFilesBelowSizeLimit]);
-      console.log("right after setFileDataObjects: ", fileDataObjects);
+      });
+      const updatedFdoArray = [...fileDataObjects, ...newFilesBelowSizeLimit];
+      console.log("updatedFdoArray: ", updatedFdoArray);
+      setFileDataObjects(updatedFdoArray);
+      // setSwapIdxMemo(Array.from({length: updatedFdoArray.length}, (_, i) => i));
 
       //if needed, throw up modal informing user that files above the size limit were not added
       if (newFilesAboveSizeLimit.length > 0) {
@@ -163,6 +172,7 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
   };
 
   const handleDragStart = (event: any, idx: number) => {
+    console.log("handleDragStart entered: idx chosen:", idx);
     setDraggedIdx(idx);
     event.dataTransfer.effectAllowed = "move";
   };
@@ -174,46 +184,73 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
   };
 
   const handleDropForMove = (event: any, idx: number) => {
+    console.log("handleDropForMove entered: idx chosen:", idx); //to idx
+    console.log("draggedIdx: ", draggedIdx); //from idx
     event.preventDefault();
 
     if (draggedIdx !== null && draggedIdx !== idx) {
-      const fileDataObjectsCopy = [...fileDataObjects];
-
       // Swap in addedFileArray
+      const fileDataObjectsCopy = [...fileDataObjects];
       const tempFile = fileDataObjectsCopy[draggedIdx];
       fileDataObjectsCopy[draggedIdx] = fileDataObjectsCopy[idx];
       fileDataObjectsCopy[idx] = tempFile;
-
-      setFileDataObjects(fileDataObjectsCopy);
+      setFileDataObjects([...fileDataObjectsCopy]);
     }
-
     setDraggedIdx(null); // Reset the dragged item index
   };
 
-  const uploadBlobsToStore = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    console.log("uploadBlobsToStore entered");
+  const uploadFilesToBlobStoreAndMetadataToDB = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    console.log("uploadFilesToBlobStoreAndMetadataToDB entered");
     event.preventDefault();
-    fileDataObjects.forEach((fdo: FileDataObject) => {
-      const file = fdo.file;
-      const inBlobStore = fdo.inBlobStore;
-      if(file && !inBlobStore) {
-        console.log("file.name: ", file.name);
-        // Using this: https://vercel.com/docs/storage/vercel-blob/quickstart#browser-uploads 
-        const newBlob = put(file.name, file, {
-          access: 'public',
-          handleBlobUploadUrl: '/api/upload'
-        });
-        newBlob.then((br: BlobResult) => {
-          console.log("br: ", br);
-          const uploadBlobMetadataResponse = uploadBlobMetadata(br, POST_ID, SITE_ID);
-          console.log("uploadBlobMetadataResponse: ", uploadBlobMetadataResponse);
-          return uploadBlobMetadataResponse;
-        }).then((_: ImagePrismaSchema) => {
-          refreshMetadata(); //trigger a re-render
-        });
-      } else { //TODO: to be deleted
-        console.log("no files uploaded because there were no new local files");
-      }
+
+    const fileDataObjectsCopy = [...fileDataObjects];
+
+    const uploadPromiseWrapper = new Promise(() => {
+      fileDataObjects.forEach((fdo: FileDataObject, fdoIdx: number) => {
+        console.log(">>> fdo: ", fdo);
+        if(fdo.inBlobStore) {
+          if(fdo?.id && fdo.orderIndex != fdoIdx) {
+            console.log("Already in blob store fdo.orderIdx: ", fdo.orderIndex, "   fdoIdx: ", fdoIdx);
+            const updateBlobMetadataResponse = updateBlobMetadata(fdo.id, {orderIndex: fdoIdx});
+            console.log("updateBlobMetadataResponse: ", updateBlobMetadataResponse);
+            updateBlobMetadataResponse.then((responseValue: ImagePrismaSchema) => {
+              console.log("updateBlobMetadataResponse: fdoIdx: ", fdoIdx, "    responseValue: ", responseValue);
+              const newUpdatedFile: FileDataObject = {
+                inBlobStore: true,
+                ...responseValue
+              }
+              fileDataObjectsCopy[fdoIdx] = newUpdatedFile;
+            })
+          }
+        } else {
+          const file = fdo?.file;
+          if(file) {
+            console.log("file.name: ", file.name);
+            // Using this: https://vercel.com/docs/storage/vercel-blob/quickstart#browser-uploads 
+            const newBlob = put(file.name, file, {
+              access: 'public',
+              handleBlobUploadUrl: '/api/upload'
+            });
+            newBlob.then((br: BlobResult) => {
+              console.log("br: ", br);
+              const uploadBlobMetadataResponse = uploadBlobMetadata(br, fdoIdx, POST_ID, SITE_ID);
+              console.log("uploadBlobMetadataResponse: ", uploadBlobMetadataResponse);
+              return uploadBlobMetadataResponse;
+            }).then((responseValue: ImagePrismaSchema) => {
+              console.log("uploadBlobMetadataResponse: fdoIdx: ", fdoIdx,"    responseValue: ", responseValue);
+              const newUploadedFile: FileDataObject = {
+                inBlobStore: true,
+                ...responseValue
+              }
+              fileDataObjectsCopy[fdoIdx] = newUploadedFile;
+            });
+          }
+        }
+      });
+    });
+    
+    uploadPromiseWrapper.then(() => {
+      setFileDataObjects(fileDataObjectsCopy);
     });
   };
 
@@ -243,6 +280,7 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
   const printOutData = async () => {
     console.log("[TEST] printOutData called");
     console.log("fileDataObjects: ", fileDataObjects);
+    // console.log("swapIdxMemo: ", swapIdxMemo);
   }
 
   //TEST
@@ -290,7 +328,7 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
             You may upload a maximum of {IMAGE_UPLOAD_QUANTITY_LIMIT} images</p>
       }
       <p>
-        <button type="submit" className='border border-black' onClick={event => uploadBlobsToStore(event)}>Upload Pics to Blob Store</button>
+        <button type="submit" className='border border-black' onClick={event => uploadFilesToBlobStoreAndMetadataToDB(event)}>Upload Pics to Blob Store</button>
         <button type="submit" className='border border-black' onClick={printOutData}>Print Local Data to Console</button>
         <button type="submit" className='border border-black' onClick={handleListAllblobsInStore}>List All Blobs In Store</button>
         <button type="submit" className='border border-black' onClick={handlePurgeAllBlobsInStore}>Purge All Blobs In Store</button>
@@ -302,7 +340,7 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
       <div
         className="grid grid-cols-3 gap-4 mt-4 md:grid-cols-3"
         onDragOver={handleDragOver}
-      >
+      > 
         {fileDataObjects.map((fdo: FileDataObject, idx: number) => {
           console.log("FileDataObject to be rendered: ", fdo);
           const inBlobStore = fdo?.inBlobStore;
