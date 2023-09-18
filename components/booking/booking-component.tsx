@@ -1,7 +1,6 @@
-"use client"
-import React, { useState } from 'react';
+'use client'
+import React, { useState, useEffect } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Stripe, loadStripe } from '@stripe/stripe-js'
 import { addDays, format } from "date-fns"
 import { DateRange } from 'react-day-picker';
 import { Input } from "@/components/ui/input"
@@ -9,20 +8,17 @@ import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import calculateTotalCost from "@/lib/utils/payment-helper"
 import { cn } from "@/lib/utils"
+import { Elements } from '@stripe/react-stripe-js';
+import CardInput from './card-element';
+// import { NextRouter, useRouter } from 'next/router';
+import { useRouter } from 'next/navigation'
+
 
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
-
-let stripePromise: Promise<Stripe | null>
-const getStripe = () => {
-    if (!stripePromise) {
-        stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
-    }
-    return stripePromise
-}
 
 export async function fetchPostJSON(url: string, data?: {}) {
     try {
@@ -55,41 +51,44 @@ type BookingProps = {
 
 // get listingId from prop
 const BookingComponent: React.FC<BookingProps> = ({ listing, className }: any) => {
-    // const [startDate, setStartDate] = useState(new Date());
-    // const [endDate, setEndDate] = useState(new Date());
+
+    const [adults, setAdults] = useState(1);
+    const [children, setChildren] = useState(0);
+    const [infants, setInfants] = useState(0);
+    const [pets, setPets] = useState(0);
     const [date, setDate] = React.useState<DateRange | undefined>({
         from: new Date(),
         to: undefined//addDays(new Date(), 20),
     })
-    const handleCheckout = async () => {
-        const response = await fetchPostJSON('/api/checkout_sessions', {
-            startDate: date?.from,
-            endDate: date?.to,
-            // this will need to be changed when testing stripe stuff again
-            listingId: listing.id
-        })
-
-        if (response.statusCode === 500) {
-            console.error(response.message)
-            return;
+    const router = useRouter()
+    const handleCheckout = () => {
+        // Construct the URL with search query parameters
+        const url = new URL('/checkout', window.location.origin);
+        url.searchParams.append('id', listing.id);
+        if (date?.from) {
+            url.searchParams.append('startDate', date.from?.toISOString());
+        }
+        if (date?.to) {
+            url.searchParams.append('endDate', date.to?.toISOString());
         }
 
-        const stripe = await getStripe()
-        const { error } = await stripe!.redirectToCheckout({
-            // Make the id field from the Checkout Session creation API response
-            // available to this file, so you can provide it as parameter here
-            // instead of the {{CHECKOUT_SESSION_ID}} placeholder.
-            sessionId: response.id, // response.sessionId
-        })
-        // If `redirectToCheckout` fails due to a browser or network
-        // error, display the localized error message to your customer
-        // using `error.message`.
-        console.warn(error.message)
+        // Guests
+        url.searchParams.append('adults', adults.toString());
+        url.searchParams.append('children', children.toString());
+        url.searchParams.append('infants', infants.toString());
+        url.searchParams.append('pets', pets.toString());
 
+        router.push(url.toString());
     }
+
 
     return (
         <div className="p-5 bg-white text-slate-600 rounded-sm items-center shadow-[0_3px_10px_rgb(0,0,0,0.2)] min-w-[350px] border border-slate-300 max-w-[375px] m-auto">
+            {/* {stripeInstance && (
+                <Elements stripe={stripeInstance}>
+                    <CardInput />
+                </Elements>
+            )} */}
             <div className="mb-5">
                 <p className="text-lg text-bold">${listing.price} Per Night</p>
             </div>
@@ -137,8 +136,8 @@ const BookingComponent: React.FC<BookingProps> = ({ listing, className }: any) =
                             <label>Adults</label>
                             <Input
                                 type="number"
-                                className=""
-                                defaultValue={1}
+                                value={adults}
+                                onChange={e => setAdults(Number(e.target.value))}
                                 min={1}
                                 max={listing.maxGuests}
                             />
@@ -147,8 +146,8 @@ const BookingComponent: React.FC<BookingProps> = ({ listing, className }: any) =
                             <label>Children</label>
                             <Input
                                 type="number"
-                                className=""
-                                defaultValue={0}
+                                value={children}
+                                onChange={e => setChildren(Number(e.target.value))}
                                 min={0}
                                 max={listing.maxGuests}
                             />
@@ -157,8 +156,8 @@ const BookingComponent: React.FC<BookingProps> = ({ listing, className }: any) =
                             <label>Infants</label>
                             <Input
                                 type="number"
-                                className=""
-                                defaultValue={0}
+                                value={infants}
+                                onChange={e => setInfants(Number(e.target.value))}
                                 min={0}
                                 max={listing.maxGuests}
                             />
@@ -167,12 +166,11 @@ const BookingComponent: React.FC<BookingProps> = ({ listing, className }: any) =
                             <label>Pets</label>
                             <Input
                                 type="number"
-                                className=""
-                                defaultValue={0}
+                                value={pets}
+                                onChange={e => setPets(Number(e.target.value))}
                                 min={0}
-                                max={listing.Pets}
+                                max={listing.Pets} // I assume "Pets" here is a number that shows the max allowed pets
                             />
-                            {/* Pets Allowed? */}
                         </div>
                     </PopoverContent>
                 </Popover>
@@ -235,3 +233,31 @@ const BookingComponent: React.FC<BookingProps> = ({ listing, className }: any) =
 }
 
 export default BookingComponent;
+
+    // const handleCheckout = async () => {
+    //     const response = await fetchPostJSON('/api/checkout_sessions', {
+    //         startDate: date?.from,
+    //         endDate: date?.to,
+    //         listingId: listing.id
+    //     })
+
+    //     if (response.statusCode === 500) {
+    //         console.error(response.message)
+    //         return;
+    //     }
+
+    //     const stripe = await getStripe()
+    //     if (stripe) {
+    //         const { error, paymentIntent } = await stripe.confirmCardPayment(response.client_secret, {
+    //             payment_method: 'pm_card_visa', // TODO: You'll have to integrate Stripe Elements or another method to get the Payment Method
+    //         });
+
+    //         if (error) {
+    //             console.error("Payment failed:", error);
+    //         } else if (paymentIntent && paymentIntent.status === "succeeded") {
+    //             console.log("Payment successful!");
+    //         }
+    //     }
+
+
+    // }
