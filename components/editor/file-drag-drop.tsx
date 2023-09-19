@@ -14,7 +14,7 @@ import { uploadBlobMetadata, listAllBlobsInStore, deleteBlobFromStore, getBlobMe
 import { Image as ImagePrismaSchema, Post } from "@prisma/client";
 
 //DEV MODE
-// const DEBUG_TOGGLE = false;
+const DEBUG_TOGGLE = false;
 
 //abstract data type used to handle file operations in this editor
 interface FileDataObject extends Partial<ImagePrismaSchema> {
@@ -31,19 +31,14 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
   const PERMITTED_FILE_TYPES = new Set([FILE_CONSTS.JPEG, FILE_CONSTS.PNG]);
   const [fileDataObjects, setFileDataObjects] = useState<FileDataObject[]>([]);
   const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
-  // const [swapIdxMemo, setSwapIdxMemo] = useState<Array<number>>([]); //tracks reordering of images
 
   //states for confirmation modal for deleting pictures
   const [editorWarningModalOpen, setEditorWarningModalOpen] = useState<boolean>(false);
   const [editorWarningModalData, setEditorWarningModalData] = useState<EditorWarningModalDataType>(EditorWarningModalDataTemplate);
 
   //TEST
-  const [blobsFromStore, setBlobsFromStore] = useState<BlobResult[]>([]);
-  const [blobMetadata, setBlobMetadata] = useState<ImagePrismaSchema[]>([]);
-
-  // const resetSwapIdxMemo = async () => {
-  //   ;
-  // };
+  const [blobsFromStoreTest, setBlobsFromStoreTest] = useState<BlobResult[]>([]);
+  const [blobMetadataTest, setBlobMetadataTest] = useState<ImagePrismaSchema[]>([]);
 
   const refreshMetadata = async () => {
     const currentBlobMetadataForPost = await getBlobMetadata(SITE_ID, POST_ID);
@@ -58,7 +53,6 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
     );
     console.log("currentFileDataObjects: ", currentFileDataObjects);
     setFileDataObjects([...currentFileDataObjects]);
-    // setSwapIdxMemo(Array.from({length: currentFileDataObjects.length}, (_, i) => i));
   };
 
   useEffect(() => {
@@ -96,14 +90,12 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
               orderIndex: fileDataObjects.length + fileIdx
             }
             newFilesBelowSizeLimit.push(newFileNotStored);
-            console.log("newFilesBelowSizeLimit: ", newFilesBelowSizeLimit);
           }
         }
       });
       const updatedFdoArray = [...fileDataObjects, ...newFilesBelowSizeLimit];
       console.log("updatedFdoArray: ", updatedFdoArray);
       setFileDataObjects(updatedFdoArray);
-      // setSwapIdxMemo(Array.from({length: updatedFdoArray.length}, (_, i) => i));
 
       //if needed, throw up modal informing user that files above the size limit were not added
       if (newFilesAboveSizeLimit.length > 0) {
@@ -118,11 +110,10 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
     }
   };
 
-  const deleteFileFromLocalStateAndDeleteMetadataFromDB = (idxToRemove: number) => {
+  const deleteFileFromLocalStateAndDB = (idxToRemove: number) => {
     const fileDataObjectsWithItemRemoved = fileDataObjects.filter((fdo: FileDataObject, itemIdx: number) => {
       //perform the actual removal of the metadata from the DB and blob from the store
       if(itemIdx === idxToRemove && fdo.id && fdo.inBlobStore) {
-        console.log("TRYING TO REMOVE PIC THAT IS IN BLOB STORE");
         const deleteMetadataResponse = deleteBlobMetadata(fdo.id);
         console.log("deleteMetadataResponse: ", deleteMetadataResponse);
         deleteMetadataResponse.then((value: ImagePrismaSchema) => {
@@ -210,9 +201,7 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
         console.log(">>> fdo: ", fdo);
         if(fdo.inBlobStore) {
           if(fdo?.id && fdo.orderIndex != fdoIdx) {
-            console.log("Already in blob store fdo.orderIdx: ", fdo.orderIndex, "   fdoIdx: ", fdoIdx);
             const updateBlobMetadataResponse = updateBlobMetadata(fdo.id, {orderIndex: fdoIdx});
-            console.log("updateBlobMetadataResponse: ", updateBlobMetadataResponse);
             updateBlobMetadataResponse.then((responseValue: ImagePrismaSchema) => {
               console.log("updateBlobMetadataResponse: fdoIdx: ", fdoIdx, "    responseValue: ", responseValue);
               const newUpdatedFile: FileDataObject = {
@@ -259,13 +248,13 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
     console.log("[TEST] handleListAllblobsInStore called");
     const blobsInStore = await listAllBlobsInStore();
     console.log("listCurrentBlobsInStore: blobsInStore: ", blobsInStore);
-    setBlobsFromStore(blobsInStore);
+    setBlobsFromStoreTest(blobsInStore);
   };
 
   //TEST
   const handlePurgeAllBlobsInStore = async () => {
     console.log("[TEST] handlePurgeAllBlobsInStore called");
-    blobsFromStore.forEach((br: BlobResult) => {
+    blobsFromStoreTest.forEach((br: BlobResult) => {
       if(br.url) {
         const url = br.url;
         const response = deleteBlobFromStore(url);
@@ -288,13 +277,13 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
     console.log("[TEST] handleListBlobMetadata called");
     const allBlobMetadata = await listAllBlobMetadata();
     console.log("allBlobMetadata: ", allBlobMetadata);
-    setBlobMetadata([...allBlobMetadata]);
+    setBlobMetadataTest([...allBlobMetadata]);
   };
 
   //TEST
   const handlePurgeAllBlobMetadata = async () => {
     console.log("[TEST] handlePurgeAllBlobMetadata entered");
-    blobMetadata.forEach((imgObj: ImagePrismaSchema) => {
+    blobMetadataTest.forEach((imgObj: ImagePrismaSchema) => {
       const response = deleteBlobMetadata(imgObj.id);
       // console.log("response: ", response);
       response.then((value: ImagePrismaSchema) => {
@@ -328,25 +317,25 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
             You may upload a maximum of {IMAGE_UPLOAD_QUANTITY_LIMIT} images</p>
       }
       <p>
-        <button type="submit" className='border border-black' onClick={event => uploadFilesToBlobStoreAndMetadataToDB(event)}>Upload Pics to Blob Store</button>
+        <button type="submit" className='border border-black' onClick={(event) => uploadFilesToBlobStoreAndMetadataToDB(event)}>Upload Pics to Blob Store</button>
+        &nbsp;
         <button type="submit" className='border border-black' onClick={printOutData}>Print Local Data to Console</button>
-        <button type="submit" className='border border-black' onClick={handleListAllblobsInStore}>List All Blobs In Store</button>
-        <button type="submit" className='border border-black' onClick={handlePurgeAllBlobsInStore}>Purge All Blobs In Store</button>
       </p>
       <p>
         <button type="submit" className='border border-black' onClick={handleListBlobMetadata}>List All Blob Metadata</button>
         <button type="submit" className='border border-black' onClick={handlePurgeAllBlobMetadata}>Purge All Blob Metadata</button>
+        &nbsp;
+        <button type="submit" className='border border-black' onClick={handleListAllblobsInStore}>List All Blobs In Store</button>
+        <button type="submit" className='border border-black' onClick={handlePurgeAllBlobsInStore}>Purge All Blobs In Store</button>
       </p>
       <div
         className="grid grid-cols-3 gap-4 mt-4 md:grid-cols-3"
         onDragOver={handleDragOver}
       > 
         {fileDataObjects.map((fdo: FileDataObject, idx: number) => {
-          console.log("FileDataObject to be rendered: ", fdo);
+          //console.log("FileDataObject to be rendered: ", fdo);
           const inBlobStore = fdo?.inBlobStore;
-          
           const fileObj = fdo.file;
-          //console.log("fileObj: ", fileObj);
           const fileObjSize = humanReadableFileSize(inBlobStore? parseInt(fdo.size? fdo.size: "0") : fileObj?.size);
           return (
             <div
@@ -363,10 +352,9 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
                 className="absolute top-0 right-0 z-50 p-1 bg-white rounded-bl focus:outline-none"
                 onClick={() => handleImageDeleteIconClicked(idx)}
               >
-                <Trash2 className="hover:stroke-rose-600" />
+                <Trash2 className="hover:stroke-rose-600"/>
               </button>
               <img
-                // className="relative inset-0 z-0 object-cover w-full h-full border preview"
                 className="relative inset-0 z-0 object-cover w-full h-full border-4 border-white preview"
                 src={inBlobStore? fdo.url: fdo.localBlobUrl}
               />
@@ -387,29 +375,8 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
     <EditorWarningModal
       modalOpen={editorWarningModalOpen}
       setModalOpen={setEditorWarningModalOpen}
-      handleDeletePressed={deleteFileFromLocalStateAndDeleteMetadataFromDB}
+      handleDeletePressed={deleteFileFromLocalStateAndDB}
       modalData={editorWarningModalData}
     />
-
-    {/* <h1>Upload Your Avatar</h1> */}
-    {/* <form onSubmit={uploadBlobsToStore}>
-      <input name="file" ref={inputFileRef} type="file" required multiple />
-      <br />
-      <button type="submit" className='border border-black'>Upload</button>
-    </form> */}
-    {/* <button type="submit" className='border border-black' onClick={handleListAllblobsInStore}>List All Blobs</button>
-    <button type="submit" className='border border-black' onClick={handleDeleteAllBlobsInStore}>Delete All Blobs</button> */}
-    {/* {blobList && (
-      <div>
-        Blob url: <br />
-        {
-          blobList.map((blob: BlobResult | null, idx: number) => (
-            <p key={idx}>
-              <a key={idx} href={blob?.url}>{blob?.url}</a><br />
-            </p>
-          ))
-        }
-      </div>
-    )} */}
   </>);
 }
