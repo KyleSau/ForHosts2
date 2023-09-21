@@ -266,11 +266,11 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
     data: {
       title: "",
       price: 0,
-      checkInTime: "0:00",
-      checkOutTime: "0:00",
+      checkInTime: "4:00",
+      checkOutTime: "11:00",
       location: "location",
       currency: "USD",
-      minimumStay: 0,
+      minimumStay: 1,
       cleaningFee: 0,
       securityDeposit: 0,
       totalBeds: 0,
@@ -482,7 +482,7 @@ export const updatePost = async (data: Post) => {
     // if the site has a custom domain, we need to revalidate those tags too
     post.site?.customDomain &&
       (await revalidateTag(`${post.site?.customDomain}-posts`),
-      await revalidateTag(`${post.site?.customDomain}-${post.slug}`));
+        await revalidateTag(`${post.site?.customDomain}-${post.slug}`));
 
     return response;
   } catch (error: any) {
@@ -607,7 +607,7 @@ export const updatePostMetadata = withPostAuth(
       // if the site has a custom domain, we need to revalidate those tags too
       post.site?.customDomain &&
         (await revalidateTag(`${post.site?.customDomain}-posts`),
-        await revalidateTag(`${post.site?.customDomain}-${post.slug}`));
+          await revalidateTag(`${post.site?.customDomain}-${post.slug}`));
 
       return response;
     } catch (error: any) {

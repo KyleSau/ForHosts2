@@ -483,7 +483,7 @@ export default function PolicySettings({ data }) {
                     </Label>
                     <div className="col-span-1 col-start-5 flex items-center">
                         <span className="mr-2">%</span>
-                        <Input type="number" className="w-full" />
+                        <Input type="number" className="w-full" min="0" onWheel={event => event.currentTarget.blur()} />
                     </div>
                 </div>
                 <hr className="mb-5 mt-5" />

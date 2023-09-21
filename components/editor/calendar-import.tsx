@@ -9,13 +9,13 @@ function CalendarImportForm() {
         setImportUrls([...importUrls, '']); // Add an empty input
     };
 
-    const handleInputChange = (index, event) => {
+    const handleInputChange = (index: number, event: any) => {
         const updatedUrls = [...importUrls];
         updatedUrls[index] = event.target.value;
         setImportUrls(updatedUrls);
     };
 
-    const handleRemoveInput = (index) => {
+    const handleRemoveInput = (index: number) => {
         const updatedUrls = [...importUrls];
         updatedUrls.splice(index, 1); // Remove the input at the specified index
         setImportUrls(updatedUrls);

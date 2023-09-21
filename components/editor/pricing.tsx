@@ -5,16 +5,6 @@ import { updatePropertyPriceInfo } from "@/lib/actions";
 import TabTitle from "./tab-title";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { Toggle } from "@/components/ui/toggle";
-import CalendarImportForm from "./calendar-import";
-import { CalendarModal } from "./calendar-editor-modal";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 import EditorSaveButton from "./editor-save-button";
 
 const hourAN = [
@@ -72,10 +62,10 @@ const validationSchema = Yup.object().shape({
   // petFee: Yup.number().positive("Pet Fee must be a positive number"),
   // extraGuestFee: Yup.object({
   //   guests: Yup.number()
-    
+
   //     .positive("Guest count must be a positive number"),
   //   fee: Yup.number()
-      
+
   //     .positive("Fee amount must be a positive number"),
   // }),
   // maximumStay: Yup.number()
@@ -87,7 +77,7 @@ const validationSchema = Yup.object().shape({
   // availabilityWindow: Yup.string().required("Availability Window is required"),
 });
 
-export default function PricingAvailability({ data }) {
+export default function Pricing({ data }: any) {
   const id = data["id"];
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -117,7 +107,7 @@ export default function PricingAvailability({ data }) {
       // Add initial values for other form fields here
     },
     validationSchema: validationSchema,
-    onSubmit: async (values) => {
+    onSubmit: async (values: any) => {
       setSubmitted(false);
       setIsLoading(true);
       const result = await updatePropertyPriceInfo(values);
@@ -134,7 +124,7 @@ export default function PricingAvailability({ data }) {
     },
   });
 
-  const handleBeforeUnload = (e) => {
+  const handleBeforeUnload = (e: any) => {
     if (formik.dirty) {
       e.preventDefault();
       e.returnValue = "You have unsaved changes. Are you sure you want to leave?";
@@ -167,6 +157,8 @@ export default function PricingAvailability({ data }) {
               value={formik.values.price}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
+              min="0"
+              onWheel={event => event.currentTarget.blur()}
             />
           </div>
         </div>
@@ -188,6 +180,8 @@ export default function PricingAvailability({ data }) {
               // value={formik.values.weekendPrice}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
+              min="0"
+              onWheel={event => event.currentTarget.blur()}
             />
           </div>
         </div>
@@ -210,6 +204,8 @@ export default function PricingAvailability({ data }) {
               // value={formik.values.weeklyDiscount}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
+              min="0"
+              onWheel={event => event.currentTarget.blur()}
             />
           </div>
         </div>
@@ -229,6 +225,8 @@ export default function PricingAvailability({ data }) {
               // value={formik.values.monthlyDiscount}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
+              min="0"
+              onWheel={event => event.currentTarget.blur()}
             />
           </div>
         </div>
@@ -248,6 +246,8 @@ export default function PricingAvailability({ data }) {
               value={formik.values.cleaningFee}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
+              min="0"
+              onWheel={event => event.currentTarget.blur()}
             />
           </div>
         </div>
@@ -269,6 +269,8 @@ export default function PricingAvailability({ data }) {
               // value={formik.values.petFee}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
+              min="0"
+              onWheel={event => event.currentTarget.blur()}
             />
           </div>
         </div>
@@ -290,6 +292,8 @@ export default function PricingAvailability({ data }) {
               value={formik.values.securityDeposit}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
+              min="0"
+              onWheel={event => event.currentTarget.blur()}
             />
           </div>
         </div>
@@ -297,21 +301,20 @@ export default function PricingAvailability({ data }) {
           <div className="text-red-600">{formik.errors.securityDeposit}</div>
         ) : null}
         <hr />
-        <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
-          <Label htmlFor="extraGuestFee" className="col-span-1 col-start-1 flex items-center">
+        <div className="text-sm font-medium text-gray-900 grid grid-cols-1 gap-4 mb-5 mt-5 md:grid-cols-5">
+          <Label htmlFor="extraGuestFee" className="col-span-2 col-start-1 flex items-center">
             Extra Guest Fee
           </Label>
-          <div className="col-span-2 col-start-3 flex items-center w-full">
+          <div className="col-span-1 col-start-4 flex items-center w-full">
             <Input
               type="number"
               className="w-full"
               id="extraGuestFee.guests"
               name="extraGuestFee.guests"
-              // value={formik.values.extraGuestFee.guests}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
+              min="0"
+              onWheel={event => event.currentTarget.blur()}
             />
-            <span className="ml-2">Guest(s)</span>
+            <span className="ml-2 mr-2">Guest(s)</span>
           </div>
           <div className="col-span-1 col-start-5 flex items-center">
             <span className="mr-2">$</span>
@@ -320,243 +323,14 @@ export default function PricingAvailability({ data }) {
               className="w-full"
               id="extraGuestFee.fee"
               name="extraGuestFee.fee"
-              // value={formik.values.extraGuestFee.fee}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
+              min="0"
+              onWheel={event => event.currentTarget.blur()}
             />
-            <span className="ml-2">Per Guest</span>
+            <span className="ml-2 mr-2">Per Guest</span>
           </div>
         </div>
-        <hr />
-        <TabTitle title="Trip Length" desc="" />
-        <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
-          <Label htmlFor="minimumStay" className="col-span-1 col-start-1 flex items-center">
-            Minimum Stay
-          </Label>
-          <div className="col-span-1 col-start-5 flex items-center">
-            <Input
-              type="number"
-              className="w-full"
-              id="minimumStay"
-              name="minimumStay"
-              value={formik.values.minimumStay}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-          </div>
-        </div>
-        {formik.touched.minimumStay && formik.errors.minimumStay ? (
-          <div className="text-red-600">{formik.errors.minimumStay}</div>
-        ) : null}
-        <hr />
-        <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
-          <Label htmlFor="maximumStay" className="col-span-1 col-start-1 flex items-center">
-            Maximum Stay
-          </Label>
-          <div className="col-span-1 col-start-5 flex items-center">
-            <Input
-              type="number"
-              className="w-full"
-              id="maximumStay"
-              name="maximumStay"
-              // value={formik.values.maximumStay}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-          </div>
-        </div>
-        {formik.touched.maximumStay && formik.errors.maximumStay ? (
-          <div className="text-red-600">{formik.errors.maximumStay}</div>
-        ) : null}
-        <hr />
-        <TabTitle title="Availability" desc="" />
-        <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
-          <Label htmlFor="advancedNotice" className="col-span-1 col-start-1 flex items-center">
-            Advanced Notice
-          </Label>
-          <div className="col-span-1 col-start-5 flex items-center">
-            <select
-              id="advancedNotice"
-              name="advancedNotice"
-              // value={formik.values.advancedNotice}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              className="w-full p-2 border rounded-md"
-            >
-              <option value="" disabled>
-                Select Advanced Notice
-              </option>
-              <option value="SameDay">Same Day</option>
-              <option value="1Day">At Least 1 Day</option>
-              <option value="2Day">At Least 2 Days</option>
-              <option value="3Day">At Least 3 Days</option>
-              <option value="7Day">At Least 7 Days</option>
-            </select>
-          </div>
-        </div>
-        {formik.touched.advancedNotice && formik.errors.advancedNotice ? (
-          <div className="text-red-600">{formik.errors.advancedNotice}</div>
-        ) : null}
-        <hr />
-        <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
-          <Label
-            htmlFor="sameDayAdvancedNotice"
-            className="col-span-1 col-start-1 flex items-center"
-          >
-            Same Day Advanced Notice
-          </Label>
-          <div className="col-span-1 col-start-5 flex items-center">
-            <select
-              id="sameDayAdvancedNotice"
-              name="sameDayAdvancedNotice"
-              // value={formik.values.sameDayAdvancedNotice}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              className="w-full p-2 border rounded-md"
-            >
-              <option value="" disabled>
-                Select Same Day Advanced Notice
-              </option>
-              {hourAN.map((hour) => (
-                <option key={hour} value={hour}>
-                  {hour}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        {formik.touched.sameDayAdvancedNotice && formik.errors.sameDayAdvancedNotice ? (
-          <div className="text-red-600">{formik.errors.sameDayAdvancedNotice}</div>
-        ) : null}
-        <hr />
-        <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
-          <Label htmlFor="preparationTime" className="col-span-1 col-start-1 flex items-center">
-            Preparation Time
-          </Label>
-          <div className="col-span-1 col-start-5 flex items-center">
-            <select
-              id="preparationTime"
-              name="preparationTime"
-              // value={formik.values.preparationTime}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              className="w-full p-2 border rounded-md"
-            >
-              <option value="" disabled>
-                Select Preparation Time
-              </option>
-              {preparationTimeOptions.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <hr />
-        <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
-          <Label
-            htmlFor="availabilityWindow"
-            className="col-span-1 col-start-1 flex items-center"
-          >
-            Availability Window
-          </Label>
-          <div className="col-span-1 col-start-5 flex items-center">
-            <select
-              id="availabilityWindow"
-              name="availabilityWindow"
-              // value={formik.values.availabilityWindow}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              className="w-full p-2 border rounded-md"
-            >
-              <option value="" disabled>
-                Select Availability Window
-              </option>
-              {availabilityWindowOptions.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <hr />
-        <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
-          <Label
-            htmlFor="restrictedCheckIn"
-            className="col-span-1 col-start-1 flex items-center"
-          >
-            Restricted Check-In
-          </Label>
-          <div className="col-span-2 col-start-3 flex items-center w-full">
-            {/* Create custom Toggle component or use your own implementation */}
-            <Toggle>Monday</Toggle>
-            <Toggle>Tuesday</Toggle>
-            <Toggle>Wednesday</Toggle>
-            <Toggle>Thursday</Toggle>
-            <Toggle>Friday</Toggle>
-            <Toggle>Saturday</Toggle>
-            <Toggle>Sunday</Toggle>
-          </div>
-        </div>
-        <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
-          <Label
-            htmlFor="restrictedCheckOut"
-            className="col-span-1 col-start-1 flex items-center"
-          >
-            Restricted Check-Out
-          </Label>
-          <div className="col-span-2 col-start-3 flex items-center">
-            {/* Create custom Toggle component or use your own implementation */}
-            <Toggle>Monday</Toggle>
-            <Toggle>Tuesday</Toggle>
-            <Toggle>Wednesday</Toggle>
-            <Toggle>Thursday</Toggle>
-            <Toggle>Friday</Toggle>
-            <Toggle>Saturday</Toggle>
-            <Toggle>Sunday</Toggle>
-          </div>
-        </div>
-        <hr />
-        <TabTitle title="Calendar Sync" desc="" />
-        <CalendarImportForm />
-        <br />
-        <br />
-        {/* <CalendarModal data={data} /> */}
-        <hr />
-        <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
-          <Label
-            htmlFor="calendarExport"
-            className="col-span-1 col-start-1 flex items-center"
-          >
-            Calendar Export
-          </Label>
-          <div className="col-span-3 col-start-3 flex items-center relative">
-            <Input
-              type="text"
-              className="w-full pr-10"
-              id="calendarExport"
-              name="calendarExport"
-              value={formik.values.calendarExport}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-            <button
-              type="button"
-              className="absolute top-0 right-0 h-full w-10 flex items-center justify-center bg-gray-200 hover:bg-gray-300 cursor-pointer"
-              onClick={() => {
-                const input = document.querySelector('input[type="text"]');
-                if (input) {
-                  input.select();
-                  document.execCommand("copy");
-                }
-              }}
-            >
-              Copy
-            </button>
-          </div>
-        </div>
+
+
         <hr className="mb-5" />
         <EditorSaveButton submitted={submitted} isLoading={isLoading} />
       </div>

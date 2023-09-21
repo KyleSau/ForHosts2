@@ -100,7 +100,7 @@ export default function InfoForGuests({ data }) {
                     <div className="text-sm font-medium text-gray-900 mt-5 mb-5 grid grid-cols-5 gap-4">
                         <span className="col-span-1 col-start-1 flex items-center">Checkout Time</span>
                         <Select>
-                            <SelectTrigger className="col-span-1 col-start-5 flex items-center">
+                            <SelectTrigger className="col-span-1 col-start-5 flex items-center transform-none">
                                 <SelectValue
                                     placeholder={formik.values.checkoutTime}
                                     onChange={formik.handleChange}
@@ -112,6 +112,7 @@ export default function InfoForGuests({ data }) {
                                         value="checkoutTime"
                                         key={hour}
                                         value={hour}
+                                        maximum-scale="1"
                                     >
                                         {hour}
                                     </SelectItem>
@@ -122,7 +123,7 @@ export default function InfoForGuests({ data }) {
                     <hr />
                     <div className="text-sm font-medium text-gray-900 mt-5 mb-5 grid grid-cols-5 gap-4">
                         <span className="col-span-1 col-start-1 flex items-center">Interaction Preferences</span>
-                        <div className="col-span-4 col-start-2 flex items-center space-x-4">
+                        <div className="col-span-2 col-start-4 flex items-center space-x-4">
                             <RadioGroup
                                 name="interactionPreferences"
                                 defaultValue={formik.values.interactionPreferences}
@@ -134,58 +135,31 @@ export default function InfoForGuests({ data }) {
                                         I won’t be available in person, and prefer communicating through the app.
                                     </Label>
                                 </div>
-                                {/* Other RadioGroupItems */}
-                            </RadioGroup>
-                            <RadioGroup
-                                name="interactionPreferences"
-                                defaultValue={formik.values.interactionPreferences}
-                                onChange={(value) => formik.setFieldValue("interactionPreferences", value)}
-                            >
                                 <div className="flex items-center space-x-2">
                                     <RadioGroupItem value="sayHello" id="sayHello" />
                                     <Label htmlFor="sayHello">
                                         I like to say hello in person, but keep to myself otherwise.
                                     </Label>
                                 </div>
-                                {/* Other RadioGroupItems */}
-                            </RadioGroup>
-                            <RadioGroup
-                                name="interactionPreferences"
-                                defaultValue={formik.values.interactionPreferences}
-                                onChange={(value) => formik.setFieldValue("interactionPreferences", value)}
-                            >
                                 <div className="flex items-center space-x-2">
                                     <RadioGroupItem value="socializeWithGuests" id="socializeWithGuests" />
                                     <Label htmlFor="socializeWithGuests">
                                         I like socializing and spending time with guests.
                                     </Label>
                                 </div>
-                                {/* Other RadioGroupItems */}
-                            </RadioGroup>
-                            <RadioGroup
-                                name="interactionPreferences"
-                                defaultValue={formik.values.interactionPreferences}
-                                onChange={(value) => formik.setFieldValue("interactionPreferences", value)}
-                            >
                                 <div className="flex items-center space-x-2">
                                     <RadioGroupItem value="noPreference" id="noPreference" />
                                     <Label htmlFor="noPreference">
                                         No preference. I’ll follow my guests’ lead.
                                     </Label>
                                 </div>
-                                {/* Other RadioGroupItems */}
+                                {/* Add more RadioGroupItems as needed */}
                             </RadioGroup>
                         </div>
                     </div>
 
+
                     <TabTitle title="After Booking" desc="" />
-                    <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
-                        <Label htmlFor="Address" className="col-span-1 col-start-1 flex items-center">Address</Label>
-                        <div className="col-span-3 col-start-3 flex items-center relative">
-                            <Input type="text" className="w-full pr-10" />
-                        </div>
-                    </div>
-                    <hr />
                     <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
                         <Label htmlFor="Directions" className="col-span-1 col-start-1 flex items-center">Directions</Label>
                         <div className="col-span-3 col-start-3 flex items-center relative">
@@ -193,13 +167,20 @@ export default function InfoForGuests({ data }) {
                         </div>
                     </div>
                     <hr />
-                    <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
-                        <Label htmlFor="Wifi" className="col-span-1 col-start-1 flex items-center">Wifi Details</Label>
-                        <div className="col-span-3 col-start-3 flex items-center">
-                            <p className="p-2">Network Name</p><Input type="text" className="w-full mr-10" />
-                            <p className="p-2">Password</p><Input type="text" className="w-full" />
+                    <div className="text-sm font-medium text-gray-900 grid grid-cols-1 gap-4 mb-5 mt-5">
+                        <Label htmlFor="Wifi" className="flex items-center">Wifi Details</Label>
+                        <div className="flex flex-col md:flex-row md:space-x-4">
+                            <div className="md:w-1/2">
+                                <p className="p-2">Network Name</p>
+                                <Input type="text" className="w-full" />
+                            </div>
+                            <div className="md:w-1/2">
+                                <p className="p-2">Password</p>
+                                <Input type="text" className="w-full" />
+                            </div>
                         </div>
                     </div>
+
                     <hr />
                     <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
                         <Label htmlFor="HouseManual" className="col-span-1 col-start-1 flex items-center">House Manual</Label>
@@ -208,22 +189,11 @@ export default function InfoForGuests({ data }) {
                         </div>
                     </div>
                     <hr />
-                    <TabTitle title="Check-In Method" desc="" />
+                    <TabTitle title="Check-In" desc="" />
                     <br />
-                    <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
-                        <div className="col-span-1 col-start-1 flex items-center">Check-In Method</div>
-                        <div className="col-span-4 col-start-2 flex items-center space-x-4">
-                            <RadioGroup
-                                name="checkInMethod"
-                                defaultValue={formik.values.checkInMethod}
-                                onChange={(value) => formik.setFieldValue("checkInMethod", value)}
-                            >
-                                <div className="flex items-center space-x-2">
-                                    <RadioGroupItem value="selfCheckIn" id="selfCheckIn" />
-                                    <Label htmlFor="selfCheckIn">Self check-in</Label>
-                                </div>
-                                {/* Other RadioGroupItems */}
-                            </RadioGroup>
+                    <div className="text-sm font-medium text-gray-900 grid grid-cols-2 gap-4 mb-5 mt-5">
+                        <div className="flex items-center">Check-In Method</div>
+                        <div className="flex flex-col">
                             <RadioGroup
                                 name="checkInMethod"
                                 defaultValue={formik.values.checkInMethod}
@@ -237,6 +207,7 @@ export default function InfoForGuests({ data }) {
                                 </div>
                                 {/* Other RadioGroupItems */}
                             </RadioGroup>
+
                             <RadioGroup
                                 name="checkInMethod"
                                 defaultValue={formik.values.checkInMethod}
@@ -248,6 +219,7 @@ export default function InfoForGuests({ data }) {
                                 </div>
                                 {/* Other RadioGroupItems */}
                             </RadioGroup>
+
                             <RadioGroup
                                 name="checkInMethod"
                                 defaultValue={formik.values.checkInMethod}
@@ -261,6 +233,7 @@ export default function InfoForGuests({ data }) {
                                 </div>
                                 {/* Other RadioGroupItems */}
                             </RadioGroup>
+
                             <RadioGroup
                                 name="checkInMethod"
                                 defaultValue={formik.values.checkInMethod}
@@ -276,6 +249,7 @@ export default function InfoForGuests({ data }) {
                             </RadioGroup>
                         </div>
                     </div>
+
 
                     <hr />
                     <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
