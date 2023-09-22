@@ -124,14 +124,15 @@ export const deleteBlobFromStore = async (urlToDelete: string) => {
 
     if(urlToDelete === blobUrl) {
       const successJson = {
-        message: 'Success'
+        message: "Success",
+        ...deletedBlob
       };
       return successJson;
     }
   }
 
   const errorJson = {
-    message: 'An error occurred on the server.'
+    message: "An error occurred on the server while deleting file at: " + urlToDelete
   };
   return errorJson;
 };

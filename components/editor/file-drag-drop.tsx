@@ -35,6 +35,7 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
   //states for confirmation modal for deleting pictures
   const [editorWarningModalOpen, setEditorWarningModalOpen] = useState<boolean>(false);
   const [editorWarningModalData, setEditorWarningModalData] = useState<EditorWarningModalDataType>(EditorWarningModalDataTemplate);
+  const [uploadProgress, setUploadProgress] = useState(0); 
 
   //TEST
   const [blobsFromStoreTest, setBlobsFromStoreTest] = useState<BlobResult[]>([]);
@@ -59,6 +60,19 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
     console.log("useEffect entered. getting existing blobs");
     refreshMetadata();
   }, []);
+
+  // useEffect(() => {
+  //   const intervalId = setInterval(async () => {
+  //     const response = await fetch('/api/upload/progress');
+  //     if (response.ok) {
+  //       const progressData = await response.json();
+  //       console.log("progressData: ", progressData);
+  //       setUploadProgress(progressData.progress);
+  //     }
+  //   }, 2000); // Adjust the polling interval as needed
+
+  //   return () => clearInterval(intervalId);
+  // }, []);
 
   const addFilesToLocalState = (newFiles: (File | null)[]) => {
     //first check if adding the new files causes currently uploaded pics to surpass the upload threshold; show modal if so
@@ -192,14 +206,19 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
 
   const uploadFilesToBlobStoreAndMetadataToDB = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     console.log("uploadFilesToBlobStoreAndMetadataToDB entered");
+    console.log("event: ", event);
     event.preventDefault();
 
     const fileDataObjectsCopy = [...fileDataObjects];
 
     const uploadPromiseWrapper = new Promise(() => {
+
+      // const xhr = new XMLHttpRequest
+
       fileDataObjects.forEach((fdo: FileDataObject, fdoIdx: number) => {
         console.log(">>> fdo: ", fdo);
-        if(fdo.inBlobStore) {
+        if(fdo.inBlobStore) 
+        {
           if(fdo?.id && fdo.orderIndex != fdoIdx) {
             const updateBlobMetadataResponse = updateBlobMetadata(fdo.id, {orderIndex: fdoIdx});
             updateBlobMetadataResponse.then((responseValue: ImagePrismaSchema) => {
@@ -209,9 +228,13 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
                 ...responseValue
               }
               fileDataObjectsCopy[fdoIdx] = newUpdatedFile;
+
+              // xhr.upload.addEventListener
             })
           }
-        } else {
+        } 
+        else 
+        {
           const file = fdo?.file;
           if(file) {
             console.log("file.name: ", file.name);
@@ -242,6 +265,8 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
       setFileDataObjects(fileDataObjectsCopy);
     });
   };
+
+
 
   //TEST
   const handleListAllblobsInStore = async () => { 
