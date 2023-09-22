@@ -88,11 +88,32 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+// model Image {
+//   id         String   @id @default(cuid())
+//   url        String
+//   uploadedAt DateTime
+//   size       Bytes
+
+//   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+//   userId String?
+
+//   site   Site?   @relation(fields: [siteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+//   siteId String?
+
+//   postId String
+//   post   Post?  @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+//   @@index([userId])
+//   @@index([siteId])
+//   @@index([postId])
+// }
 model Image {
   id         String   @id @default(cuid())
   url        String
   uploadedAt DateTime
-  size       Bytes
+  size       String
+  fileName   String
+  orderIndex Int
 
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String?
@@ -111,6 +132,8 @@ model Image {
 model Post {
   id    String @id @default(cuid())
   title String @db.Text
+
+  images Image[]
 
   price           Int
   weekendPrice    Int
@@ -187,8 +210,6 @@ model Post {
   photoGallery         String[] // List of images showcasing the property
   photoGalleryBlurhash String[] @default([])
   additionalServices   String[] // List of additional services offered at the property
-
-  Image Image[]
 
   @@unique([slug, siteId])
   @@index([siteId])
