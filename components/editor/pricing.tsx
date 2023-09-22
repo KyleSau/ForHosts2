@@ -143,11 +143,11 @@ export default function Pricing({ data }: any) {
     <form onSubmit={formik.handleSubmit}>
       <div>
         <TabTitle title="Pricing" desc="" />
-        <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+        <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
           <Label htmlFor="price" className="col-span-1 col-start-1 flex items-center">
             Price Per Night
           </Label>
-          <div className="col-span-1 col-start-5 flex items-center">
+          <div className="col-span-1 md:col-span-2 sm:col-span-3 col-start-3 md:col-start-4 sm:col-start-5 flex items-center max-w-[200px]">
             <span className="mr-2">$</span>
             <Input
               type="number"
@@ -166,11 +166,11 @@ export default function Pricing({ data }: any) {
           <div className="text-red-600">{formik.errors.price}</div>
         ) : null}
         <hr />
-        <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+        <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
           <Label htmlFor="weekendPrice" className="col-span-1 col-start-1 flex items-center">
             Weekend Price (fri/sat)
           </Label>
-          <div className="col-span-1 col-start-5 flex items-center">
+          <div className="col-span-1 md:col-span-2 sm:col-span-3 col-start-3 md:col-start-4 sm:col-start-5 flex items-center max-w-[200px]">
             <span className="mr-2">$</span>
             <Input
               type="number"
@@ -190,11 +190,11 @@ export default function Pricing({ data }: any) {
         ) : null}
         <hr />
         <TabTitle title="Discounts" desc="" />
-        <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+        <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
           <Label htmlFor="weeklyDiscount" className="col-span-1 col-start-1 flex items-center">
             Weekly
           </Label>
-          <div className="col-span-1 col-start-5 flex items-center">
+          <div className="col-span-1 md:col-span-2 sm:col-span-3 col-start-3 md:col-start-4 sm:col-start-5 flex items-center max-w-[200px]">
             <span className="mr-2">%</span>
             <Input
               type="number"
@@ -211,11 +211,11 @@ export default function Pricing({ data }: any) {
         </div>
 
         <hr />
-        <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+        <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
           <Label htmlFor="monthlyDiscount" className="col-span-1 col-start-1 flex items-center">
             Monthly
           </Label>
-          <div className="col-span-1 col-start-5 flex items-center">
+          <div className="col-span-1 md:col-span-2 sm:col-span-3 col-start-3 md:col-start-4 sm:col-start-5 flex items-center max-w-[200px]">
             <span className="mr-2">%</span>
             <Input
               type="number"
@@ -232,11 +232,11 @@ export default function Pricing({ data }: any) {
         </div>
         <hr />
         <TabTitle title="Additional Fees" desc="" />
-        <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+        <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
           <Label htmlFor="cleaningFee" className="col-span-1 col-start-1 flex items-center">
             Cleaning Fee
           </Label>
-          <div className="col-span-1 col-start-5 flex items-center">
+          <div className="col-span-1 md:col-span-2 sm:col-span-3 col-start-3 md:col-start-4 sm:col-start-5 flex items-center max-w-[200px]">
             <span className="mr-2">$</span>
             <Input
               type="number"
@@ -255,11 +255,11 @@ export default function Pricing({ data }: any) {
           <div className="text-red-600">{formik.errors.cleaningFee}</div>
         ) : null}
         <hr />
-        <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+        <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
           <Label htmlFor="petFee" className="col-span-1 col-start-1 flex items-center">
             Pet Fee
           </Label>
-          <div className="col-span-1 col-start-5 flex items-center">
+          <div className="col-span-1 md:col-span-2 sm:col-span-3 col-start-3 md:col-start-4 sm:col-start-5 flex items-center max-w-[200px]">
             <span className="mr-2">$</span>
             <Input
               type="number"
@@ -278,11 +278,11 @@ export default function Pricing({ data }: any) {
           <div className="text-red-600">{formik.errors.petFee}</div>
         ) : null}
         <hr />
-        <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+        <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
           <Label htmlFor="securityDeposit" className="col-span-1 col-start-1 flex items-center">
             Security Deposit
           </Label>
-          <div className="col-span-1 col-start-5 flex items-center">
+          <div className="col-span-1 md:col-span-2 sm:col-span-3 col-start-3 md:col-start-4 sm:col-start-5 flex items-center max-w-[200px]">
             <span className="mr-2">$</span>
             <Input
               type="number"
@@ -301,32 +301,31 @@ export default function Pricing({ data }: any) {
           <div className="text-red-600">{formik.errors.securityDeposit}</div>
         ) : null}
         <hr />
-        <div className="text-sm font-medium text-gray-900 grid grid-cols-1 gap-4 mb-5 mt-5 md:grid-cols-5">
+        <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
           <Label htmlFor="extraGuestFee" className="col-span-2 col-start-1 flex items-center">
             Extra Guest Fee
           </Label>
-          <div className="col-span-1 col-start-4 flex items-center w-full">
+          <div className="col-span-2 md:col-span-3 sm:col-span-4 col-start-2 md:col-start-2 sm:col-start-2 flex items-center">
+            <span className="m-2">After</span>
             <Input
               type="number"
-              className="w-full"
+              className="col-span-2 md:col-span-3 sm:col-span-4 col-start-2 md:col-start-2 sm:col-start-2 flex items-center"
               id="extraGuestFee.guests"
               name="extraGuestFee.guests"
               min="0"
               onWheel={event => event.currentTarget.blur()}
             />
-            <span className="ml-2 mr-2">Guest(s)</span>
-          </div>
-          <div className="col-span-1 col-start-5 flex items-center">
-            <span className="mr-2">$</span>
+            <span className="m-2">Guest(s)</span>
+            <span className="m-2">$</span>
             <Input
               type="number"
-              className="w-full"
+              className="col-span-2 md:col-span-3 sm:col-span-4 col-start-2 md:col-start-2 sm:col-start-2 flex items-center"
               id="extraGuestFee.fee"
               name="extraGuestFee.fee"
               min="0"
               onWheel={event => event.currentTarget.blur()}
             />
-            <span className="ml-2 mr-2">Per Guest</span>
+            <span className="m-2">Per Guest</span>
           </div>
         </div>
 

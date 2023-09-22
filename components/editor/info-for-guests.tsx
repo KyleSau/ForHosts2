@@ -55,10 +55,10 @@ export default function InfoForGuests({ data }) {
             <form onSubmit={formik.handleSubmit}>
                 <TabTitle title="Before Booking" desc="" />
                 <div className="mt-10">
-                    <div className="text-sm font-medium text-gray-900 mt-5 mb-5 grid grid-cols-5 gap-4">
+                    <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
                         <span className="col-span-1 col-start-1 flex items-center">Check-in Window</span>
                         <Select>
-                            <SelectTrigger className="col-span-1 col-start-4 flex items-center">
+                            <SelectTrigger className="col-span-1 md:col-span-2 sm:col-span-3 col-start-3 md:col-start-4 sm:col-start-5 flex items-center max-w-[200px]">
                                 <SelectValue
                                     placeholder={formik.values.checkinWindowStart}
                                     onChange={formik.handleChange}
@@ -77,7 +77,7 @@ export default function InfoForGuests({ data }) {
                             </SelectContent>
                         </Select>
                         <Select>
-                            <SelectTrigger className="col-span-1 col-start-5 flex items-center">
+                            <SelectTrigger className="col-span-1 md:col-span-2 sm:col-span-3 col-start-3 md:col-start-4 sm:col-start-5 flex items-center max-w-[200px]">
                                 <SelectValue
                                     placeholder={formik.values.checkinWindowEnd}
                                     onChange={formik.handleChange}
@@ -97,10 +97,10 @@ export default function InfoForGuests({ data }) {
                         </Select>
                     </div>
                     <hr />
-                    <div className="text-sm font-medium text-gray-900 mt-5 mb-5 grid grid-cols-5 gap-4">
+                    <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
                         <span className="col-span-1 col-start-1 flex items-center">Checkout Time</span>
                         <Select>
-                            <SelectTrigger className="col-span-1 col-start-5 flex items-center transform-none">
+                            <SelectTrigger className="col-span-1 md:col-span-2 sm:col-span-3 col-start-3 md:col-start-4 sm:col-start-5 flex items-center max-w-[200px]">
                                 <SelectValue
                                     placeholder={formik.values.checkoutTime}
                                     onChange={formik.handleChange}
@@ -121,9 +121,9 @@ export default function InfoForGuests({ data }) {
                         </Select>
                     </div>
                     <hr />
-                    <div className="text-sm font-medium text-gray-900 mt-5 mb-5 grid grid-cols-5 gap-4">
+                    <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
                         <span className="col-span-1 col-start-1 flex items-center">Interaction Preferences</span>
-                        <div className="col-span-2 col-start-4 flex items-center space-x-4">
+                        <div className="col-span-1 md:col-span-2 sm:col-span-3 col-start-3 md:col-start-4 sm:col-start-5 flex items-center">
                             <RadioGroup
                                 name="interactionPreferences"
                                 defaultValue={formik.values.interactionPreferences}
@@ -153,47 +153,49 @@ export default function InfoForGuests({ data }) {
                                         No preference. I’ll follow my guests’ lead.
                                     </Label>
                                 </div>
-                                {/* Add more RadioGroupItems as needed */}
                             </RadioGroup>
                         </div>
                     </div>
-
-
                     <TabTitle title="After Booking" desc="" />
-                    <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
-                        <Label htmlFor="Directions" className="col-span-1 col-start-1 flex items-center">Directions</Label>
-                        <div className="col-span-3 col-start-3 flex items-center relative">
-                            <Input type="text" className="w-full pr-10" />
+                    <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
+                        <Label htmlFor="Directions" className="col-span-1 col-start-1 flex items-center">
+                            Directions
+                        </Label>
+                        <div className="col-span-2 md:col-span-3 sm:col-span-4 col-start-2 md:col-start-2 sm:col-start-2 flex">
+                            <Input type="text" className="w-full h-[200px]" />
                         </div>
                     </div>
                     <hr />
-                    <div className="text-sm font-medium text-gray-900 grid grid-cols-1 gap-4 mb-5 mt-5">
-                        <Label htmlFor="Wifi" className="flex items-center">Wifi Details</Label>
-                        <div className="flex flex-col md:flex-row md:space-x-4">
-                            <div className="md:w-1/2">
-                                <p className="p-2">Network Name</p>
-                                <Input type="text" className="w-full" />
-                            </div>
-                            <div className="md:w-1/2">
-                                <p className="p-2">Password</p>
-                                <Input type="text" className="w-full" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr />
-                    <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
-                        <Label htmlFor="HouseManual" className="col-span-1 col-start-1 flex items-center">House Manual</Label>
-                        <div className="col-span-3 col-start-3 flex items-center">
+                    <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
+                        <Label htmlFor="Wifi" className="flex items-center">
+                            Wifi Details
+                        </Label>
+                        <div className="col-span-2 md:col-span-3 sm:col-span-4 col-start-2 md:col-start-2 sm:col-start-2 flex items-center">
+                            <p className="p-2">Network Name</p>
                             <Input type="text" className="w-full" />
+                        </div>
+                        <div className="col-span-2 md:col-span-3 sm:col-span-4 col-start-2 md:col-start-2 sm:col-start-2 flex items-center">
+                            <p className="p-2">Password</p>
+                            <Input type="text" className="w-full" />
+                        </div>
+                    </div>
+                    <hr />
+                    <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
+                        <Label htmlFor="HouseManual" className="col-span-1 col-start-1 flex items-center">
+                            House Manual
+                        </Label>
+                        <div className="col-span-2 md:col-span-3 sm:col-span-4 col-start-2 md:col-start-2 sm:col-start-2 flex items-center">
+                            <Input type="text" className="w-full h-[200px]" />
                         </div>
                     </div>
                     <hr />
                     <TabTitle title="Check-In" desc="" />
                     <br />
-                    <div className="text-sm font-medium text-gray-900 grid grid-cols-2 gap-4 mb-5 mt-5">
-                        <div className="flex items-center">Check-In Method</div>
-                        <div className="flex flex-col">
+                    <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
+                        <span className="col-span-1 col-start-1 flex items-center">
+                            Check-In Method
+                        </span>
+                        <div className="col-span-1 md:col-span-2 sm:col-span-3 col-start-3 md:col-start-4 sm:col-start-5 flex items-center">
                             <RadioGroup
                                 name="checkInMethod"
                                 defaultValue={formik.values.checkInMethod}
@@ -205,40 +207,16 @@ export default function InfoForGuests({ data }) {
                                         Smart lock - A lock guests open with a mobile app or keypad
                                     </Label>
                                 </div>
-                                {/* Other RadioGroupItems */}
-                            </RadioGroup>
-
-                            <RadioGroup
-                                name="checkInMethod"
-                                defaultValue={formik.values.checkInMethod}
-                                onChange={(value) => formik.setFieldValue("checkInMethod", value)}
-                            >
                                 <div className="flex items-center space-x-2">
                                     <RadioGroupItem value="keypad" id="keypad" />
                                     <Label htmlFor="keypad">Keypad - Guests can open the door with a code</Label>
                                 </div>
-                                {/* Other RadioGroupItems */}
-                            </RadioGroup>
-
-                            <RadioGroup
-                                name="checkInMethod"
-                                defaultValue={formik.values.checkInMethod}
-                                onChange={(value) => formik.setFieldValue("checkInMethod", value)}
-                            >
                                 <div className="flex items-center space-x-2">
                                     <RadioGroupItem value="lockbox" id="lockbox" />
                                     <Label htmlFor="lockbox">
                                         Lockbox - The key is stored in a small safe, which guests can open with a code
                                     </Label>
                                 </div>
-                                {/* Other RadioGroupItems */}
-                            </RadioGroup>
-
-                            <RadioGroup
-                                name="checkInMethod"
-                                defaultValue={formik.values.checkInMethod}
-                                onChange={(value) => formik.setFieldValue("checkInMethod", value)}
-                            >
                                 <div className="flex items-center space-x-2">
                                     <RadioGroupItem value="buildingStaff" id="buildingStaff" />
                                     <Label htmlFor="buildingStaff">
@@ -249,13 +227,11 @@ export default function InfoForGuests({ data }) {
                             </RadioGroup>
                         </div>
                     </div>
-
-
                     <hr />
-                    <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+                    <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
                         <Label htmlFor="Directions" className="col-span-1 col-start-1 flex items-center">Checkout Instructions</Label>
-                        <div className="col-span-3 col-start-3 flex items-center relative">
-                            <Input type="text" className="w-full pr-10" />
+                        <div className="col-span-2 md:col-span-3 sm:col-span-4 col-start-2 md:col-start-2 sm:col-start-2 flex items-center">
+                            <Input type="text" className="w-full h-[200px]" />
                         </div>
                     </div>
                 </div>

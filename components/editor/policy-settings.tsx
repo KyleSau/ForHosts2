@@ -380,7 +380,7 @@ export default function PolicySettings({ data }) {
                         Quiet Hours
                     </span>
                     <Select>
-                        <SelectTrigger className="col-span-1 col-start-4 flex items-center">
+                        <SelectTrigger className="col-span-1 col-start-4 flex items-center resize-none">
                             <SelectValue
                                 placeholder={formik.values.quietHoursStart}
                                 onChange={formik.handleChange}
@@ -468,9 +468,13 @@ export default function PolicySettings({ data }) {
                     </Select>
                 </div>
                 <hr />
-                <div className="mb-5 mt-5 text-sm font-medium leading-6 text-gray-900">
-                    Additional Rules
-                    <TextareaAutosize />
+                <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
+                    <Label htmlFor="HouseManual" className="col-span-1 col-start-1 flex items-center">
+                        Additional Rules
+                    </Label>
+                    <div className="col-span-2 md:col-span-3 sm:col-span-4 col-start-2 md:col-start-2 sm:col-start-2 flex items-center">
+                        <Input type="text" className="w-full h-[200px]" />
+                    </div>
                 </div>
                 <hr />
                 <TabTitle title="Taxes" desc="" />
