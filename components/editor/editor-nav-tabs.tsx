@@ -5,7 +5,7 @@ import InfoForGuests from './info-for-guests';
 import PolicySettings from './policy-settings';
 import ListingImages from './listing-images';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMoneyCheckDollar } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faMoneyCheckDollar } from '@fortawesome/free-solid-svg-icons';
 import { faPaperclip } from '@fortawesome/free-solid-svg-icons';
 import { faScaleBalanced } from '@fortawesome/free-solid-svg-icons';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
@@ -17,8 +17,10 @@ export default function EditorTabs({ data }) {
   return (
     <div className="flex justify-center w-full">
       <Tabs defaultValue="ListingDetails" className="w-full">
-        <TabsList className="w-auto h-125 shadow-md md:w-full">
-          <TabsTrigger value="ListingDetails">
+        {/* Adjust TabsList class for responsiveness */}
+        <TabsList className="w-full md:w-auto h-125 shadow-md md:w-full flex-wrap justify-center md:flex-nowrap">
+          {/* Add responsive classes to each TabsTrigger */}
+          <TabsTrigger value="ListingDetails" className="w-full md:w-auto">
             <div className="text-center">
               <div>
                 <FontAwesomeIcon icon={faPaperclip} />
@@ -28,10 +30,9 @@ export default function EditorTabs({ data }) {
               </div>
             </div>
           </TabsTrigger>
-          <TabsTrigger value="Pricing">
+          <TabsTrigger value="Pricing" className="w-full md:w-auto">
             <div className="text-center">
               <div>
-
                 <FontAwesomeIcon icon={faMoneyCheckDollar} className="mx-auto" />
               </div>
               <div>
@@ -39,21 +40,19 @@ export default function EditorTabs({ data }) {
               </div>
             </div>
           </TabsTrigger>
-          <TabsTrigger value="Availability">
+          <TabsTrigger value="Availability" className="w-full md:w-auto">
             <div className="text-center">
               <div>
-
-                <FontAwesomeIcon icon={faMoneyCheckDollar} className="mx-auto" />
+                <FontAwesomeIcon icon={faCalendar} className="mx-auto" />
               </div>
               <div>
                 Availability
               </div>
             </div>
           </TabsTrigger>
-          <TabsTrigger value="PolicySettings">
+          <TabsTrigger value="PolicySettings" className="w-full md:w-auto">
             <div className="text-center">
               <div>
-
                 <FontAwesomeIcon icon={faScaleBalanced} />
               </div>
               <div>
@@ -61,10 +60,9 @@ export default function EditorTabs({ data }) {
               </div>
             </div>
           </TabsTrigger>
-          <TabsTrigger value="InfoForGuests">
+          <TabsTrigger value="InfoForGuests" className="w-full md:w-auto">
             <div className="text-center">
               <div>
-
                 <FontAwesomeIcon icon={faCircleInfo} />
               </div>
               <div>
@@ -72,10 +70,9 @@ export default function EditorTabs({ data }) {
               </div>
             </div>
           </TabsTrigger>
-          <TabsTrigger value="ListingImages">
+          <TabsTrigger value="ListingImages" className="w-full md:w-auto">
             <div className="text-center">
               <div>
-
                 <FontAwesomeIcon icon={faImage} />
               </div>
               <div>
@@ -92,5 +89,6 @@ export default function EditorTabs({ data }) {
         <TabsContent className='text-gray-400 font-bold' value="ListingImages"><ListingImages data={data} /></TabsContent>
       </Tabs>
     </div>
+
   );
 }

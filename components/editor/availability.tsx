@@ -153,11 +153,11 @@ export default function Availability({ data }) {
         <form onSubmit={formik.handleSubmit}>
             <div>
                 <TabTitle title="Trip Length" desc="" />
-                <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+                <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
                     <Label htmlFor="minimumStay" className="col-span-1 col-start-1 flex items-center">
                         Minimum Stay
                     </Label>
-                    <div className="col-span-1 col-start-5 flex items-center">
+                    <div className="col-span-1 md:col-span-1 sm:col-span-1 col-start-3 md:col-start-4 sm:col-start-5 flex items-center">
                         <Input
                             type="number"
                             className="w-full"
@@ -175,11 +175,11 @@ export default function Availability({ data }) {
                     <div className="text-red-600">{formik.errors.minimumStay}</div>
                 ) : null}
                 <hr />
-                <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+                <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
                     <Label htmlFor="maximumStay" className="col-span-1 col-start-1 flex items-center">
                         Maximum Stay
                     </Label>
-                    <div className="col-span-1 col-start-5 flex items-center">
+                    <div className="col-span-1 md:col-span-1 sm:col-span-1 col-start-3 md:col-start-4 sm:col-start-5 flex items-center">
                         <Input
                             type="number"
                             className="w-full"
@@ -198,11 +198,11 @@ export default function Availability({ data }) {
                 ) : null}
                 <hr />
                 <TabTitle title="Availability" desc="" />
-                <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+                <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
                     <Label htmlFor="advancedNotice" className="col-span-1 col-start-1 flex items-center">
                         Advanced Notice
                     </Label>
-                    <div className="col-span-1 col-start-5 flex items-center">
+                    <div className="col-span-1 md:col-span-2 sm:col-span-3 col-start-3 md:col-start-4 sm:col-start-5 flex items-center">
                         <select
                             id="advancedNotice"
                             name="advancedNotice"
@@ -226,14 +226,14 @@ export default function Availability({ data }) {
                     <div className="text-red-600">{formik.errors.advancedNotice}</div>
                 ) : null}
                 <hr />
-                <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+                <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
                     <Label
                         htmlFor="sameDayAdvancedNotice"
                         className="col-span-1 col-start-1 flex items-center"
                     >
                         Same Day Advanced Notice
                     </Label>
-                    <div className="col-span-1 col-start-5 flex items-center">
+                    <div className="col-span-1 md:col-span-2 sm:col-span-3 col-start-3 md:col-start-4 sm:col-start-5 flex items-center">
                         <select
                             id="sameDayAdvancedNotice"
                             name="sameDayAdvancedNotice"
@@ -257,11 +257,11 @@ export default function Availability({ data }) {
                     <div className="text-red-600">{formik.errors.sameDayAdvancedNotice}</div>
                 ) : null}
                 <hr />
-                <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+                <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
                     <Label htmlFor="preparationTime" className="col-span-1 col-start-1 flex items-center">
                         Preparation Time
                     </Label>
-                    <div className="col-span-1 col-start-5 flex items-center">
+                    <div className="col-span-1 md:col-span-2 sm:col-span-3 col-start-3 md:col-start-4 sm:col-start-5 flex items-center">
                         <select
                             id="preparationTime"
                             name="preparationTime"
@@ -282,14 +282,14 @@ export default function Availability({ data }) {
                     </div>
                 </div>
                 <hr />
-                <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+                <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
                     <Label
                         htmlFor="availabilityWindow"
                         className="col-span-1 col-start-1 flex items-center"
                     >
                         Availability Window
                     </Label>
-                    <div className="col-span-1 col-start-5 flex items-center">
+                    <div className="col-span-1 md:col-span-2 sm:col-span-3 col-start-3 md:col-start-4 sm:col-start-5 flex items-center">
                         <select
                             id="availabilityWindow"
                             name="availabilityWindow"
@@ -311,7 +311,7 @@ export default function Availability({ data }) {
                 </div>
                 <hr />
                 <div>
-                    <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+                    <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
                         <Label
                             htmlFor="restrictedCheckIn"
                             className="col-span-1 col-start-1 flex items-center"
@@ -329,7 +329,7 @@ export default function Availability({ data }) {
                             <Toggle>Sunday</Toggle>
                         </div>
                     </div>
-                    <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+                    <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
                         <Label
                             htmlFor="restrictedCheckOut"
                             className="col-span-1 col-start-1 flex items-center"
@@ -356,7 +356,7 @@ export default function Availability({ data }) {
                 <br />
                 {/* <CalendarModal data={data} /> */}
                 <hr />
-                <div className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
+                <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
                     <Label
                         htmlFor="calendarExport"
                         className="col-span-1 col-start-1 flex items-center"
