@@ -31,8 +31,8 @@ model User {
   reviews       Review[]
   // stripe_account_id
   stripeAccount StripeAccount? // add relation?
-  Image         Image[]
-  Calendar      Calendar[]
+  images        Image[]
+  calendars     Calendar[]
 }
 
 model StripeAccount {
@@ -243,7 +243,7 @@ model Site {
   user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId        String?
   posts         Post[]
-  Image         Image[]
+  images        Image[]
 
   @@index([userId])
 }
