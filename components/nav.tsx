@@ -68,24 +68,28 @@ export default function Nav({ children }: { children: ReactNode }) {
           name: "Back to All Sites",
           href: "/sites",
           icon: <ArrowLeft width={18} />,
+          suboptions: [],
         },
         {
           name: "Listings",
           href: `/site/${id}`,
           isActive: segments.length === 2,
           icon: <Newspaper width={18} />,
+          suboptions: [],
         },
         {
           name: "Analytics",
           href: `/site/${id}/analytics`,
           isActive: segments.includes("analytics"),
           icon: <BarChart3 width={18} />,
+          suboptions: [],
         },
         {
           name: "Settings",
           href: `/site/${id}/settings`,
           isActive: segments.includes("settings"),
           icon: <Settings width={18} />,
+          suboptions: [],
         },
       ];
     } else if (segments[0] === "post" && id) {
@@ -94,18 +98,52 @@ export default function Nav({ children }: { children: ReactNode }) {
           name: "Back to All Rentals",
           href: siteId ? `/site/${siteId}` : "/sites",
           icon: <ArrowLeft width={18} />,
+          suboptions: [],
         },
         {
           name: "Editor",
           href: `/post/${id}`,
           isActive: segments.length === 2,
           icon: <Edit3 width={18} />,
+          suboptions: [
+            {
+              name: "Listing Details",
+              href: "/site/1/option1",
+              isActive: segments.includes("option1"),
+            },
+            {
+              name: "Pricing",
+              href: "/site/1/option2",
+              isActive: segments.includes("option2"),
+            },
+            {
+              name: "Availability",
+              href: "/site/1/option1",
+              isActive: segments.includes("option1"),
+            },
+            {
+              name: "Policies & Rules",
+              href: "/site/1/option1",
+              isActive: segments.includes("option1"),
+            },
+            {
+              name: "Info For Guests",
+              href: "/site/1/option1",
+              isActive: segments.includes("option1"),
+            },
+            {
+              name: "Images",
+              href: "/site/1/option1",
+              isActive: segments.includes("option1"),
+            },
+          ],
         },
         {
           name: "Settings",
           href: `/post/${id}/settings`,
           isActive: segments.includes("settings"),
           icon: <Settings width={18} />,
+          suboptions: [],
         },
       ];
     }
@@ -115,48 +153,56 @@ export default function Nav({ children }: { children: ReactNode }) {
         href: "/",
         isActive: segments.length === 0,
         icon: <LayoutDashboard width={18} />,
+        suboptions: [],
       },
       {
         name: "Websites",
         href: "/sites",
         isActive: segments[0] === "sites",
         icon: <Layout width={18} />,
+        suboptions: [],
       },
       {
         name: "Listings",
         href: "/listings",
         isActive: segments[0] === "Listings",
         icon: <Home width={18} />,
+        suboptions: [],
       },
       {
         name: "Reservations",
         href: "/reservations",
         isActive: segments[0] === "reservations",
         icon: <CalendarCheck2 width={18} />,
+        suboptions: [],
       },
       {
         name: "Payments",
         href: "/payments",
         isActive: segments[0] === "payments",
         icon: <CircleDollarSign width={18} />,
+        suboptions: [],
       },
       {
         name: "Calendar",
         href: "/calendar",
         isActive: segments[0] === "calendar",
         icon: <CalendarDays width={18} />,
+        suboptions: [],
       },
       {
         name: "Inbox",
         href: "/inbox",
         isActive: segments[0] === "inbox",
         icon: <MessagesSquare width={18} />,
+        suboptions: [],
       },
       {
         name: "Settings",
         href: "/settings",
         isActive: segments[0] === "settings",
         icon: <Settings width={18} />,
+        suboptions: [],
       }
     ];
   }, [segments, id, siteId]);
@@ -203,16 +249,29 @@ export default function Nav({ children }: { children: ReactNode }) {
             </Link>
           </div>
           <div className="grid gap-1">
-            {tabs.map(({ name, href, isActive, icon }) => (
-              <Link
-                key={name}
-                href={href}
-                className={`flex items-center space-x-3 ${isActive ? "bg-stone-200 text-black dark:bg-stone-700" : ""
-                  } rounded-lg px-2 py-1.5 transition-all duration-150 ease-in-out hover:bg-stone-200 active:bg-stone-300 dark:text-white dark:hover:bg-stone-700 dark:active:bg-stone-800`}
-              >
-                {icon}
-                <span className="text-sm font-medium">{name}</span>
-              </Link>
+            {tabs.map(({ name, href, isActive, icon, suboptions }) => (
+              <div key={name}>
+                {/* Render main menu item */}
+                <Link href={href} passHref>
+                  <div className={`cursor-pointer flex items-center space-x-3 ${isActive ? "bg-stone-200 text-black dark:bg-stone-700" : ""}`}>
+                    {icon}
+                    <span className="text-sm font-medium">{name}</span>
+                  </div>
+                </Link>
+
+                {/* Render suboptions */}
+                {suboptions.length > 0 && (
+                  <div className="pl-6">
+                    {suboptions.map(({ name, href, isActive }) => (
+                      <Link key={name} href={href} passHref>
+                        <div className={`cursor-pointer text-sm ${isActive ? "bg-stone-200 text-black dark:bg-stone-700" : ""}`}>
+                          {name}
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
             ))}
           </div>
         </div>

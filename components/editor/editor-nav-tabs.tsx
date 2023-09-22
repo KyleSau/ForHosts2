@@ -4,14 +4,17 @@ import ListingDetails from './listing-details';
 import InfoForGuests from './info-for-guests';
 import PolicySettings from './policy-settings';
 import ListingImages from './listing-images';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendar, faMoneyCheckDollar } from '@fortawesome/free-solid-svg-icons';
-import { faPaperclip } from '@fortawesome/free-solid-svg-icons';
-import { faScaleBalanced } from '@fortawesome/free-solid-svg-icons';
-import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
-import { faImage } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCalendar,
+  faMoneyCheckDollar,
+  faPaperclip,
+  faScaleBalanced,
+  faCircleInfo,
+  faImage
+} from '@fortawesome/free-solid-svg-icons';
 import Availability from './availability';
 import Pricing from './pricing';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export default function EditorTabs({ data }) {
   return (

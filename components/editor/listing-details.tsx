@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import TabTitle from './tab-title';
 import EditorSaveButton from './editor-save-button';
 import { updateListingDetails } from '@/lib/actions';
+import AutoComplete from '../form/auto-complete';
 
 export default function ListingDetails({ data }) {
   const id = data['id'];

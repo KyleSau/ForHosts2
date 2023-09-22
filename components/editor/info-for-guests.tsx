@@ -189,15 +189,13 @@ export default function InfoForGuests({ data }) {
                         </div>
                     </div>
                     <hr />
-                    <TabTitle title="Check-In" desc="" />
-                    <br />
                     <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
                         <span className="col-span-1 col-start-1 flex items-center">
                             Check-In Method
                         </span>
-                        <div className="col-span-1 md:col-span-2 sm:col-span-3 col-start-3 md:col-start-4 sm:col-start-5 flex items-center">
+                        <div className="col-span-1 md:col-span-2 sm:col-span-3 col-start-3 md:col-start-3 sm:col-start-4 flex items-center">
                             <RadioGroup
-                                name="checkInMethod"
+                                name=""
                                 defaultValue={formik.values.checkInMethod}
                                 onChange={(value) => formik.setFieldValue("checkInMethod", value)}
                             >
@@ -223,7 +221,12 @@ export default function InfoForGuests({ data }) {
                                         Building staff - Someone will be available 24 hours a day to let guests in.
                                     </Label>
                                 </div>
-                                {/* Other RadioGroupItems */}
+                                <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="greet" id="greet" />
+                                    <Label htmlFor="greet">
+                                        Host greets you - The host or co-host will meet guests to exchange the key
+                                    </Label>
+                                </div>
                             </RadioGroup>
                         </div>
                     </div>

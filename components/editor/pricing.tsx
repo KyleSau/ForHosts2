@@ -301,15 +301,15 @@ export default function Pricing({ data }: any) {
           <div className="text-red-600">{formik.errors.securityDeposit}</div>
         ) : null}
         <hr />
-        <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
-          <Label htmlFor="extraGuestFee" className="col-span-2 col-start-1 flex items-center">
+        <div className="text-sm font-medium text-gray-900 grid grid-cols-6 md:grid-cols-7 sm:grid-cols-8 gap-4 mb-5 mt-5">
+          <Label htmlFor="extraGuestFee" className="col-span-1 col-start-1 flex items-center">
             Extra Guest Fee
           </Label>
-          <div className="col-span-2 md:col-span-3 sm:col-span-4 col-start-2 md:col-start-2 sm:col-start-2 flex items-center">
+          <div className="col-span-2 md:col-span-2 sm:col-span-6 col-start-5 md:col-start-6 sm:col-start-2 flex items-center">
             <span className="m-2">After</span>
             <Input
               type="number"
-              className="col-span-2 md:col-span-3 sm:col-span-4 col-start-2 md:col-start-2 sm:col-start-2 flex items-center"
+              className="flex items-center min-w-[50px] max-w-[50px]"
               id="extraGuestFee.guests"
               name="extraGuestFee.guests"
               min="0"
@@ -319,7 +319,7 @@ export default function Pricing({ data }: any) {
             <span className="m-2">$</span>
             <Input
               type="number"
-              className="col-span-2 md:col-span-3 sm:col-span-4 col-start-2 md:col-start-2 sm:col-start-2 flex items-center"
+              className="flex items-center min-w-[50px] max-w-[50px]"
               id="extraGuestFee.fee"
               name="extraGuestFee.fee"
               min="0"

@@ -3,15 +3,20 @@ import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 
 function CalendarImportForm() {
-    const [importUrls, setImportUrls] = useState(['']); // Initial state with one input
+    const [importUrls, setImportUrls] = useState([
+        {
+            title: '',
+            url: '',
+        },
+    ]); // Initial state with one input
 
     const handleAddInput = () => {
-        setImportUrls([...importUrls, '']); // Add an empty input
+        setImportUrls([...importUrls, { title: '', url: '' }]); // Add an empty input
     };
 
-    const handleInputChange = (index: number, event: any) => {
+    const handleInputChange = (index: number, field: string, value: string) => {
         const updatedUrls = [...importUrls];
-        updatedUrls[index] = event.target.value;
+        updatedUrls[index][field] = value;
         setImportUrls(updatedUrls);
     };
 
@@ -21,17 +26,52 @@ function CalendarImportForm() {
         setImportUrls(updatedUrls);
     };
 
+    const handleSave = (index: number) => {
+        // Handle the save logic for the calendar at the specified index
+        const calendarToSave = importUrls[index];
+        // You can send this data to your backend or handle it as needed.
+        // For this example, we'll just log it to the console.
+        console.log('Saving Calendar:', calendarToSave);
+    };
+
     return (
         <div>
-            {importUrls.map((url, index) => (
-                <div key={index} className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5">
-                    <Label htmlFor={`importUrl${index}`} className="col-span-1 col-start-1 flex items-center">Calendar Import</Label>
+            {importUrls.map((calendar, index) => (
+                <div
+                    key={index}
+                    className="text-sm font-medium text-gray-900 grid grid-cols-5 gap-4 mb-5 mt-5"
+                >
+                    <Label
+                        htmlFor={`title${index}`}
+                        className="col-span-1 col-start-1 flex items-center"
+                    >
+                        Calendar Title
+                    </Label>
+                    <div className="col-span-3 col-start-3 flex items-center">
+                        <Input
+                            type="text"
+                            id={`title${index}`}
+                            value={calendar.title}
+                            onChange={(e) =>
+                                handleInputChange(index, 'title', e.target.value)
+                            }
+                            className="w-full"
+                        />
+                    </div>
+                    <Label
+                        htmlFor={`importUrl${index}`}
+                        className="col-span-1 col-start-1 flex items-center"
+                    >
+                        Calendar Import
+                    </Label>
                     <div className="col-span-3 col-start-3 flex items-center">
                         <Input
                             type="url"
                             id={`importUrl${index}`}
-                            value={url}
-                            onChange={(e) => handleInputChange(index, e)}
+                            value={calendar.url}
+                            onChange={(e) =>
+                                handleInputChange(index, 'url', e.target.value)
+                            }
                             className="w-full"
                         />
                         {index > 0 && (
@@ -43,9 +83,17 @@ function CalendarImportForm() {
                                 Remove
                             </button>
                         )}
+                        <button
+                            type="button"
+                            onClick={() => handleSave(index)}
+                            className="ml-2 px-2 py-1 bg-green-500 text-white rounded-md hover:bg-green-600"
+                        >
+                            Save
+                        </button>
                     </div>
                 </div>
-            ))}
+            ))
+            }
             <button
                 type="button"
                 onClick={handleAddInput}
@@ -53,7 +101,7 @@ function CalendarImportForm() {
             >
                 +
             </button>
-        </div>
+        </div >
     );
 }
 
