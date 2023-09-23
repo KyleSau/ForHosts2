@@ -31,7 +31,8 @@ model User {
   reviews       Review[]
   // stripe_account_id
   stripeAccount StripeAccount? // add relation?
-  Image         Image[]
+  images        Image[]
+  calendars     Calendar[]
 }
 
 model StripeAccount {
@@ -91,7 +92,9 @@ model Image {
   id         String   @id @default(cuid())
   url        String
   uploadedAt DateTime
-  size       Bytes
+  size       String
+  fileName   String
+  orderIndex Int
 
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String?
@@ -108,9 +111,30 @@ model Image {
 }
 
 model Post {
-  id            String        @id @default(cuid())
-  title         String        @db.Text
-  price         Int
+  id    String @id @default(cuid())
+  title String @db.Text
+
+  images Image[]
+
+  price           Int
+  weekendPrice    Int
+  cleaningFee     Int
+  weeklyDiscount  Float
+  monthlyDiscount Float
+  securityDeposit Int
+  petFee          Int
+
+  minStay              Int
+  maxStay              Int
+  advanceNotice        Int // 0 - 7
+  sameDayAdvanceNotice Int // 6AM -> Midnight
+  preparationTime      Int // 0 -2
+  availabilityWindow   Int // 3, 6, 9, 12, 24
+  restrictedCheckIn    Int[] // 0 - 6
+  restrictedCheckOut   Int[] // 0 - 6
+
+  calendar Calendar[]
+
   description   String?       @db.Text
   content       String?       @db.Text
   slug          String        @default(cuid())
@@ -124,7 +148,32 @@ model Post {
   user          User?         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId        String?
   reservations  Reservation[]
-  calendarUrls  String[] // ical links
+  location      String // street, zip, city, state, country
+  longitude     String
+  latitude      String
+
+  instantBooking     Boolean
+  petsAllowed        Boolean
+  eventsAllowed      Boolean
+  smokingAllowed     Boolean
+  photographyAllowed Boolean
+
+  quietHoursStart Int
+  quietHoursEnd   Int
+
+  checkInWindowStart Int
+  checkInWindowEnd   Int
+  checkoutTime       Int
+
+  interactionPreferences String
+  additionalRules        String
+  afterBookingDirections String
+
+  wifiName             String
+  wifiPassword         String
+  houseManual          String
+  checkInMethod        String
+  checkoutInstructions String
 
   // New fields to include additional features
   propertyType         String // 
@@ -135,25 +184,31 @@ model Post {
   checkInTime          String // HH:mm:ss Check-in time for the rental property
   checkOutTime         String // HH:mm:ss Check-out time for the rental property
   amenities            String[] // List of amenities available at the property
-  location             String // Location of the rental property
-  instantBooking       Boolean? // Indicates if the property supports instant booking
   rating               Float? // Average rating based on guest reviews
   reviews              Review[] // List of guest reviews and ratings
   currency             String // Currency in which the price is listed
-  minimumStay          Int // Minimum number of nights required for booking
-  cleaningFee          Int // One-time cleaning fee for the property
-  securityDeposit      Int // Refundable security deposit amount
   availabilityCalendar String? // Availability calendar of the property
   photoGallery         String[] // List of images showcasing the property
   photoGalleryBlurhash String[] @default([])
   additionalServices   String[] // List of additional services offered at the property
-  availabilityWindow   String[] // how far out a listing can be booked
-  // advanceNotice
-  // cancellationPolicy   String? // Cancellation policy for bookings
-  Image                Image[]
 
   @@unique([slug, siteId])
   @@index([siteId])
+  @@index([userId])
+}
+
+model Calendar {
+  id        String   @id @default(cuid())
+  postId    String
+  name      String
+  url       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId    String?
+  Post      Post     @relation(fields: [postId], references: [id])
+
+  @@index([postId])
   @@index([userId])
 }
 
@@ -188,12 +243,13 @@ model Site {
   user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId        String?
   posts         Post[]
-  Image         Image[]
+  images        Image[]
 
   @@index([userId])
 }
 
 // check if there are any other payment's for postId with status = (PENDING | SUCCESS) in range of(startDate, endDate)
+// model StripePaymentIntent
 model Payment {
   id                    String   @id @default(cuid())
   stripePaymentIntentId String   @unique

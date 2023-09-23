@@ -70,11 +70,12 @@
 //https://vercel.com/docs/storage/vercel-blob/quickstart#browser-uploads
 
 import { handleBlobUpload, type HandleBlobUploadBody } from '@vercel/blob';
-import { NextResponse } from 'next/server';
- 
+import { NextRequest, NextResponse } from 'next/server';
+import prisma from "@/lib/prisma";
+import { getSession } from "@/lib/auth";
+
 export async function POST(request: Request): Promise<NextResponse> {
   const body = (await request.json()) as HandleBlobUploadBody;
-  console.log("request body: ", body);
 
   try {
     const jsonResponse = await handleBlobUpload({
@@ -82,14 +83,14 @@ export async function POST(request: Request): Promise<NextResponse> {
       request,
       onBeforeGenerateToken: async (pathname) => {
         // Generate a client token for the browser to upload the file
- 
+
         // ⚠️ Authenticate users before reaching this point.
         // Otherwise, you're allowing anonymous uploads.
         // const { user, userCanUpload } = await auth(request, pathname);
         // if (!userCanUpload) {
         //   throw new Error('not authenticated or bad pathname');
         // }
-        
+
         console.log("onBeforeGenerateToken pathname: ", pathname);
 
         return {
@@ -104,19 +105,65 @@ export async function POST(request: Request): Promise<NextResponse> {
         // Get notified of browser upload completion
         // ⚠️ This will not work on `localhost` websites,
         // Use ngrok or similar to get the full upload flow
- 
+
         console.log('onUploadCompleted: blob upload completed: ', blob, metadata);
- 
+
         try {
           // Run any logic after the file upload completed
           // const { userId } = JSON.parse(metadata);
           // await db.update({ avatar: blob.url, userId });
+          const response = await prisma.image.create({
+            // site: {
+            //   connect: {
+            //     id: site.id,
+            //   },
+            // },
+            // post: {
+            //   connect: {
+            //     id: post.id,
+            //   },
+            // },
+            data: {
+              url: blob.url,
+              uploadedAt: blob.uploadedAt,
+              size: blob.size,
+              user: {
+                connect: {
+                  id: session.user.id,
+                },
+              }
+            }
+          });
+
+          /*          const listingId = body.listingId;
+
+                    const imageId = response.id;
+
+                    // if this is a listing upload then
+                    // if the post id is owned by session.user.id
+                    const hostId = '2342';
+
+                    // host post.photoGallery.push(blob.url)
+                    // get current imageGallery
+                    const imageGallery = [];
+
+                    imageGallery.push(blob.url);
+
+                    const postResponse = await prisma.post.update({
+                      where: {
+                        id: hostId,
+                      },
+                      data: {
+                        photoGallery:
+                      }
+                    });*/
+
         } catch (error) {
           throw new Error('Could not update user');
         }
       },
     });
- 
+
     return NextResponse.json(jsonResponse);
   } catch (error) {
     return NextResponse.json(
