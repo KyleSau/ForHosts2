@@ -64,8 +64,8 @@ export default function Editor({ post }: { post: PostWithSite }) {
       debouncedData.bathrooms === post.bathrooms &&
       debouncedData.instantBooking === post.instantBooking &&
       debouncedData.rating === post.rating &&
-      JSON.stringify(debouncedData.calendars) ===
-      JSON.stringify(post.calendars) &&
+      // JSON.stringify(debouncedData.calendars) ===
+      // JSON.stringify(post.calendars) &&
       JSON.stringify(debouncedData.photoGallery) ===
       JSON.stringify(post.photoGallery) &&
       JSON.stringify(debouncedData.additionalServices) ===
