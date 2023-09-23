@@ -113,9 +113,6 @@ model Image {
 model Post {
   id    String @id @default(cuid())
   title String @db.Text
-
-  images Image[]
-
   price           Int
   weekendPrice    Int
   cleaningFee     Int
@@ -133,7 +130,8 @@ model Post {
   restrictedCheckIn    Int[] // 0 - 6
   restrictedCheckOut   Int[] // 0 - 6
 
-  calendar Calendar[]
+  calendars Calendar[]
+  images Image[]
 
   description   String?       @db.Text
   content       String?       @db.Text

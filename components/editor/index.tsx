@@ -53,7 +53,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
       debouncedData.checkOutTime === post.checkOutTime &&
       debouncedData.location === post.location &&
       debouncedData.currency === post.currency &&
-      debouncedData.minimumStay === post.minimumStay &&
+      debouncedData.minStay === post.minStay &&
       debouncedData.cleaningFee === post.cleaningFee &&
       debouncedData.securityDeposit === post.securityDeposit &&
       JSON.stringify(debouncedData.amenities) ===
@@ -64,8 +64,8 @@ export default function Editor({ post }: { post: PostWithSite }) {
       debouncedData.bathrooms === post.bathrooms &&
       debouncedData.instantBooking === post.instantBooking &&
       debouncedData.rating === post.rating &&
-      JSON.stringify(debouncedData.calendarUrls) ===
-      JSON.stringify(post.calendarUrls) &&
+      JSON.stringify(debouncedData.calendars) ===
+      JSON.stringify(post.calendars) &&
       JSON.stringify(debouncedData.photoGallery) ===
       JSON.stringify(post.photoGallery) &&
       JSON.stringify(debouncedData.additionalServices) ===
@@ -201,30 +201,30 @@ export default function Editor({ post }: { post: PostWithSite }) {
    * @param index Declare which date it is, 0 for starting date, 1 for ending date
    * @param scope Determines slider behavior. Set to true if being called from parent, false if being called from a child component.
    */
-  const setAvailabilityWindowTimes = async (date: string, index: number, scope: boolean) => {
-    let availabilityWindow = data.availabilityWindow;
+  // const setAvailabilityWindowTimes = async (date: string, index: number, scope: boolean) => {
+  //   let availabilityWindow = data.availabilityWindow;
 
-    if (!availabilityWindow || availabilityWindow.length == 0) {
-      availabilityWindow = ["", ""];
-    } else if (availabilityWindow.length < 2) {
-      availabilityWindow.push("");
-    }
+  //   if (!availabilityWindow || availabilityWindow.length == 0) {
+  //     availabilityWindow = ["", ""];
+  //   } else if (availabilityWindow.length < 2) {
+  //     availabilityWindow.push("");
+  //   }
 
-    if (scope) { //if function is called from parent component
-      if (index === 0) { //start date
-        availabilityWindow[0] = date;
-      } else if (index === 1) { //end date
-        //if called from parent AND is setting the end date, then this means host is setting a custom date
-        setSliderIdx(sliderIntervals.length - 1);
-        availabilityWindow[1] = date;
-      }
-    } else { //if function is called from child component via being passed as a callback
-      if (index === 1) {
-        availabilityWindow[1] = date;
-      }
-    }
-    setData({ ...data, availabilityWindow });
-  };
+  //   if (scope) { //if function is called from parent component
+  //     if (index === 0) { //start date
+  //       availabilityWindow[0] = date;
+  //     } else if (index === 1) { //end date
+  //       //if called from parent AND is setting the end date, then this means host is setting a custom date
+  //       setSliderIdx(sliderIntervals.length - 1);
+  //       availabilityWindow[1] = date;
+  //     }
+  //   } else { //if function is called from child component via being passed as a callback
+  //     if (index === 1) {
+  //       availabilityWindow[1] = date;
+  //     }
+  //   }
+  //   setData({ ...data, availabilityWindow });
+  // };
 
   return (
     <div className="relative min-h-[500px] w-full max-w-screen-lg border-stone-200 p-12 px-8 dark:border-stone-700 sm:mb-[calc(20vh)] sm:rounded-lg sm:border sm:px-12 sm:shadow-lg">
@@ -308,7 +308,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
           transition: "max-height 0.5s ease-in-out",
         }}
       >
-        <div className="mb-2">
+        {/* <div className="mb-2">
           <h2 className="font-cal text-xl font-bold">In-Service Date</h2>
           <input
             type="date"
@@ -332,7 +332,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
             onChange={(e) => setAvailabilityWindowTimes(e.target.value, 1, true)}
             className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
           />
-        </div>
+        </div> */}
 
         <div className="mb-2">
           <div className="flex">
@@ -388,7 +388,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
           }
           className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
         />
-        <div className="mb-2 mt-4">
+        {/* <div className="mb-2 mt-4">
           <input
             type="text"
             placeholder="iCal Calendar URLs (comma separated)"
@@ -398,7 +398,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
             }
             className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
           />
-        </div>
+        </div> */}
         <div className="mb-4">
           <h2 className="font-cal text-xl font-bold"> Currency</h2>
           <select
@@ -437,9 +437,9 @@ export default function Editor({ post }: { post: PostWithSite }) {
           <input
             type="number"
             placeholder="Minimum stay required at property (days)"
-            defaultValue={post?.minimumStay || ""}
+            defaultValue={post?.minStay || ""}
             onChange={(e) =>
-              setData({ ...data, minimumStay: parseInt(e.target.value, 10) })
+              setData({ ...data, minStay: parseInt(e.target.value, 10) })
             }
             className="dark:placeholder-text-600 placeholder-text-stone-400 w-full rounded-md border border-black px-0 font-cal text-xl focus:border-black focus:bg-sitecolor focus:outline-none focus:ring-0"
           />

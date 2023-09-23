@@ -273,7 +273,7 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
       checkOutTime: '0:00',
       location: 'location',
       currency: 'USD',
-      minimumStay: 0,
+      minStay: 0,
       cleaningFee: 0,
       securityDeposit: 0,
       totalBeds: 0,
@@ -282,7 +282,7 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
       amenities: [],  // empty array for amenities
       photoGallery: [],  // empty array for photoGallery
       additionalServices: [],  // empty array for additionalServices
-      calendarUrls: [],
+      // calendars: [],
       propertyType: 'idk',
       site: {
         connect: {
@@ -294,6 +294,35 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
           id: session.user.id,
         },
       },
+      weekendPrice: 0,
+      weeklyDiscount: 0,
+      monthlyDiscount: 0,
+      petFee: 0,
+      maxStay: 100,
+      advanceNotice: 0,
+      sameDayAdvanceNotice: 0,
+      preparationTime: 0,
+      availabilityWindow: 0,
+      longitude: "",
+      latitude: "",
+      instantBooking: false,
+      petsAllowed: false,
+      eventsAllowed: false,
+      smokingAllowed: false,
+      photographyAllowed: false,
+      quietHoursStart: 0,
+      quietHoursEnd: 0,
+      checkInWindowStart: 0,
+      checkInWindowEnd: 0,
+      checkoutTime: 0,
+      interactionPreferences: "",
+      additionalRules: "",
+      afterBookingDirections: "",
+      wifiName: "",
+      wifiPassword: "",
+      houseManual: "",
+      checkInMethod: "",
+      checkoutInstructions: "",
     },
   });
 
@@ -343,7 +372,7 @@ export const updatePost = async (data: Post) => {
         checkOutTime: data.checkOutTime,
         location: data.location,
         currency: data.currency,
-        minimumStay: data.minimumStay,
+        minStay: data.minStay,
         cleaningFee: data.cleaningFee,
         securityDeposit: data.securityDeposit,
         amenities: data.amenities,
@@ -356,7 +385,7 @@ export const updatePost = async (data: Post) => {
         photoGallery: data.photoGallery,
         additionalServices: data.additionalServices,
         availabilityWindow: data.availabilityWindow,
-        calendarUrls: data.calendarUrls,
+        // calendars: data.calendars,
         propertyType: data.propertyType, // change this to data.propertyTpe
       },
     });
@@ -604,10 +633,10 @@ export const getCalendarUrls = async (postId: string) => {
         id: postId,
       },
       select: {
-        calendarUrls: true,
+        calendars: true,
       },
     });
-    return post?.calendarUrls || []; // Return an empty array if calendarUrls is not found
+    return post?.calendars || []; // Return an empty array if calendarUrls is not found
   } catch (error: any) {
     return {
       error: "Failed to fetch calendar urls",
