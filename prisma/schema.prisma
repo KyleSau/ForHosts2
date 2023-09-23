@@ -158,12 +158,12 @@ model Post {
   smokingAllowed     Boolean
   photographyAllowed Boolean
 
-  quietHoursStart Int
-  quietHoursEnd   Int
+  quietHoursStart String
+  quietHoursEnd   String
 
-  checkInWindowStart Int
-  checkInWindowEnd   Int
-  checkoutTime       Int
+  checkInWindowStart String
+  checkInWindowEnd   String
+  checkoutTime       String
 
   interactionPreferences String
   additionalRules        String
