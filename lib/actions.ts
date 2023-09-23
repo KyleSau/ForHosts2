@@ -14,8 +14,7 @@ import {
 } from "@/lib/domains";
 import { put } from "@vercel/blob";
 import { customAlphabet } from "nanoid";
-import { calcDateDelta, getBlurDataURL } from "@/lib/utils";
-import { RESERVATION_FUTURE_DAYS_THRESHOLD } from "./constants";
+import { getBlurDataURL } from "@/lib/utils";
 
 const nanoid = customAlphabet(
   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
