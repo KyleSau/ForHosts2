@@ -7,6 +7,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import EditorSaveButton from "./editor-save-button";
 import AmenityEditor from "../amenities/amenity-editor";
+import AmenityDataTable from "../amenities/amenity-data-table";
 
 const hourAN = [
   "6:00 AM",
@@ -329,7 +330,8 @@ export default function Pricing({ data }: any) {
             <span className="m-2">Per Guest</span>
           </div>
         </div>
-        <AmenityEditor />
+        {/* <AmenityEditor /> */}
+        <AmenityDataTable />
         <hr className="mb-5" />
         <EditorSaveButton submitted={submitted} isLoading={isLoading} />
       </div>

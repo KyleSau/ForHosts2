@@ -14,7 +14,7 @@ const AmenityEditor = () => {
     };
 
     return (
-        <div className="space-y-4">
+        <div className="grid grid-cols-4 md:grid-cols-5 gap-4">
             {Object.keys(amenityDetails).map((amenityName) => (
                 <div key={amenityName}>
                     <label className="flex items-center space-x-2">
@@ -29,7 +29,6 @@ const AmenityEditor = () => {
                             <span className="ml-2">{amenityName}</span>
                         </div>
                     </label>
-                    <p className="text-sm text-gray-500">{amenityDetails[amenityName].description}</p>
                 </div>
             ))}
         </div>
