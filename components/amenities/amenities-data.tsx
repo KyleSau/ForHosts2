@@ -46,7 +46,7 @@ import {
 
 
 export const amenityDetails: { [key: string]: { icon: any; description: string } } = {
-  Wifi: {
+  "Wifi": {
     icon: faWifi,
     description: "Wifi available throughout the listing.",
   },
@@ -72,7 +72,7 @@ export const amenityDetails: { [key: string]: { icon: any; description: string }
     icon: faParking,
     description: "Free parking space available.",
   },
-  Pool: {
+  "Pool": {
     icon: faSwimmingPool,
     description: "Access to a swimming pool (private or shared).",
   },
@@ -92,9 +92,9 @@ export const amenityDetails: { [key: string]: { icon: any; description: string }
     icon: faUtensilSpoon,
     description: "Barbecue or grill for outdoor cooking.",
   },
-  Elevator: {
+  "Elevator": {
     icon: faElevator,
-    description: "Elevator access (if applicable).",
+    description: "Elevator access.",
   },
   "Pets Allowed": {
     icon: faPaw,
@@ -103,10 +103,6 @@ export const amenityDetails: { [key: string]: { icon: any; description: string }
   "Family/Kid-Friendly": {
     icon: faChild,
     description: "Amenities suitable for families with children.",
-  },
-  "Smoking Policy": {
-    icon: faSmoking,
-    description: "Smoking policy for the listing.",
   },
   "Wheelchair Accessible": {
     icon: faWheelchair,
@@ -120,19 +116,19 @@ export const amenityDetails: { [key: string]: { icon: any; description: string }
     icon: faClock,
     description: "Flexible check-in times, available 24/7.",
   },
-  Workspace: {
+  "Workspace": {
     icon: faLaptop,
     description: "Designated workspace with a desk and chair.",
   },
-  Breakfast: {
+  "Breakfast": {
     icon: faCoffee,
     description: "Complimentary breakfast items or vouchers provided.",
   },
-  Bikes: {
+  "Bikes": {
     icon: faBicycle,
     description: "Bicycles available for guest use.",
   },
-  Fireplace: {
+  "Fireplace": {
     icon: faFire,
     description: "Working fireplace (gas or wood-burning).",
   },
@@ -248,20 +244,8 @@ export const amenityDetails: { [key: string]: { icon: any; description: string }
     icon: faMap,
     description: "Local maps and guidebooks for guest exploration.",
   },
-  "Decorations (for birthdays, anniversaries, etc.)": {
-    icon: faGift,
-    description: "Decorations available for special occasions.",
-  },
-  "Laptop-Friendly Workspace": {
-    icon: faLaptop,
-    description: "Laptop-friendly workspace with desk and chair.",
-  },
   "Recycling Bins": {
     icon: faRecycle,
     description: "Recycling bins for eco-friendly guests.",
-  },
-  "Energy-Efficient Appliances": {
-    icon: faLightbulb,
-    description: "Energy-efficient appliances for eco-conscious guests.",
   },
 };

@@ -6,6 +6,7 @@ import TabTitle from "./tab-title";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import EditorSaveButton from "./editor-save-button";
+import AmenityEditor from "../amenities/amenity-editor";
 
 const hourAN = [
   "6:00 AM",
@@ -328,8 +329,7 @@ export default function Pricing({ data }: any) {
             <span className="m-2">Per Guest</span>
           </div>
         </div>
-
-
+        <AmenityEditor />
         <hr className="mb-5" />
         <EditorSaveButton submitted={submitted} isLoading={isLoading} />
       </div>
