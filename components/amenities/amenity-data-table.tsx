@@ -71,7 +71,7 @@ export const columns: ColumnDef<Amenity>[] = [
     {
         accessorKey: "icon",
         header: "Icon",
-        cell: ({ row }) => <div className="lowercase">{
+        cell: ({ row }) => <div className="lowercase text-sm font-medium text-[#2CB0D7]">{
             <FontAwesomeIcon icon={row.getValue("icon")} />}</div>, // Here ideally you should be using some component to render the icon.
     },
     {
@@ -146,13 +146,13 @@ export default function DataTableDemo() {
         state: {
             sorting,
             columnFilters,
-            columnVisibility,
+            //columnVisibility,
             rowSelection,
         },
     })
 
     return (
-        <div className="w-full">
+        <div className="w-full text-sm font-medium text-gray-900">
             <div className="flex items-center py-4">
                 <Input
                     placeholder="Filter amenities..."
@@ -160,7 +160,7 @@ export default function DataTableDemo() {
                     onChange={(event) =>
                         table.getColumn("id")?.setFilterValue(event.target.value)
                     }
-                    className="max-w-sm"
+                    className="max-w-sm text-sm font-medium text-gray-900"
                 />
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -189,7 +189,7 @@ export default function DataTableDemo() {
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
-            <div className="rounded-md border">
+            <div className="rounded-md border text-sm font-medium text-gray-900">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -230,7 +230,7 @@ export default function DataTableDemo() {
                             <TableRow>
                                 <TableCell
                                     colSpan={columns.length}
-                                    className="h-24 text-center"
+                                    className="h-24 text-center text-black"
                                 >
                                     No results.
                                 </TableCell>
@@ -240,11 +240,11 @@ export default function DataTableDemo() {
                 </Table>
             </div>
             <div className="flex items-center justify-end space-x-2 py-4">
-                <div className="flex-1 text-sm text-muted-foreground">
+                <div className="flex-1 text-sm font-medium text-gray-900 text-muted-foreground">
                     {table.getFilteredSelectedRowModel().rows.length} of{" "}
                     {table.getFilteredRowModel().rows.length} row(s) selected.
                 </div>
-                <div className="space-x-2">
+                <div className="space-x-2 text-sm font-medium text-gray-900">
                     <Button
                         variant="outline"
                         size="sm"
@@ -258,6 +258,7 @@ export default function DataTableDemo() {
                         size="sm"
                         onClick={() => table.nextPage()}
                         disabled={!table.getCanNextPage()}
+                        className=""
                     >
                         Next
                     </Button>
