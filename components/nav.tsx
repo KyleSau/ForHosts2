@@ -145,6 +145,13 @@ export default function Nav({ children }: { children: ReactNode }) {
           icon: <Settings width={18} />,
           suboptions: [],
         },
+        {
+          name: "Listing Details",
+          href: `/post/${id}/listing-details`,
+          isActive: segments.includes("listing-details"),
+          icon: <Settings width={18} />,
+          suboptions: [],
+        },
       ];
     }
     return [

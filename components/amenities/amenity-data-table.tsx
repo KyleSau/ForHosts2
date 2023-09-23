@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -12,11 +12,11 @@ import {
     getPaginationRowModel,
     getSortedRowModel,
     useReactTable,
-} from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+} from "@tanstack/react-table";
+import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
@@ -25,8 +25,8 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
     Table,
     TableBody,
@@ -34,19 +34,19 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 
-import { amenityDetails } from "./amenities-data"
-import { IconDefinition } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { amenityDetails } from "./amenities-data";
+import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { Amenity } from "./amenities-data"
 
 export type Amenity = {
-    id: string
-    category: string
-    description: string | null
-    icon: IconDefinition | null
-}
+    id: string;
+    category: string;
+    description: string | null;
+    icon: IconDefinition | null;
+};
 export const columns: ColumnDef<Amenity>[] = [
     // export const columns: ColumnDef<any, any>[] = [
     {
@@ -96,9 +96,7 @@ export const columns: ColumnDef<Amenity>[] = [
             const amenity = row.original
 
             return (
-                <div>
-
-                </div>
+                <div></div>
                 // <DropdownMenu>
                 //     <DropdownMenuTrigger asChild>
                 //         <Button variant="ghost" className="h-8 w-8 p-0">
@@ -118,19 +116,19 @@ export const columns: ColumnDef<Amenity>[] = [
                 //         <DropdownMenuItem>View payment details</DropdownMenuItem>
                 //     </DropdownMenuContent>
                 // </DropdownMenu>
-            )
+            );
         },
     },
-]
+];
 
 export default function DataTableDemo() {
-    const [sorting, setSorting] = React.useState<SortingState>([])
+    const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-        []
-    )
+        [],
+    );
     const [columnVisibility, setColumnVisibility] =
-        React.useState<VisibilityState>({})
-    const [rowSelection, setRowSelection] = React.useState({})
+        React.useState<VisibilityState>({});
+    const [rowSelection, setRowSelection] = React.useState({});
 
     const table = useReactTable({
         data: amenityDetails,
