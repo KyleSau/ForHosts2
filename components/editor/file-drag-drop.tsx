@@ -3,8 +3,8 @@
 import { Image, Trash2 } from 'lucide-react';
 import { FILE_CONSTS, IMAGE_UPLOAD_QUANTITY_LIMIT, IMAGE_SIZE_LIMIT_BYTES, IMAGE_SIZE_LIMIT_MB } from '@/lib/constants';
 import React, { useState, useRef } from 'react';
-import EditorWarningModal, 
-  { EditorWarningModalDataType, EditorWarningModalDataTemplate } from "@/components/editor/warning-confirmation-modal";
+import EditorWarningModal,
+{ EditorWarningModalDataType, EditorWarningModalDataTemplate } from "@/components/editor/warning-confirmation-modal";
 import { humanReadableFileSize } from '@/lib/utils';
 
 import { put, type BlobResult } from '@vercel/blob'; // test
@@ -25,7 +25,7 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
 
   const addFilesAndUrlsToState = (newFiles: (File | null)[]) => {
     //first check if adding the new files causes currently uploaded pics to surpass the upload threshold; show modal if so
-    if (addedFileArray.length > IMAGE_UPLOAD_QUANTITY_LIMIT || addedFileArray.length+newFiles.length > IMAGE_UPLOAD_QUANTITY_LIMIT) {
+    if (addedFileArray.length > IMAGE_UPLOAD_QUANTITY_LIMIT || addedFileArray.length + newFiles.length > IMAGE_UPLOAD_QUANTITY_LIMIT) {
       setEditorWarningModalData({
         ...editorWarningModalData,
         idxToRemove: -1,
@@ -36,7 +36,7 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
       const newFilesAboveSizeLimit: (File | null)[] = [];
       const newFilesBelowSizeLimit: (File | null)[] = [];
 
-      newFiles.forEach((file: File|null) => {
+      newFiles.forEach((file: File | null) => {
         const fileSizeBytes = file?.size ? file.size : IMAGE_SIZE_LIMIT_BYTES + 100;
         if (fileSizeBytes > IMAGE_SIZE_LIMIT_BYTES) {
           newFilesAboveSizeLimit.push(file);
@@ -56,8 +56,8 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
       setAddedFileUrlArray([...addedFileUrlArray, ...urlsForNewFiles]);
 
       //if needed, throw up modal informing user that files above the size limit were not added
-      if(newFilesAboveSizeLimit.length > 0) {
-        const filesAndSizes = newFilesAboveSizeLimit.map((file: File|null) => `${file?.name} (${humanReadableFileSize(file?.size)})`).join("\n");
+      if (newFilesAboveSizeLimit.length > 0) {
+        const filesAndSizes = newFilesAboveSizeLimit.map((file: File | null) => `${file?.name} (${humanReadableFileSize(file?.size)})`).join("\n");
         setEditorWarningModalData({
           ...editorWarningModalData,
           idxToRemove: -2,
@@ -91,7 +91,7 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
   const addFilesFromOpenPopup = (event: any) => {
     const newFiles: Array<File> = Array.from(event.target.files as ArrayLike<File>)
       .filter((file: File) => PERMITTED_FILE_TYPES.has(file.type));
-      addFilesAndUrlsToState(newFiles);
+    addFilesAndUrlsToState(newFiles);
   };
 
   const dropNewImageHandler = (event: any) => {
@@ -147,6 +147,41 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
     setDraggedIdx(null); // Reset the dragged item index
   };
 
+  const listAllBlobsInStore = async () => {
+    console.log("listAllBlobsInStore called");
+
+    const response = await fetch("/api/blob/get-blobs", {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+    const data = await response.json();
+    console.log("listCurrentBlobsInStore: data: ", data);
+    setAllBlobs(data);
+  };
+
+  const deleteAllBlobsInStore = async () => {
+    console.log("deleteAllBlobsInStore called");
+
+    const blob = allBlobs[allBlobs.length - 1];
+
+    // allBlobs.forEach((blob: BlobResult) => {
+
+    // });
+    const url = blob.url;
+    console.log("url: ", url);
+    const response = await fetch(`/api/blob/delete-blob?url=${url}`, {
+      method: "DELETE"
+    });
+
+    console.log("deleteAllBlobsInStore: response: ", response);
+    // const data = await response.json();
+    // console.log("listCurrentBlobsInStore: data: ", data);
+    // setAllBlobs(data);
+  };
+
   return (<>
     <div
       id={componentId}
@@ -166,12 +201,12 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
     <div className="relative flex-row items-center justify-center py-5 text-center text-gray-400 border border-black rounded">
       {
         (addedFileArray.length > 0) ?
-        <p>You may add {IMAGE_UPLOAD_QUANTITY_LIMIT - addedFileArray.length} more images</p>
-        : 
-        <p>Your Added Pictures Will Appear Here. <br />
-        You may upload a maximum of {IMAGE_UPLOAD_QUANTITY_LIMIT} images</p>
+          <p>You may add {IMAGE_UPLOAD_QUANTITY_LIMIT - addedFileArray.length} more images</p>
+          :
+          <p>Your Added Pictures Will Appear Here. <br />
+            You may upload a maximum of {IMAGE_UPLOAD_QUANTITY_LIMIT} images</p>
       }
-      <div 
+      <div
         className="grid grid-cols-2 gap-4 mt-4 md:grid-cols-2"
         onDragOver={dragOverHandler}
       >
@@ -193,9 +228,9 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
                 className="absolute top-0 right-0 z-50 p-1 bg-white rounded-bl focus:outline-none"
                 onClick={() => handleImageDeleteIconClicked(idx)}
               >
-                <Trash2 className="hover:stroke-rose-600"/>
+                <Trash2 className="hover:stroke-rose-600" />
               </button>
-              <img 
+              <img
                 // className="relative inset-0 z-0 object-cover w-full h-full border preview"
                 className="relative inset-0 z-0 object-cover w-full h-full border-4 border-white preview"
                 src={fileUrl}
@@ -209,8 +244,8 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
         })}
       </div>
     </div>
-    
-    <EditorWarningModal 
+
+    <EditorWarningModal
       modalOpen={editorWarningModalOpen}
       setModalOpen={setEditorWarningModalOpen}
       handleDeletePressed={removeFileAndUrlFromState}
@@ -221,12 +256,17 @@ export function FileClickDragDrop({ componentId }: { componentId: string }) {
     <form
       onSubmit={async (event) => {
         event.preventDefault();
-        
-        if(inputFileRef.current?.files !== null) {
-          const file: File | null = inputFileRef.current? inputFileRef.current.files[0] : null;
-          
-          if(file !== null) {
-            const newBlob = await put(file.name, file, {
+
+        if (inputFileRef.current?.files !== null) {
+          //---- Multi file upload ----
+          const selectedFiles: FileList | undefined = inputFileRef.current?.files;
+          console.log("selectedFiles: ", selectedFiles);
+
+          Array.from(selectedFiles as ArrayLike<File>).forEach((file: File) => {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("id", 'sdfadsfadf');
+            const newBlob = put(file.name, file, {
               access: 'public',
               handleBlobUploadUrl: '/api/upload',
             });

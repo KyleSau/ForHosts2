@@ -6,6 +6,7 @@ import { DateRange } from 'react-day-picker';
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
+import calculateTotalCost from "@/lib/utils/payment-helper"
 import { cn } from "@/lib/utils"
 import { Elements } from '@stripe/react-stripe-js';
 import CardInput from './card-element';
@@ -57,7 +58,7 @@ const BookingComponent: React.FC<BookingProps> = ({ listing, className }: any) =
     const [pets, setPets] = useState(0);
     const [date, setDate] = React.useState<DateRange | undefined>({
         from: new Date(),
-        to: addDays(new Date(), 20),
+        to: undefined//addDays(new Date(), 20),
     })
     const router = useRouter()
     const handleCheckout = () => {
@@ -185,9 +186,17 @@ const BookingComponent: React.FC<BookingProps> = ({ listing, className }: any) =
             <div className="w-full grid-cols-2">
                 <Popover>
                     <div className="">
-                        <p className="underline"><PopoverTrigger className="underline">${listing.price} X Total Days </PopoverTrigger>
-                            <span className="float-right">$XXXX.XX</span>
-                        </p>
+                        {date?.to ? (
+                            <p className="underline">
+                                <PopoverTrigger className="underline">
+                                    ${listing.price} X {calculateTotalCost(date.from!, date.to!, listing.price).nights}
+                                </PopoverTrigger>
+                                <span className="float-right">
+                                    ${calculateTotalCost(date.from!, date.to!, listing.price).price}
+                                </span>
+                            </p>
+                        ) : null}
+
                     </div>
                     <PopoverContent>Display individual dates selected in a list</PopoverContent>
                 </Popover>
@@ -225,30 +234,30 @@ const BookingComponent: React.FC<BookingProps> = ({ listing, className }: any) =
 
 export default BookingComponent;
 
-    // const handleCheckout = async () => {
-    //     const response = await fetchPostJSON('/api/checkout_sessions', {
-    //         startDate: date?.from,
-    //         endDate: date?.to,
-    //         listingId: listing.id
-    //     })
+// const handleCheckout = async () => {
+//     const response = await fetchPostJSON('/api/checkout_sessions', {
+//         startDate: date?.from,
+//         endDate: date?.to,
+//         listingId: listing.id
+//     })
 
-    //     if (response.statusCode === 500) {
-    //         console.error(response.message)
-    //         return;
-    //     }
+//     if (response.statusCode === 500) {
+//         console.error(response.message)
+//         return;
+//     }
 
-    //     const stripe = await getStripe()
-    //     if (stripe) {
-    //         const { error, paymentIntent } = await stripe.confirmCardPayment(response.client_secret, {
-    //             payment_method: 'pm_card_visa', // TODO: You'll have to integrate Stripe Elements or another method to get the Payment Method
-    //         });
+//     const stripe = await getStripe()
+//     if (stripe) {
+//         const { error, paymentIntent } = await stripe.confirmCardPayment(response.client_secret, {
+//             payment_method: 'pm_card_visa', // TODO: You'll have to integrate Stripe Elements or another method to get the Payment Method
+//         });
 
-    //         if (error) {
-    //             console.error("Payment failed:", error);
-    //         } else if (paymentIntent && paymentIntent.status === "succeeded") {
-    //             console.log("Payment successful!");
-    //         }
-    //     }
+//         if (error) {
+//             console.error("Payment failed:", error);
+//         } else if (paymentIntent && paymentIntent.status === "succeeded") {
+//             console.log("Payment successful!");
+//         }
+//     }
 
 
-    // }
+// }
