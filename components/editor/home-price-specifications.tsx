@@ -15,10 +15,10 @@ const validationSchema = Yup.object().shape({
   maxGuests: Yup.number()
     .required('Max guests allowed is required')
     .positive('Max guests allowed must be a positive number'),
-    minimumStay: Yup.number()
+  minStay: Yup.number()
     .required('Minimum stay required is required')
     .positive('Minimum stay must be a positive number'),
-    bedrooms: Yup.number()
+  bedrooms: Yup.number()
     .required('Number of rooms is required')
     .positive('Number of rooms must be a positive number'),
   cleaningFee: Yup.number()
@@ -27,35 +27,35 @@ const validationSchema = Yup.object().shape({
   // Add validation for other fields here
 });
 
-export default function PriceSpecifications({data}) {
-    const id = data['id'];
-    const [siteData, setSiteData] = useState(id);
+export default function PriceSpecifications({ data }) {
+  const id = data['id'];
+  const [siteData, setSiteData] = useState(id);
   const formik = useFormik({
-      initialValues: {
-        id: id,
-        site: data.site,
-          siteId: data.siteId,
+    initialValues: {
+      id: id,
+      site: data.site,
+      siteId: data.siteId,
       price: '',
       securityDeposit: '',
       maxGuests: '',
-      minimumStay: '',
+      minStay: '',
       bedrooms: '',
       cleaningFee: '',
       // Initialize other fields here
     },
     validationSchema: validationSchema,
-    onSubmit: async (values : any) => {
+    onSubmit: async (values: any) => {
       // Handle form submission logic here
       const result = await updatePropertyPriceInfo(values);
-           
-            if (result?.error) {
-            // Handle the error, e.g., display an error message
-            console.error(result.error);
-          } else {
-            // Handle success, e.g., navigate to a success page or show a success message
-              console.log('Post updated successfully:', result);
-              
-          }
+
+      if (result?.error) {
+        // Handle the error, e.g., display an error message
+        console.error(result.error);
+      } else {
+        // Handle success, e.g., navigate to a success page or show a success message
+        console.log('Post updated successfully:', result);
+
+      }
       // You can add your logic to send this data to the server or handle it as needed
     },
   });
@@ -64,14 +64,14 @@ export default function PriceSpecifications({data}) {
       e.preventDefault();
       e.returnValue = "You have unsaved changes. Are you sure you want to leave?";
     }
+  };
+  useEffect(() => {
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-    useEffect(() => {
-        window.addEventListener("beforeunload", handleBeforeUnload);
-    
-        return () => {
-          window.removeEventListener("beforeunload", handleBeforeUnload);
-        };
-      }, [formik.dirty]);
+  }, [formik.dirty]);
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className="space-y-12">
@@ -90,13 +90,12 @@ export default function PriceSpecifications({data}) {
               </label>
               <div className="mt-2">
                 <input
-                
+
                   type="number"
                   name="price"
                   id="price"
-                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
-                    formik.touched.price && formik.errors.price ? 'border-red-500' : ''
-                  }`}
+                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.price && formik.errors.price ? 'border-red-500' : ''
+                    }`}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.price}
@@ -116,9 +115,8 @@ export default function PriceSpecifications({data}) {
                   type="number"
                   name="securityDeposit"
                   id="securityDeposit"
-                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
-                    formik.touched.securityDeposit && formik.errors.securityDeposit ? 'border-red-500' : ''
-                  }`}
+                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.securityDeposit && formik.errors.securityDeposit ? 'border-red-500' : ''
+                    }`}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.securityDeposit}
@@ -138,9 +136,8 @@ export default function PriceSpecifications({data}) {
                   type="number"
                   name="maxGuests"
                   id="maxGuests"
-                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
-                    formik.touched.maxGuests && formik.errors.maxGuests ? 'border-red-500' : ''
-                  }`}
+                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.maxGuests && formik.errors.maxGuests ? 'border-red-500' : ''
+                    }`}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.maxGuests}
@@ -152,24 +149,23 @@ export default function PriceSpecifications({data}) {
             </div>
 
             <div className="sm:col-span-2">
-              <label htmlFor="minimumStay" className="block text-sm font-medium leading-6 text-gray-900">
+              <label htmlFor="minStay" className="block text-sm font-medium leading-6 text-gray-900">
                 Minimum stay required (in days)
               </label>
               <div className="mt-2">
                 <input
                   type="number"
-                  name="minimumStay"
-                  id="minimumStay"
-                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
-                    formik.touched.minimumStay && formik.errors.minimumStay ? 'border-red-500' : ''
-                  }`}
+                  name="minStay"
+                  id="minStay"
+                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.minStay && formik.errors.minStay ? 'border-red-500' : ''
+                    }`}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.minimumStay}
+                  value={formik.values.minStay}
                 />
               </div>
-              {formik.touched.minimumStay && formik.errors.minimumStay && (
-                <div className="text-red-600 text-sm mt-2">{formik.errors.minimumStay}</div>
+              {formik.touched.minStay && formik.errors.minStay && (
+                <div className="text-red-600 text-sm mt-2">{formik.errors.minStay}</div>
               )}
             </div>
 
@@ -182,9 +178,8 @@ export default function PriceSpecifications({data}) {
                   type="number"
                   name="bedrooms"
                   id="bedrooms"
-                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
-                    formik.touched.bedrooms && formik.errors.bedrooms ? 'border-red-500' : ''
-                  }`}
+                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.bedrooms && formik.errors.bedrooms ? 'border-red-500' : ''
+                    }`}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.bedrooms}
@@ -204,9 +199,8 @@ export default function PriceSpecifications({data}) {
                   type="number"
                   name="cleaningFee"
                   id="cleaningFee"
-                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
-                    formik.touched.cleaningFee && formik.errors.cleaningFee ? 'border-red-500' : ''
-                  }`}
+                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.cleaningFee && formik.errors.cleaningFee ? 'border-red-500' : ''
+                    }`}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.cleaningFee}
@@ -217,11 +211,11 @@ export default function PriceSpecifications({data}) {
               )}
             </div>
 
-           
+
           </div>
           <EditorSaveButton />
         </div>
-<EditorSaveButton />
+        <EditorSaveButton />
       </div>
     </form>
   );

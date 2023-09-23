@@ -60,7 +60,7 @@ const validationSchema = Yup.object().shape({
     securityDeposit: Yup.number()
         .required("Security Deposit is required")
         .positive("Security Deposit must be a positive number"),
-    minimumStay: Yup.number()
+    minStay: Yup.number()
         .required("Minimum stay required is required")
         .positive("Minimum stay must be a positive number"),
     cleaningFee: Yup.number()
@@ -99,7 +99,7 @@ export default function Availability({ data }) {
             siteId: data.siteId,
             price: "",
             securityDeposit: "",
-            minimumStay: "",
+            minStay: "",
             cleaningFee: "",
             // weekendPrice: "",
             // weeklyDiscount: "",
@@ -154,16 +154,16 @@ export default function Availability({ data }) {
             <div>
                 <TabTitle title="Trip Length" desc="" />
                 <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
-                    <Label htmlFor="minimumStay" className="col-span-1 col-start-1 flex items-center">
+                    <Label htmlFor="minStay" className="col-span-1 col-start-1 flex items-center">
                         Minimum Stay
                     </Label>
                     <div className="col-span-1 md:col-span-1 sm:col-span-1 col-start-3 md:col-start-4 sm:col-start-5 flex items-center">
                         <Input
                             type="number"
                             className="w-full"
-                            id="minimumStay"
-                            name="minimumStay"
-                            value={formik.values.minimumStay}
+                            id="minStay"
+                            name="minStay"
+                            value={formik.values.minStay}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             min="0"
@@ -171,8 +171,8 @@ export default function Availability({ data }) {
                         />
                     </div>
                 </div>
-                {formik.touched.minimumStay && formik.errors.minimumStay ? (
-                    <div className="text-red-600">{formik.errors.minimumStay}</div>
+                {formik.touched.minStay && formik.errors.minStay ? (
+                    <div className="text-red-600">{formik.errors.minStay}</div>
                 ) : null}
                 <hr />
                 <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">

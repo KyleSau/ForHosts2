@@ -1,6 +1,6 @@
 import ical from 'ical';
 import { NextResponse } from 'next/server';
-import { getCalendarUrls } from '@/lib/actions';
+// import { getCalendarUrls } from '@/lib/actions';
 
 export async function GET(
     _req: Request,
@@ -13,7 +13,7 @@ export async function GET(
         'https://forhosts.com/api/post/clkalnvrt0002mi084cw8m8d0/calendar.ics',
     ];
 
-    const calendarUrls = await getCalendarUrls(postId);
+    const calendarUrls: string[] = []//await getCalendarUrls(postId);
 
     // If calendarUrls is an object with an error property, handle the error
     if (typeof calendarUrls === 'object' && 'error' in calendarUrls) {

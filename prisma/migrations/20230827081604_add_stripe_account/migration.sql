@@ -94,7 +94,7 @@ CREATE TABLE "Post" (
     "instantBooking" BOOLEAN,
     "rating" DOUBLE PRECISION,
     "currency" TEXT NOT NULL,
-    "minimumStay" INTEGER NOT NULL,
+    "minStay" INTEGER NOT NULL,
     "cleaningFee" INTEGER NOT NULL,
     "securityDeposit" INTEGER NOT NULL,
     "availabilityCalendar" TEXT,

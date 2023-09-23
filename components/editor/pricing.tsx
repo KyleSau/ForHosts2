@@ -51,7 +51,7 @@ const validationSchema = Yup.object().shape({
   securityDeposit: Yup.number()
     .required("Security Deposit is required")
     .positive("Security Deposit must be a positive number"),
-  minimumStay: Yup.number()
+  minStay: Yup.number()
     .required("Minimum stay required is required")
     .positive("Minimum stay must be a positive number"),
   cleaningFee: Yup.number()
@@ -90,7 +90,7 @@ export default function Pricing({ data }: any) {
       siteId: data.siteId,
       price: "",
       securityDeposit: "",
-      minimumStay: "",
+      minStay: "",
       cleaningFee: "",
       // weekendPrice: "",
       // weeklyDiscount: "",
