@@ -66,660 +66,669 @@ import {
   faVideo,
   faWind,
   faWindowMaximize,
+  IconDefinition,
 } from "@fortawesome/free-solid-svg-icons";
 
-export const amenityDetails =
+
+export type Amenity = {
+  id: string
+  category: string
+  description: string | null
+  icon: IconDefinition | null
+}
+
+export const amenityDetails: Amenity[] =
   [
     {
-      "name": "Essentials",
+      "id": "Essentials",
       "category": "Popular",
       "description": "Towels, bed sheets, soap, toilet paper, and pillows",
       "icon": faBed
     },
     {
-      "name": "Air conditioning",
+      "id": "Air conditioning",
       "category": "Popular",
       "description": "Add details",
       "icon": faSnowflake
     },
     {
-      "name": "Cleaning products",
+      "id": "Cleaning products",
       "category": "Popular",
       "description": null,
       "icon": faBroom
     },
     {
-      "name": "Cooking basics",
+      "id": "Cooking basics",
       "category": "Popular",
       "description": "Pots and pans, oil, salt and pepper",
       "icon": faUtensils
     },
     {
-      "name": "Dedicated workspace",
+      "id": "Dedicated workspace",
       "category": "Popular",
       "description": "Guests have a desk or table that’s used just for working, along with a comfortable chair",
       "icon": faLaptop
     },
     {
-      "name": "Dishes and silverware",
+      "id": "Dishes and silverware",
       "category": "Popular",
       "description": "Bowls, chopsticks, plates, cups, etc.",
       "icon": faUtensils
     },
     {
-      "name": "Dryer",
+      "id": "Dryer",
       "category": "Popular",
       "description": null,
       "icon": faTshirt
     },
     {
-      "name": "Hair dryer",
+      "id": "Hair dryer",
       "category": "Popular",
       "description": null,
       "icon": faCut
     },
     {
-      "name": "Heating",
+      "id": "Heating",
       "category": "Popular",
       "description": null,
       "icon": faTemperatureLow
     },
     {
-      "name": "Hot tub",
+      "id": "Hot tub",
       "category": "Popular",
       "description": null,
       "icon": faHotTub
     },
     {
-      "name": "Kitchen",
+      "id": "Kitchen",
       "category": "Popular",
       "description": "Space where guests can cook their own meals",
       "icon": faUtensils
     },
     {
-      "name": "Pool",
+      "id": "Pool",
       "category": "Popular",
       "description": null,
       "icon": faSwimmingPool
     },
     {
-      "name": "TV",
+      "id": "TV",
       "category": "Popular",
       "description": null,
       "icon": faTv
     },
     {
-      "name": "Washer",
+      "id": "Washer",
       "category": "Popular",
       "description": null,
       "icon": null
     },
     {
-      "name": "Wifi",
+      "id": "Wifi",
       "category": "Popular",
       "description": "Available throughout the listing",
       "icon": faWifi
     },
     {
-      "name": "Bathroom",
+      "id": "Bathroom",
       "category": "Bedroom and laundry",
       "description": "Bathtub",
       "icon": faBath
     },
     {
-      "name": "Bidet",
+      "id": "Bidet",
       "category": "Bathroom",
       "description": null,
       "icon": faFaucet
     },
     {
-      "name": "Body soap",
+      "id": "Body soap",
       "category": "Bathroom",
       "description": null,
       "icon": faSoap
     },
     {
-      "name": "Cleaning products",
+      "id": "Cleaning products",
       "category": "Bathroom",
       "description": null,
       "icon": faBroom
     },
     {
-      "name": "Conditioner",
+      "id": "Conditioner",
       "category": "Bathroom",
       "description": null,
       "icon": faFlask
     },
     {
-      "name": "Hair dryer",
+      "id": "Hair dryer",
       "category": "Bathroom",
       "description": null,
       "icon": faCut
     },
     {
-      "name": "Hot water",
+      "id": "Hot water",
       "category": "Bathroom",
       "description": null,
       "icon": faShower
     },
     {
-      "name": "Outdoor shower",
+      "id": "Outdoor shower",
       "category": "Bathroom",
       "description": null,
       "icon": faShower
     },
     {
-      "name": "Shampoo",
+      "id": "Shampoo",
       "category": "Bathroom",
       "description": null,
       "icon": faFlask
     },
     {
-      "name": "Shower gel",
+      "id": "Shower gel",
       "category": "Bathroom",
       "description": null,
       "icon": faFlask
     },
     {
-      "name": "Bed linens",
+      "id": "Bed linens",
       "category": "Bedroom and laundry",
       "description": null,
       "icon": faBed
     },
     {
-      "name": "Clothing storage",
+      "id": "Clothing storage",
       "category": "Bedroom and laundry",
       "description": null,
       "icon": null
     },
     {
-      "name": "Dryer",
+      "id": "Dryer",
       "category": "Bedroom and laundry",
       "description": null,
       "icon": faTshirt
     },
     {
-      "name": "Drying rack for clothing",
+      "id": "Drying rack for clothing",
       "category": "Bedroom and laundry",
       "description": null,
       "icon": faTshirt
     },
     {
-      "name": "Extra pillows and blankets",
+      "id": "Extra pillows and blankets",
       "category": "Bedroom and laundry",
       "description": null,
       "icon": faBed
     },
     {
-      "name": "Hangers",
+      "id": "Hangers",
       "category": "Bedroom and laundry",
       "description": null,
       "icon": null
     },
     {
-      "name": "Iron",
+      "id": "Iron",
       "category": "Bedroom and laundry",
       "description": null,
       "icon": null
     },
     {
-      "name": "Mosquito net",
+      "id": "Mosquito net",
       "category": "Bedroom and laundry",
       "description": null,
       "icon": faBed
     },
     {
-      "name": "Room-darkening shades",
+      "id": "Room-darkening shades",
       "category": "Bedroom and laundry",
       "description": null,
       "icon": faWindowMaximize
     },
     {
-      "name": "Safe",
+      "id": "Safe",
       "category": "Bedroom and laundry",
       "description": null,
       "icon": faLock
     },
     {
-      "name": "Washer",
+      "id": "Washer",
       "category": "Bedroom and laundry",
       "description": null,
       "icon": null
     },
     {
-      "name": "Arcade games",
+      "id": "Arcade games",
       "category": "Entertainment",
       "description": null,
       "icon": faGamepad
     },
     {
-      "name": "Batting cage",
+      "id": "Batting cage",
       "category": "Entertainment",
       "description": null,
       "icon": faBaseballBall
     },
     {
-      "name": "Books and reading material",
+      "id": "Books and reading material",
       "category": "Entertainment",
       "description": "NEW",
       "icon": faBook
     },
     {
-      "name": "Bowling alley",
+      "id": "Bowling alley",
       "category": "Entertainment",
       "description": null,
       "icon": faBowlingBall
     },
     {
-      "name": "Climbing wall",
+      "id": "Climbing wall",
       "category": "Entertainment",
       "description": null,
       "icon": faMountain
     },
     {
-      "name": "Darts",
+      "id": "Darts",
       "category": "Entertainment",
       "description": null,
       "icon": faBullseye
     },
     {
-      "name": "Fitness equipment",
+      "id": "Fitness equipment",
       "category": "Entertainment",
       "description": "Show all 6 amenities",
       "icon": faDumbbell
     },
     {
-      "name": "Game console",
+      "id": "Game console",
       "category": "Entertainment",
       "description": null,
       "icon": faGamepad
     },
     {
-      "name": "Games",
+      "id": "Games",
       "category": "Entertainment",
       "description": null,
       "icon": faDice
     },
     {
-      "name": "Hammock",
+      "id": "Hammock",
       "category": "Entertainment",
       "description": null,
       "icon": null
     },
     {
-      "name": "Movie theater",
+      "id": "Movie theater",
       "category": "Entertainment",
       "description": null,
       "icon": faFilm
     },
     {
-      "name": "Music",
+      "id": "Music",
       "category": "Entertainment",
       "description": null,
       "icon": faMusic
     },
     {
-      "name": "Patio or balcony",
+      "id": "Patio or balcony",
       "category": "Entertainment",
       "description": "Private or shared",
       "icon": faCouch
     },
     {
-      "name": "Ping pong table",
+      "id": "Ping pong table",
       "category": "Entertainment",
       "description": null,
       "icon": null
     },
     {
-      "name": "Pool table",
+      "id": "Pool table",
       "category": "Entertainment",
       "description": null,
       "icon": null
     },
     {
-      "name": "Record player",
+      "id": "Record player",
       "category": "Entertainment",
       "description": null,
       "icon": faCompactDisc
     },
     {
-      "name": "Sauna",
+      "id": "Sauna",
       "category": "Entertainment",
       "description": null,
       "icon": faHotTub
     },
     {
-      "name": "Swimming pool",
+      "id": "Swimming pool",
       "category": "Entertainment",
       "description": null,
       "icon": faSwimmingPool
     },
     {
-      "name": "Table tennis",
+      "id": "Table tennis",
       "category": "Entertainment",
       "description": null,
       "icon": null
     },
     {
-      "name": "Tennis court",
+      "id": "Tennis court",
       "category": "Entertainment",
       "description": null,
       "icon": null
     },
     {
-      "name": "Fire extinguisher",
+      "id": "Fire extinguisher",
       "category": "Health and safety",
       "description": null,
       "icon": faFireExtinguisher
     },
     {
-      "name": "First aid kit",
+      "id": "First aid kit",
       "category": "Health and safety",
       "description": null,
       "icon": faFirstAid
     },
     {
-      "name": "Smoke alarm",
+      "id": "Smoke alarm",
       "category": "Health and safety",
       "description": null,
       "icon": faFire
     },
     {
-      "name": "Carbon monoxide alarm",
+      "id": "Carbon monoxide alarm",
       "category": "Health and safety",
       "description": null,
       "icon": faFire
     },
     {
-      "name": "Internet",
+      "id": "Internet",
       "category": "Logistics",
       "description": "Wifi details",
       "icon": faWifi
     },
     {
-      "name": "Long-term stays allowed",
+      "id": "Long-term stays allowed",
       "category": "Logistics",
       "description": "Allow stay for 28 days or more",
       "icon": faCalendarAlt
     },
     {
-      "name": "Luggage dropoff allowed",
+      "id": "Luggage dropoff allowed",
       "category": "Logistics",
       "description": null,
       "icon": faLuggageCart
     },
     {
-      "name": "Paid parking",
+      "id": "Paid parking",
       "category": "Logistics",
       "description": null,
       "icon": faParking
     },
     {
-      "name": "Free parking on premises",
+      "id": "Free parking on premises",
       "category": "Logistics",
       "description": null,
       "icon": faParking
     },
     {
-      "name": "Free street parking",
+      "id": "Free street parking",
       "category": "Logistics",
       "description": null,
       "icon": faParking
     },
     {
-      "name": "Private entrance",
+      "id": "Private entrance",
       "category": "Logistics",
       "description": null,
       "icon": faDoorOpen
     },
     {
-      "name": "Private living room",
+      "id": "Private living room",
       "category": "Logistics",
       "description": null,
       "icon": faCouch
     },
     {
-      "name": "Private outdoor pool",
+      "id": "Private outdoor pool",
       "category": "Logistics",
       "description": null,
       "icon": faSwimmingPool
     },
     {
-      "name": "Private pool",
+      "id": "Private pool",
       "category": "Logistics",
       "description": null,
       "icon": faSwimmingPool
     },
     {
-      "name": "Shared outdoor pool",
+      "id": "Shared outdoor pool",
       "category": "Logistics",
       "description": null,
       "icon": faSwimmingPool
     },
     {
-      "name": "Shared pool",
+      "id": "Shared pool",
       "category": "Logistics",
       "description": null,
       "icon": faSwimmingPool
     },
     {
-      "name": "Air purifier",
+      "id": "Air purifier",
       "category": "Safety features",
       "description": null,
       "icon": faWind
     },
     {
-      "name": "Baby monitor",
+      "id": "Baby monitor",
       "category": "Safety features",
       "description": null,
       "icon": faBaby
     },
     {
-      "name": "Babysitter recommendations",
+      "id": "Babysitter recommendations",
       "category": "Safety features",
       "description": null,
       "icon": null
     },
     {
-      "name": "Buzzer/wireless intercom",
+      "id": "Buzzer/wireless intercom",
       "category": "Safety features",
       "description": null,
       "icon": faBell
     },
     {
-      "name": "CCTV cameras",
+      "id": "CCTV cameras",
       "category": "Safety features",
       "description": null,
       "icon": faVideo
     },
     {
-      "name": "Doorman",
+      "id": "Doorman",
       "category": "Safety features",
       "description": null,
       "icon": faUserTie
     },
     {
-      "name": "Doorperson",
+      "id": "Doorperson",
       "category": "Safety features",
       "description": null,
       "icon": faUserTie
     },
     {
-      "name": "Fire extinguisher",
+      "id": "Fire extinguisher",
       "category": "Safety features",
       "description": null,
       "icon": faFireExtinguisher
     },
     {
-      "name": "Fireplace guards",
+      "id": "Fireplace guards",
       "category": "Safety features",
       "description": null,
       "icon": faFire
     },
     {
-      "name": "Firm mattress",
+      "id": "Firm mattress",
       "category": "Safety features",
       "description": null,
       "icon": faBed
     },
     {
-      "name": "First aid kit",
+      "id": "First aid kit",
       "category": "Safety features",
       "description": null,
       "icon": faFirstAid
     },
     {
-      "name": "Smoke alarm",
+      "id": "Smoke alarm",
       "category": "Safety features",
       "description": null,
       "icon": faFire
     },
     {
-      "name": "Carbon monoxide alarm",
+      "id": "Carbon monoxide alarm",
       "category": "Safety features",
       "description": null,
       "icon": faFire
     },
     {
-      "name": "Internet",
+      "id": "Internet",
       "category": "Logistics",
       "description": "Wifi details",
       "icon": faWifi
     },
     {
-      "name": "Long-term stays allowed",
+      "id": "Long-term stays allowed",
       "category": "Logistics",
       "description": "Allow stay for 28 days or more",
       "icon": faCalendarAlt
     },
     {
-      "name": "Luggage dropoff allowed",
+      "id": "Luggage dropoff allowed",
       "category": "Logistics",
       "description": null,
       "icon": faLuggageCart
     },
     {
-      "name": "Paid parking",
+      "id": "Paid parking",
       "category": "Logistics",
       "description": null,
       "icon": faParking
     },
     {
-      "name": "Free parking on premises",
+      "id": "Free parking on premises",
       "category": "Logistics",
       "description": null,
       "icon": faParking
     },
     {
-      "name": "Free street parking",
+      "id": "Free street parking",
       "category": "Logistics",
       "description": null,
       "icon": faParking
     },
     {
-      "name": "Private entrance",
+      "id": "Private entrance",
       "category": "Logistics",
       "description": null,
       "icon": faDoorOpen
     },
     {
-      "name": "Private living room",
+      "id": "Private living room",
       "category": "Logistics",
       "description": null,
       "icon": faCouch
     },
     {
-      "name": "Private outdoor pool",
+      "id": "Private outdoor pool",
       "category": "Logistics",
       "description": null,
       "icon": faSwimmingPool
     },
     {
-      "name": "Private pool",
+      "id": "Private pool",
       "category": "Logistics",
       "description": null,
       "icon": faSwimmingPool
     },
     {
-      "name": "Shared outdoor pool",
+      "id": "Shared outdoor pool",
       "category": "Logistics",
       "description": null,
       "icon": faSwimmingPool
     },
     {
-      "name": "Shared pool",
+      "id": "Shared pool",
       "category": "Logistics",
       "description": null,
       "icon": faSwimmingPool
     },
     {
-      "name": "Air purifier",
+      "id": "Air purifier",
       "category": "Safety features",
       "description": null,
       "icon": faWind
     },
     {
-      "name": "Baby monitor",
+      "id": "Baby monitor",
       "category": "Safety features",
       "description": null,
       "icon": faBaby
     },
     {
-      "name": "Buzzer/wireless intercom",
+      "id": "Buzzer/wireless intercom",
       "category": "Safety features",
       "description": null,
       "icon": faBell
     },
     {
-      "name": "CCTV cameras",
+      "id": "CCTV cameras",
       "category": "Safety features",
       "description": null,
       "icon": faVideo
     },
     {
-      "name": "Doorman",
+      "id": "Doorman",
       "category": "Safety features",
       "description": null,
       "icon": faUserTie
     },
     {
-      "name": "Doorperson",
+      "id": "Doorperson",
       "category": "Safety features",
       "description": null,
       "icon": faUserTie
     },
     {
-      "name": "Fire extinguisher",
+      "id": "Fire extinguisher",
       "category": "Safety features",
       "description": null,
       "icon": faFireExtinguisher
     },
     {
-      "name": "Fireplace guards",
+      "id": "Fireplace guards",
       "category": "Safety features",
       "description": null,
       "icon": faFire
     },
     {
-      "name": "Firm mattress",
+      "id": "Firm mattress",
       "category": "Safety features",
       "description": null,
       "icon": faBed
     },
     {
-      "name": "First aid kit",
+      "id": "First aid kit",
       "category": "Safety features",
       "description": null,
       "icon": faFirstAid
     },
     {
-      "name": "Smoke alarm",
+      "id": "Smoke alarm",
       "category": "Safety features",
       "description": null,
       "icon": faFire
     },
     {
-      "name": "Carbon monoxide alarm",
+      "id": "Carbon monoxide alarm",
       "category": "Safety features",
       "description": null,
       "icon": faFire
