@@ -82,7 +82,7 @@ export const columns: ColumnDef<Amenity>[] = [
     {
         accessorKey: "description",
         header: "Description",
-        cell: ({ row }) => <div className="lowercase">{String(row.getValue("description"))}</div>, // Here ideally you should be using some component to render the icon.
+        cell: ({ row }) => <div className="lowercase">{row.getValue("description") ? String(row.getValue("description")) : ''}</div>, // Here ideally you should be using some component to render the icon.
     },
     {
         accessorKey: "category",
