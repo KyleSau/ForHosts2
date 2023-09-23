@@ -615,16 +615,13 @@ export const getCalendarUrls = async (postId: string) => {
   }
 };
 
-// this will be invoked by the stripe webhook
-// StripeMetaData
+/*
 export const createReservation = async (formData: FormData, currentDate: Date) => {
-  // FormData
   const postId = formData.get("postId") as string;
   const startDate = new Date(formData.get("start-date") as string);
   const endDate = new Date(formData.get("end-date") as string);
 
   try {
-    //do validation
     const dateDeltaArray = calcDateDelta(currentDate, startDate);
 
     if (dateDeltaArray.some((t: number) => t < 0)) {
@@ -655,4 +652,4 @@ export const createReservation = async (formData: FormData, currentDate: Date) =
     }
   }
 };
-
+*/
