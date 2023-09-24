@@ -2,8 +2,8 @@
 
 import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { list, del, put, BlobResult } from '@vercel/blob';
-// import { NextResponse } from 'next/server';
+import { list, del, BlobResult } from '@vercel/blob';
+import { getBlurDataURL } from "./utils";
 
 export const uploadBlobMetadata = async (blobResult: BlobResult, orderIndex: number, postId: string, siteId: string) => {
   console.log("entered uploadBlobMetadata");
@@ -23,15 +23,11 @@ export const uploadBlobMetadata = async (blobResult: BlobResult, orderIndex: num
     const response = await prisma.image.create({
       data: {
         url: blobResult.url,
+        blurHash: await getBlurDataURL(blobResult.url),
         uploadedAt: blobResult.uploadedAt,
         size: blobResult.size.toString(),
         fileName: blobResult.pathname,
         orderIndex,
-        user: {
-          connect: {
-            id: session?.user.id,
-          },
-        },
         site: {
           connect: {
             id: siteId
@@ -72,10 +68,8 @@ export const updateBlobMetadata = async (cuid: string, updatedFields: any) => {
 
 export const getBlobMetadata = async (siteId: string, postId: string) => {
   try {
-    const session = await getSession();
     const response = await prisma.image.findMany({
       where: {
-        userId: session?.user.id,
         siteId,
         postId
       },

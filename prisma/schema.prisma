@@ -31,7 +31,6 @@ model User {
   reviews       Review[]
   // stripe_account_id
   stripeAccount StripeAccount? // add relation?
-  images        Image[]
   calendars     Calendar[]
 }
 
@@ -91,21 +90,18 @@ model VerificationToken {
 model Image {
   id         String   @id @default(cuid())
   url        String
+  blurHash   String
   uploadedAt DateTime
   size       String
   fileName   String
   orderIndex Int
-
-  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String?
-
-  site   Site?   @relation(fields: [siteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  
   siteId String?
-
+  site   Site?   @relation(fields: [siteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  
   postId String
   post   Post?  @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  @@index([userId])
   @@index([siteId])
   @@index([postId])
 }

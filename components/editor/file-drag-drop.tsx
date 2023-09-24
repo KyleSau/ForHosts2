@@ -1,8 +1,8 @@
 "use client";
 
-import { Image, Trash2 } from 'lucide-react';
+import { Image, Trash2, Loader2 } from 'lucide-react';
 import { FILE_CONSTS, IMAGE_UPLOAD_QUANTITY_LIMIT, IMAGE_SIZE_LIMIT_BYTES, IMAGE_SIZE_LIMIT_MB } from '@/lib/constants';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import EditorWarningModal, { EditorWarningModalDataType, EditorWarningModalDataTemplate } from "@/components/editor/warning-confirmation-modal";
 import { humanReadableFileSize } from '@/lib/utils';
 
@@ -12,6 +12,9 @@ import { uploadBlobMetadata, listAllBlobsInStore, deleteBlobFromStore, getBlobMe
   updateBlobMetadata
 } from '@/lib/blob_actions';
 import { Image as ImagePrismaSchema, Post } from "@prisma/client";
+import { headers } from 'next/headers';
+import { hostname } from 'os';
+import { PrismaClientRustPanicError } from '@prisma/client/runtime';
 
 //DEV MODE
 const DEBUG_TOGGLE = false;
@@ -35,7 +38,9 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
   //states for confirmation modal for deleting pictures
   const [editorWarningModalOpen, setEditorWarningModalOpen] = useState<boolean>(false);
   const [editorWarningModalData, setEditorWarningModalData] = useState<EditorWarningModalDataType>(EditorWarningModalDataTemplate);
-  const [uploadProgress, setUploadProgress] = useState(0); 
+  const [isUploading, setIsUploading] = useState<boolean>(false); 
+  // const [isUploading, setIsUploading] = useRef(false); 
+
 
   //TEST
   const [blobsFromStoreTest, setBlobsFromStoreTest] = useState<BlobResult[]>([]);
@@ -61,19 +66,6 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
     refreshMetadata();
   }, []);
 
-  // useEffect(() => {
-  //   const intervalId = setInterval(async () => {
-  //     const response = await fetch('/api/upload/progress');
-  //     if (response.ok) {
-  //       const progressData = await response.json();
-  //       console.log("progressData: ", progressData);
-  //       setUploadProgress(progressData.progress);
-  //     }
-  //   }, 2000); // Adjust the polling interval as needed
-
-  //   return () => clearInterval(intervalId);
-  // }, []);
-
   const addFilesToLocalState = (newFiles: (File | null)[]) => {
     //first check if adding the new files causes currently uploaded pics to surpass the upload threshold; show modal if so
     if (fileDataObjects.length > IMAGE_UPLOAD_QUANTITY_LIMIT || fileDataObjects.length + newFiles.length > IMAGE_UPLOAD_QUANTITY_LIMIT) {
@@ -86,6 +78,8 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
     } else {
       const newFilesAboveSizeLimit: (File | null)[] = [];
       const newFilesBelowSizeLimit: FileDataObject[] = [];
+      const a = hostname;
+      console.log("HOSTNAME: ", a);
 
       newFiles.forEach((file: File|null, fileIdx: number) => {
         console.log("new file: ", file);
@@ -110,6 +104,7 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
       const updatedFdoArray = [...fileDataObjects, ...newFilesBelowSizeLimit];
       console.log("updatedFdoArray: ", updatedFdoArray);
       setFileDataObjects(updatedFdoArray);
+      setIsUploading(false);
 
       //if needed, throw up modal informing user that files above the size limit were not added
       if (newFilesAboveSizeLimit.length > 0) {
@@ -204,68 +199,64 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
     setDraggedIdx(null); // Reset the dragged item index
   };
 
+
+  const uploadPromiseWrapper = async (fileDataObjects: FileDataObject[]) => {
+    const fileDataObjectsCopy = [...fileDataObjects];
+
+    for (let fdoIdx: number = 0; fdoIdx < fileDataObjects.length; fdoIdx++) {
+      const fdo: FileDataObject = fileDataObjects[fdoIdx];
+      console.log(">>> fdo: ", fdo);
+      if(fdo.inBlobStore)
+      {
+        if(fdo?.id && fdo.orderIndex != fdoIdx) {
+          const updateBlobMetadataResponse = await updateBlobMetadata(fdo.id, {orderIndex: fdoIdx});
+          const newUpdatedFile: FileDataObject = {
+            inBlobStore: true,
+            ...updateBlobMetadataResponse
+          }
+          fileDataObjectsCopy[fdoIdx] = newUpdatedFile;
+        }
+      } 
+      else 
+      {
+        const file = fdo?.file;
+        if(file) {
+          console.log("file.name: ", file.name);
+          // Using this: https://vercel.com/docs/storage/vercel-blob/quickstart#browser-uploads 
+          const blobResult = await put(file.name, file, {
+            access: 'public',
+            handleBlobUploadUrl: '/api/upload'
+          });
+          
+          const uploadBlobMetadataResponse = await uploadBlobMetadata(blobResult, fdoIdx, POST_ID, SITE_ID);
+          console.log("uploadBlobMetadataResponse: fdoIdx: ", fdoIdx,"    responseValue: ", uploadBlobMetadataResponse);
+          const newUploadedFile: FileDataObject = {
+            inBlobStore: true,
+            ...uploadBlobMetadataResponse
+          }
+          fileDataObjectsCopy[fdoIdx] = newUploadedFile;
+        }
+      }
+    };
+
+    return fileDataObjectsCopy;
+  }
+
   const uploadFilesToBlobStoreAndMetadataToDB = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     console.log("uploadFilesToBlobStoreAndMetadataToDB entered");
     console.log("event: ", event);
     event.preventDefault();
 
-    const fileDataObjectsCopy = [...fileDataObjects];
+    setIsUploading(true);
+    console.log("setIsUploading to TRUE");
 
-    const uploadPromiseWrapper = new Promise(() => {
-
-      // const xhr = new XMLHttpRequest
-
-      fileDataObjects.forEach((fdo: FileDataObject, fdoIdx: number) => {
-        console.log(">>> fdo: ", fdo);
-        if(fdo.inBlobStore) 
-        {
-          if(fdo?.id && fdo.orderIndex != fdoIdx) {
-            const updateBlobMetadataResponse = updateBlobMetadata(fdo.id, {orderIndex: fdoIdx});
-            updateBlobMetadataResponse.then((responseValue: ImagePrismaSchema) => {
-              console.log("updateBlobMetadataResponse: fdoIdx: ", fdoIdx, "    responseValue: ", responseValue);
-              const newUpdatedFile: FileDataObject = {
-                inBlobStore: true,
-                ...responseValue
-              }
-              fileDataObjectsCopy[fdoIdx] = newUpdatedFile;
-
-              // xhr.upload.addEventListener
-            })
-          }
-        } 
-        else 
-        {
-          const file = fdo?.file;
-          if(file) {
-            console.log("file.name: ", file.name);
-            // Using this: https://vercel.com/docs/storage/vercel-blob/quickstart#browser-uploads 
-            const newBlob = put(file.name, file, {
-              access: 'public',
-              handleBlobUploadUrl: '/api/upload'
-            });
-            newBlob.then((br: BlobResult) => {
-              console.log("br: ", br);
-              const uploadBlobMetadataResponse = uploadBlobMetadata(br, fdoIdx, POST_ID, SITE_ID);
-              console.log("uploadBlobMetadataResponse: ", uploadBlobMetadataResponse);
-              return uploadBlobMetadataResponse;
-            }).then((responseValue: ImagePrismaSchema) => {
-              console.log("uploadBlobMetadataResponse: fdoIdx: ", fdoIdx,"    responseValue: ", responseValue);
-              const newUploadedFile: FileDataObject = {
-                inBlobStore: true,
-                ...responseValue
-              }
-              fileDataObjectsCopy[fdoIdx] = newUploadedFile;
-            });
-          }
-        }
-      });
-    });
+    const uploadPromiseResponse = await uploadPromiseWrapper(fileDataObjects);
+    console.log("uploadPromiseResponse: ", uploadPromiseResponse);
     
-    uploadPromiseWrapper.then(() => {
-      setFileDataObjects(fileDataObjectsCopy);
-    });
+    setFileDataObjects(uploadPromiseResponse as FileDataObject[]);
+    setIsUploading(false);
+    console.log("setIsUploading to FALSE");    
   };
-
 
 
   //TEST
@@ -317,6 +308,31 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
     })
   };
 
+  const renderActionButtonForImage = (isUploading: boolean, fdo: FileDataObject, imageIdx: number) => {
+    if (isUploading && !fdo.inBlobStore) {
+      return (
+        <button
+        type="button"
+        className="absolute top-0 right-0 z-50 p-1 bg-white rounded-bl focus:outline-none"
+        onClick={() => {}}
+        >
+        <Loader2 className='animate-spin'/> 
+        </button>
+      );
+    } 
+    
+    return (
+      <button
+        type="button"
+        className="absolute top-0 right-0 z-50 p-1 bg-white rounded-bl focus:outline-none"
+        onClick={() => handleImageDeleteIconClicked(imageIdx)}
+      >
+        <Trash2 className="hover:stroke-rose-600"/> 
+      </button>
+    );
+  };
+
+  console.log("12345 isUploading: ", isUploading);
   return (<>
     <div
       id={componentId}
@@ -372,20 +388,16 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
               onDrop={(e) => handleDropForMove(e, idx)}
               onDragOver={handleDragOver}
             >
-              <button
-                type="button"
-                className="absolute top-0 right-0 z-50 p-1 bg-white rounded-bl focus:outline-none"
-                onClick={() => handleImageDeleteIconClicked(idx)}
-              >
-                <Trash2 className="hover:stroke-rose-600"/>
-              </button>
+              {
+                renderActionButtonForImage(isUploading, fdo, idx)
+              }
               <img
                 className="relative inset-0 z-0 object-cover w-full h-full border-4 border-white preview"
                 src={inBlobStore? fdo.url: fdo.localBlobUrl}
               />
               <div className="absolute bottom-0 left-0 right-0 flex flex-col p-2 text-xs bg-white bg-opacity-50">
                 <span className="w-full font-bold text-gray-900 truncate">
-                  {inBlobStore? fdo.fileName + " [BLOB]": fileObj?.name + " [LOCAL]"}
+                  {inBlobStore? fdo.fileName + " [UPLOADED]": fileObj?.name + " [NOT UPLOADED]"}
                 </span>
                 <span className="text-xs text-gray-900" x-text="humanFileSize(files[index].size)">
                   {fileObjSize}
