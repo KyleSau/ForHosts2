@@ -14,7 +14,8 @@ import {
 } from "@/lib/domains";
 import { put } from "@vercel/blob";
 import { customAlphabet } from "nanoid";
-import { getBlurDataURL } from "@/lib/utils";
+import { calcDateDelta, getBlurDataURL } from "@/lib/utils";
+import { RESERVATION_FUTURE_DAYS_THRESHOLD } from "./constants";
 
 const nanoid = customAlphabet(
   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
@@ -278,7 +279,7 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
       amenities: [], // empty array for amenities
       photoGallery: [], // empty array for photoGallery
       additionalServices: [], // empty array for additionalServices
-      //calendarUrls: [],
+      calendarUrls: [],
       propertyType: "idk",
       site: {
         connect: {
@@ -290,35 +291,6 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
           id: session.user.id,
         },
       },
-      weekendPrice: 0, // Add weekendPrice field with an appropriate value
-      weeklyDiscount: 0, // Add weeklyDiscount field with an appropriate value
-      monthlyDiscount: 0, // Add monthlyDiscount field with an appropriate value
-      petFee: 0, // Add petFee field with an appropriate value
-      maxStay: 0, // Add maxStay field with an appropriate value
-      advanceNotice: 0, // Add advanceNotice field with an appropriate value
-      sameDayAdvanceNotice: 0, // Add sameDayAdvanceNotice field with an appropriate value
-      preparationTime: 0, // Add preparationTime field with an appropriate value
-      availabilityWindow: 0, // Add availabilityWindow field with an appropriate value
-      longitude: "0", // Add longitude field with an appropriate value
-      latitude: "0", // Add latitude field with an appropriate value
-      instantBooking: false, // Add instantBooking field with an appropriate value
-      petsAllowed: false, // Add petsAllowed field with an appropriate value
-      eventsAllowed: false, // Add eventsAllowed field with an appropriate value
-      smokingAllowed: false, // Add smokingAllowed field with an appropriate value
-      photographyAllowed: false, // Add photographyAllowed field with an appropriate value
-      quietHoursStart: "00:00", // Add quietHoursStart field with an appropriate value
-      quietHoursEnd: "00:00", // Add quietHoursEnd field with an appropriate value
-      checkInWindowStart: "00:00", // Add checkInWindowStart field with an appropriate value
-      checkInWindowEnd: "00:00", // Add checkInWindowEnd field with an appropriate value
-      checkoutTime: "11:00", // Add checkoutTime field with an appropriate value
-      interactionPreferences: "", // Add interactionPreferences field with an appropriate value
-      additionalRules: "", // Add additionalRules field with an appropriate value
-      afterBookingDirections: "", // Add afterBookingDirections field with an appropriate value
-      wifiName: "", // Add wifiName field with an appropriate value
-      wifiPassword: "", // Add wifiPassword field with an appropriate value
-      houseManual: "", // Add houseManual field with an appropriate value
-      checkInMethod: "", // Add checkInMethod field with an appropriate value
-      checkoutInstructions: "", // Add checkoutInstructions field with an appropriate value
     },
   });
 
@@ -393,7 +365,7 @@ export const updatePropertyPriceInfo = async (data: Post) => {
       data: {
         price: data.price,
         securityDeposit: data.securityDeposit,
-        minStay: data.minStay,
+        minStay: data.minimumStay,
         cleaningFee: data.cleaningFee,
       },
     });
@@ -431,7 +403,7 @@ export const updateListingDetails = async (data: Post) => {
         title: data.title,
         description: data.description,
         maxGuests: data.maxGuests,
-        minStay: data.minStay,
+        minimumStay: data.minimumStay,
         bedrooms: data.bedrooms,
         bathrooms: data.bathrooms,
         // country: data.country,

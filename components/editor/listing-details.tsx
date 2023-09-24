@@ -18,14 +18,14 @@ export default function ListingDetails({ data }) {
   let [isPendingSaving, startTransitionSaving] = useTransition();
   let [isPendingPublishing, startTransitionPublishing] = useTransition();
   const url = process.env.NEXT_PUBLIC_VERCEL_ENV
-  ? `https://${data.site?.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${data.slug}`
-  : `http://${data.site?.subdomain}.localhost:3000/${data.slug}`;
+    ? `https://${data.site?.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${data.slug}`
+    : `http://${data.site?.subdomain}.localhost:3000/${data.slug}`;
   const validationSchema = Yup.object().shape({
     title: Yup.string().required('Title is required'),
     description: Yup.string().required('Description is required'),
     bedrooms: Yup.number().required('Number of bedrooms is required').min(1, 'Must be at least 1'),
     bathrooms: Yup.number().required('Number of bathrooms is required').min(1, 'Must be at least 1'),
-   location: Yup.string().required('Street Address is required'),
+    location: Yup.string().required('Street Address is required'),
     // streetAddress: Yup.string().required('Street address is required'),
     // city: Yup.string().required('City is required'),
     // region: Yup.string().required('State / Province is required'),
@@ -54,8 +54,8 @@ export default function ListingDetails({ data }) {
       setIsLoading(true);
       const formData = new FormData();
       formData.append("published", String(!data.published));
-      
-      console.log(data.published, typeof data.published); 
+
+      console.log(data.published, typeof data.published);
       console.log(formData)
       // Your form submission logic
       const result = await updateListingDetails(values);
@@ -88,10 +88,10 @@ export default function ListingDetails({ data }) {
     };
   }, [formik.dirty]);
   return (
-    
+
     <form onSubmit={formik.handleSubmit}>
-    
-            <div className="absolute right-5 top-5 mb-5 flex items-center space-x-3">
+
+      <div className="absolute right-5 top-5 mb-5 flex items-center space-x-3">
         {data.published && (
           <a
             href={url}
@@ -116,7 +116,7 @@ export default function ListingDetails({ data }) {
                     `Successfully ${data.published ? "unpublished" : "published"
                     } your post.`,
                   );
-                
+
                 },
               );
             });
@@ -136,10 +136,10 @@ export default function ListingDetails({ data }) {
           )}
         </button>
         {data.published && submitted && (
-  <div>
-    YOU HAVE UNPUBLISHED SAVED CHANGES
-  </div>
-)}
+          <div>
+            YOU HAVE UNPUBLISHED SAVED CHANGES
+          </div>
+        )}
 
       </div>
       <TabTitle title="Basic Details" desc="Basic Listing Details About Your Property" />
@@ -155,7 +155,7 @@ export default function ListingDetails({ data }) {
             }`}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-         
+
           value={formik.values.title}
         />
         {formik.touched.title && formik.errors.title && (
@@ -230,25 +230,25 @@ export default function ListingDetails({ data }) {
       <TabTitle title="Address Information" desc='Address Information regarding your listing (This will not be shown to anyone until 24 hours before check-in)' />
       <div className="mt-6 grid grid-cols-2 gap-4">
         <div className="space-y-4">
-        <label htmlFor="location" className="block text-sm font-medium leading-6  text-gray-900">
-          Street Address
-        </label>
-        <input
-          type="text"
-          name="location"
-          id="location"
-          className={` w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.location && formik.errors.location ? 'border-red-500' : ''
-            }`}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-        
-          value={formik.values.location}
-        />
-        {formik.touched.title && formik.errors.title && (
-          <div className="text-red-600 text-sm mt-2">{formik.errors.location}</div>
-        )}
+          <label htmlFor="location" className="block text-sm font-medium leading-6  text-gray-900">
+            Street Address
+          </label>
+          <input
+            type="text"
+            name="location"
+            id="location"
+            className={` w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.location && formik.errors.location ? 'border-red-500' : ''
+              }`}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
 
-</div>
+            value={formik.values.location}
+          />
+          {formik.touched.title && formik.errors.title && (
+            <div className="text-red-600 text-sm mt-2">{formik.errors.location}</div>
+          )}
+
+        </div>
       </div>
       <hr className='mt-8' />
       <div className='mt-4'>
