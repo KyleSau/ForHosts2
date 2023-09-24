@@ -28,11 +28,7 @@ model User {
   sessions      Session[]
   sites         Site[]
   posts         Post[]
-  reviews       Review[]
-  // stripe_account_id
   stripeAccount StripeAccount? // add relation?
-  images        Image[]
-  calendars     Calendar[]
 }
 
 model StripeAccount {
@@ -88,16 +84,26 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model Payment {
+  id                    String   @id @default(cuid())
+  stripePaymentIntentId String   @unique
+  postId                String
+  startDate             DateTime
+  endDate               DateTime
+  status                String // PROCESSING, SUCCEEDED, FAILED
+  totalPrice            Int
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
 model Image {
   id         String   @id @default(cuid())
   url        String
+  blurHash   String
   uploadedAt DateTime
   size       String
   fileName   String
   orderIndex Int
-
-  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String?
 
   site   Site?   @relation(fields: [siteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   siteId String?
@@ -105,33 +111,31 @@ model Image {
   postId String
   post   Post?  @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  @@index([userId])
   @@index([siteId])
   @@index([postId])
 }
 
 model Post {
-  id            String        @id @default(cuid())
-  title         String        @db.Text
-  images        Image[]
-  calendar      Calendar[]
-  description   String?       @db.Text
-  content       String?       @db.Text
-  slug          String        @default(cuid())
-  image         String?       @default("https://public.blob.vercel-storage.com/eEZHAoPTOBSYGBE3/hxfcV5V-eInX3jbVUhjAt1suB7zB88uGd1j20b.png") @db.Text
-  imageBlurhash String?       @default("data:image/png;base64,...")
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  published     Boolean       @default(false)
-  site          Site?         @relation(fields: [siteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  siteId        String?
-  user          User?         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId        String?
-  reservations  Reservation[]
+  id          String   @id @default(cuid())
+  title       String   @db.Text
+  description String?  @db.Text
+  slug        String   @default(cuid())
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  rating    Float? // Average rating based on guest reviews
-  reviews   Review[] // List of guest reviews and ratings
-  amenities String[] // Array of amenity names
+  // One to many relations: 
+  images       Image[]
+  calendars    Calendar[]
+  reservations Reservation[]
+  reviews      Review[]
+
+  // One to one relations:
+  site   Site?   @relation(fields: [siteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  siteId String?
+
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String?
 
   locationId String?   @unique
   location   Location? @relation(fields: [locationId], references: [id])
@@ -142,15 +146,16 @@ model Post {
   availabilityId String?       @unique
   availability   Availability? @relation(fields: [availabilityId], references: [id])
 
-  ruleId String? @unique
-  rule   Rule?   @relation(fields: [ruleId], references: [id])
+  propertyDetailsId String?          @unique
+  propertyDetails   PropertyDetails? @relation(fields: [propertyDetailsId], references: [id])
 
-  propertyDetailId String?         @unique
-  propertyDetail   PropertyDetail? @relation(fields: [propertyDetailId], references: [id])
+  afterBookingInfoId String?           @unique
+  afterBookingInfo   AfterBookingInfo? @relation(fields: [afterBookingInfoId], references: [id])
 
-  propertyFacilitiesId String?             @unique
-  propertyFacilities   PropertyFacilities? @relation(fields: [propertyFacilitiesId], references: [id])
+  propertyRulesId String?        @unique
+  propertyRules   PropertyRules? @relation(fields: [propertyRulesId], references: [id])
 
+  // Many to many relations: 
   @@unique([slug, siteId])
   @@index([siteId])
   @@index([userId])
@@ -165,6 +170,7 @@ model Location {
   country   String
   longitude String
   latitude  String
+  radius    Int // Miles
 
   post Post?
 }
@@ -174,68 +180,68 @@ model Pricing {
   price           Int
   weekendPrice    Int
   cleaningFee     Int
-  weeklyDiscount  Float
-  monthlyDiscount Float
   securityDeposit Int
   petFee          Int
+  weeklyDiscount  Float
+  monthlyDiscount Float
 
   post Post?
 }
 
 model Availability {
   id                   String  @id @default(cuid())
-  minStay              Int
-  maxStay              Int
-  advanceNotice        Int
-  sameDayAdvanceNotice Int
-  preparationTime      Int
-  availabilityWindow   Int
-  restrictedCheckIn    Int[]
-  restrictedCheckOut   Int[]
-  checkInWindowStart   Int
-  checkInWindowEnd     Int
-  checkoutTime         Int
-  checkInTime          String
-  checkOutTime         String
-  availabilityCalendar String?
+  instantBooking       Boolean
+  minStay              Int // days (1)
+  maxStay              Int // days (365)
+  advanceNotice        Int // days (0 - 7)
+  sameDayAdvanceNotice Int // hours (6AM - Midnight)
+  preparationTime      Int // days (0 - 2 days)
+  availabilityWindow   Int // months (3 - 24 months)
+  restrictedCheckIn    Int[] // days of the week restricted [0...6]
+  restrictedCheckOut   Int[] // days of the week restricted [0...6]
+  checkInWindowStart   String // "HH:mm"
+  checkInWindowEnd     String // "HH:mm"
+  checkInTime          String // "HH:mm"
+  checkOutTime         String // "HH:mm"
 
   post Post?
 }
 
-model Rule {
-  id                     String @id @default(cuid())
-  quietHoursStart        Int
-  quietHoursEnd          Int
+model PropertyRules {
+  id                     String  @id @default(cuid())
+  petsAllowed            Boolean
+  eventsAllowed          Boolean
+  smokingAllowed         Boolean
+  photographyAllowed     Boolean
+  checkInMethod          String
+  quietHoursStart        String // "HH:mm"
+  quietHoursEnd          String // "HH:mm"
   interactionPreferences String
   additionalRules        String
-  afterBookingDirections String
+  cancellationPolicy     String
 
   post Post?
 }
 
-model PropertyFacilities {
-  id                   String  @id @default(cuid())
-  instantBooking       Boolean
-  petsAllowed          Boolean
-  eventsAllowed        Boolean
-  smokingAllowed       Boolean
-  photographyAllowed   Boolean
-  wifiName             String
-  wifiPassword         String
-  houseManual          String
-  checkInMethod        String
-  checkoutInstructions String
-
-  post Post?
-}
-
-model PropertyDetail {
-  id           String @id @default(cuid())
+model PropertyDetails {
+  id           String   @id @default(cuid())
   propertyType String
   maxGuests    Int?
   bedrooms     Int?
-  totalBeds    Int?
   bathrooms    Int?
+  totalBeds    Int?
+  amenities    String[]
+
+  post Post?
+}
+
+model AfterBookingInfo {
+  id                     String @id @default(cuid())
+  wifiName               String
+  wifiPassword           String
+  houseManual            String
+  checkoutInstructions   String
+  afterBookingDirections String
 
   post Post?
 }
@@ -247,12 +253,9 @@ model Calendar {
   url       String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId    String?
   Post      Post     @relation(fields: [postId], references: [id])
 
   @@index([postId])
-  @@index([userId])
 }
 
 model Review {
@@ -262,12 +265,9 @@ model Review {
   comment   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId    String?
-  Post      Post     @relation(fields: [postId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id])
 
   @@index([postId])
-  @@index([userId])
 }
 
 model Site {
@@ -291,20 +291,6 @@ model Site {
   @@index([userId])
 }
 
-// check if there are any other payment's for postId with status = (PENDING | SUCCESS) in range of(startDate, endDate)
-// model StripePaymentIntent
-model Payment {
-  id                    String   @id @default(cuid())
-  stripePaymentIntentId String   @unique
-  postId                String
-  startDate             DateTime
-  endDate               DateTime
-  status                String // PROCESSING, SUCCEEDED, FAILED
-  totalPrice            Int
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-}
-
 model Reservation {
   id String @id @default(cuid())
 
@@ -324,14 +310,4 @@ model Reservation {
   post Post? @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@index([postId])
-}
-
-model Example {
-  id            Int     @id @default(autoincrement())
-  name          String?
-  description   String? @db.Text
-  domainCount   Int?
-  url           String?
-  image         String? @db.Text
-  imageBlurhash String? @db.Text
 }
