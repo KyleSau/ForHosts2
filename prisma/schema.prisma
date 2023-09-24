@@ -31,7 +31,6 @@ model User {
   reviews       Review[]
   // stripe_account_id
   stripeAccount StripeAccount? // add relation?
-  images        Image[]
   calendars     Calendar[]
 }
 
@@ -91,86 +90,25 @@ model VerificationToken {
 model Image {
   id         String   @id @default(cuid())
   url        String
+  blurHash   String
   uploadedAt DateTime
   size       String
   fileName   String
   orderIndex Int
-
-  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String?
-
-  site   Site?   @relation(fields: [siteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  
   siteId String?
-
+  site   Site?   @relation(fields: [siteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  
   postId String
   post   Post?  @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  @@index([userId])
   @@index([siteId])
   @@index([postId])
 }
 
 model Post {
-  id            String        @id @default(cuid())
-  title         String        @db.Text
-  images        Image[]
-  calendar      Calendar[]
-  description   String?       @db.Text
-  content       String?       @db.Text
-  slug          String        @default(cuid())
-  image         String?       @default("https://public.blob.vercel-storage.com/eEZHAoPTOBSYGBE3/hxfcV5V-eInX3jbVUhjAt1suB7zB88uGd1j20b.png") @db.Text
-  imageBlurhash String?       @default("data:image/png;base64,...")
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  published     Boolean       @default(false)
-  site          Site?         @relation(fields: [siteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  siteId        String?
-  user          User?         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId        String?
-  reservations  Reservation[]
-
-  rating    Float? // Average rating based on guest reviews
-  reviews   Review[] // List of guest reviews and ratings
-  amenities String[] // Array of amenity names
-
-  locationId String?   @unique
-  location   Location? @relation(fields: [locationId], references: [id])
-
-  pricingId String?  @unique
-  pricing   Pricing? @relation(fields: [pricingId], references: [id])
-
-  availabilityId String?       @unique
-  availability   Availability? @relation(fields: [availabilityId], references: [id])
-
-  ruleId String? @unique
-  rule   Rule?   @relation(fields: [ruleId], references: [id])
-
-  propertyDetailId String?         @unique
-  propertyDetail   PropertyDetail? @relation(fields: [propertyDetailId], references: [id])
-
-  propertyFacilitiesId String?             @unique
-  propertyFacilities   PropertyFacilities? @relation(fields: [propertyFacilitiesId], references: [id])
-
-  @@unique([slug, siteId])
-  @@index([siteId])
-  @@index([userId])
-}
-
-model Location {
-  id        String @id @default(cuid())
-  street    String
-  zip       String
-  city      String
-  state     String
-  country   String
-  longitude String
-  latitude  String
-
-  post Post?
-}
-
-model Pricing {
-  id              String @id @default(cuid())
+  id    String @id @default(cuid())
+  title String @db.Text
   price           Int
   weekendPrice    Int
   cleaningFee     Int
@@ -179,65 +117,78 @@ model Pricing {
   securityDeposit Int
   petFee          Int
 
-  post Post?
-}
-
-model Availability {
-  id                   String  @id @default(cuid())
   minStay              Int
   maxStay              Int
-  advanceNotice        Int
-  sameDayAdvanceNotice Int
-  preparationTime      Int
-  availabilityWindow   Int
-  restrictedCheckIn    Int[]
-  restrictedCheckOut   Int[]
-  checkInWindowStart   Int
-  checkInWindowEnd     Int
-  checkoutTime         Int
-  checkInTime          String
-  checkOutTime         String
-  availabilityCalendar String?
+  advanceNotice        Int // 0 - 7
+  sameDayAdvanceNotice Int // 6AM -> Midnight
+  preparationTime      Int // 0 -2
+  availabilityWindow   Int // 3, 6, 9, 12, 24
+  restrictedCheckIn    Int[] // 0 - 6
+  restrictedCheckOut   Int[] // 0 - 6
 
-  post Post?
-}
+  calendars Calendar[]
+  images Image[]
 
-model Rule {
-  id                     String @id @default(cuid())
-  quietHoursStart        Int
-  quietHoursEnd          Int
+  description   String?       @db.Text
+  content       String?       @db.Text
+  slug          String        @default(cuid())
+  image         String?       @default("https://public.blob.vercel-storage.com/eEZHAoPTOBSYGBE3/hxfcV5V-eInX3jbVUhjAt1suB7zB88uGd1j20b.png") @db.Text
+  imageBlurhash String?       @default("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAhCAYAAACbffiEAAAACXBIWXMAABYlAAAWJQFJUiTwAAABfUlEQVR4nN3XyZLDIAwE0Pz/v3q3r55JDlSBplsIEI49h76k4opexCK/juP4eXjOT149f2Tf9ySPgcjCc7kdpBTgDPKByKK2bTPFEdMO0RDrusJ0wLRBGCIuelmWJAjkgPGDSIQEMBDCfA2CEPM80+Qwl0JkNxBimiaYGOTUlXYI60YoehzHJDEm7kxjV3whOQTD3AaCuhGKHoYhyb+CBMwjIAFz647kTqyapdV4enGINuDJMSScPmijSwjCaHeLcT77C7EC0C1ugaCTi2HYfAZANgj6Z9A8xY5eiYghDMNQBJNCWhASot0jGsSCUiHWZcSGQjaWWCDaGMOWnsCcn2QhVkRuxqqNxMSdUSElCDbp1hbNOsa6Ugxh7xXauF4DyM1m5BLtCylBXgaxvPXVwEoOBjeIFVODtW74oj1yBQah3E8tyz3SkpolKS9Geo9YMD1QJR1Go4oJkgO1pgbNZq0AOUPChyjvh7vlXaQa+X1UXwKxgHokB2XPxbX+AnijwIU4ahazAAAAAElFTkSuQmCC") @db.Text
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  published     Boolean       @default(false)
+  site          Site?         @relation(fields: [siteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  siteId        String?
+  user          User?         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId        String?
+  reservations  Reservation[]
+  location      String // street, zip, city, state, country
+  longitude     String
+  latitude      String
+
+  instantBooking     Boolean
+  petsAllowed        Boolean
+  eventsAllowed      Boolean
+  smokingAllowed     Boolean
+  photographyAllowed Boolean
+
+  quietHoursStart String
+  quietHoursEnd   String
+
+  checkInWindowStart String
+  checkInWindowEnd   String
+  checkoutTime       String
+
   interactionPreferences String
   additionalRules        String
   afterBookingDirections String
 
-  post Post?
-}
-
-model PropertyFacilities {
-  id                   String  @id @default(cuid())
-  instantBooking       Boolean
-  petsAllowed          Boolean
-  eventsAllowed        Boolean
-  smokingAllowed       Boolean
-  photographyAllowed   Boolean
   wifiName             String
   wifiPassword         String
   houseManual          String
   checkInMethod        String
   checkoutInstructions String
 
-  post Post?
-}
+  // New fields to include additional features
+  propertyType         String // 
+  maxGuests            Int?
+  bedrooms             Int?
+  totalBeds            Int?
+  bathrooms            Int?
+  checkInTime          String // HH:mm:ss Check-in time for the rental property
+  checkOutTime         String // HH:mm:ss Check-out time for the rental property
+  amenities            String[] // List of amenities available at the property
+  rating               Float? // Average rating based on guest reviews
+  reviews              Review[] // List of guest reviews and ratings
+  currency             String // Currency in which the price is listed
+  availabilityCalendar String? // Availability calendar of the property
+  photoGallery         String[] // List of images showcasing the property
+  photoGalleryBlurhash String[] @default([])
+  additionalServices   String[] // List of additional services offered at the property
 
-model PropertyDetail {
-  id           String @id @default(cuid())
-  propertyType String
-  maxGuests    Int?
-  bedrooms     Int?
-  totalBeds    Int?
-  bathrooms    Int?
-
-  post Post?
+  @@unique([slug, siteId])
+  @@index([siteId])
+  @@index([userId])
 }
 
 model Calendar {
