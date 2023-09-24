@@ -3,8 +3,7 @@ import { Section } from "./Section"
 const VerticalFeatures = () => (
   <Section
     title="What We Do"
-    description="ForHosts enables you to offer direct booking to your guests, without the hassle of managing a website. We take care of the technical stuff, so you can focus on what matters most. 
-      "
+    description="ForHosts enables you to offer direct booking to your guests, without the hassle of managing a website. We take care of the technical stuff, so you can focus on what matters most."
   >
     <VerticalFeatureRow
       title="Why us?"
