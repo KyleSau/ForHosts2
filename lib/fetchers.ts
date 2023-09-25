@@ -39,10 +39,17 @@ export async function getPostsForSite(domain: string) {
           title: true,
           description: true,
           slug: true,
-          image: true,
-          imageBlurhash: true,
           createdAt: true,
-          price: true
+          images: {
+            select: {
+              url: true,
+              blurHash: true
+              // Specify the fields you want from the Image model. 
+              // For example, if Image has a 'url' field:
+              // url: true,
+              // Add other fields as needed
+            },
+          }
         },
         orderBy: [
           {
@@ -73,6 +80,7 @@ export async function getPostData(domain: string, slug: string) {
           published: true,
         },
         include: {
+          images: true,
           site: {
             include: {
               user: true,
@@ -84,7 +92,7 @@ export async function getPostData(domain: string, slug: string) {
       if (!data) return null;
 
       const [mdxSource, adjacentPosts] = await Promise.all([
-        getMdxSource(data.content!),
+        getMdxSource(data.description!),
         prisma.post.findMany({
           where: {
             site: subdomain ? { subdomain } : { customDomain: domain },
@@ -98,9 +106,10 @@ export async function getPostData(domain: string, slug: string) {
             title: true,
             createdAt: true,
             description: true,
-            image: true,
-            imageBlurhash: true,
-            price: true,
+            images: true
+            // image: true,
+            // imageBlurhash: true,
+            // price: true,
             // bedRooms: true,
 
           },

@@ -28,12 +28,12 @@ export default async function SiteHomePage({
             <div className="group relative mx-auto h-80 w-full overflow-hidden sm:h-150 lg:rounded-xl">
               <BlurImage
                 alt={posts[0].title ?? ""}
-                blurDataURL={posts[0].imageBlurhash ?? placeholderBlurhash}
+                blurDataURL={posts[0].images[0].blurHash ?? placeholderBlurhash}
                 className="h-full w-full object-cover group-hover:scale-105 group-hover:duration-300"
                 width={1300}
                 height={630}
                 placeholder="blur"
-                src={posts[0].image ?? "/placeholder.png"}
+                src={posts[0].images[0].url ?? "/placeholder.png"}
               />
             </div>
             <div className="mx-auto mt-10 w-5/6 lg:w-full justify-center">
