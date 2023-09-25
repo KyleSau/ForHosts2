@@ -83,7 +83,7 @@ export default async function SitePostPage({
           {/* <ListingDescription description={data.description} /> */}
           {data.description && (
             <div>
-              <ShowMoreModal text={data.content} />
+              <ShowMoreModal text={data.description} />
             </div>
           )}
         </div>
