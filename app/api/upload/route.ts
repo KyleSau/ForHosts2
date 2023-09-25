@@ -125,13 +125,11 @@ export async function POST(request: Request): Promise<NextResponse> {
             // },
             data: {
               url: blob.url,
+              blurHash: '',
+              fileName: '',
+              orderIndex: 1,
               uploadedAt: blob.uploadedAt,
               size: blob.size,
-              user: {
-                connect: {
-                  id: session.user.id,
-                },
-              }
             }
           });
 
