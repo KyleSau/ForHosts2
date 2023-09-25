@@ -26,6 +26,10 @@ import {
   CircleDollarSign,
   Scale,
   MapPin,
+  Info,
+  BedSingle,
+  Image
+
 
 
 } from "lucide-react";
@@ -36,7 +40,8 @@ import {
 } from "next/navigation";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { getSiteFromPostId } from "@/lib/actions";
-import Image from "next/image";
+
+import Logo from "./Logo";
 
 const externalLinks = [
   {
@@ -109,17 +114,11 @@ export default function Nav({ children }: { children: ReactNode }) {
           icon: <ArrowLeft width={18} />,
           suboptions: [],
         },
-        // {
-        //   name: "Editor",
-        //   href: `/post/${id}`,
-        //   isActive: segments.length === 2,
-        //   icon: <Edit3 width={18} />,
 
-        // },
         {
-          name: "Property Description",
-          href: `/post/${id}/listing-details`,
-          isActive: segments.includes("listing-details"),
+          name: "Description",
+          href: `/post/${id}/description`,
+          isActive: segments.includes("description"),
           icon: <ScrollText width={18} />,
           suboptions: [],
         },
@@ -131,6 +130,13 @@ export default function Nav({ children }: { children: ReactNode }) {
           suboptions: [],
         },
         {
+          name: "Details",
+          href: `/post/${id}/details`,
+          isActive: segments.includes("details"),
+          icon: <BedSingle width={18} />,
+          suboptions: [],
+        },
+        {
           name: "Availability",
           href: `/post/${id}/availability`,
           isActive: segments.includes("availability"),
@@ -138,10 +144,10 @@ export default function Nav({ children }: { children: ReactNode }) {
           suboptions: [],
         },
         {
-          name: "Listing Images",
-          href: `/post/${id}/listing-images`,
-          isActive: segments.includes("listing-images"),
-          icon: <LayoutList width={18} />,
+          name: "Photos",
+          href: `/post/${id}/photos`,
+          isActive: segments.includes("photos"),
+          icon: <Image width={18} />,
           suboptions: [],
         },
         {
@@ -152,10 +158,17 @@ export default function Nav({ children }: { children: ReactNode }) {
           suboptions: [],
         },
         {
-          name: "Policy Settings",
-          href: `/post/${id}/policy-settings`,
-          isActive: segments.includes("policy-settings"),
+          name: "Rules & Policies",
+          href: `/post/${id}/rules`,
+          isActive: segments.includes("rules"),
           icon: <Scale width={18} />,
+          suboptions: [],
+        },
+        {
+          name: "Info for guests",
+          href: `/post/${id}/info`,
+          isActive: segments.includes("info"),
+          icon: <Info width={18} />,
           suboptions: [],
         },
         {
@@ -260,13 +273,14 @@ export default function Nav({ children }: { children: ReactNode }) {
               href="/"
               className=" p-2"
             >
-              <Image
+              <Logo />
+              {/* <Image
                 src="/ForHostsLogoWithoutSlug.svg"
                 width={160}
                 height={75}
                 alt="Logo"
                 className="dark:scale-110 dark:border-stone-400"
-              />
+              /> */}
             </Link>
           </div>
           <div className="grid gap-1">

@@ -27,7 +27,9 @@ export default async function PostPage({ params }: { params: { id: string } }) {
   }
 
   return <div>
-    <FileClickDragDrop componentId="listing-photos-drag-drop-area" data={data} />
+    <h3>
+      Listing Overview
+    </h3>
   </div>
 
   // return <Editor post={data} />;
