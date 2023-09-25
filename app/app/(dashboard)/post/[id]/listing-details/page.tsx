@@ -24,7 +24,7 @@ export default async function listingDetailsPage({ params }: { params: { id: str
   }
   return (
   <div>
-    {JSON.stringify(data)}
+  
       <ListingDetails data={data} />
       </div>
       

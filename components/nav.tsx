@@ -105,38 +105,7 @@ export default function Nav({ children }: { children: ReactNode }) {
           href: `/post/${id}`,
           isActive: segments.length === 2,
           icon: <Edit3 width={18} />,
-          suboptions: [
-            {
-              name: "Listing Details",
-              href: "/site/1/option1",
-              isActive: segments.includes("option1"),
-            },
-            {
-              name: "Pricing",
-              href: "/site/1/option2",
-              isActive: segments.includes("option2"),
-            },
-            {
-              name: "Availability",
-              href: "/site/1/option1",
-              isActive: segments.includes("option1"),
-            },
-            {
-              name: "Policies & Rules",
-              href: "/site/1/option1",
-              isActive: segments.includes("option1"),
-            },
-            {
-              name: "Info For Guests",
-              href: "/site/1/option1",
-              isActive: segments.includes("option1"),
-            },
-            {
-              name: "Images",
-              href: "/site/1/option1",
-              isActive: segments.includes("option1"),
-            },
-          ],
+          
         },
         {
           name: "Settings",
@@ -152,6 +121,35 @@ export default function Nav({ children }: { children: ReactNode }) {
           icon: <Settings width={18} />,
           suboptions: [],
         },
+        {
+          name: "Availability",
+          href: `/post/${id}/availability`,
+          isActive: segments.includes("availability"),
+          icon: <Settings width={18} />,
+          suboptions: [],
+        },
+        {
+          name: "Listing Images",
+          href: `/post/${id}/listing-images`,
+          isActive: segments.includes("listing-images"),
+          icon: <Settings width={18} />,
+          suboptions: [],
+        },
+        {
+          name: "Pricing",
+          href: `/post/${id}/pricing`,
+          isActive: segments.includes("pricing"),
+          icon: <Settings width={18} />,
+          suboptions: [],
+        },
+        {
+          name: "Policy Settings",
+          href: `/post/${id}/policy-settings`,
+          isActive: segments.includes("policy-settings"),
+          icon: <Settings width={18} />,
+          suboptions: [],
+        },
+
       ];
     }
     return [
@@ -267,17 +265,8 @@ export default function Nav({ children }: { children: ReactNode }) {
                 </Link>
 
                 {/* Render suboptions */}
-                {suboptions.length > 0 && (
-                  <div className="pl-6">
-                    {suboptions.map(({ name, href, isActive }) => (
-                      <Link key={name} href={href} passHref>
-                        <div className={`cursor-pointer text-sm ${isActive ? "bg-stone-200 text-black dark:bg-stone-700" : ""}`}>
-                          {name}
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                )}
+              
+         
               </div>
             ))}
           </div>
