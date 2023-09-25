@@ -7,7 +7,7 @@ export default async function listingDetailsPage({ params }: { params: { id: str
     if (!session) {
       redirect("/login");
     }
-    const data = await prisma.post.findUnique({
+    const post = await prisma.post.findUnique({
         where: {
           id: params.id,
         },
@@ -19,14 +19,14 @@ export default async function listingDetailsPage({ params }: { params: { id: str
           },
         },
       });
-      if (!data || data.userId !== session.user.id) {
+      if (!post || post.userId !== session.user.id) {
         notFound();
   }
   return (
-  <div>
+ 
   
-      <ListingDetails data={data} />
-      </div>
+      <ListingDetails data={post} />
+     
       
   )
 }

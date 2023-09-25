@@ -14,11 +14,20 @@ import {
   Settings,
   CalendarCheck2,
   Home,
-  CircleDollarSign,
+ 
   FileQuestion,
   MessagesSquare,
   BookOpen,
   CalendarDays,
+  Clock10,
+  LayoutList,
+  ScrollText,
+  DollarSign,
+  CircleDollarSign,
+  Scale,
+  MapPin,
+ 
+  
 } from "lucide-react";
 import {
   useParams,
@@ -100,52 +109,59 @@ export default function Nav({ children }: { children: ReactNode }) {
           icon: <ArrowLeft width={18} />,
           suboptions: [],
         },
-        {
-          name: "Editor",
-          href: `/post/${id}`,
-          isActive: segments.length === 2,
-          icon: <Edit3 width={18} />,
+        // {
+        //   name: "Editor",
+        //   href: `/post/${id}`,
+        //   isActive: segments.length === 2,
+        //   icon: <Edit3 width={18} />,
           
-        },
+        // },
         {
-          name: "Settings",
-          href: `/post/${id}/settings`,
-          isActive: segments.includes("settings"),
-          icon: <Settings width={18} />,
+          name: "Property Description",
+          href: `/post/${id}/listing-details`,
+          isActive: segments.includes("listing-details"),
+          icon: <ScrollText width={18} />,
           suboptions: [],
         },
         {
-          name: "Listing Details",
-          href: `/post/${id}/listing-details`,
-          isActive: segments.includes("listing-details"),
-          icon: <Settings width={18} />,
+          name: "Location",
+          href: `/post/${id}/location`,
+          isActive: segments.includes("location"),
+          icon: <MapPin width={18} />,
           suboptions: [],
         },
         {
           name: "Availability",
           href: `/post/${id}/availability`,
           isActive: segments.includes("availability"),
-          icon: <Settings width={18} />,
+          icon: <Clock10 width={18} />,
           suboptions: [],
         },
         {
           name: "Listing Images",
           href: `/post/${id}/listing-images`,
           isActive: segments.includes("listing-images"),
-          icon: <Settings width={18} />,
+          icon: <LayoutList width={18} />,
           suboptions: [],
         },
         {
           name: "Pricing",
           href: `/post/${id}/pricing`,
           isActive: segments.includes("pricing"),
-          icon: <Settings width={18} />,
+          icon: <CircleDollarSign width={18} />,
           suboptions: [],
         },
         {
           name: "Policy Settings",
           href: `/post/${id}/policy-settings`,
           isActive: segments.includes("policy-settings"),
+          icon: <Scale width={18} />,
+          suboptions: [],
+        },
+        {
+          name: "Settings",
+          href: `/post/${id}/settings`,
+          isActive: segments.includes("settings"),
           icon: <Settings width={18} />,
           suboptions: [],
         },
@@ -258,7 +274,7 @@ export default function Nav({ children }: { children: ReactNode }) {
               <div key={name}>
                 {/* Render main menu item */}
                 <Link href={href} passHref>
-                  <div className={`cursor-pointer flex items-center space-x-3 ${isActive ? "bg-stone-200 text-black dark:bg-stone-700" : ""}`}>
+                  <div className={`cursor-pointer flex items-center space-x-3 hover:bg-stone-300 ${isActive ? "bg-stone-200 text-black dark:bg-stone-700" : ""}`}>
                     {icon}
                     <span className="text-sm font-medium">{name}</span>
                   </div>

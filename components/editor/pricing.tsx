@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -80,13 +81,13 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function Pricing({ data }: any) {
-  const id = data["id"];
+  // const id = data["id"];
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const formik = useFormik({
     initialValues: {
-      id: id,
+      id: data.id,
       site: data.site,
       siteId: data.siteId,
       price: "",
