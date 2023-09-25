@@ -1,6 +1,6 @@
-import ical from 'ical';
+// import ical from 'ical';
 import { NextResponse } from 'next/server';
-import { getCalendarUrls } from '@/lib/actions';
+// import { getCalendarUrls } from '@/lib/actions';
 
 export async function GET(
     _req: Request,
@@ -52,4 +52,6 @@ export async function GET(
     // const response = await lookupCalendarEvents(calendarUrls);
 
     // return new NextResponse(JSON.stringify(response));
+
+    return new NextResponse(null);
 }

@@ -1,7 +1,7 @@
 import { unstable_cache } from "next/cache";
 import prisma from "@/lib/prisma";
 import { serialize } from "next-mdx-remote/serialize";
-import { replaceExamples, replaceTweets } from "@/lib/remark-plugins";
+// import { replaceExamples, replaceTweets } from "@/lib/remark-plugins";
 
 export async function getSiteData(domain: string) {
   const subdomain = domain.endsWith(`.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`)
@@ -39,10 +39,17 @@ export async function getPostsForSite(domain: string) {
           title: true,
           description: true,
           slug: true,
-          image: true,
-          imageBlurhash: true,
           createdAt: true,
-          price: true
+          images: {
+            select: {
+              url: true,
+              blurHash: true
+              // Specify the fields you want from the Image model. 
+              // For example, if Image has a 'url' field:
+              // url: true,
+              // Add other fields as needed
+            },
+          }
         },
         orderBy: [
           {
@@ -73,6 +80,7 @@ export async function getPostData(domain: string, slug: string) {
           published: true,
         },
         include: {
+          images: true,
           site: {
             include: {
               user: true,
@@ -84,7 +92,7 @@ export async function getPostData(domain: string, slug: string) {
       if (!data) return null;
 
       const [mdxSource, adjacentPosts] = await Promise.all([
-        getMdxSource(data.content!),
+        getMdxSource(data.description!),
         prisma.post.findMany({
           where: {
             site: subdomain ? { subdomain } : { customDomain: domain },
@@ -98,9 +106,10 @@ export async function getPostData(domain: string, slug: string) {
             title: true,
             createdAt: true,
             description: true,
-            image: true,
-            imageBlurhash: true,
-            price: true,
+            images: true
+            // image: true,
+            // imageBlurhash: true,
+            // price: true,
             // bedRooms: true,
 
           },
@@ -127,9 +136,9 @@ async function getMdxSource(postContents: string) {
   const content = postContents?.replaceAll(/<(https?:\/\/\S+)>/g, "[$1]($1)");
   // Serialize the content string into MDX
   const mdxSource = await serialize(content, {
-    mdxOptions: {
-      remarkPlugins: [replaceTweets, () => replaceExamples(prisma)],
-    },
+    // mdxOptions: {
+    //   remarkPlugins: [replaceTweets, () => replaceExamples(prisma)],
+    // },
   });
 
   return mdxSource;

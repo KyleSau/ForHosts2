@@ -62,7 +62,7 @@ export default async function PostOG({
           </div>
           <img
             tw="mt-4 w-5/6 rounded-2xl border border-gray-200 shadow-md"
-            src={data.image}
+            src={data.images[0].url}
             alt={data.title}
           />
         </div>

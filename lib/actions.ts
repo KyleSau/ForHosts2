@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { Prisma, Post, Site, Reservation, PrismaPromise } from "@prisma/client";
+import { Post, Site } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { withPostAuth, withSiteAuth } from "./auth";
 import { getSession } from "@/lib/auth";
@@ -267,22 +267,7 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
   const response = await prisma.post.create({
     data: {
       title: '',
-      price: 0,
-      checkInTime: '0:00',
-      checkOutTime: '0:00',
-      location: 'location',
-      currency: 'USD',
-      minStay: 0,
-      cleaningFee: 0,
-      securityDeposit: 0,
-      totalBeds: 0,
-      bedrooms: 0,
-      bathrooms: 0,
-      amenities: [],  // empty array for amenities
-      photoGallery: [],  // empty array for photoGallery
-      additionalServices: [],  // empty array for additionalServices
-      // calendars: [],
-      propertyType: 'idk',
+      description: '',
       site: {
         connect: {
           id: site.id,
@@ -293,38 +278,87 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
           id: session.user.id,
         },
       },
-      weekendPrice: 0,
-      weeklyDiscount: 0,
-      monthlyDiscount: 0,
-      petFee: 0,
-      maxStay: 100,
-      advanceNotice: 0,
-      sameDayAdvanceNotice: 0,
-      preparationTime: 0,
-      availabilityWindow: 0,
-      longitude: "",
-      latitude: "",
-      instantBooking: false,
-      petsAllowed: false,
-      eventsAllowed: false,
-      smokingAllowed: false,
-      photographyAllowed: false,
-      quietHoursStart: "0",
-      quietHoursEnd: "0",
-      checkInWindowStart: "0",
-      checkInWindowEnd: "0",
-      checkoutTime: "0",
-      interactionPreferences: "",
-      additionalRules: "",
-      afterBookingDirections: "",
-      wifiName: "",
-      wifiPassword: "",
-      houseManual: "",
-      checkInMethod: "",
-      checkoutInstructions: "",
+      location: {
+        create: {
+          // Fill in default or form values for Location fields
+          street: '',
+          zip: '',
+          city: '',
+          state: '',
+          country: '',
+          longitude: '',
+          latitude: '',
+          radius: 0,
+        },
+      },
+      pricing: {
+        create: {
+          // Fill in default or form values for Pricing fields
+          price: 0,
+          weekendPrice: 0,
+          cleaningFee: 0,
+          securityDeposit: 0,
+          petFee: 0,
+          weeklyDiscount: 0.0,
+          monthlyDiscount: 0.0,
+        },
+      },
+      availability: {
+        create: {
+          // Fill in default or form values for Availability fields
+          instantBooking: false,
+          minStay: 1,
+          maxStay: 365,
+          advanceNotice: 0,
+          sameDayAdvanceNotice: 6,
+          preparationTime: 0,
+          availabilityWindow: 3,
+          restrictedCheckIn: [],
+          restrictedCheckOut: [],
+          checkInWindowStart: "00:00",
+          checkInWindowEnd: "00:00",
+          checkInTime: "00:00",
+          checkOutTime: "00:00",
+        },
+      },
+      propertyRules: {
+        create: {
+          // Fill in default or form values for PropertyRules fields
+          petsAllowed: false,
+          eventsAllowed: false,
+          smokingAllowed: false,
+          photographyAllowed: false,
+          checkInMethod: '',
+          quietHoursStart: "00:00",
+          quietHoursEnd: "00:00",
+          interactionPreferences: '',
+          additionalRules: '',
+          cancellationPolicy: '',
+        },
+      },
+      propertyDetails: {
+        create: {
+          // Fill in default or form values for PropertyDetails fields
+          propertyType: '',
+          maxGuests: 0,
+          bedrooms: 0,
+          bathrooms: 0,
+          totalBeds: 0,
+          amenities: [],
+        },
+      },
+      afterBookingInfo: {
+        create: {
+          // Fill in default or form values for AfterBookingInfo fields
+          wifiName: '',
+          wifiPassword: '',
+          houseManual: '',
+          checkoutInstructions: '',
+          afterBookingDirections: '',
+        },
+      },
     },
   });
-
 
   await revalidateTag(
     `${site.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}-posts`,
@@ -334,80 +368,94 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
   return response;
 });
 
-
-
-// creating a separate function for this because we're not using FormData
 export const updatePost = async (data: Post) => {
   const session = await getSession();
   if (!session?.user.id) {
-    return {
-      error: "Not authenticated",
-    };
+    return { error: "Not authenticated" };
   }
+
+  // Fetch the post and its related sub-tables
   const post = await prisma.post.findUnique({
     where: {
       id: data.id,
     },
     include: {
+      images: true,
       site: true,
+      pricing: true,
+      location: true,
+      availability: true,
+      propertyRules: true,
+      propertyDetails: true,
+      afterBookingInfo: true,
     },
   });
+
   if (!post || post.userId !== session.user.id) {
-    return {
-      error: "Post not found",
-    };
+    return { error: "Post not found" };
   }
+
   try {
-    const response = await prisma.post.update({
+    const updatedPost = await prisma.post.update({
       where: {
         id: data.id,
       },
       data: {
         title: data.title,
-        price: data.price,
         description: data.description,
-        content: data.content,
-        checkInTime: data.checkInTime,
-        checkOutTime: data.checkOutTime,
-        location: data.location,
-        currency: data.currency,
-        minStay: data.minStay,
-        cleaningFee: data.cleaningFee,
-        securityDeposit: data.securityDeposit,
-        amenities: data.amenities,
-        maxGuests: data.maxGuests,
-        bedrooms: data.bedrooms,
-        bathrooms: data.bathrooms,
-        totalBeds: data.totalBeds,
-        instantBooking: data.instantBooking,
-        rating: data.rating,
-        photoGallery: data.photoGallery,
-        additionalServices: data.additionalServices,
-        availabilityWindow: data.availabilityWindow,
-        // calendars: data.calendars,
-        propertyType: data.propertyType, // change this to data.propertyTpe
       },
     });
 
-    await revalidateTag(
-      `${post.site?.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}-posts`,
-    );
-    await revalidateTag(
-      `${post.site?.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}-${post.slug}`,
-    );
+    if (post.location) {
+      await prisma.location.update({
+        where: { id: post.location!.id },
+        data: post.location,
+      });
+    }
 
-    // if the site has a custom domain, we need to revalidate those tags too
-    post.site?.customDomain &&
-      (await revalidateTag(`${post.site?.customDomain}-posts`),
-        await revalidateTag(`${post.site?.customDomain}-${post.slug}`));
+    if (post.pricing) {
+      await prisma.pricing.update({
+        where: { id: post.pricing!.id },
+        data: post.pricing,
+      });
+    }
 
-    return response;
+    if (post.availability) {
+      await prisma.availability.update({
+        where: { id: post.availability!.id },
+        data: post.availability,
+      });
+    }
+
+    if (post.propertyRules) {
+      await prisma.propertyRules.update({
+        where: { id: post.propertyRules!.id },
+        data: post.propertyRules,
+      });
+    }
+
+    if (post.propertyDetails) {
+      await prisma.propertyDetails.update({
+        where: { id: post.propertyDetails!.id },
+        data: post.propertyDetails,
+      });
+    }
+
+    if (post.afterBookingInfo) {
+      await prisma.afterBookingInfo.update({
+        where: { id: post.afterBookingInfo!.id },
+        data: post.afterBookingInfo,
+      });
+    }
+
+    return updatedPost;
+
   } catch (error: any) {
-    return {
-      error: error.message,
-    };
+    console.error('Error updating post and its relations:', error);
+    return { error: error.message };
   }
 };
+
 
 export const getPosts = async (userId: string, siteId: string | undefined, limit = null) => {
   const posts = await prisma.post.findMany({
@@ -420,6 +468,8 @@ export const getPosts = async (userId: string, siteId: string | undefined, limit
     },
     include: {
       site: true,
+      images: true,
+      // and other tables
     },
     ...(limit ? { take: limit } : {}),
   });
@@ -427,7 +477,7 @@ export const getPosts = async (userId: string, siteId: string | undefined, limit
   return posts;
 };
 
-
+// revisit this
 export const updatePostMetadata = withPostAuth(
   async (
     formData: FormData,
@@ -463,10 +513,7 @@ export const updatePostMetadata = withPostAuth(
             id: post.id,
           },
           data: {
-            image: urls[0]?.url,  // Take the first image URL as the main image
-            imageBlurhash: urls[0]?.blurhash, // Same for the blurhash
-            photoGallery: urls.map(u => u.url), // Store all the URLs in the photoGallery
-            photoGalleryBlurhash: urls.map(u => u.blurhash), // Store all the blurhashes
+
           },
         })
       } else {
@@ -537,6 +584,7 @@ export const updatePostMetadata = withPostAuth(
   },
 );
 
+// McDoodle: test if everything is cascade deleted!
 export const deletePost = withPostAuth(async (_: FormData, post: Post) => {
   try {
     const response = await prisma.post.delete({
@@ -626,21 +674,21 @@ export const getReservations = async (limit: number = 10) => {
 
 // get all the calendar urls from the Post
 export const getCalendarUrls = async (postId: string) => {
-  try {
-    const post = await prisma.post.findUnique({
-      where: {
-        id: postId,
-      },
-      select: {
-        calendars: true,
-      },
-    });
-    return post?.calendars || []; // Return an empty array if calendarUrls is not found
-  } catch (error: any) {
-    return {
-      error: "Failed to fetch calendar urls",
-    };
-  }
+  // try {
+  //   const post = await prisma.post.findUnique({
+  //     where: {
+  //       id: postId,
+  //     },
+  //     select: {
+  //       calendarUrls: true,
+  //     },
+  //   });
+  //   return post?.calendarUrls || []; // Return an empty array if calendarUrls is not found
+  // } catch (error: any) {
+  //   return {
+  //     error: "Failed to fetch calendar urls",
+  //   };
+  // }
 };
 
 /*
