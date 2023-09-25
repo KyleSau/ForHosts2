@@ -17,9 +17,9 @@ export default function SiteCard({ data }: { data: any }) {
           width={500}
           height={400}
           className="h-44 object-cover"
-          src={data.images[0].url ?? "/placeholder.png"}
+          src={(data.images && data.images.length > 0 ? data.images[0].url : undefined) ?? "/placeholder.png"}
+          blurDataURL={(data.images && data.images.length > 0 ? data.images[0].blurHash : undefined) ?? placeholderBlurhash}
           placeholder="blur"
-          blurDataURL={data.images[0].blurHash ?? placeholderBlurhash}
         />
         <div className="border-t border-stone-200 p-4 dark:border-stone-700">
           <h3 className="my-0 truncate font-cal text-xl font-bold tracking-wide dark:text-white dark:text-white">
