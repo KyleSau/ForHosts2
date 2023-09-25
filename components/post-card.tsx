@@ -1,5 +1,5 @@
 import BlurImage from "@/components/blur-image";
-import { placeholderBlurhash, random } from "@/lib/utils";
+import { placeholderBlurhash, } from "@/lib/utils";
 import { Post, Site } from "@prisma/client";
 import { BarChart, ExternalLink } from "lucide-react";
 import Link from "next/link";
@@ -23,9 +23,12 @@ export default function PostCard({
             width={500}
             height={400}
             className="h-full object-cover"
-            src={data.images[0].url ?? "/placeholder.png"}
+            // src={data.images[0].url ?? "/placeholder.png"}
+            src={(data.images && data.images.length > 0 ? data.images[0].url : undefined) ?? "/placeholder.png"}
             placeholder="blur"
-            blurDataURL={data.images[0].blurHash ?? placeholderBlurhash}
+            // blurDataURL={data.images[0].blurHash ?? placeholderBlurhash}
+            blurDataURL={(data.images && data.images.length > 0 ? data.images[0].blurHash : undefined) ?? placeholderBlurhash}
+
           />
           {!data.published && (
             <span className="absolute bottom-2 right-2 rounded-md border border-stone-200 bg-white px-3 py-0.5 text-sm font-medium text-stone-600 shadow-md">

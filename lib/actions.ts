@@ -380,6 +380,7 @@ export const updatePost = async (data: Post) => {
       id: data.id,
     },
     include: {
+      images: true,
       site: true,
       pricing: true,
       location: true,
@@ -467,12 +468,7 @@ export const getPosts = async (userId: string, siteId: string | undefined, limit
     },
     include: {
       site: true,
-      images: {
-        select: {
-          url: true,
-          blurHash: true
-        },
-      }
+      images: true,
       // and other tables
     },
     ...(limit ? { take: limit } : {}),
