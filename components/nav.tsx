@@ -14,7 +14,7 @@ import {
   Settings,
   CalendarCheck2,
   Home,
- 
+
   FileQuestion,
   MessagesSquare,
   BookOpen,
@@ -26,8 +26,8 @@ import {
   CircleDollarSign,
   Scale,
   MapPin,
- 
-  
+
+
 } from "lucide-react";
 import {
   useParams,
@@ -114,7 +114,7 @@ export default function Nav({ children }: { children: ReactNode }) {
         //   href: `/post/${id}`,
         //   isActive: segments.length === 2,
         //   icon: <Edit3 width={18} />,
-          
+
         // },
         {
           name: "Property Description",
@@ -270,19 +270,20 @@ export default function Nav({ children }: { children: ReactNode }) {
             </Link>
           </div>
           <div className="grid gap-1">
-            {tabs.map(({ name, href, isActive, icon, suboptions }) => (
+            {tabs.map(({ name, href, isActive, icon }) => (
               <div key={name}>
                 {/* Render main menu item */}
-                <Link href={href} passHref>
-                  <div className={`cursor-pointer flex items-center space-x-3 hover:bg-stone-300 ${isActive ? "bg-stone-200 text-black dark:bg-stone-700" : ""}`}>
-                    {icon}
-                    <span className="text-sm font-medium">{name}</span>
-                  </div>
+                <Link
+                  key={name}
+                  href={href}
+                  className={`flex items-center space-x-3 ${isActive ? "bg-stone-200 text-black dark:bg-stone-700" : ""
+                    } rounded-lg px-2 py-1.5 transition-all duration-150 ease-in-out hover:bg-stone-200 active:bg-stone-300 dark:text-white dark:hover:bg-stone-700 dark:active:bg-stone-800`}
+                >
+                  {icon}
+                  <span className="text-sm font-medium">{name}</span>
                 </Link>
 
                 {/* Render suboptions */}
-              
-         
               </div>
             ))}
           </div>

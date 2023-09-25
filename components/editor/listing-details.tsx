@@ -125,21 +125,16 @@ export default function ListingDetails({ data }) {
             "flex h-7 w-24 items-center justify-center space-x-2 rounded-lg border text-sm transition-all focus:outline-none",
             isPendingPublishing
               ? "cursor-not-allowed border-stone-200 bg-stone-100 text-stone-400 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-300"
-              : "border border-black bg-black text-white hover:bg-sitecolor hover:text-black active:bg-stone-100 dark:border-stone-700 dark:hover:border-stone-200",
+              : "border border-green-600 bg-green-600 hover:bg-green-500 text-white hover:bg-sitecolor active:bg-stone-100 dark:border-stone-700 dark:hover:border-stone-200",
           )}
           disabled={isPendingPublishing}
         >
           {isPendingPublishing ? (
             <LoadingDots />
           ) : (
-            <p>{data.published ? "Edit Listing" : "Publish Listing"}</p>
+            <p>{data.published ? "Unpublish" : "Publish"}</p>
           )}
         </button>
-        {data.published && submitted && (
-          <div>
-            YOU HAVE UNPUBLISHED SAVED CHANGES
-          </div>
-        )}
 
       </div>
       <TabTitle title="Basic Details" desc="Basic Listing Details About Your Property" />
@@ -181,7 +176,7 @@ export default function ListingDetails({ data }) {
         )}
       </div>
       <hr className='mt-8' />
-      
+
       <div className='mt-4'>
         <EditorSaveButton submitted={submitted} isLoading={isLoading} />
       </div>
