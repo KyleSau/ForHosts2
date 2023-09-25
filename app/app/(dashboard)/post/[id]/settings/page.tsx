@@ -18,7 +18,11 @@ export default async function PostSettings({
     where: {
       id: params.id,
     },
+    include: {
+      images: true
+    }
   });
+
   if (!data || data.userId !== session.user.id) {
     notFound();
   }
@@ -48,7 +52,7 @@ export default async function PostSettings({
           inputAttrs={{
             name: "image",
             type: "file",
-            defaultValue: data?.image!,
+            defaultValue: data?.images[0],
           }}
           handleSubmit={updatePostMetadata}
         />

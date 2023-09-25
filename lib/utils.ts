@@ -128,14 +128,10 @@ export const createCleanQueryList = (multiQueryString: string) => {
 };
 
 export const humanReadableFileSize = (size: number | undefined) => {
-  // file.size unit is in bytes
-  if (size !== undefined) {
-    const i = Math.floor(Math.log(size) / Math.log(1024));
-    return (
-      (size / Math.pow(1024, i)).toFixed(2) +
-      " " +
-      ["B", "kB", "MB", "GB", "TB"][i]
-    );
-  }
-  return 0.0;
-};
+  const i = Math.floor((size? Math.log(size): 0) / Math.log(1024));
+  return (
+    ((size? size: 0) / Math.pow(1024, i)).toFixed(2) +
+    " " +
+    ["B", "kB", "MB", "GB", "TB"][i]
+  );
+}

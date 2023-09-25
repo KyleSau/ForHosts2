@@ -1,18 +1,15 @@
 import { notFound } from "next/navigation";
 import { getPostData } from "@/lib/fetchers";
 import BlogCard from "@/components/blog-card";
-import BlurImage from "@/components/blur-image";
 import MDX from "@/components/mdx";
 import AmenitiesModal from "@/components/amenities/amenities-modal";
 import { amenityDetails } from "@/components/amenities/amenities-data";
-import ImageGallery from "@/components/dash-site-page/image-gallery";
-import DashHeader from "@/components/dash-site-page/dash-header";
 import BookingComponent from "@/components/booking/booking-component";
 import ListingDescription from "@/components/users-sites/listing-description";
-import { Calendar } from "@/components/ui/calendar"
 
 import dynamic from 'next/dynamic'
 import { CalendarDemo } from "@/components/ui/uicalendar";
+import ShowMoreModal from "@/components/users-sites/show-more-modal"
 // import OpenStreetMap from '../component/OpenStreetMap'
 const Map = dynamic(() => import('@/components/users-sites/open-street-map'), {
   ssr: false,
@@ -62,13 +59,13 @@ export default async function SitePostPage({
   return (
     <>
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-5 grid-rows-10 bg-gradient-to-b from-gray-50 via-gray-100 to-gray-50 shadow-[0_3px_10px_rgb(0,0,0,0.2)] rounded-2xl">
-        <div className="col-span-1 md:col-span-full justify-center m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+        {/* <div className="col-span-1 md:col-span-full justify-center m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
           <ImageGallery images={data.photoGallery} imageBlurhash={data.photoGalleryBlurhash} />
         </div>
         <div className="bg-white col-span-1 md:col-span-full m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
           <DashHeader title={data.title} guests={data.maxGuests} bedrooms={data.bedrooms} totalbeds={data.totalBeds} bathrooms={data.bathrooms} />
           <hr />
-        </div>
+        </div> */}
         <div className="relative bg-white col-span-1 md:col-span-2 md:min-w-[400px] m-2 row-span-4 row-start-3 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
           <div className="sticky top-0 pt-[50px] pb-[50px]">
             <BookingComponent listing={data} />
@@ -83,7 +80,12 @@ export default async function SitePostPage({
           <div className="">
             Listing Description
           </div>
-          <ListingDescription description={data.description} />
+          {/* <ListingDescription description={data.description} /> */}
+          {data.description && (
+            <div>
+              <ShowMoreModal text={data.description} />
+            </div>
+          )}
         </div>
         <div className="bg-white col-start-1 md:col-start-3 md:col-span-3 p-8 m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
           <div className="">
@@ -107,11 +109,6 @@ export default async function SitePostPage({
           </div>
         </div>
         <hr className="m-5 col-span-1 md:col-span-full" />
-        <div className="bg-white col-span-1 md:col-span-full m-2">
-          <div className="">
-            Host Description
-          </div>
-        </div>
         <div className="bg-white col-span-1 md:col-span-full m-2 rounded-sm">
           <p className="text-xl font-bold flex justify-center mb-5">What To Know About Where You&apos;re Staying</p>
           <div className="grid grid-cols-3">

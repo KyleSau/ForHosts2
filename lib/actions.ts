@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { Post, Site, Location, Availability, Pricing, PropertyRules, PropertyDetails, AfterBookingInfo } from "@prisma/client";
+import { Post, Site } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { withPostAuth, withSiteAuth } from "./auth";
 import { getSession } from "@/lib/auth";
@@ -368,263 +368,35 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
   return response;
 });
 
-export const updateLocation = async (post: Post, data: Location) => {
-  try {
-    const listing = await prisma.post.findUnique({
-      where: {
-        id: post.id,
-      },
-      include: {
-        site: true,
-      },
-    });
-
-    if (!listing || !post) {
-      throw new Error('lookup failed for location');
-    }
-
-    const locationId = post.locationId;
-
-    if (!locationId) {
-      throw new Error('Location ID not found for the post');
-    }
-
-    const { street, zip, city, state, country, longitude, latitude, radius } = data;
-
-    const response = await prisma.location.update({
-      where: {
-        id: locationId,
-      },
-      data: {
-        street,
-        zip,
-        city,
-        state,
-        country,
-        longitude,
-        latitude,
-        radius,
-      },
-    });
-
-    return response;
-
-  } catch (error) {
-    console.error('Error updating location:', error);
-    throw error;
-  }
-}
-
-export const updatePricing = async (post: Post, data: Pricing) => {
-  try {
-    const listing = await prisma.post.findUnique({
-      where: {
-        id: post.id,
-      },
-      include: {
-        site: true,
-      },
-    });
-
-    if (!listing || !post) {
-      console.error('lookup failed for pricing');
-      return;
-    }
-
-    const pricingId = post.pricingId;
-
-    const { price, weekendPrice, cleaningFee, securityDeposit, petFee, weeklyDiscount, monthlyDiscount } = data;
-
-    const response = await prisma.pricing.update({
-      where: {
-        id: pricingId!,
-      },
-      data: {
-        price,
-        weekendPrice,
-        cleaningFee,
-        securityDeposit,
-        petFee,
-        weeklyDiscount,
-        monthlyDiscount,
-      },
-    });
-
-    return response;
-
-  } catch (error) {
-    console.error('Error updating pricing:', error);
-  }
-}
-
-export const updateAvailability = async (post: Post, data: Availability) => {
-  try {
-    const listing = await prisma.post.findUnique({
-      where: {
-        id: post.id,
-      },
-    });
-
-    if (!listing || !post) {
-      console.error('lookup failed for availability');
-      return;
-    }
-
-    const availabilityId = post.availabilityId;
-
-    // Destructuring the necessary properties from data
-    const {
-      instantBooking, minStay, maxStay, advanceNotice, sameDayAdvanceNotice, preparationTime,
-      availabilityWindow, restrictedCheckIn, restrictedCheckOut, checkInWindowStart, checkInWindowEnd,
-      checkInTime, checkOutTime
-    } = data;
-
-    const response = await prisma.availability.update({
-      where: {
-        id: availabilityId!,
-      },
-      data: {
-        instantBooking, minStay, maxStay, advanceNotice, sameDayAdvanceNotice, preparationTime,
-        availabilityWindow, restrictedCheckIn, restrictedCheckOut, checkInWindowStart, checkInWindowEnd,
-        checkInTime, checkOutTime
-      },
-    });
-
-    return response;
-
-  } catch (error) {
-    console.error('Error updating availability:', error);
-  }
-}
-
-export const updatePropertyRules = async (post: Post, data: PropertyRules) => {
-  try {
-    const listing = await prisma.post.findUnique({
-      where: {
-        id: post.id,
-      },
-    });
-
-    if (!listing || !post) {
-      console.error('lookup failed for property rules');
-      return;
-    }
-
-    const propertyRulesId = post.propertyRulesId;
-
-    const {
-      petsAllowed, eventsAllowed, smokingAllowed, photographyAllowed, checkInMethod,
-      quietHoursStart, quietHoursEnd, interactionPreferences, additionalRules, cancellationPolicy
-    } = data;
-
-    const response = await prisma.propertyRules.update({
-      where: {
-        id: propertyRulesId!,
-      },
-      data: {
-        petsAllowed, eventsAllowed, smokingAllowed, photographyAllowed, checkInMethod,
-        quietHoursStart, quietHoursEnd, interactionPreferences, additionalRules, cancellationPolicy
-      },
-    });
-
-    return response;
-
-  } catch (error) {
-    console.error('Error updating property rules:', error);
-  }
-}
-
-export const updatePropertyDetails = async (post: Post, data: PropertyDetails) => {
-  try {
-    const listing = await prisma.post.findUnique({
-      where: {
-        id: post.id,
-      },
-    });
-
-    if (!listing || !post) {
-      console.error('lookup failed for property details');
-      return;
-    }
-
-    const propertyDetailsId = post.propertyDetailsId;
-
-    const { propertyType, maxGuests, bedrooms, bathrooms, totalBeds, amenities } = data;
-
-    const response = await prisma.propertyDetails.update({
-      where: {
-        id: propertyDetailsId!,
-      },
-      data: {
-        propertyType, maxGuests, bedrooms, bathrooms, totalBeds, amenities
-      },
-    });
-
-    return response;
-
-  } catch (error) {
-    console.error('Error updating property details:', error);
-  }
-}
-
-export const updateAfterBookingInfo = async (post: Post, data: AfterBookingInfo) => {
-  try {
-    const listing = await prisma.post.findUnique({
-      where: {
-        id: post.id,
-      },
-    });
-
-    if (!listing || !post) {
-      console.error('lookup failed for after booking info');
-      return;
-    }
-
-    const afterBookingInfoId = post.afterBookingInfoId;
-
-    const { wifiName, wifiPassword, houseManual, checkoutInstructions, afterBookingDirections } = data;
-
-    const response = await prisma.afterBookingInfo.update({
-      where: {
-        id: afterBookingInfoId!,
-      },
-      data: {
-        wifiName, wifiPassword, houseManual, checkoutInstructions, afterBookingDirections
-      },
-    });
-
-    return response;
-
-  } catch (error) {
-    console.error('Error updating after booking info:', error);
-  }
-}
-
-
-
-// creating a separate function for this because we're not using FormData
 export const updatePost = async (data: Post) => {
   const session = await getSession();
   if (!session?.user.id) {
-    return {
-      error: "Not authenticated",
-    };
+    return { error: "Not authenticated" };
   }
+
+  // Fetch the post and its related sub-tables
   const post = await prisma.post.findUnique({
     where: {
       id: data.id,
     },
     include: {
+      images: true,
       site: true,
+      pricing: true,
+      location: true,
+      availability: true,
+      propertyRules: true,
+      propertyDetails: true,
+      afterBookingInfo: true,
     },
   });
+
   if (!post || post.userId !== session.user.id) {
-    return {
-      error: "Post not found",
-    };
+    return { error: "Post not found" };
   }
+
   try {
-    const response = await prisma.post.update({
+    const updatedPost = await prisma.post.update({
       where: {
         id: data.id,
       },
@@ -634,25 +406,56 @@ export const updatePost = async (data: Post) => {
       },
     });
 
-    await revalidateTag(
-      `${post.site?.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}-posts`,
-    );
-    await revalidateTag(
-      `${post.site?.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}-${post.slug}`,
-    );
+    if (post.location) {
+      await prisma.location.update({
+        where: { id: post.location!.id },
+        data: post.location,
+      });
+    }
 
-    // if the site has a custom domain, we need to revalidate those tags too
-    post.site?.customDomain &&
-      (await revalidateTag(`${post.site?.customDomain}-posts`),
-        await revalidateTag(`${post.site?.customDomain}-${post.slug}`));
+    if (post.pricing) {
+      await prisma.pricing.update({
+        where: { id: post.pricing!.id },
+        data: post.pricing,
+      });
+    }
 
-    return response;
+    if (post.availability) {
+      await prisma.availability.update({
+        where: { id: post.availability!.id },
+        data: post.availability,
+      });
+    }
+
+    if (post.propertyRules) {
+      await prisma.propertyRules.update({
+        where: { id: post.propertyRules!.id },
+        data: post.propertyRules,
+      });
+    }
+
+    if (post.propertyDetails) {
+      await prisma.propertyDetails.update({
+        where: { id: post.propertyDetails!.id },
+        data: post.propertyDetails,
+      });
+    }
+
+    if (post.afterBookingInfo) {
+      await prisma.afterBookingInfo.update({
+        where: { id: post.afterBookingInfo!.id },
+        data: post.afterBookingInfo,
+      });
+    }
+
+    return updatedPost;
+
   } catch (error: any) {
-    return {
-      error: error.message,
-    };
+    console.error('Error updating post and its relations:', error);
+    return { error: error.message };
   }
 };
+
 
 export const getPosts = async (userId: string, siteId: string | undefined, limit = null) => {
   const posts = await prisma.post.findMany({
@@ -665,6 +468,8 @@ export const getPosts = async (userId: string, siteId: string | undefined, limit
     },
     include: {
       site: true,
+      images: true,
+      // and other tables
     },
     ...(limit ? { take: limit } : {}),
   });

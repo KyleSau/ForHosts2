@@ -43,7 +43,6 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.rewrite(
       new URL(`/app${path === "/" ? "" : path}${url.search}`, req.url),
     );
-
   }
 
   // rewrite root application to `/home` folder
