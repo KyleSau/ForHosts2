@@ -25,15 +25,16 @@ export default function MDX({ source }: { source: MDXRemoteProps }) {
   );
 }
 
-interface ExampleCardProps
-  extends Pick<Post, "description" | "image" | "imageBlurhash"> {
-  name: string | null;
-  url: string | null;
-}
+// interface ExampleCardProps
+//   extends Pick<Post, "description" | "images" | "imageBlurhash"> {
+//   name: string | null;
+//   url: string | null;
+//   blurHash: string | null;
+// }
 
 function Examples({ data }: { data: string }) {
   if (!data) return null;
-  const parsedData = JSON.parse(data) as Array<ExampleCardProps>;
+  const parsedData = JSON.parse(data) as Array<any>;
   return (
     <div className="not-prose my-10 grid grid-cols-1 gap-x-4 gap-y-4 lg:-mx-36 lg:mb-20 lg:grid-cols-3 lg:gap-y-8">
       {parsedData.map((d) => (
@@ -43,7 +44,7 @@ function Examples({ data }: { data: string }) {
   );
 }
 
-function ExamplesCard({ data }: { data: ExampleCardProps }) {
+function ExamplesCard({ data }: { data: any }) {
   return (
     <a href={`https://${data.url}`} target="_blank" rel="noreferrer">
       <div className="ease hidden rounded-2xl border-2 border-gray-100 bg-white shadow-md transition-all duration-200 hover:-translate-y-1 hover:shadow-xl lg:block">
@@ -53,9 +54,9 @@ function ExamplesCard({ data }: { data: ExampleCardProps }) {
             width={500}
             height={400}
             className="h-64 w-full object-cover"
-            src={data.image ?? "/placeholder.png"}
+            src={data.images[0].url ?? "/placeholder.png"}
             placeholder="blur"
-            blurDataURL={data.imageBlurhash ?? undefined}
+            blurDataURL={data.images[0].blurhash ?? undefined}
           />
         </div>
         <div className="h-36 px-5 py-6">
@@ -74,9 +75,9 @@ function ExamplesCard({ data }: { data: ExampleCardProps }) {
             width={500}
             height={400}
             className="h-full object-cover"
-            src={`/examples/${data.image}`}
+            src={`/examples/${data.images[0].url}`}
             placeholder="blur"
-            blurDataURL={data.imageBlurhash ?? undefined}
+            blurDataURL={data.images[0].blurHash ?? undefined}
           />
         </div>
         <div className="w-3/5 px-5 py-6">
