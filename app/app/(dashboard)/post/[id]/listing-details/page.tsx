@@ -23,7 +23,10 @@ export default async function listingDetailsPage({ params }: { params: { id: str
         notFound();
   }
   return (
+  <div>
+    {JSON.stringify(data)}
       <ListingDetails data={data} />
+      </div>
       
   )
 }
