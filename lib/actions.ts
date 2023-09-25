@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { Post, Site, Location } from "@prisma/client";
+import { Post, Site, Location, Availability, Pricing, PropertyRules, PropertyDetails, AfterBookingInfo } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { withPostAuth, withSiteAuth } from "./auth";
 import { getSession } from "@/lib/auth";
@@ -369,45 +369,238 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
 });
 
 export const updateLocation = async (post: Post, data: Location) => {
+  try {
+    const listing = await prisma.post.findUnique({
+      where: {
+        id: post.id,
+      },
+      include: {
+        site: true,
+      },
+    });
 
-  // McDoodle: try catch!!! 100% for error handling
+    if (!listing || !post) {
+      throw new Error('lookup failed for location');
+    }
 
-  const listing = await prisma.post.findUnique({
-    where: {
-      id: post.id,
-    },
-    include: {
-      site: true,
-    },
-  });
+    const locationId = post.locationId;
 
-  if (!listing || !post) {
-    console.error('lookup failed for location');
-    return;
+    if (!locationId) {
+      throw new Error('Location ID not found for the post');
+    }
+
+    const { street, zip, city, state, country, longitude, latitude, radius } = data;
+
+    const response = await prisma.location.update({
+      where: {
+        id: locationId,
+      },
+      data: {
+        street,
+        zip,
+        city,
+        state,
+        country,
+        longitude,
+        latitude,
+        radius,
+      },
+    });
+
+    return response;
+
+  } catch (error) {
+    console.error('Error updating location:', error);
+    throw error;
   }
-
-  const locationId = post.locationId;
-
-  const { street, zip, city, state, country, longitude, latitude, radius } = data;
-
-  const response = prisma.location.update({
-    where: {
-      id: locationId!,
-    },
-    data: {
-      street,
-      zip,
-      city,
-      state,
-      country,
-      longitude,
-      latitude,
-      radius,
-    },
-  });
-
-  return response;
 }
+
+export const updatePricing = async (post: Post, data: Pricing) => {
+  try {
+    const listing = await prisma.post.findUnique({
+      where: {
+        id: post.id,
+      },
+      include: {
+        site: true,
+      },
+    });
+
+    if (!listing || !post) {
+      console.error('lookup failed for pricing');
+      return;
+    }
+
+    const pricingId = post.pricingId;
+
+    const { price, weekendPrice, cleaningFee, securityDeposit, petFee, weeklyDiscount, monthlyDiscount } = data;
+
+    const response = await prisma.pricing.update({
+      where: {
+        id: pricingId!,
+      },
+      data: {
+        price,
+        weekendPrice,
+        cleaningFee,
+        securityDeposit,
+        petFee,
+        weeklyDiscount,
+        monthlyDiscount,
+      },
+    });
+
+    return response;
+
+  } catch (error) {
+    console.error('Error updating pricing:', error);
+  }
+}
+
+export const updateAvailability = async (post: Post, data: Availability) => {
+  try {
+    const listing = await prisma.post.findUnique({
+      where: {
+        id: post.id,
+      },
+    });
+
+    if (!listing || !post) {
+      console.error('lookup failed for availability');
+      return;
+    }
+
+    const availabilityId = post.availabilityId;
+
+    // Destructuring the necessary properties from data
+    const {
+      instantBooking, minStay, maxStay, advanceNotice, sameDayAdvanceNotice, preparationTime,
+      availabilityWindow, restrictedCheckIn, restrictedCheckOut, checkInWindowStart, checkInWindowEnd,
+      checkInTime, checkOutTime
+    } = data;
+
+    const response = await prisma.availability.update({
+      where: {
+        id: availabilityId!,
+      },
+      data: {
+        instantBooking, minStay, maxStay, advanceNotice, sameDayAdvanceNotice, preparationTime,
+        availabilityWindow, restrictedCheckIn, restrictedCheckOut, checkInWindowStart, checkInWindowEnd,
+        checkInTime, checkOutTime
+      },
+    });
+
+    return response;
+
+  } catch (error) {
+    console.error('Error updating availability:', error);
+  }
+}
+
+export const updatePropertyRules = async (post: Post, data: PropertyRules) => {
+  try {
+    const listing = await prisma.post.findUnique({
+      where: {
+        id: post.id,
+      },
+    });
+
+    if (!listing || !post) {
+      console.error('lookup failed for property rules');
+      return;
+    }
+
+    const propertyRulesId = post.propertyRulesId;
+
+    const {
+      petsAllowed, eventsAllowed, smokingAllowed, photographyAllowed, checkInMethod,
+      quietHoursStart, quietHoursEnd, interactionPreferences, additionalRules, cancellationPolicy
+    } = data;
+
+    const response = await prisma.propertyRules.update({
+      where: {
+        id: propertyRulesId!,
+      },
+      data: {
+        petsAllowed, eventsAllowed, smokingAllowed, photographyAllowed, checkInMethod,
+        quietHoursStart, quietHoursEnd, interactionPreferences, additionalRules, cancellationPolicy
+      },
+    });
+
+    return response;
+
+  } catch (error) {
+    console.error('Error updating property rules:', error);
+  }
+}
+
+export const updatePropertyDetails = async (post: Post, data: PropertyDetails) => {
+  try {
+    const listing = await prisma.post.findUnique({
+      where: {
+        id: post.id,
+      },
+    });
+
+    if (!listing || !post) {
+      console.error('lookup failed for property details');
+      return;
+    }
+
+    const propertyDetailsId = post.propertyDetailsId;
+
+    const { propertyType, maxGuests, bedrooms, bathrooms, totalBeds, amenities } = data;
+
+    const response = await prisma.propertyDetails.update({
+      where: {
+        id: propertyDetailsId!,
+      },
+      data: {
+        propertyType, maxGuests, bedrooms, bathrooms, totalBeds, amenities
+      },
+    });
+
+    return response;
+
+  } catch (error) {
+    console.error('Error updating property details:', error);
+  }
+}
+
+export const updateAfterBookingInfo = async (post: Post, data: AfterBookingInfo) => {
+  try {
+    const listing = await prisma.post.findUnique({
+      where: {
+        id: post.id,
+      },
+    });
+
+    if (!listing || !post) {
+      console.error('lookup failed for after booking info');
+      return;
+    }
+
+    const afterBookingInfoId = post.afterBookingInfoId;
+
+    const { wifiName, wifiPassword, houseManual, checkoutInstructions, afterBookingDirections } = data;
+
+    const response = await prisma.afterBookingInfo.update({
+      where: {
+        id: afterBookingInfoId!,
+      },
+      data: {
+        wifiName, wifiPassword, houseManual, checkoutInstructions, afterBookingDirections
+      },
+    });
+
+    return response;
+
+  } catch (error) {
+    console.error('Error updating after booking info:', error);
+  }
+}
+
+
 
 // creating a separate function for this because we're not using FormData
 export const updatePost = async (data: Post) => {
