@@ -176,6 +176,9 @@ dependencies:
   lucide-react:
     specifier: ^0.244.0
     version: 0.244.0(react@18.2.0)
+  luxon:
+    specifier: ^3.4.3
+    version: 3.4.3
   micro:
     specifier: ^9.4.1
     version: 9.4.1
@@ -7899,8 +7902,8 @@ packages:
     requiresBuild: true
     optional: true
 
-  /luxon@3.3.0:
-    resolution: {integrity: sha512-An0UCfG/rSiqtAIiBPO0Y9/zAnHUZxAMiCpTd5h2smgsj7GGmcenvrvww2cqNA8/4A5ZrD1gJpHN2mIHZQF+Mg==}
+  /luxon@3.4.3:
+    resolution: {integrity: sha512-tFWBiv3h7z+T/tDaoxA8rqTxy1CHV6gHS//QdaH4pulbq/JuBSGgQspQQqcgnwdAx6pNI7cmvz5Sv/addzHmUg==}
     engines: {node: '>=12'}
     dev: false
 
@@ -9391,7 +9394,7 @@ packages:
       invariant: 2.2.4
       lodash: 4.17.21
       lodash-es: 4.17.21
-      luxon: 3.3.0
+      luxon: 3.4.3
       memoize-one: 6.0.0
       moment: 2.29.4
       moment-timezone: 0.5.43

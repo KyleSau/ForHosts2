@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { Post, Site, Location } from "@prisma/client";
+import { Post, Site } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { withPostAuth, withSiteAuth } from "./auth";
 import { getSession } from "@/lib/auth";
@@ -368,70 +368,34 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
   return response;
 });
 
-export const updateLocation = async (post: Post, data: Location) => {
-
-  // McDoodle: try catch!!! 100% for error handling
-
-  const listing = await prisma.post.findUnique({
-    where: {
-      id: post.id,
-    },
-    include: {
-      site: true,
-    },
-  });
-
-  if (!listing || !post) {
-    console.error('lookup failed for location');
-    return;
-  }
-
-  const locationId = post.locationId;
-
-  const { street, zip, city, state, country, longitude, latitude, radius } = data;
-
-  const response = prisma.location.update({
-    where: {
-      id: locationId!,
-    },
-    data: {
-      street,
-      zip,
-      city,
-      state,
-      country,
-      longitude,
-      latitude,
-      radius,
-    },
-  });
-
-  return response;
-}
-
-// creating a separate function for this because we're not using FormData
 export const updatePost = async (data: Post) => {
   const session = await getSession();
   if (!session?.user.id) {
-    return {
-      error: "Not authenticated",
-    };
+    return { error: "Not authenticated" };
   }
+
+  // Fetch the post and its related sub-tables
   const post = await prisma.post.findUnique({
     where: {
       id: data.id,
     },
     include: {
       site: true,
+      pricing: true,
+      location: true,
+      availability: true,
+      propertyRules: true,
+      propertyDetails: true,
+      afterBookingInfo: true,
     },
   });
+
   if (!post || post.userId !== session.user.id) {
-    return {
-      error: "Post not found",
-    };
+    return { error: "Post not found" };
   }
+
   try {
-    const response = await prisma.post.update({
+    const updatedPost = await prisma.post.update({
       where: {
         id: data.id,
       },
@@ -441,25 +405,56 @@ export const updatePost = async (data: Post) => {
       },
     });
 
-    await revalidateTag(
-      `${post.site?.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}-posts`,
-    );
-    await revalidateTag(
-      `${post.site?.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}-${post.slug}`,
-    );
+    if (post.location) {
+      await prisma.location.update({
+        where: { id: post.location!.id },
+        data: post.location,
+      });
+    }
 
-    // if the site has a custom domain, we need to revalidate those tags too
-    post.site?.customDomain &&
-      (await revalidateTag(`${post.site?.customDomain}-posts`),
-        await revalidateTag(`${post.site?.customDomain}-${post.slug}`));
+    if (post.pricing) {
+      await prisma.pricing.update({
+        where: { id: post.pricing!.id },
+        data: post.pricing,
+      });
+    }
 
-    return response;
+    if (post.availability) {
+      await prisma.availability.update({
+        where: { id: post.availability!.id },
+        data: post.availability,
+      });
+    }
+
+    if (post.propertyRules) {
+      await prisma.propertyRules.update({
+        where: { id: post.propertyRules!.id },
+        data: post.propertyRules,
+      });
+    }
+
+    if (post.propertyDetails) {
+      await prisma.propertyDetails.update({
+        where: { id: post.propertyDetails!.id },
+        data: post.propertyDetails,
+      });
+    }
+
+    if (post.afterBookingInfo) {
+      await prisma.afterBookingInfo.update({
+        where: { id: post.afterBookingInfo!.id },
+        data: post.afterBookingInfo,
+      });
+    }
+
+    return updatedPost;
+
   } catch (error: any) {
-    return {
-      error: error.message,
-    };
+    console.error('Error updating post and its relations:', error);
+    return { error: error.message };
   }
 };
+
 
 export const getPosts = async (userId: string, siteId: string | undefined, limit = null) => {
   const posts = await prisma.post.findMany({
@@ -472,6 +467,7 @@ export const getPosts = async (userId: string, siteId: string | undefined, limit
     },
     include: {
       site: true,
+      // and other tables
     },
     ...(limit ? { take: limit } : {}),
   });

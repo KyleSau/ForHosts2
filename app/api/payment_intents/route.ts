@@ -1,16 +1,40 @@
-import { NextResponse } from 'next/server'
-import Stripe from 'stripe'
+import { NextResponse } from 'next/server';
+import Stripe from 'stripe';
 import prisma from "@/lib/prisma";
+import { DateTime } from 'luxon';
 
-const { DateTime } = require('luxon');
+interface PaymentIntentRequest {
+    startDate: string;
+    endDate: string;
+    adults: number;
+    children: number;
+    infants: number;
+    pets: number;
+    price: number;
+    title: string;
+    postId: string;
+    userId: string | null;
+}
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    // https://github.com/stripe/stripe-node#configuration
     apiVersion: '2022-11-15',
-})
+});
 
-function calculateTotalCost(startDate: Date, endDate: Date, pricePerNight: number) {
-    // Input validation
+async function getStripeAccountForHostId(hostId: string) {
+    const stripeAccount = await prisma?.stripeAccount.findUnique({
+        where: {
+            userId: hostId
+        }
+    });
+
+    if (!stripeAccount) {
+        throw new Error('Stripe account not found for user');
+    }
+
+    return stripeAccount;
+}
+
+function calculateTotalCost(startDate: string, endDate: string, pricePerNight: number) {
     if (!startDate || !endDate || !pricePerNight) {
         throw new Error('Invalid input');
     }
@@ -26,9 +50,6 @@ function calculateTotalCost(startDate: Date, endDate: Date, pricePerNight: numbe
 
     return daysDiff * pricePerNight;
 }
-
-// Remember this is just a helper. Always do the final calculations on the server.
-
 
 function formatAmountForStripe(
     amount: number,
@@ -49,155 +70,141 @@ function formatAmountForStripe(
     return zeroDecimalCurrency ? amount : Math.round(amount * 100)
 }
 
-async function getStripeAccountForHostId(hostId: string) {
-    const stripeAccount = await prisma?.stripeAccount.findUnique({
+// ... [Keep helper functions unchanged]
+async function checkForConflictingPayments(postId: string, startDate: string, endDate: string): Promise<boolean> {
+    const luxonStart = DateTime.fromISO(startDate);
+    const luxonEnd = DateTime.fromISO(endDate);
+
+    const conflictingPayments = await prisma.stripePayment.findMany({
         where: {
-            userId: hostId
+            postId,
+            startDate: { lte: luxonEnd.toJSDate() }, // Convert DateTime back to JavaScript Date for database queries
+            endDate: { gte: luxonStart.toJSDate() },  // Convert DateTime back to JavaScript Date for database queries
+            status: { in: ['PROCESSING', 'SUCCEEDED'] }
         }
     });
-
-    if (!stripeAccount) {
-        throw new Error('Stripe account not found for user');
-    }
-
-    return stripeAccount;
+    return conflictingPayments.length > 0;
 }
 
-// ... [keep other helper functions unchanged, e.g. calculateTotalCost, formatAmountForStripe, getStripeAccountForHostId]
+async function createStripePaymentIntent(params: Stripe.PaymentIntentCreateParams): Promise<Stripe.PaymentIntent> {
+    try {
+        return await stripe.paymentIntents.create(params);
+    } catch (error: any) {
+        console.error("Error creating Stripe payment intent:", error.message);
+        throw new Error("Unable to create payment intent");
+    }
+}
+
+async function createPaymentIntent(requestData: PaymentIntentRequest): Promise<Stripe.PaymentIntent> {
+    const { startDate, endDate, adults, children, infants, pets, price, title, postId, userId } = requestData;
+
+    if (price <= 0) throw new Error('Price must be greater than 0');
+
+    const stripeAccount = await getStripeAccountForHostId(userId!);
+    const totalPrice = calculateTotalCost(startDate, endDate, price);
+    const applicationFee = Math.round(totalPrice * 0.03); // 3% of totalPrice
+
+    if (await checkForConflictingPayments(postId, startDate, endDate)) {
+        throw new Error('Conflicting reservation dates detected. Please choose different dates.');
+    }
+
+    const params: Stripe.PaymentIntentCreateParams = {
+        amount: formatAmountForStripe(totalPrice, 'usd'),
+        currency: 'usd',
+        payment_method_types: ['card'],
+        description: title,
+        application_fee_amount: applicationFee * 100,
+        transfer_data: { destination: stripeAccount.accountId },
+        metadata: { listingId: postId, startDate, endDate, adults, children, infants, pets },
+    };
+
+    return createStripePaymentIntent(params);
+}
+
+async function createStripePayment(current_intent: Stripe.PaymentIntent) {
+    try {
+        const payment = await prisma.stripePayment.create({
+            data: {
+                intentId: current_intent.id,
+                postId: current_intent.metadata.listingId,
+                startDate: current_intent.metadata.startDate,
+                endDate: current_intent.metadata.endDate,
+                status: 'PROCESSING',
+                totalPrice: current_intent.amount,
+            }
+        });
+        return current_intent;
+    } catch (e) {
+        console.log('prisma payment create error');
+        throw new Error('Failed to create payment in database');
+    }
+}
+
+async function handleExistingPaymentIntent(body: any): Promise<NextResponse | null> {
+    if (!body.payment_intent_id) {
+        return null;
+    }
+    try {
+        const current_intent = await stripe.paymentIntents.retrieve(body.payment_intent_id);
+        if (current_intent) {
+            await createStripePayment(current_intent);
+            return NextResponse.json(current_intent);
+        }
+    } catch (e) {
+        if ((e as any).code !== 'resource_missing') {
+            console.log('Error with payment intent retrieval:', e);
+            return new NextResponse(null, { status: 500 });
+        }
+    }
+    return null;
+}
 
 export async function POST(request: Request) {
-    console.log('/payment_intents POST called!');
+    if (!process.env.STRIPE_SECRET_KEY) {
+        throw new Error('STRIPE_SECRET_KEY not set in environment variables.');
+    }
 
+    console.log('/payment_intents POST called!');
 
     const body = await request.json();
 
-    console.log('body: ', JSON.stringify(body));
-    console.log('has payment intent: ' + body.payment_intent_id);
-
-    if (body.payment_intent_id) {
-        console.log('there is a payment_intent.id: ' + body.payment_intent_id);
-        try {
-            const current_intent = await stripe.paymentIntents.retrieve(
-                body.payment_intent_id
-            )
-            if (current_intent) {
-                try {
-                    console.log('time to create payment entry');
-                    const payment = await prisma.stripePayment.create({
-                        data: {
-                            intentId: current_intent.id,
-                            postId: current_intent.metadata.listingId,
-                            startDate: current_intent.metadata.startDate,
-                            endDate: current_intent.metadata.endDate,
-                            status: 'PROCESSING',
-                            totalPrice: current_intent.amount,
-                        }
-                    });
-                    console.log(JSON.stringify(payment));
-                    return NextResponse.json(current_intent);
-                } catch (e) {
-                    console.log('prisma payment create error');
-                    return NextResponse.error();
-                }
-            }
-        } catch (e) {
-            if ((e as any).code !== 'resource_missing') {
-                console.log('bad stuff');
-                const errorMessage =
-                    e instanceof Error ? e.message : 'Internal server error'
-                return NextResponse.error();
-
-            }
-        }
+    // If there's an existing payment intent, handle it.
+    const existingPaymentResponse = await handleExistingPaymentIntent(body);
+    if (existingPaymentResponse) {
+        return existingPaymentResponse;
     }
 
-    const post = await prisma?.post.findUnique({
-        where: {
-            id: body.listingId,
-        }
+    // If not, proceed to create a new one.
+    const post = await prisma.post.findUnique({
+        where: { id: body.listingId }, include: {
+            site: true,
+            location: true,
+            pricing: true,
+            availability: true,
+            propertyRules: true,
+            propertyDetails: true,
+            afterBookingInfo: true,
+        },
     });
 
     if (!post) {
         return NextResponse.error();  // Provide a meaningful response
     }
 
-    console.log('post name: ', post.title);
-    console.log('price: ' + post.price);
-    console.log('hostId: ' + post.userId);
-
-    // Create Stripe Payment Intent
-    const paymentIntent = await createPaymentIntent(post, body);
-
-    return NextResponse.json(paymentIntent);
-}
-
-async function createPaymentIntent(post: any, body: any) {
-    const hostId = post.userId;
-    const stripeAccount = await getStripeAccountForHostId(hostId);
-    const accountId = stripeAccount.accountId;
-
-    console.log('stripe account id: ', accountId);
-
-    const { startDate, endDate, adults, children, infants, pets } = body;
-
-    // filter out any status' after 10 minutes of createdAt date
-    const conflictingPayments = await prisma.stripePayment.findMany({
-        where: {
-            postId: post.listingId,
-            startDate: {
-                lte: endDate
-            },
-            endDate: {
-                gte: startDate
-            },
-            status: {
-                in: ['PROCESSING', 'SUCCEEDED']
-            }
-        }
-    });
-
-    if (conflictingPayments.length > 0) {
-        throw new Error('Conflicting reservation dates detected. Please choose different dates.');
-        // return a response here
-    }
-
-    const totalPrice = calculateTotalCost(startDate, endDate, post.price);
-
-    console.log('total price: ', totalPrice);
-
-    const product_description = post.title;
-    const applicationFee = Math.round(totalPrice * .03); // 3% of totalPrice
-
-
-
-
-    const params: Stripe.PaymentIntentCreateParams = {
-        amount: formatAmountForStripe(totalPrice, 'usd'),
-        currency: 'usd',
-        payment_method_types: ['card'],
-        description: product_description,
-        application_fee_amount: applicationFee * 100,
-        transfer_data: {
-            destination: accountId,
-        },
-        metadata: {
-            listingId: post.id,
-            startDate,
-            endDate,
-            adults,
-            children,
-            infants,
-            pets
-        },
+    const paymentIntentRequest: PaymentIntentRequest = {
+        startDate: body.startDate,
+        endDate: body.endDate,
+        adults: body.adults,
+        children: body.children,
+        infants: body.infants,
+        pets: body.pets,
+        price: post.pricing?.price!,
+        title: post.title,
+        postId: post.id,
+        userId: post.userId || null
     };
 
-    console.log('params metadata: ' + JSON.stringify(params.metadata));
 
-    try {
-        const intent = await stripe.paymentIntents.create(params);
-        return intent;
-    } catch (error: any) {
-        console.error("Error creating Stripe payment intent:", error.message);
-        throw new Error("Unable to create payment intent");
-    }
+    return NextResponse.json(await createPaymentIntent(paymentIntentRequest));
 }
+
