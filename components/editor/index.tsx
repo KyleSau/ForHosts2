@@ -16,7 +16,7 @@ export default function Editor({ post }: { post: PostWithSite }) {
 
   return (
     <div className="relative min-h-[500px] w-full max-w-screen-lg border-stone-200 p-12 px-8 dark:border-stone-700 sm:mb-[calc(20vh)] sm:rounded-lg sm:border sm:px-12 sm:shadow-lg">
-      <EditorTabs data={data} />
+      <p>gonna put the publishing stuff here</p>
     </div>
   );
 }
