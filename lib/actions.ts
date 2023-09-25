@@ -467,6 +467,12 @@ export const getPosts = async (userId: string, siteId: string | undefined, limit
     },
     include: {
       site: true,
+      images: {
+        select: {
+          url: true,
+          blurHash: true
+        },
+      }
       // and other tables
     },
     ...(limit ? { take: limit } : {}),

@@ -7,7 +7,7 @@ import Link from "next/link";
 export default function PostCard({
   data,
 }: {
-  data: Post & { site: Site | null };
+  data: Post & { site: Site | null } & any;
 }) {
   const url = `${data.site?.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${data.slug}`;
 
@@ -23,9 +23,9 @@ export default function PostCard({
             width={500}
             height={400}
             className="h-full object-cover"
-            src={data.image ?? "/placeholder.png"}
+            src={data.images[0].url ?? "/placeholder.png"}
             placeholder="blur"
-            blurDataURL={data.imageBlurhash ?? placeholderBlurhash}
+            blurDataURL={data.images[0].blurHash ?? placeholderBlurhash}
           />
           {!data.published && (
             <span className="absolute bottom-2 right-2 rounded-md border border-stone-200 bg-white px-3 py-0.5 text-sm font-medium text-stone-600 shadow-md">
