@@ -83,9 +83,9 @@ export async function POST(request: Request) {
             if (current_intent) {
                 try {
                     console.log('time to create payment entry');
-                    const payment = await prisma.payment.create({
+                    const payment = await prisma.stripePayment.create({
                         data: {
-                            stripePaymentIntentId: current_intent.id,
+                            intentId: current_intent.id,
                             postId: current_intent.metadata.listingId,
                             startDate: current_intent.metadata.startDate,
                             endDate: current_intent.metadata.endDate,
@@ -141,7 +141,7 @@ async function createPaymentIntent(post: any, body: any) {
     const { startDate, endDate, adults, children, infants, pets } = body;
 
     // filter out any status' after 10 minutes of createdAt date
-    const conflictingPayments = await prisma.payment.findMany({
+    const conflictingPayments = await prisma.stripePayment.findMany({
         where: {
             postId: post.listingId,
             startDate: {

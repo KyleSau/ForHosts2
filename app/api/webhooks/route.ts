@@ -9,9 +9,9 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 })
 
 async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
-    await prisma.payment.update({
+    await prisma.stripePayment.update({
         where: {
-            stripePaymentIntentId: paymentIntent.id
+            intentId: paymentIntent.id
         },
         data: {
             status: 'SUCCEEDED'
@@ -37,9 +37,9 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
 }
 
 async function handlePaymentFailure(paymentIntent: Stripe.PaymentIntent) {
-    await prisma.payment.update({
+    await prisma.stripePayment.update({
         where: {
-            stripePaymentIntentId: paymentIntent.id
+            intentId: paymentIntent.id
         },
         data: {
             status: 'FAILED'
