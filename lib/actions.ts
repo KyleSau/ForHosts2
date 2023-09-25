@@ -468,7 +468,11 @@ export const getPosts = async (userId: string, siteId: string | undefined, limit
     },
     include: {
       site: true,
-      images: true,
+      images: {
+        orderBy: {
+          orderIndex: "asc"
+        }
+      }
       // and other tables
     },
     ...(limit ? { take: limit } : {}),
