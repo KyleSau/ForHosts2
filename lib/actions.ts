@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { Prisma, Post, Site, Reservation, PrismaPromise } from "@prisma/client";
+import { Post, Site, Location } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { withPostAuth, withSiteAuth } from "./auth";
 import { getSession } from "@/lib/auth";
@@ -264,23 +264,8 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
 
   const response = await prisma.post.create({
     data: {
-      title: "",
-      price: 0,
-      checkInTime: "4:00",
-      checkOutTime: "11:00",
-      location: "location",
-      currency: "USD",
-      minStay: 1,
-      cleaningFee: 0,
-      securityDeposit: 0,
-      totalBeds: 0,
-      bedrooms: 0,
-      bathrooms: 0,
-      amenities: [], // empty array for amenities
-      photoGallery: [], // empty array for photoGallery
-      additionalServices: [], // empty array for additionalServices
-      calendarUrls: [],
-      propertyType: "idk",
+      title: '',
+      description: '',
       site: {
         connect: {
           id: site.id,
@@ -289,6 +274,85 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
       user: {
         connect: {
           id: session.user.id,
+        },
+      },
+      location: {
+        create: {
+          // Fill in default or form values for Location fields
+          street: '',
+          zip: '',
+          city: '',
+          state: '',
+          country: '',
+          longitude: '',
+          latitude: '',
+          radius: 0,
+        },
+      },
+      pricing: {
+        create: {
+          // Fill in default or form values for Pricing fields
+          price: 0,
+          weekendPrice: 0,
+          cleaningFee: 0,
+          securityDeposit: 0,
+          petFee: 0,
+          weeklyDiscount: 0.0,
+          monthlyDiscount: 0.0,
+        },
+      },
+      availability: {
+        create: {
+          // Fill in default or form values for Availability fields
+          instantBooking: false,
+          minStay: 1,
+          maxStay: 365,
+          advanceNotice: 0,
+          sameDayAdvanceNotice: 6,
+          preparationTime: 0,
+          availabilityWindow: 3,
+          restrictedCheckIn: [],
+          restrictedCheckOut: [],
+          checkInWindowStart: "00:00",
+          checkInWindowEnd: "00:00",
+          checkInTime: "00:00",
+          checkOutTime: "00:00",
+        },
+      },
+      propertyRules: {
+        create: {
+          // Fill in default or form values for PropertyRules fields
+          petsAllowed: false,
+          eventsAllowed: false,
+          smokingAllowed: false,
+          photographyAllowed: false,
+          checkInMethod: '',
+          quietHoursStart: "00:00",
+          quietHoursEnd: "00:00",
+          interactionPreferences: '',
+          additionalRules: '',
+          cancellationPolicy: '',
+        },
+      },
+      propertyDetails: {
+        create: {
+          // Fill in default or form values for PropertyDetails fields
+          propertyType: '',
+          maxGuests: 0,
+          bedrooms: 0,
+          bathrooms: 0,
+          totalBeds: 0,
+          amenities: [],
+        },
+      },
+      afterBookingInfo: {
+        create: {
+          // Fill in default or form values for AfterBookingInfo fields
+          wifiName: '',
+          wifiPassword: '',
+          houseManual: '',
+          checkoutInstructions: '',
+          afterBookingDirections: '',
         },
       },
     },
@@ -302,123 +366,47 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
   return response;
 });
 
-export const updatePropertyDescript = async (data: Post) => {
-  const session = await getSession();
-  if (!session?.user.id) {
-    return {
-      error: "Not authenticated",
-    };
-  }
-  const post = await prisma.post.findUnique({
-    where: {
-      id: data.id,
-    },
-    include: {
-      site: true,
-    },
-  });
-  if (!post || post.userId !== session.user.id) {
-    return {
-      error: "Post not found",
-    };
-  }
-  try {
-    const response = await prisma.post.update({
-      where: {
-        id: data.id,
-      },
-      data: {
-        title: data.title,
-        description: data.description,
-      },
-    });
-    return response;
-  } catch (e) {
-    console.error(e);
-  }
-};
-export const updatePropertyPriceInfo = async (data: Post) => {
-  const session = await getSession();
-  if (!session?.user.id) {
-    return {
-      error: "Not authenticated",
-    };
-  }
-  const post = await prisma.post.findUnique({
-    where: {
-      id: data.id,
-    },
-    include: {
-      site: true,
-    },
-  });
-  if (!post || post.userId !== session.user.id) {
-    return {
-      error: "Post not found",
-    };
-  }
-  try {
-    const response = await prisma.post.update({
-      where: {
-        id: data.id,
-      },
-      data: {
-        price: data.price,
-        securityDeposit: data.securityDeposit,
-        minStay: data.minimumStay,
-        cleaningFee: data.cleaningFee,
-      },
-    });
-    return response;
-  } catch (e) {
-    console.error(e);
-  }
-};
-export const updateListingDetails = async (data: Post) => {
-  const session = await getSession();
-  if (!session?.user.id) {
-    return {
-      error: "Not authenticated",
-    };
-  }
-  const post = await prisma.post.findUnique({
-    where: {
-      id: data.id,
-    },
-    include: {
-      site: true,
-    },
-  });
-  if (!post || post.userId !== session.user.id) {
-    return {
-      error: "Post not found",
-    };
-  }
-  try {
-    const response = await prisma.post.update({
-      where: {
-        id: data.id,
-      },
-      data: {
-        title: data.title,
-        description: data.description,
-        maxGuests: data.maxGuests,
-        minimumStay: data.minimumStay,
-        bedrooms: data.bedrooms,
-        bathrooms: data.bathrooms,
-        // country: data.country,
-        // address: data.address,
-        // state: data.state,
-        // zip: data.zip,
-        // city: data.city
+export const updateLocation = async (post: Post, data: Location) => {
 
-      },
-    });
-    return response;
-  } catch (e) {
-    console.error(e);
+  // McDoodle: try catch!!! 100% for error handling
+
+  const listing = await prisma.post.findUnique({
+    where: {
+      id: post.id,
+    },
+    include: {
+      site: true,
+    },
+  });
+
+  if (!listing || !post) {
+    console.error('lookup failed for location');
+    return;
   }
-};
+
+  const locationId = post.locationId;
+
+  const { street, zip, city, state, country, longitude, latitude, radius } = data;
+
+  const response = prisma.location.update({
+    where: {
+      id: locationId!,
+    },
+    data: {
+      street,
+      zip,
+      city,
+      state,
+      country,
+      longitude,
+      latitude,
+      radius,
+    },
+  });
+
+  return response;
+}
+
 // creating a separate function for this because we're not using FormData
 export const updatePost = async (data: Post) => {
   const session = await getSession();
@@ -447,28 +435,7 @@ export const updatePost = async (data: Post) => {
       },
       data: {
         title: data.title,
-        price: data.price,
         description: data.description,
-        content: data.content,
-        checkInTime: data.checkInTime,
-        checkOutTime: data.checkOutTime,
-        location: data.location,
-        currency: data.currency,
-        minStay: data.minStay,
-        cleaningFee: data.cleaningFee,
-        securityDeposit: data.securityDeposit,
-        amenities: data.amenities,
-        maxGuests: data.maxGuests,
-        bedrooms: data.bedrooms,
-        bathrooms: data.bathrooms,
-        totalBeds: data.totalBeds,
-        instantBooking: data.instantBooking,
-        rating: data.rating,
-        photoGallery: data.photoGallery,
-        additionalServices: data.additionalServices,
-        availabilityWindow: data.availabilityWindow,
-        //calendarUrls: data.calendarUrls,
-        propertyType: data.propertyType, // change this to data.propertyTpe
       },
     });
 
@@ -514,6 +481,7 @@ export const getPosts = async (
   return posts;
 };
 
+// revisit this
 export const updatePostMetadata = withPostAuth(
   async (
     formData: FormData,
@@ -550,10 +518,7 @@ export const updatePostMetadata = withPostAuth(
             id: post.id,
           },
           data: {
-            image: urls[0]?.url, // Take the first image URL as the main image
-            imageBlurhash: urls[0]?.blurhash, // Same for the blurhash
-            photoGallery: urls.map((u) => u.url), // Store all the URLs in the photoGallery
-            photoGalleryBlurhash: urls.map((u) => u.blurhash), // Store all the blurhashes
+
           },
         });
       } else {
@@ -624,6 +589,7 @@ export const updatePostMetadata = withPostAuth(
   },
 );
 
+// McDoodle: test if everything is cascade deleted!
 export const deletePost = withPostAuth(async (_: FormData, post: Post) => {
   try {
     const response = await prisma.post.delete({
@@ -711,23 +677,23 @@ export const getReservations = async (limit: number = 10) => {
 };
 
 // get all the calendar urls from the Post
-// export const getCalendarUrls = async (postId: string) => {
-//   try {
-//     const post = await prisma.post.findUnique({
-//       where: {
-//         id: postId,
-//       },
-//       select: {
-//         calendarUrls: true,
-//       },
-//     });
-//     return post?.calendarUrls || []; // Return an empty array if calendarUrls is not found
-//   } catch (error: any) {
-//     return {
-//       error: "Failed to fetch calendar urls",
-//     };
-//   }
-// };
+export const getCalendarUrls = async (postId: string) => {
+  // try {
+  //   const post = await prisma.post.findUnique({
+  //     where: {
+  //       id: postId,
+  //     },
+  //     select: {
+  //       calendarUrls: true,
+  //     },
+  //   });
+  //   return post?.calendarUrls || []; // Return an empty array if calendarUrls is not found
+  // } catch (error: any) {
+  //   return {
+  //     error: "Failed to fetch calendar urls",
+  //   };
+  // }
+};
 
 /*
 export const createReservation = async (formData: FormData, currentDate: Date) => {
