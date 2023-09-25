@@ -14,8 +14,7 @@ import {
 } from "@/lib/domains";
 import { put } from "@vercel/blob";
 import { customAlphabet } from "nanoid";
-import { calcDateDelta, getBlurDataURL } from "@/lib/utils";
-import { RESERVATION_FUTURE_DAYS_THRESHOLD } from "./constants";
+import { getBlurDataURL } from "@/lib/utils";
 
 const nanoid = customAlphabet(
   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
@@ -29,7 +28,10 @@ export const getReservationsByPostId = async (postId: string) => {
         post: {
           id: postId,
         },
-        OR: [{ status: "PENDING" }, { status: "CONFIRMED" }],
+        OR: [
+          { status: 'PENDING' },
+          { status: 'CONFIRMED' },
+        ],
       },
       include: {
         post: true,
@@ -169,7 +171,7 @@ export const updateSite = withSiteAuth(
         const file = formData.get(key) as File;
         const filename = `${nanoid()}.${file.type.split("/")[1]}`;
 
-        console.log("filename: " + filename);
+        console.log('filename: ' + filename);
 
         const { url } = await put(filename, file, {
           access: "public",
@@ -459,11 +461,7 @@ export const updatePost = async (data: Post) => {
   }
 };
 
-export const getPosts = async (
-  userId: string,
-  siteId: string | undefined,
-  limit = null,
-) => {
+export const getPosts = async (userId: string, siteId: string | undefined, limit = null) => {
   const posts = await prisma.post.findMany({
     where: {
       userId: userId as string,
@@ -496,22 +494,21 @@ export const updatePostMetadata = withPostAuth(
       let response;
       if (key === "image") {
         const files = formData.getAll("image") as File[]; // This will retrieve all the files
-        const urls = await Promise.all(
-          files.map(async (file) => {
-            const filename = `${nanoid()}.${file.type.split("/")[1]}`;
-            console.log("post filename: " + filename);
+        const urls = await Promise.all(files.map(async (file) => {
+          const filename = `${nanoid()}.${file.type.split("/")[1]}`;
+          console.log('post filename: ' + filename);
 
-            const SIZE_LIMIT = 50000;
-            if (file.size > SIZE_LIMIT) {
-            }
-            const { url } = await put(filename, file, {
-              access: "public",
-            });
+          const SIZE_LIMIT = 50000;
+          if (file.size > SIZE_LIMIT) {
 
-            const blurhash = await getBlurDataURL(url);
-            return { url, blurhash };
-          }),
-        );
+          }
+          const { url } = await put(filename, file, {
+            access: "public",
+          });
+
+          const blurhash = await getBlurDataURL(url);
+          return { url, blurhash };
+        }));
 
         response = await prisma.post.update({
           where: {
@@ -520,7 +517,7 @@ export const updatePostMetadata = withPostAuth(
           data: {
 
           },
-        });
+        })
       } else {
         response = await prisma.post.update({
           where: {
@@ -644,6 +641,7 @@ export const editUser = async (
   }
 };
 
+
 export const getReservations = async (limit: number = 10) => {
   const session = await getSession();
 
@@ -705,13 +703,9 @@ export const createReservation = async (formData: FormData, currentDate: Date) =
     const dateDeltaArray = calcDateDelta(currentDate, startDate);
 
     if (dateDeltaArray.some((t: number) => t < 0)) {
-      throw new Error(
-        "The starting date of your reservation must be on or after today.",
-      );
+      throw new Error("The starting date of your reservation must be on or after today.")
     } else if (dateDeltaArray[0] > RESERVATION_FUTURE_DAYS_THRESHOLD) {
-      throw new Error(
-        `The starting date of your reservation cannot be more than ${RESERVATION_FUTURE_DAYS_THRESHOLD} days from today.`,
-      );
+      throw new Error(`The starting date of your reservation cannot be more than ${RESERVATION_FUTURE_DAYS_THRESHOLD} days from today.`);
     }
 
     const response = await prisma?.reservation.create({
@@ -720,8 +714,8 @@ export const createReservation = async (formData: FormData, currentDate: Date) =
         startDate,
         endDate,
         totalPrice: 100,
-        status: "PENDING",
-      },
+        status: 'PENDING',
+      }
     });
     return response;
   } catch (error: any) {

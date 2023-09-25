@@ -21,7 +21,7 @@ export default async function listingDetailsPage({ params }: { params: { id: str
       });
       if (!data || data.userId !== session.user.id) {
         notFound();
-      }
+  }
   return (
       <ListingDetails data={data} />
       
