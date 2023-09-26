@@ -11,6 +11,10 @@ import { useTransition } from "react";
 import { updatePostMetadata } from '@/lib/actions';
 import { ExternalLink } from 'lucide-react';
 import clsx from "clsx";
+import EditorWrapper from './editor-container-wrapper';
+import AmenityEditor from '../amenities/amenity-editor';
+import AmenityDataTable from '../amenities/amenity-data-table';
+
 export default function ListingDetails({ data }) {
   const id = data['id'];
   const [submitted, setSubmitted] = useState(false);
@@ -90,98 +94,122 @@ export default function ListingDetails({ data }) {
     };
   }, [formik.dirty]);
   return (
+    <EditorWrapper>
+      <form onSubmit={formik.handleSubmit}>
+        <div className="absolute right-5 top-5 mb-5 flex items-center space-x-3">
+          {data.published && (
+            <a
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-1 text-sm text-stone-400 hover:text-stone-500"
+            >
+              <ExternalLink className="h-4 w-4" />
+            </a>
+          )}
 
-    <form onSubmit={formik.handleSubmit}>
+          <button
+            onClick={() => {
+              setSubmitted(false);
+              const formData = new FormData();
+              console.log(data.published, typeof data.published);
+              formData.append("published", String(!data.published));
+              startTransitionPublishing(async () => {
+                await updatePostMetadata(formData, data.id, "published").then(
+                  () => {
+                    toast.success(
+                      `Successfully ${data.published ? "unpublished" : "published"
+                      } your post.`,
+                    );
 
-      <div className="absolute right-5 top-5 mb-5 flex items-center space-x-3">
-        {data.published && (
-          <a
-            href={url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center space-x-1 text-sm text-stone-400 hover:text-stone-500"
+                  },
+                );
+              });
+            }}
+            className={clsx(
+              "flex h-7 w-24 items-center justify-center space-x-2 rounded-lg border text-sm transition-all focus:outline-none",
+              isPendingPublishing
+                ? "cursor-not-allowed border-stone-200 bg-stone-100 text-stone-400 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-300"
+                : "border border-green-600 bg-green-600 hover:bg-green-500 text-white hover:bg-sitecolor active:bg-stone-100 dark:border-stone-700 dark:hover:border-stone-200",
+            )}
+            disabled={isPendingPublishing}
           >
-            <ExternalLink className="h-4 w-4" />
-          </a>
-        )}
-
-        <button
-          onClick={() => {
-            setSubmitted(false);
-            const formData = new FormData();
-            console.log(data.published, typeof data.published);
-            formData.append("published", String(!data.published));
-            startTransitionPublishing(async () => {
-              await updatePostMetadata(formData, data.id, "published").then(
-                () => {
-                  toast.success(
-                    `Successfully ${data.published ? "unpublished" : "published"
-                    } your post.`,
-                  );
-
-                },
-              );
-            });
-          }}
-          className={clsx(
-            "flex h-7 w-24 items-center justify-center space-x-2 rounded-lg border text-sm transition-all focus:outline-none",
-            isPendingPublishing
-              ? "cursor-not-allowed border-stone-200 bg-stone-100 text-stone-400 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-300"
-              : "border border-green-600 bg-green-600 hover:bg-green-500 text-white hover:bg-sitecolor active:bg-stone-100 dark:border-stone-700 dark:hover:border-stone-200",
-          )}
-          disabled={isPendingPublishing}
-        >
-          {isPendingPublishing ? (
-            <LoadingDots />
-          ) : (
-            <p>{data.published ? "Unpublish" : "Publish"}</p>
-          )}
-        </button>
-
-      </div>
-      <TabTitle title="Basic Details" desc="Basic Listing Details About Your Property" />
-      <div className="mt-8">
-        <label htmlFor="title" className="block text-sm font-medium leading-6  text-gray-900">
-          Listing Title
-        </label>
-        <input
-          type="text"
-          name="title"
-          id="title"
-          className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.title && formik.errors.title ? 'border-red-500' : ''
-            }`}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-
-          value={formik.values.title}
-        />
-        {formik.touched.title && formik.errors.title && (
-          <div className="text-red-600 text-sm mt-2">{formik.errors.title}</div>
-        )}
-      </div>
-
-      <div className="mt-10">
-        <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900">
-          Description of property
-        </label>
-        <textarea
-          name="description"
-          id="description"
-          className={`block w-full h-[300px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.description && formik.errors.description ? 'border-red-500' : ''
-            }`}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.description}
-        />
-        {formik.touched.description && formik.errors.description && (
-          <div className="text-red-600 text-sm mt-2">{formik.errors.description}</div>
-        )}
-      </div>
-      <hr className='mt-8' />
-
-      <div className='mt-4'>
-        <EditorSaveButton dirty={formik.dirty} submitted={submitted} isLoading={isLoading} />
-      </div>
-    </form>
+            {isPendingPublishing ? (
+              <LoadingDots />
+            ) : (
+              <p>{data.published ? "Unpublish" : "Publish"}</p>
+            )}
+          </button>
+        </div>
+        <TabTitle title="Facilities" desc="Choose the amount for various facilities in your property" />
+        <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8">
+          <div>
+            <label htmlFor="maxGuests" className="block text-sm font-medium leading-6 text-gray-900">
+              Max Guests
+            </label>
+            <input
+              type="number"
+              name="maxGuests"
+              id="maxGuests"
+              className={`block w-[50px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.bedrooms && formik.errors.bedrooms ? 'border-red-500' : ''
+                }`}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.maxGuests}
+              min="0"
+              onWheel={event => event.currentTarget.blur()}
+            />
+            {formik.touched.maxGuests && formik.errors.maxGuests && (
+              <div className="text-red-600 text-sm mt-2">{formik.errors.maxGuests}</div>
+            )}
+          </div>
+          <div>
+            <label htmlFor="bedrooms" className="block text-sm font-medium leading-6 text-gray-900">
+              Number of Bedrooms
+            </label>
+            <input
+              type="number"
+              name="bedrooms"
+              id="bedrooms"
+              className={`block w-[50px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.bedrooms && formik.errors.bedrooms ? 'border-red-500' : ''
+                }`}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.bedrooms}
+              min="0"
+              onWheel={event => event.currentTarget.blur()}
+            />
+            {formik.touched.bedrooms && formik.errors.bedrooms && (
+              <div className="text-red-600 text-sm mt-2">{formik.errors.bedrooms}</div>
+            )}
+          </div>
+          <div>
+            <label htmlFor="bathrooms" className="block text-sm font-medium leading-6 text-gray-900">
+              Number of Bathrooms
+            </label>
+            <input
+              type="number"
+              name="bathrooms"
+              id="bathrooms"
+              className={`block w-[50px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.bathrooms && formik.errors.bathrooms ? 'border-red-500' : ''
+                }`}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.bathrooms}
+              min="0"
+              onWheel={event => event.currentTarget.blur()}
+            />
+            {formik.touched.bathrooms && formik.errors.bathrooms && (
+              <div className="text-red-600 text-sm mt-2">{formik.errors.bathrooms}</div>
+            )}
+          </div>
+        </div>
+        <hr className="mt-5 mb-5" />
+        <AmenityDataTable />
+        <div className='mt-4'>
+          <EditorSaveButton dirty={formik.dirty} submitted={submitted} isLoading={isLoading} />
+        </div>
+      </form>
+    </EditorWrapper>
   );
 }
