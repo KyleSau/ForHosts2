@@ -407,21 +407,21 @@ export const updatePost = async (data: Post) => {
       }
     });
 
-    if (post.location) {
+    if (data.location) {
       await prisma.location.update({
         where: { id: post.location!.id },
-        data: post.location,
+        data: data.location,
       });
     }
 
-    if (post.pricing) {
+    if (data.pricing) {
       await prisma.pricing.update({
         where: { id: post.pricing!.id },
-        data: post.pricing,
+        data: data.pricing,
       });
     }
 
-    if (post.availability) {
+    if (data.availability) {
       console.log('uh oh we need all the stuff');
       console.log('data availability: ' + data.availability);
       // console.log('post availability!.id: ', post.availability!.id);
@@ -433,24 +433,24 @@ export const updatePost = async (data: Post) => {
       });
     }
 
-    if (post.propertyRules) {
+    if (data.propertyRules) {
       await prisma.propertyRules.update({
         where: { id: post.propertyRules!.id },
-        data: post.propertyRules,
+        data: data.propertyRules,
       });
     }
 
-    if (post.propertyDetails) {
+    if (data.propertyDetails) {
       await prisma.propertyDetails.update({
         where: { id: post.propertyDetails!.id },
-        data: post.propertyDetails,
+        data: data.propertyDetails,
       });
     }
 
-    if (post.afterBookingInfo) {
+    if (data.afterBookingInfo) {
       await prisma.afterBookingInfo.update({
         where: { id: post.afterBookingInfo!.id },
-        data: post.afterBookingInfo,
+        data: data.afterBookingInfo,
       });
     }
 

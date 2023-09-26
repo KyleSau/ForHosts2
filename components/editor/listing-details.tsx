@@ -58,6 +58,8 @@ export default function ListingDetails({ data }) {
       console.log(data.published, typeof data.published);
       console.log(formData)
       // Your form submission logic
+      console.log('data: ', JSON.stringify(data));
+      console.log('values: ', JSON.stringify(values));
       const result = await updatePost(values);
 
       if (result?.error) {
