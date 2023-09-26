@@ -15,6 +15,7 @@ import { updatePost, updatePostMetadata } from "@/lib/actions";
 import clsx from "clsx";
 import LoadingDots from "@/components/icons/loading-dots";
 import { ExternalLink } from "lucide-react";
+import { Label } from "@/components/ui/label";
 
 type PostWithSite = Post & { site: { subdomain: string | null } | null };
 
@@ -189,6 +190,7 @@ export default function TitleDescriptionEditor({ post }: { post: PostWithSite })
                     )}
                 </button>
             </div>
+            <Label>Title</Label>
             <div className="mb-5 flex flex-col space-y-3 pb-5 border-b border-stone-200">
                 <input
                     type="text"
@@ -204,8 +206,9 @@ export default function TitleDescriptionEditor({ post }: { post: PostWithSite })
                     className="w-full resize-none border-none focus:outline-none focus:ring-0 px-0 placeholder:text-stone-400"
                 /> */}
             </div>
+            <Label>Description</Label>
             {editor && <EditorBubbleMenu editor={editor} />}
-            <EditorContent className="border border-gray-300" editor={editor} />
+            <EditorContent type="textarea" className="border border-gray-200" editor={editor} />
         </div>
     );
 }
