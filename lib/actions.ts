@@ -404,6 +404,13 @@ export const updatePost = async (data: Post) => {
       },
     });
 
+    if (post.propertyRules) {
+      console.log("data proprules: " + data.propertyRules);
+      await prisma.propertyRules.update({
+        where: { id: post.propertyRules!.id },
+        data: data.propertyRules,
+      });
+    }
     if (post.location) {
       await prisma.location.update({
         where: { id: post.location!.id },
@@ -411,8 +418,9 @@ export const updatePost = async (data: Post) => {
       });
     }
 
+ 
     if (post.pricing) {
-      console.log("data availability: " + data.pricing);
+      console.log("data pricing: " + data.pricing);
       await prisma.pricing.update({
         where: { id: post.pricing!.id },
         data: data.pricing,
@@ -431,12 +439,7 @@ export const updatePost = async (data: Post) => {
       });
     }
 
-    if (post.propertyRules) {
-      await prisma.propertyRules.update({
-        where: { id: post.propertyRules!.id },
-        data: data.propertyRules,
-      });
-    }
+
 
     if (post.propertyDetails) {
       await prisma.propertyDetails.update({
