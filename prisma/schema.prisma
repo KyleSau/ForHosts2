@@ -189,20 +189,20 @@ model Pricing {
 }
 
 model Availability {
-  id                   String  @id @default(cuid())
-  instantBooking       Boolean
-  minStay              Int // days (1)
-  maxStay              Int // days (365)
-  advanceNotice        Int // days (0 - 7)
-  sameDayAdvanceNotice Int // hours (6AM - Midnight)
-  preparationTime      Int // days (0 - 2 days)
-  availabilityWindow   Int // months (3 - 24 months)
+  id                   String   @id @default(cuid())
+  instantBooking       Boolean?
+  minStay              Int? // days (1)
+  maxStay              Int? // days (365)
+  advanceNotice        Int? // days (0 - 7)
+  sameDayAdvanceNotice Int? // hours (6AM - Midnight)
+  preparationTime      Int? // days (0 - 2 days)
+  availabilityWindow   Int? // months (3 - 24 months)
   restrictedCheckIn    Int[] // days of the week restricted [0...6]
   restrictedCheckOut   Int[] // days of the week restricted [0...6]
-  checkInWindowStart   String // "HH:mm"
-  checkInWindowEnd     String // "HH:mm"
-  checkInTime          String // "HH:mm"
-  checkOutTime         String // "HH:mm"
+  checkInWindowStart   String? // "HH:mm"
+  checkInWindowEnd     String? // "HH:mm"
+  checkInTime          String? // "HH:mm"
+  checkOutTime         String? // "HH:mm"
 
   post Post?
 }

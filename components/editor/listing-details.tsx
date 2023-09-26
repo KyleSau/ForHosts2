@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import TabTitle from './tab-title';
 import EditorSaveButton from './editor-save-button';
-import { updateListingDetails, updatePost } from '@/lib/actions';
+import { updatePost } from '@/lib/actions';
 import LoadingDots from "../icons/loading-dots";
 import { toast } from "sonner";
 import { useTransition } from "react";
@@ -178,7 +178,7 @@ export default function ListingDetails({ data }) {
       <hr className='mt-8' />
 
       <div className='mt-4'>
-        <EditorSaveButton submitted={submitted} isLoading={isLoading} />
+        <EditorSaveButton dirty={formik.dirty} submitted={submitted} isLoading={isLoading} />
       </div>
     </form>
   );

@@ -369,7 +369,7 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
 });
 
 export const updatePost = async (data: Post) => {
-  console.log(JSON.stringify(data))
+  console.log('data: ' + JSON.stringify(data))
   const session = await getSession();
   if (!session?.user.id) {
     return { error: "Not authenticated" };
@@ -404,7 +404,7 @@ export const updatePost = async (data: Post) => {
       data: {
         title: data.title,
         description: data.description,
-      },
+      }
     });
 
     if (post.location) {
@@ -422,9 +422,14 @@ export const updatePost = async (data: Post) => {
     }
 
     if (post.availability) {
+      console.log('uh oh we need all the stuff');
+      console.log('data availability: ' + data.availability);
+      // console.log('post availability!.id: ', post.availability!.id);
+      // console.log('availability: ' + JSON.stringify(post.availability));
       await prisma.availability.update({
         where: { id: post.availability!.id },
-        data: post.availability,
+
+        data: data.availability,
       });
     }
 

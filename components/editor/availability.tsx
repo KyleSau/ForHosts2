@@ -56,7 +56,7 @@ const availabilityWindowOptions = [
 ];
 
 const validationSchema = Yup.object().shape({
-  
+
   minStay: Yup.number()
     .required("Minimum stay is required")
     .positive("Minimum stay must be a positive number"),
@@ -92,6 +92,7 @@ export default function Availability({ data }) {
     initialValues: {
       id: data.id,
       availabilityId: avaData.id,
+      instantBooking: avaData.instantBooking,
       minStay: avaData.minStay,
       maxStay: avaData.maxStay,
       advanceNotice: avaData.advanceNotice,
@@ -107,16 +108,18 @@ export default function Availability({ data }) {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      console.log("values" +JSON.stringify(values))
+      console.log("values" + JSON.stringify(values))
       setSubmitted(false);
       setIsLoading(true);
       const transformedValues = {
         id: values.id,
         availability: {
-          id: values.availabilityId,
-          minstay: values.minStay,
-          maxstay: values.maxStay,
-          advancenotice: values.advanceNotice,
+          instantBooking: values.instantBooking,
+          minStay: values.minStay,
+          maxStay: values.maxStay,
+          advanceNotice: parseInt(values.advanceNotice),
+          restrictedCheckIn: [],
+          restrictedCheckOut: [],
         },
       };
       const result = await updatePost(transformedValues);
@@ -124,6 +127,7 @@ export default function Availability({ data }) {
         console.log("Post updated successfully:", result);
         setSubmitted(true);
         setIsLoading(false);
+        // formik.resetForm({ values: transformedValues });
       }
       if (result?.error) {
         console.error(result.error);
@@ -149,232 +153,252 @@ export default function Availability({ data }) {
     };
   }, [formik.dirty]);
 
-    return (
-      <EditorWrapper>
-        {JSON.stringify(avaData)}
-        <form onSubmit={formik.handleSubmit}>
-        
-          <TabTitle title="Availability Details" desc="Information regarding availability of your property"  />
-          <hr className="mt-4"/>
-      <div>
-        <TabTitle title="Trip Length" desc="" />
-        <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
-          <Label
-            htmlFor="minStay"
-            className="col-span-1 col-start-1 flex items-center"
-          >
-            Minimum Stay
-          </Label>
-          <div className="col-span-1 col-start-3 flex items-center sm:col-span-1 sm:col-start-5 md:col-span-1 md:col-start-4">
-            <Input
-              type="number"
-              className="w-full"
-              id="minStay"
-              name="minStay"
-              value={formik.values.minStay}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              min="0"
-              onWheel={(event) => event.currentTarget.blur()}
-            />
-          </div>
-        </div>
-        {formik.touched.minStay && formik.errors.minStay ? (
-          <div className="text-red-600">{formik.errors.minStay}</div>
-        ) : null}
-        
-        <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
-          <Label
-            htmlFor="maxStay"
-            className="col-span-1 col-start-1 flex items-center"
-          >
-            Maximum Stay
-          </Label>
-          <div className="col-span-1 col-start-3 flex items-center sm:col-span-1 sm:col-start-5 md:col-span-1 md:col-start-4">
-            <Input
-              type="number"
-              className="w-full"
-              id="maxStay"
-              name="maxStay"
-              value={formik.values.maxStay}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              min="0"
-              onWheel={(event) => event.currentTarget.blur()}
-            />
-          </div>
-        </div>
-        {formik.touched.maxStay && formik.errors.maxStay ? (
-          <div className="text-red-600">{formik.errors.maxStay}</div>
-        ) : null}
-        <hr />
-        <TabTitle title="Availability" desc="" />
-        <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
-          <Label
-            htmlFor="advanceNotice"
-            className="col-span-1 col-start-1 flex items-center"
-          >
-            Advanced Notice
-          </Label>
-          <div className="col-span-1 col-start-3 flex items-center sm:col-span-3 sm:col-start-5 md:col-span-2 md:col-start-4">
-            <select
-              id="advanceNotice"
-              name="advanceNotice"
-               value={formik.values.advanceNotice}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              className="w-full rounded-md border p-2"
-            >
-              <option value="" disabled>
-                Select Advanced Notice
-              </option>
-              <option value="0">Same Day</option>
-              <option value="1">At Least 1 Day</option>
-              <option value="2">At Least 2 Days</option>
-              <option value="3">At Least 3 Days</option>
-              <option value="7">At Least 7 Days</option>
-            </select>
-          </div>
-        </div>
-        {formik.touched.advanceNotice && formik.errors.advanceNotice ? (
-          <div className="text-red-600">{formik.errors.advanceNotice}</div>
-        ) : null}
-        <hr />
-        <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
-          <Label
-            htmlFor="sameDayAdvancedNotice"
-            className="col-span-1 col-start-1 flex items-center"
-          >
-            Same Day Advanced Notice
-          </Label>
-          <div className="col-span-1 col-start-3 flex items-center sm:col-span-3 sm:col-start-5 md:col-span-2 md:col-start-4">
-            <select
-              id="sameDayAdvanceNotice"
-              name="sameDayAdvanceNotice"
-              // value={formik.values.sameDayAdvancedNotice}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              className="w-full rounded-md border p-2"
-            >
-              <option value="" disabled>
-                Select Same Day Advanced Notice
-              </option>
-              {hourAN.map((hour) => (
-                <option key={hour} value={hour}>
-                  {hour}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        {formik.touched.sameDayAdvanceNotice &&
-        formik.errors.sameDayAdvanceNotice ? (
-          <div className="text-red-600">
-            {formik.errors.sameDayAdvanceNotice}
-          </div>
-        ) : null}
-        <hr />
-        <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
-          <Label
-            htmlFor="preparationTime"
-            className="col-span-1 col-start-1 flex items-center"
-          >
-            Preparation Time
-          </Label>
-          <div className="col-span-1 col-start-3 flex items-center sm:col-span-3 sm:col-start-5 md:col-span-2 md:col-start-4">
-            <select
-              id="preparationTime"
-              name="preparationTime"
-              // value={formik.values.preparationTime}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              className="w-full rounded-md border p-2"
-            >
-              <option value="" disabled>
-                Select Preparation Time
-              </option>
-              {preparationTimeOptions.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <hr />
-        <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
-          <Label
-            htmlFor="availabilityWindow"
-            className="col-span-1 col-start-1 flex items-center"
-          >
-            Availability Window
-          </Label>
-          <div className="col-span-1 col-start-3 flex items-center sm:col-span-3 sm:col-start-5 md:col-span-2 md:col-start-4">
-            <select
-              id="availabilityWindow"
-              name="availabilityWindow"
-              // value={formik.values.availabilityWindow}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              className="w-full rounded-md border p-2"
-            >
-              <option value="" disabled>
-                Select Availability Window
-              </option>
-              {availabilityWindowOptions.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <hr />
+  return (
+    <EditorWrapper>
+      {/* {JSON.stringify(avaData)} */}
+      <form onSubmit={formik.handleSubmit}>
+        <h1 className="font-bold text-3xl">Availability</h1>
+        {/* <TabTitle title="Availability" desc="Information regarding availability of your property" /> */}
+        <hr className="mt-4" />
         <div>
+          <div className="mb-5 mt-5 flex items-center justify-between text-sm font-medium leading-6 text-gray-900">
+            <span>Instant Booking</span>
+            <label className="relative inline-flex cursor-pointer items-center space-x-2">
+              <input
+                type="checkbox"
+                className="hidden"
+                checked={formik.values.instantBooking}
+                onChange={() =>
+                  formik.setFieldValue("instantBooking", !formik.values.instantBooking)
+                }
+              />
+              <div
+                className={`h-6 w-12 bg-${formik.values.instantBooking ? "blue-500" : "gray-300"
+                  } rounded-full p-1 transition-transform duration-300`}
+              >
+                <div
+                  className={`h-4 w-4 transform rounded-full bg-white shadow-md ${formik.values.instantBooking ? "translate-x-6" : "translate-x-0"
+                    }`}
+                ></div>
+              </div>
+            </label>
+          </div>
+          <TabTitle title="Trip Length" desc="" />
+          <hr className="mt-4" />
           <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
             <Label
-              htmlFor="restrictedCheckIn"
+              htmlFor="minStay"
               className="col-span-1 col-start-1 flex items-center"
             >
-              Restricted Check-In
+              Minimum Stay
             </Label>
-            <div className="col-span-4 col-start-2 flex flex-wrap items-center">
-              {/* Create custom Toggle component or use your own implementation */}
-              <Toggle>Monday</Toggle>
-              <Toggle>Tuesday</Toggle>
-              <Toggle>Wednesday</Toggle>
-              <Toggle>Thursday</Toggle>
-              <Toggle>Friday</Toggle>
-              <Toggle>Saturday</Toggle>
-              <Toggle>Sunday</Toggle>
+            <div className="col-span-1 col-start-3 flex items-center sm:col-span-1 sm:col-start-5 md:col-span-1 md:col-start-4">
+              <Input
+                type="number"
+                className="w-full"
+                id="minStay"
+                name="minStay"
+                value={formik.values.minStay}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                min="0"
+                onWheel={(event) => event.currentTarget.blur()}
+              />
+            </div>
+          </div>
+          {formik.touched.minStay && formik.errors.minStay ? (
+            <div className="text-red-600">{formik.errors.minStay}</div>
+          ) : null}
+
+          <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
+            <Label
+              htmlFor="maxStay"
+              className="col-span-1 col-start-1 flex items-center"
+            >
+              Maximum Stay
+            </Label>
+            <div className="col-span-1 col-start-3 flex items-center sm:col-span-1 sm:col-start-5 md:col-span-1 md:col-start-4">
+              <Input
+                type="number"
+                className="w-full"
+                id="maxStay"
+                name="maxStay"
+                value={formik.values.maxStay}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                min="0"
+                onWheel={(event) => event.currentTarget.blur()}
+              />
+            </div>
+          </div>
+          {formik.touched.maxStay && formik.errors.maxStay ? (
+            <div className="text-red-600">{formik.errors.maxStay}</div>
+          ) : null}
+          <TabTitle title="Availability" desc="" />
+          <hr className="mt-4" />
+          <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
+            <Label
+              htmlFor="advanceNotice"
+              className="col-span-1 col-start-1 flex items-center"
+            >
+              Advanced Notice
+            </Label>
+            <div className="col-span-1 col-start-3 flex items-center sm:col-span-3 sm:col-start-5 md:col-span-2 md:col-start-4">
+              <select
+                id="advanceNotice"
+                name="advanceNotice"
+                value={formik.values.advanceNotice}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className="w-full rounded-md border p-2"
+              >
+                <option value="" disabled>
+                  Select Advanced Notice
+                </option>
+                <option value={0}>Same Day</option>
+                <option value={1}>At Least 1 Day</option>
+                <option value={2}>At Least 2 Days</option>
+                <option value={3}>At Least 3 Days</option>
+                <option value={7}>At Least 7 Days</option>
+              </select>
+            </div>
+          </div>
+          {formik.touched.advanceNotice && formik.errors.advanceNotice ? (
+            <div className="text-red-600">{formik.errors.advanceNotice}</div>
+          ) : null}
+          <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
+            <Label
+              htmlFor="sameDayAdvancedNotice"
+              className="col-span-1 col-start-1 flex items-center"
+            >
+              Same Day Advanced Notice
+            </Label>
+            <div className="col-span-1 col-start-3 flex items-center sm:col-span-3 sm:col-start-5 md:col-span-2 md:col-start-4">
+              <select
+                id="sameDayAdvanceNotice"
+                name="sameDayAdvanceNotice"
+                // value={formik.values.sameDayAdvancedNotice}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className="w-full rounded-md border p-2"
+              >
+                <option value="" disabled>
+                  Select Same Day Advanced Notice
+                </option>
+                {hourAN.map((hour) => (
+                  <option key={hour} value={hour}>
+                    {hour}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          {formik.touched.sameDayAdvanceNotice &&
+            formik.errors.sameDayAdvanceNotice ? (
+            <div className="text-red-600">
+              {formik.errors.sameDayAdvanceNotice}
+            </div>
+          ) : null}
+          <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
+            <Label
+              htmlFor="preparationTime"
+              className="col-span-1 col-start-1 flex items-center"
+            >
+              Preparation Time
+            </Label>
+            <div className="col-span-1 col-start-3 flex items-center sm:col-span-3 sm:col-start-5 md:col-span-2 md:col-start-4">
+              <select
+                id="preparationTime"
+                name="preparationTime"
+                // value={formik.values.preparationTime}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className="w-full rounded-md border p-2"
+              >
+                <option value="" disabled>
+                  Select Preparation Time
+                </option>
+                {preparationTimeOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
           <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
             <Label
-              htmlFor="restrictedCheckOut"
+              htmlFor="availabilityWindow"
               className="col-span-1 col-start-1 flex items-center"
             >
-              Restricted Check-Out
+              Availability Window
             </Label>
-            <div className="col-span-4 col-start-2 flex flex-wrap items-center">
-              {/* Create custom Toggle component or use your own implementation */}
-              <Toggle>Monday</Toggle>
-              <Toggle>Tuesday</Toggle>
-              <Toggle>Wednesday</Toggle>
-              <Toggle>Thursday</Toggle>
-              <Toggle>Friday</Toggle>
-              <Toggle>Saturday</Toggle>
-              <Toggle>Sunday</Toggle>
+            <div className="col-span-1 col-start-3 flex items-center sm:col-span-3 sm:col-start-5 md:col-span-2 md:col-start-4">
+              <select
+                id="availabilityWindow"
+                name="availabilityWindow"
+                // value={formik.values.availabilityWindow}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className="w-full rounded-md border p-2"
+              >
+                <option value="" disabled>
+                  Select Availability Window
+                </option>
+                {availabilityWindowOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
+          <div>
+            <TabTitle title="Restricted Days" desc="" />
+            <hr className="mt-4" />
+            <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
+              <Label
+                htmlFor="restrictedCheckIn"
+                className="col-span-1 col-start-1 flex items-center"
+              >
+                Restricted Check-In
+              </Label>
+              <div className="col-span-4 col-start-2 flex flex-wrap items-center">
+                {/* Create custom Toggle component or use your own implementation */}
+                <Toggle>Monday</Toggle>
+                <Toggle>Tuesday</Toggle>
+                <Toggle>Wednesday</Toggle>
+                <Toggle>Thursday</Toggle>
+                <Toggle>Friday</Toggle>
+                <Toggle>Saturday</Toggle>
+                <Toggle>Sunday</Toggle>
+              </div>
+            </div>
+            <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
+              <Label
+                htmlFor="restrictedCheckOut"
+                className="col-span-1 col-start-1 flex items-center"
+              >
+                Restricted Check-Out
+              </Label>
+              <div className="col-span-4 col-start-2 flex flex-wrap items-center">
+                {/* Create custom Toggle component or use your own implementation */}
+                <Toggle>Monday</Toggle>
+                <Toggle>Tuesday</Toggle>
+                <Toggle>Wednesday</Toggle>
+                <Toggle>Thursday</Toggle>
+                <Toggle>Friday</Toggle>
+                <Toggle>Saturday</Toggle>
+                <Toggle>Sunday</Toggle>
+              </div>
+            </div>
+          </div>
+          <hr className="mb-5" />
+          <EditorSaveButton dirty={formik.dirty} submitted={submitted} isLoading={isLoading} />
+
         </div>
-        <hr />
-        <hr className="mb-5" />
-                    <EditorSaveButton submitted={submitted} isLoading={isLoading} />
-                    
-                </div>
-              
-            </form>
-            </EditorWrapper>
+
+      </form>
+    </EditorWrapper>
   );
 }
