@@ -14,6 +14,7 @@ import clsx from "clsx";
 import EditorWrapper from './editor-container-wrapper';
 import AmenityEditor from '../amenities/amenity-editor';
 import AmenityDataTable from '../amenities/amenity-data-table';
+import BedroomList from '../bedroom-list';
 
 export default function ListingDetails({ data }) {
   const id = data['id'];
@@ -205,6 +206,8 @@ export default function ListingDetails({ data }) {
           </div>
         </div>
         <hr className="mt-5 mb-5" />
+        <BedroomList totalBedrooms={4} />
+
         <AmenityDataTable />
         <div className='mt-4'>
           <EditorSaveButton dirty={formik.dirty} submitted={submitted} isLoading={isLoading} />

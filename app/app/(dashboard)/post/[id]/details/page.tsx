@@ -25,7 +25,9 @@ export default async function listingDetailsPage({ params }: { params: { id: str
   }
   return (
 
-
-    // <ListingDetails data={post} />
+    <div>
+      <ListingDetails data={post} />
+    </div>
+    //
   )
 }
