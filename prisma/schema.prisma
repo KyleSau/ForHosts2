@@ -99,7 +99,7 @@ model StripePayment {
 model Image {
   id         String   @id @default(cuid())
   url        String
-  blurHash   String
+  // blurHash   String
   uploadedAt DateTime
   size       String
   fileName   String
@@ -189,22 +189,44 @@ model Pricing {
 }
 
 model Availability {
-  id                   String  @id @default(cuid())
-  instantBooking       Boolean
-  minStay              Int // days (1)
-  maxStay              Int // days (365)
-  advanceNotice        Int // days (0 - 7)
-  sameDayAdvanceNotice Int // hours (6AM - Midnight)
-  preparationTime      Int // days (0 - 2 days)
-  availabilityWindow   Int // months (3 - 24 months)
+  id                   String   @id @default(cuid())
+  instantBooking       Boolean?
+  minStay              Int? // days (1)
+  maxStay              Int? // days (365)
+  advanceNotice        Int? // days (0 - 7)
+  sameDayAdvanceNotice Int? // hours (6AM - Midnight)
+  preparationTime      Int? // days (0 - 2 days)
+  availabilityWindow   Int? // months (3 - 24 months)
   restrictedCheckIn    Int[] // days of the week restricted [0...6]
   restrictedCheckOut   Int[] // days of the week restricted [0...6]
-  checkInWindowStart   String // "HH:mm"
-  checkInWindowEnd     String // "HH:mm"
-  checkInTime          String // "HH:mm"
-  checkOutTime         String // "HH:mm"
+  checkInWindowStart   String? // "HH:mm"
+  checkInWindowEnd     String? // "HH:mm"
+  checkInTime          String? // "HH:mm"
+  checkOutTime         String? // "HH:mm"
 
   post Post?
+}
+
+// schema.prisma
+
+model Bedroom {
+  id                String           @id @default(cuid())
+  double            Int?             @default(0)
+  queen             Int?             @default(0)
+  single            Int?             @default(0)
+  sofaBed           Int?             @default(0)
+  king              Int?             @default(0)
+  smallDouble       Int?             @default(0)
+  couch             Int?             @default(0)
+  bunkBed           Int?             @default(0)
+  floorMattress     Int?             @default(0)
+  airMattress       Int?             @default(0)
+  crib              Int?             @default(0)
+  toddlerBed        Int?             @default(0)
+  hammock           Int?             @default(0)
+  waterBed          Int?             @default(0)
+  PropertyDetails   PropertyDetails? @relation(fields: [propertyDetailsId], references: [id])
+  propertyDetailsId String?
 }
 
 model PropertyRules {
@@ -224,13 +246,13 @@ model PropertyRules {
 }
 
 model PropertyDetails {
-  id           String   @id @default(cuid())
-  propertyType String
-  maxGuests    Int?
-  bedrooms     Int?
-  bathrooms    Int?
-  totalBeds    Int?
-  amenities    String[]
+  id            String    @id @default(cuid())
+  propertyType  String
+  maxGuests     Int?
+  totalBedrooms Int?
+  bathrooms     Int?
+  bedrooms      Bedroom[]
+  amenities     String[]
 
   post Post?
 }
@@ -248,12 +270,13 @@ model AfterBookingInfo {
 
 model Calendar {
   id        String   @id @default(cuid())
-  postId    String
   name      String
   url       String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Post      Post     @relation(fields: [postId], references: [id])
+
+  postId String
+  Post   Post   @relation(fields: [postId], references: [id])
 
   @@index([postId])
 }
