@@ -28,10 +28,7 @@ export const getReservationsByPostId = async (postId: string) => {
         post: {
           id: postId,
         },
-        OR: [
-          { status: 'PENDING' },
-          { status: 'CONFIRMED' },
-        ],
+        OR: [{ status: "PENDING" }, { status: "CONFIRMED" }],
       },
       include: {
         post: true,
@@ -171,7 +168,7 @@ export const updateSite = withSiteAuth(
         const file = formData.get(key) as File;
         const filename = `${nanoid()}.${file.type.split("/")[1]}`;
 
-        console.log('filename: ' + filename);
+        console.log("filename: " + filename);
 
         const { url } = await put(filename, file, {
           access: "public",
@@ -266,8 +263,8 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
 
   const response = await prisma.post.create({
     data: {
-      title: '',
-      description: '',
+      title: "",
+      description: "",
       site: {
         connect: {
           id: site.id,
@@ -281,13 +278,13 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
       location: {
         create: {
           // Fill in default or form values for Location fields
-          street: '',
-          zip: '',
-          city: '',
-          state: '',
-          country: '',
-          longitude: '',
-          latitude: '',
+          street: "",
+          zip: "",
+          city: "",
+          state: "",
+          country: "",
+          longitude: "",
+          latitude: "",
           radius: 0,
         },
       },
@@ -328,18 +325,18 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
           eventsAllowed: false,
           smokingAllowed: false,
           photographyAllowed: false,
-          checkInMethod: '',
+          checkInMethod: "",
           quietHoursStart: "00:00",
           quietHoursEnd: "00:00",
-          interactionPreferences: '',
-          additionalRules: '',
-          cancellationPolicy: '',
+          interactionPreferences: "",
+          additionalRules: "",
+          cancellationPolicy: "",
         },
       },
       propertyDetails: {
         create: {
           // Fill in default or form values for PropertyDetails fields
-          propertyType: '',
+          propertyType: "",
           maxGuests: 0,
           bedrooms: 0,
           bathrooms: 0,
@@ -350,11 +347,11 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
       afterBookingInfo: {
         create: {
           // Fill in default or form values for AfterBookingInfo fields
-          wifiName: '',
-          wifiPassword: '',
-          houseManual: '',
-          checkoutInstructions: '',
-          afterBookingDirections: '',
+          wifiName: "",
+          wifiPassword: "",
+          houseManual: "",
+          checkoutInstructions: "",
+          afterBookingDirections: "",
         },
       },
     },
@@ -369,7 +366,7 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
 });
 
 export const updatePost = async (data: Post) => {
-  console.log('data: ' + JSON.stringify(data))
+  console.log("data: " + JSON.stringify(data));
   const session = await getSession();
   if (!session?.user.id) {
     return { error: "Not authenticated" };
@@ -404,7 +401,7 @@ export const updatePost = async (data: Post) => {
       data: {
         title: data.title,
         description: data.description,
-      }
+      },
     });
 
     if (data.location) {
@@ -422,10 +419,6 @@ export const updatePost = async (data: Post) => {
     }
 
     if (data.availability) {
-      console.log('uh oh we need all the stuff');
-      console.log('data availability: ' + data.availability);
-      // console.log('post availability!.id: ', post.availability!.id);
-      // console.log('availability: ' + JSON.stringify(post.availability));
       await prisma.availability.update({
         where: { id: post.availability!.id },
 
@@ -455,15 +448,17 @@ export const updatePost = async (data: Post) => {
     }
 
     return updatedPost;
-
   } catch (error: any) {
-    console.error('Error updating post and its relations:', error);
+    console.error("Error updating post and its relations:", error);
     return { error: error.message };
   }
 };
 
-
-export const getPosts = async (userId: string, siteId: string | undefined, limit = null) => {
+export const getPosts = async (
+  userId: string,
+  siteId: string | undefined,
+  limit = null,
+) => {
   const posts = await prisma.post.findMany({
     where: {
       userId: userId as string,
@@ -476,9 +471,9 @@ export const getPosts = async (userId: string, siteId: string | undefined, limit
       site: true,
       images: {
         orderBy: {
-          orderIndex: "asc"
-        }
-      }
+          orderIndex: "asc",
+        },
+      },
       // and other tables
     },
     ...(limit ? { take: limit } : {}),
@@ -502,30 +497,29 @@ export const updatePostMetadata = withPostAuth(
       let response;
       if (key === "image") {
         const files = formData.getAll("image") as File[]; // This will retrieve all the files
-        const urls = await Promise.all(files.map(async (file) => {
-          const filename = `${nanoid()}.${file.type.split("/")[1]}`;
-          console.log('post filename: ' + filename);
+        const urls = await Promise.all(
+          files.map(async (file) => {
+            const filename = `${nanoid()}.${file.type.split("/")[1]}`;
+            console.log("post filename: " + filename);
 
-          const SIZE_LIMIT = 50000;
-          if (file.size > SIZE_LIMIT) {
+            const SIZE_LIMIT = 50000;
+            if (file.size > SIZE_LIMIT) {
+            }
+            const { url } = await put(filename, file, {
+              access: "public",
+            });
 
-          }
-          const { url } = await put(filename, file, {
-            access: "public",
-          });
-
-          const blurhash = await getBlurDataURL(url);
-          return { url, blurhash };
-        }));
+            const blurhash = await getBlurDataURL(url);
+            return { url, blurhash };
+          }),
+        );
 
         response = await prisma.post.update({
           where: {
             id: post.id,
           },
-          data: {
-
-          },
-        })
+          data: {},
+        });
       } else {
         response = await prisma.post.update({
           where: {
@@ -648,7 +642,6 @@ export const editUser = async (
     }
   }
 };
-
 
 export const getReservations = async (limit: number = 10) => {
   const session = await getSession();
