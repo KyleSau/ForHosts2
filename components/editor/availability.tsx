@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { updatePost, updatePropertyPriceInfo } from "@/lib/actions";
+import { updatePost } from "@/lib/actions";
 import TabTitle from "./tab-title";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
@@ -155,7 +155,7 @@ export default function Availability({ data }) {
 
   return (
     <EditorWrapper>
-      {/* {JSON.stringify(avaData)} */}
+      {JSON.stringify(avaData)}
       <form onSubmit={formik.handleSubmit}>
         <h1 className="font-bold text-3xl">Availability</h1>
         {/* <TabTitle title="Availability" desc="Information regarding availability of your property" /> */}

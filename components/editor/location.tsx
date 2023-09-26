@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import TabTitle from "./tab-title";
 import { useTransition } from "react";
 import EditorSaveButton from "./editor-save-button";
+import EditorWrapper from "./editor-container-wrapper";
 export default function Location() {
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -70,43 +71,44 @@ export default function Location() {
     };
   }, [formik.dirty]);
   return (
-    <div>
-      <TabTitle
-        title="Address Information"
-        desc="Address Information regarding your listing (This will not be shown to anyone until 24 hours before check-in)"
-      />
-      <div className="mt-6 grid grid-cols-2 gap-4">
-        <div className="space-y-4">
-          <label
-            htmlFor="location"
-            className="block text-sm font-medium leading-6  text-gray-900"
-          >
-            Street Address
-          </label>
-          <input
-            type="text"
-            name="location"
-            id="location"
-            className={` w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
-              formik.touched.location && formik.errors.location
+    <EditorWrapper>
+      <div>
+        <TabTitle
+          title="Address Information"
+          desc="Address Information regarding your listing (This will not be shown to anyone until 24 hours before check-in)"
+        />
+        <div className="mt-6 grid grid-cols-2 gap-4">
+          <div className="space-y-4">
+            <label
+              htmlFor="location"
+              className="block text-sm font-medium leading-6  text-gray-900"
+            >
+              Street Address
+            </label>
+            <input
+              type="text"
+              name="location"
+              id="location"
+              className={` w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.location && formik.errors.location
                 ? "border-red-500"
                 : ""
-            }`}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.location}
-          />
-          {formik.touched.title && formik.errors.title && (
-            <div className="mt-2 text-sm text-red-600">
-              {formik.errors.location}
-            </div>
-          )}
+                }`}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.location}
+            />
+            {formik.touched.title && formik.errors.title && (
+              <div className="mt-2 text-sm text-red-600">
+                {formik.errors.location}
+              </div>
+            )}
+          </div>
+        </div>
+        <hr className="mt-8" />
+        <div className="mt-4">
+          <EditorSaveButton dirty={formik.dirty} submitted={submitted} isLoading={isLoading} />
         </div>
       </div>
-      <hr className="mt-8" />
-      <div className="mt-4">
-        <EditorSaveButton submitted={submitted} isLoading={isLoading} />
-      </div>
-    </div>
+    </EditorWrapper>
   );
 }

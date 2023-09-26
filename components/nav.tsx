@@ -114,7 +114,13 @@ export default function Nav({ children }: { children: ReactNode }) {
           icon: <ArrowLeft width={18} />,
           suboptions: [],
         },
-
+        {
+          name: "Overview",
+          href: `/post/${id}`,
+          isActive: segments[2] === undefined,
+          icon: <ScrollText width={18} />,
+          suboptions: [],
+        },
         {
           name: "Description",
           href: `/post/${id}/description`,

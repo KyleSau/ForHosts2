@@ -23,7 +23,6 @@ export const uploadBlobMetadata = async (blobResult: BlobResult, orderIndex: num
     const response = await prisma.image.create({
       data: {
         url: blobResult.url,
-        blurHash: await getBlurDataURL(blobResult.url),
         uploadedAt: blobResult.uploadedAt,
         size: blobResult.size.toString(),
         fileName: blobResult.pathname,
@@ -53,7 +52,7 @@ export const updateBlobMetadata = async (cuid: string, updatedFields: any) => {
     console.log("cuid: ", cuid);
     const response = await prisma.image.update({
       where: {
-        id: cuid    
+        id: cuid
       },
       data: {
         orderIndex: updatedFields.orderIndex
@@ -96,7 +95,7 @@ export const deleteBlobMetadata = async (id: string) => {
   return response;
 };
 
-export const listAllBlobsInStore = async () => { 
+export const listAllBlobsInStore = async () => {
   console.log("listAllBlobsInStoreAction called");
   const { blobs } = await list();
   // console.log("type of blobs: ", typeof(blobs));
@@ -109,14 +108,14 @@ export const listAllBlobsInStore = async () => {
 export const deleteBlobFromStore = async (urlToDelete: string) => {
   console.log("deleteBlobFromStore called");
 
-  if(urlToDelete !== null) {
+  if (urlToDelete !== null) {
     const deletedBlob: any = await del(urlToDelete);
     console.log("deletedBlob: ", deletedBlob);
 
     const blobUrl = deletedBlob?.url;
     console.log("blobUrl: ", blobUrl);
 
-    if(urlToDelete === blobUrl) {
+    if (urlToDelete === blobUrl) {
       const successJson = {
         message: "Success",
         ...deletedBlob
