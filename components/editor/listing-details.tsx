@@ -207,7 +207,8 @@ export default function ListingDetails({ data }) {
         </div>
         <hr className="mt-5 mb-5" />
         <BedroomList totalBedrooms={4} />
-
+        <div className='text-slate-800 text-xl'>Amenities</div>
+        <hr />
         <AmenityDataTable />
         <div className='mt-4'>
           <EditorSaveButton dirty={formik.dirty} submitted={submitted} isLoading={isLoading} />
