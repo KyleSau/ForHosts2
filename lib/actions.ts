@@ -369,6 +369,7 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
 });
 
 export const updatePost = async (data: Post) => {
+  console.log(JSON.stringify(data))
   const session = await getSession();
   if (!session?.user.id) {
     return { error: "Not authenticated" };
