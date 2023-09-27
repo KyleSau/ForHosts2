@@ -10,18 +10,18 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 
 
 export default function RootLayout({
-  
+
   children,
 }: {
   children: React.ReactNode;
-  }) {
-    const googleAPIKey = process.env.GOOGLE_MAP_API_KEY;
+}) {
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={clsx(cal.variable, inter.variable)}>
-        
+
         <Providers>
-        <script src={googleAPIKey} async />
+          <script src={process.env.GOOGLE_MAP_API_KEY} async />
           {children}
           <Analytics />
         </Providers>
