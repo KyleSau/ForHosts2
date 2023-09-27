@@ -10,8 +10,8 @@ import { Input } from '../ui/input';
 
 export default function InfoForGuests({ data }) {
 
-   
-   
+
+
 
     const validationSchema = Yup.object().shape({
         maxGuests: Yup.number().required('Maximum guests is required').min(1, 'Must be at least 1'),
@@ -20,9 +20,9 @@ export default function InfoForGuests({ data }) {
 
     const formik = useFormik({
         initialValues: {
-            id: id,
-            site: data.site,
-            siteId: data.siteId,
+            // id: id,
+            // site: data.site,
+            // siteId: data.siteId,
             title: '',
             description: '',
             maxGuests: '',
