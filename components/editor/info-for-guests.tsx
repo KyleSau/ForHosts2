@@ -10,8 +10,8 @@ import { Input } from '../ui/input';
 
 export default function InfoForGuests({ data }) {
 
-    const id = data["id"];
-    const desc = data["description"];
+   
+   
 
     const validationSchema = Yup.object().shape({
         maxGuests: Yup.number().required('Maximum guests is required').min(1, 'Must be at least 1'),
