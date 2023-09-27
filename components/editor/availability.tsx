@@ -137,6 +137,10 @@ export default function Availability({ data }) {
     },
   });
 
+  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  const togglesArray = days.map(day => <Toggle className="mr-2 mb-2" key={day}>{day}</Toggle>);
+
+
   const handleBeforeUnload = (e) => {
     if (formik.dirty) {
       e.preventDefault();
@@ -155,7 +159,7 @@ export default function Availability({ data }) {
 
   return (
     <EditorWrapper>
-      {JSON.stringify(avaData)}
+      {/* {JSON.stringify(avaData)} */}
       <form onSubmit={formik.handleSubmit}>
         <h1 className="font-bold text-3xl">Availability</h1>
         {/* <TabTitle title="Availability" desc="Information regarding availability of your property" /> */}
@@ -365,13 +369,7 @@ export default function Availability({ data }) {
               </Label>
               <div className="col-span-4 col-start-2 flex flex-wrap items-center">
                 {/* Create custom Toggle component or use your own implementation */}
-                <Toggle>Monday</Toggle>
-                <Toggle>Tuesday</Toggle>
-                <Toggle>Wednesday</Toggle>
-                <Toggle>Thursday</Toggle>
-                <Toggle>Friday</Toggle>
-                <Toggle>Saturday</Toggle>
-                <Toggle>Sunday</Toggle>
+                {togglesArray}
               </div>
             </div>
             <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
@@ -383,13 +381,7 @@ export default function Availability({ data }) {
               </Label>
               <div className="col-span-4 col-start-2 flex flex-wrap items-center">
                 {/* Create custom Toggle component or use your own implementation */}
-                <Toggle>Monday</Toggle>
-                <Toggle>Tuesday</Toggle>
-                <Toggle>Wednesday</Toggle>
-                <Toggle>Thursday</Toggle>
-                <Toggle>Friday</Toggle>
-                <Toggle>Saturday</Toggle>
-                <Toggle>Sunday</Toggle>
+                {togglesArray}
               </div>
             </div>
           </div>
