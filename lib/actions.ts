@@ -5,6 +5,7 @@ import { Post, Site } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { withPostAuth, withSiteAuth } from "./auth";
 import { getSession } from "@/lib/auth";
+import approximateLocation from "@/lib/utils/geo"
 import {
   addDomainToVercel,
   // getApexDomain,
@@ -404,7 +405,16 @@ export const updatePost = async (data: Post) => {
       },
     });
 
+    // LocationUpdateRequest
     if (data.location) {
+      const { longitude, latitude, radius } = location;
+      const randomizedLocation = approximateLocation(longitude, latitude, radius ?? 0);
+
+      console.log('radius: ', radius);
+
+      data.location.longitude = randomizedLocation.lng;
+      data.location.latitude = randomizedLocation.lat;
+
       await prisma.location.update({
         where: { id: post.location!.id },
         data: data.location,

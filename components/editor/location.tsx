@@ -2,8 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import TabTitle from "./tab-title";
-import { useTransition } from "react";
 import EditorSaveButton from "./editor-save-button";
 import EditorWrapper from "./editor-container-wrapper";
 import PlacesAutocomplete, {
@@ -13,34 +11,19 @@ import PlacesAutocomplete, {
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { updatePost } from "@/lib/actions";
-function approximateLocation(lat: number, lng: number, maxOffsetInKm: number) {
-  const latRadian = lat * (Math.PI / 180);
-  const lngRadian = lng * (Math.PI / 180);
-  const earthRadius = 6371;
-  const randomDirection = Math.random() * 2 * Math.PI;
-  const randomDistance = Math.random() * maxOffsetInKm;
-  const deltaLat = (randomDistance / earthRadius) * (180 / Math.PI) / Math.cos(latRadian);
-  const deltaLng = (randomDistance / earthRadius) * (180 / Math.PI) / Math.cos(lngRadian);
-  const newLat = lat + deltaLat * Math.sin(randomDirection);
-  const newLng = lng + deltaLng * Math.cos(randomDirection);
+import dynamic from 'next/dynamic'
 
-  return { lat: newLat, lng: newLng };
-}
+const Map = dynamic(() => import('@/components/users-sites/open-street-map'), {
+  ssr: false,
+})
+
 export default function Location({ data }) {
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
 
   const validationSchema = Yup.object().shape({
-    // title: Yup.string().required("Title is required"),
-    // description: Yup.string().required("Description is required"),
-    // bedrooms: Yup.number().required('Number of bedrooms is required').min(1, 'Must be at least 1'),
-    // bathrooms: Yup.number().required('Number of bathrooms is required').min(1, 'Must be at least 1'),
     address: Yup.string().required("Address is required"),
-    // streetAddress: Yup.string().required('Street address is required'),
-    // city: Yup.string().required('City is required'),
-    // region: Yup.string().required('State / Province is required'),
-    // postalCode: Yup.string().required('ZIP / Postal code is required'),
   });
   const locData = data.location;
   const formik = useFormik({
@@ -56,21 +39,21 @@ export default function Location({ data }) {
       setSubmitted(false);
       try {
         const results = await geocodeByAddress(values.address);
-        const latLng = await getLatLng(results[0]);
-        const proximity = approximateLocation(latLng.lat, latLng.lng, values.radius);
+        const coordinates = await getLatLng(results[0]);
+        // const proximity = approximateLocation(coordinates.lat, coordinates.lng, values.radius);
         const transformedValues = {
           id: values.id,
           location: {
-            address: values.address,
-            radius: values.radius,
-            longitude: proximity.lng.toString(),
-            latitude: proximity.lat.toString(),
+            address: values.address ?? locData.address,
+            radius: values.radius ?? locData.radius,
+            longitude: coordinates.lng.toString(),
+            latitude: coordinates.lat.toString(),
           },
         };
 
-
         const result = await updatePost(transformedValues);
         if (result) {
+
           console.log("Post updated successfully:", result);
           setSubmitted(true);
           setIsLoading(false);
@@ -177,6 +160,7 @@ export default function Location({ data }) {
               />
             </div>
           </div>
+
           <EditorSaveButton
             dirty={formik.dirty}
             submitted={submitted}
@@ -184,6 +168,7 @@ export default function Location({ data }) {
           />
         </div>
       </form>
+      <Map lat={data.location.latitude} lng={data.location.longitude} />
     </EditorWrapper>
   );
 }
