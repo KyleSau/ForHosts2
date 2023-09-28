@@ -178,11 +178,11 @@ model Pricing {
   id              String @id @default(cuid())
   price           Int?
   weekendPrice    Int?
-  cleaningFee     Int?   @default(0)
-  securityDeposit Int?   @default(0)
-  petFee          Int?   @default(0)
-  weeklyDiscount  Float? @default(0)
-  monthlyDiscount Float? @default(0)
+  cleaningFee     Int?
+  securityDeposit Int?
+  petFee          Int?
+  weeklyDiscount  Float?
+  monthlyDiscount Float?
 
   post Post?
 
@@ -266,7 +266,7 @@ model PropertyDetails {
   totalBedrooms Int?      @default(1)
   bathrooms     Int?      @default(1)
   bedrooms      Bedroom[]
-  amenities     String[]
+  amenities     String[]  @default([])
 
   post Post?
 
