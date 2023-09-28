@@ -36,7 +36,7 @@ export default function Location({ data }) {
     // description: Yup.string().required("Description is required"),
     // bedrooms: Yup.number().required('Number of bedrooms is required').min(1, 'Must be at least 1'),
     // bathrooms: Yup.number().required('Number of bathrooms is required').min(1, 'Must be at least 1'),
-    street: Yup.string().required("Street Address is required"),
+    address: Yup.string().required("Address is required"),
     // streetAddress: Yup.string().required('Street address is required'),
     // city: Yup.string().required('City is required'),
     // region: Yup.string().required('State / Province is required'),
@@ -48,20 +48,20 @@ export default function Location({ data }) {
       id: data.id,
       locationId: locData.id,
       radius: locData.radius,
-      street: locData.street,
+      address: locData.address,
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       setIsLoading(true);
       setSubmitted(false);
       try {
-        const results = await geocodeByAddress(values.street);
+        const results = await geocodeByAddress(values.address);
         const latLng = await getLatLng(results[0]);
         const proximity = approximateLocation(latLng.lat, latLng.lng, values.radius);
         const transformedValues = {
           id: values.id,
           location: {
-            street: values.street,
+            address: values.address,
             radius: values.radius,
             longitude: proximity.lng.toString(),
             latitude: proximity.lat.toString(),
@@ -103,15 +103,15 @@ export default function Location({ data }) {
       <form onSubmit={formik.handleSubmit}>
         <div className="space-y-4">
           <label
-            htmlFor="street"
+            htmlFor="address"
             className="block text-sm font-medium leading-6 text-gray-900"
           >
-            Street Address
+            Address
           </label>
           <PlacesAutocomplete
-            value={formik.values.street}
-            onChange={(address) => formik.setFieldValue("street", address)}
-            onSelect={(address) => formik.setFieldValue("street", address)}
+            value={formik.values.address}
+            onChange={(address) => formik.setFieldValue("address", address)}
+            onSelect={(address) => formik.setFieldValue("address", address)}
           >
             {({
               getInputProps,
@@ -123,9 +123,9 @@ export default function Location({ data }) {
                 <input
                   {...getInputProps({
                     placeholder: "Search for an address...",
-                    className: `w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.street && formik.errors.street
-                        ? "border-red-500"
-                        : ""
+                    className: `w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.address && formik.errors.address
+                      ? "border-red-500"
+                      : ""
                       }`,
                   })}
                 />
@@ -149,9 +149,9 @@ export default function Location({ data }) {
               </div>
             )}
           </PlacesAutocomplete>
-          {formik.touched.street && formik.errors.street && (
+          {formik.touched.address && formik.errors.address && (
             <div className="mt-2 text-sm text-red-600">
-              {formik.errors.street}
+              {formik.errors.address}
             </div>
           )}
           <hr />

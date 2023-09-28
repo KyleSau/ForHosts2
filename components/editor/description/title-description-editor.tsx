@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useEditor, EditorContent } from "@tiptap/react";
+import { useEditor, EditorContent, FloatingMenu } from "@tiptap/react";
 import { TiptapEditorProps } from "../props";
 import { TiptapExtensions } from "../extensions";
 import { useDebounce } from "use-debounce";
@@ -208,7 +208,7 @@ export default function TitleDescriptionEditor({ post }: { post: PostWithSite })
             </div>
             <Label>Description</Label>
             {editor && <EditorBubbleMenu editor={editor} />}
-            <EditorContent type="textarea" className="border border-gray-200" editor={editor} />
+            <EditorContent type="textarea" className="h-96 px-1 py-1 overflow-scroll border border-gray-200 rounded-md" editor={editor} />
         </div>
     );
 }
