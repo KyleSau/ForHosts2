@@ -10,6 +10,8 @@ import PlacesAutocomplete, {
 } from "react-places-autocomplete";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
+
+import { PlusCircle, MinusCircle, XCircle } from "lucide-react";
 import { updatePost } from "@/lib/actions";
 import dynamic from 'next/dynamic'
 
@@ -20,7 +22,6 @@ const Map = dynamic(() => import('@/components/users-sites/open-street-map'), {
 export default function Location({ data }) {
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
 
   const validationSchema = Yup.object().shape({
     address: Yup.string().required("Address is required"),
@@ -41,6 +42,12 @@ export default function Location({ data }) {
         const results = await geocodeByAddress(values.address);
         const coordinates = await getLatLng(results[0]);
         // const proximity = approximateLocation(coordinates.lat, coordinates.lng, values.radius);
+        // const latLng = await getLatLng(results[0]);
+        // const proximity = approximateLocation(
+        //   latLng.lat,
+        //   latLng.lng,
+        //   values.radius,
+        // );
         const transformedValues = {
           id: values.id,
           location: {
@@ -51,6 +58,8 @@ export default function Location({ data }) {
           },
         };
 
+        console.log('transformedValues: ', transformedValues);
+
         const result = await updatePost(transformedValues);
         if (result) {
 
@@ -58,8 +67,6 @@ export default function Location({ data }) {
           setSubmitted(true);
           setIsLoading(false);
         }
-
-
       } catch (error) {
         console.error("Error geocoding address:", error);
         setSubmitted(false);
@@ -73,6 +80,13 @@ export default function Location({ data }) {
       e.returnValue =
         "You have unsaved changes. Are you sure you want to leave?";
     }
+  };
+  const incrementRadius = () => {
+    formik.setFieldValue("radius", formik.values.radius + 1);
+  };
+
+  const decrementRadius = () => {
+    formik.setFieldValue("radius", Math.max(0, formik.values.radius - 1));
   };
   useEffect(() => {
     window.addEventListener("beforeunload", handleBeforeUnload);
@@ -143,32 +157,43 @@ export default function Location({ data }) {
               htmlFor="radius"
               className="col-span-1 col-start-1 flex items-center"
             >
-              How far out should we randomize the location of your property until someone has booked (in miles)
+              How far out should we randomize the location of your property
+              until someone has booked (in miles)
             </Label>
-            <div className="col-span-1 col-start-3 flex max-w-[200px] items-center sm:col-span-3 sm:col-start-5 md:col-span-2 md:col-start-4">
+            <div className="col-span-2 flex items-center justify-end">
+              <div className="flex items-center space-x-2 ml-auto"> {/* Add ml-auto here */}
+                <button
+                  type="button"
+                  onClick={decrementRadius}
+                  className={`focus:outline-none ${!formik.values.radius && "text-gray-400"
+                    }`}
+                >
+                  <MinusCircle strokeWidth={1} size={34} />
+                </button>
+                <span className="pl-4 pr-4 text-gray-700">
+                  {formik.values.radius || 0}
+                </span>
+                <button
+                  type="button"
+                  onClick={incrementRadius}
+                  className="ml-5 text-gray-700 focus:outline-none"
+                >
+                  <PlusCircle strokeWidth={1} size={34} />
+                </button>
 
-              <Input
-                type="number"
-                className="w-full"
-                id="radius"
-                name="radius"
-                value={formik.values.radius}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
+              </div>
 
-                onWheel={(event) => event.currentTarget.blur()}
-              />
             </div>
           </div>
-
+          <hr />
           <EditorSaveButton
             dirty={formik.dirty}
             submitted={submitted}
             isLoading={isLoading}
           />
-        </div>
-      </form>
+        </div >
+      </form >
       <Map lat={data.location.latitude} lng={data.location.longitude} />
-    </EditorWrapper>
+    </EditorWrapper >
   );
 }

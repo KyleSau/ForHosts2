@@ -407,13 +407,18 @@ export const updatePost = async (data: Post) => {
 
     // LocationUpdateRequest
     if (data.location) {
-      const { longitude, latitude, radius } = location;
-      const randomizedLocation = approximateLocation(longitude, latitude, radius ?? 0);
+      const { longitude, latitude, radius } = data.location;
+      const randomizedLocation = approximateLocation(parseFloat(latitude), parseFloat(longitude), radius ?? 0);
 
       console.log('radius: ', radius);
 
-      data.location.longitude = randomizedLocation.lng;
-      data.location.latitude = randomizedLocation.lat;
+      const lng: string = randomizedLocation.lng + '';
+      const lat: string = randomizedLocation.lat + '';
+
+      data.location.longitude = lng
+      data.location.latitude = lat
+
+      console.log('ideal location: ', JSON.stringify(data.location));
 
       await prisma.location.update({
         where: { id: post.location!.id },
