@@ -12,6 +12,8 @@ import PlacesAutocomplete, {
 } from "react-places-autocomplete";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
+
+import { PlusCircle, MinusCircle, XCircle } from "lucide-react";
 import { updatePost } from "@/lib/actions";
 function approximateLocation(lat: number, lng: number, maxOffsetInKm: number) {
   const latRadian = lat * (Math.PI / 180);
@@ -19,8 +21,10 @@ function approximateLocation(lat: number, lng: number, maxOffsetInKm: number) {
   const earthRadius = 6371;
   const randomDirection = Math.random() * 2 * Math.PI;
   const randomDistance = Math.random() * maxOffsetInKm;
-  const deltaLat = (randomDistance / earthRadius) * (180 / Math.PI) / Math.cos(latRadian);
-  const deltaLng = (randomDistance / earthRadius) * (180 / Math.PI) / Math.cos(lngRadian);
+  const deltaLat =
+    ((randomDistance / earthRadius) * (180 / Math.PI)) / Math.cos(latRadian);
+  const deltaLng =
+    ((randomDistance / earthRadius) * (180 / Math.PI)) / Math.cos(lngRadian);
   const newLat = lat + deltaLat * Math.sin(randomDirection);
   const newLng = lng + deltaLng * Math.cos(randomDirection);
 
@@ -29,7 +33,6 @@ function approximateLocation(lat: number, lng: number, maxOffsetInKm: number) {
 export default function Location({ data }) {
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
 
   const validationSchema = Yup.object().shape({
     // title: Yup.string().required("Title is required"),
@@ -57,7 +60,11 @@ export default function Location({ data }) {
       try {
         const results = await geocodeByAddress(values.address);
         const latLng = await getLatLng(results[0]);
-        const proximity = approximateLocation(latLng.lat, latLng.lng, values.radius);
+        const proximity = approximateLocation(
+          latLng.lat,
+          latLng.lng,
+          values.radius,
+        );
         const transformedValues = {
           id: values.id,
           location: {
@@ -68,15 +75,12 @@ export default function Location({ data }) {
           },
         };
 
-
         const result = await updatePost(transformedValues);
         if (result) {
           console.log("Post updated successfully:", result);
           setSubmitted(true);
           setIsLoading(false);
         }
-
-
       } catch (error) {
         console.error("Error geocoding address:", error);
         setSubmitted(false);
@@ -90,6 +94,13 @@ export default function Location({ data }) {
       e.returnValue =
         "You have unsaved changes. Are you sure you want to leave?";
     }
+  };
+  const incrementRadius = () => {
+    formik.setFieldValue("radius", formik.values.radius + 1);
+  };
+
+  const decrementRadius = () => {
+    formik.setFieldValue("radius", Math.max(0, formik.values.radius - 1));
   };
   useEffect(() => {
     window.addEventListener("beforeunload", handleBeforeUnload);
@@ -123,10 +134,11 @@ export default function Location({ data }) {
                 <input
                   {...getInputProps({
                     placeholder: "Search for an address...",
-                    className: `w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.address && formik.errors.address
-                      ? "border-red-500"
-                      : ""
-                      }`,
+                    className: `w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                      formik.touched.address && formik.errors.address
+                        ? "border-red-500"
+                        : ""
+                    }`,
                   })}
                 />
                 <div>
@@ -160,23 +172,36 @@ export default function Location({ data }) {
               htmlFor="radius"
               className="col-span-1 col-start-1 flex items-center"
             >
-              How far out should we randomize the location of your property until someone has booked (in miles)
+              How far out should we randomize the location of your property
+              until someone has booked (in miles)
             </Label>
-            <div className="col-span-1 col-start-3 flex max-w-[200px] items-center sm:col-span-3 sm:col-start-5 md:col-span-2 md:col-start-4">
-
-              <Input
-                type="number"
-                className="w-full"
-                id="radius"
-                name="radius"
-                value={formik.values.radius}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-
-                onWheel={(event) => event.currentTarget.blur()}
-              />
+            <div className="col-span-2 flex items-center justify-end">
+  <div className="flex items-center space-x-2 ml-auto"> {/* Add ml-auto here */}
+    <button
+      type="button"
+      onClick={decrementRadius}
+      className={`focus:outline-none ${
+        !formik.values.radius && "text-gray-400"
+      }`}
+    >
+      <MinusCircle strokeWidth={1} size={34} />
+    </button>
+    <span className="pl-4 pr-4 text-gray-700">
+      {formik.values.radius || 0}
+    </span>
+    <button
+      type="button"
+      onClick={incrementRadius}
+      className="ml-5 text-gray-700 focus:outline-none"
+    >
+      <PlusCircle strokeWidth={1} size={34} />
+                </button>
+        
+              </div>
+        
             </div>
           </div>
+          <hr/>
           <EditorSaveButton
             dirty={formik.dirty}
             submitted={submitted}
