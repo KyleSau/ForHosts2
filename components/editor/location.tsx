@@ -120,7 +120,7 @@ export default function Location({ data }) {
                 <input
                   {...getInputProps({
                     placeholder: "Search for an address...",
-                    className: `w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.address && formik.errors.address
+                    className: `pl-1 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.address && formik.errors.address
                       ? "border-red-500"
                       : ""
                       }`,
@@ -129,9 +129,13 @@ export default function Location({ data }) {
                 <div>
                   {loading && <div>Loading...</div>}
                   {suggestions.map((suggestion) => {
+                    // const className = suggestion.active
+                    //   ? "suggestion-item--active"
+                    //   : "suggestion-item";
                     const className = suggestion.active
-                      ? "suggestion-item--active"
-                      : "suggestion-item";
+                      ? "suggestion-item--active cursor-pointer bg-gray-200"
+                      : "suggestion-item cursor-pointer";
+
                     return (
                       <div
                         {...getSuggestionItemProps(suggestion, {
@@ -152,15 +156,16 @@ export default function Location({ data }) {
             </div>
           )}
           <hr />
-          <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
+          <div className="mb-5 mt-5 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
             <Label
               htmlFor="radius"
-              className="col-span-1 col-start-1 flex items-center"
+              className="col-span-1 col-start-1 flex items-center text-md text-gray-600 leading-tight tracking-tighter"
             >
-              How far out should we randomize the location of your property
-              until someone has booked (in miles)
+              How far out should we approximate the location of your property until someone has booked (in miles)?
             </Label>
+
             <div className="col-span-2 flex items-center justify-end">
+              <div className="col-start flex">Proximity Range</div>
               <div className="flex items-center space-x-2 ml-auto"> {/* Add ml-auto here */}
                 <button
                   type="button"

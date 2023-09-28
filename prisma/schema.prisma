@@ -245,6 +245,7 @@ model PropertyDetails {
   id            String    @id @default(cuid())
   propertyType  String
   maxGuests     Int?
+  maxPets       Int?
   totalBedrooms Int?
   bathrooms     Int?
   bedrooms      Bedroom[]
