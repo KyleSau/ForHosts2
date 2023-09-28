@@ -26,10 +26,10 @@ function approximateLocation(lat: number, lng: number, maxOffsetInKm: number) {
 
   return { lat: newLat, lng: newLng };
 }
-export default function Location({data}) {
+export default function Location({ data }) {
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
- 
+
 
   const validationSchema = Yup.object().shape({
     // title: Yup.string().required("Title is required"),
@@ -49,11 +49,6 @@ export default function Location({data}) {
       locationId: locData.id,
       radius: locData.radius,
       street: locData.street,
-      // country: "",
-      // streetAddress: "",
-      // city: "",
-      // region: "",
-      // postalCode: "",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -72,8 +67,8 @@ export default function Location({data}) {
             latitude: proximity.lat.toString(),
           },
         };
-       
-  
+
+
         const result = await updatePost(transformedValues);
         if (result) {
           console.log("Post updated successfully:", result);
@@ -81,7 +76,7 @@ export default function Location({data}) {
           setIsLoading(false);
         }
 
-       
+
       } catch (error) {
         console.error("Error geocoding address:", error);
         setSubmitted(false);
@@ -128,11 +123,10 @@ export default function Location({data}) {
                 <input
                   {...getInputProps({
                     placeholder: "Search for an address...",
-                    className: `w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
-                      formik.touched.street && formik.errors.street
+                    className: `w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.street && formik.errors.street
                         ? "border-red-500"
                         : ""
-                    }`,
+                      }`,
                   })}
                 />
                 <div>
@@ -160,7 +154,7 @@ export default function Location({data}) {
               {formik.errors.street}
             </div>
           )}
-          <hr/>
+          <hr />
           <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
             <Label
               htmlFor="radius"
@@ -169,7 +163,7 @@ export default function Location({data}) {
               How far out should we randomize the location of your property until someone has booked (in miles)
             </Label>
             <div className="col-span-1 col-start-3 flex max-w-[200px] items-center sm:col-span-3 sm:col-start-5 md:col-span-2 md:col-start-4">
-           
+
               <Input
                 type="number"
                 className="w-full"
@@ -178,7 +172,7 @@ export default function Location({data}) {
                 value={formik.values.radius}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                
+
                 onWheel={(event) => event.currentTarget.blur()}
               />
             </div>

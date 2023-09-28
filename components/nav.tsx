@@ -118,7 +118,7 @@ export default function Nav({ children }: { children: ReactNode }) {
           name: "Overview",
           href: `/post/${id}`,
           isActive: segments[2] === undefined,
-          icon: <ScrollText width={18} />,
+          icon: <Home width={18} />,
           suboptions: [],
         },
         {
@@ -147,6 +147,13 @@ export default function Nav({ children }: { children: ReactNode }) {
           href: `/post/${id}/availability`,
           isActive: segments.includes("availability"),
           icon: <Clock10 width={18} />,
+          suboptions: [],
+        },
+        {
+          name: "Calendar Sync",
+          href: `/post/${id}/sync`,
+          isActive: segments.includes("sync"),
+          icon: <CalendarDays width={18} />,
           suboptions: [],
         },
         {
