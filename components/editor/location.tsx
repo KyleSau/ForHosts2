@@ -9,7 +9,6 @@ import PlacesAutocomplete, {
   getLatLng,
 } from "react-places-autocomplete";
 import { Label } from "../ui/label";
-import { Input } from "../ui/input";
 
 import { PlusCircle, MinusCircle, XCircle } from "lucide-react";
 import { updatePost } from "@/lib/actions";
