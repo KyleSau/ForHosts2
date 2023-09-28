@@ -9,7 +9,8 @@ import PlacesAutocomplete, {
   getLatLng,
 } from "react-places-autocomplete";
 import { Label } from "../ui/label";
-
+import { Input } from "../ui/input";
+import IncrementDecrementButton from "../increment-decrement-buttons";
 import { PlusCircle, MinusCircle, XCircle } from "lucide-react";
 import { updatePost } from "@/lib/actions";
 import dynamic from 'next/dynamic'
@@ -164,28 +165,7 @@ export default function Location({ data }) {
             </Label>
 
             <div className="col-span-2 flex items-center justify-end">
-              <div className="col-start flex">Proximity Range</div>
-              <div className="flex items-center space-x-2 ml-auto"> {/* Add ml-auto here */}
-                <button
-                  type="button"
-                  onClick={decrementRadius}
-                  className={`focus:outline-none ${!formik.values.radius && "text-gray-400"
-                    }`}
-                >
-                  <MinusCircle strokeWidth={1} size={34} />
-                </button>
-                <span className="pl-4 pr-4 text-gray-700">
-                  {formik.values.radius || 0}
-                </span>
-                <button
-                  type="button"
-                  onClick={incrementRadius}
-                  className="ml-5 text-gray-700 focus:outline-none"
-                >
-                  <PlusCircle strokeWidth={1} size={34} />
-                </button>
-
-              </div>
+            <IncrementDecrementButton increment={incrementRadius} decrement={decrementRadius} value={formik.values.radius} />
 
             </div>
           </div>
