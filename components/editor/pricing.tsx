@@ -135,10 +135,10 @@ export default function Pricing({ data }: any) {
 
   return (
     <EditorWrapper>
-      {JSON.stringify(pricingData)}
       <form onSubmit={formik.handleSubmit}>
         <div>
           <TabTitle title="Pricing" desc="" />
+          <hr />
           <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
             <Label
               htmlFor="price"
@@ -164,7 +164,6 @@ export default function Pricing({ data }: any) {
           {formik.touched.price && formik.errors.price ? (
             <div className="text-red-600">{formik.errors.price}</div>
           ) : null}
-          <hr />
           <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
             <Label
               htmlFor="weekendPrice"
@@ -190,8 +189,9 @@ export default function Pricing({ data }: any) {
           {formik.touched.weekendPrice && formik.errors.weekendPrice ? (
             <div className="text-red-600">{formik.errors.weekendPrice}</div>
           ) : null}
-          <hr />
+
           <TabTitle title="Discounts" desc="" />
+          <hr />
           <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
             <Label
               htmlFor="weeklyDiscount"
@@ -215,7 +215,6 @@ export default function Pricing({ data }: any) {
             </div>
           </div>
 
-          <hr />
           <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
             <Label
               htmlFor="monthlyDiscount"
@@ -238,8 +237,9 @@ export default function Pricing({ data }: any) {
               />
             </div>
           </div>
-          <hr />
+
           <TabTitle title="Additional Fees" desc="" />
+          <hr />
           <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
             <Label
               htmlFor="cleaningFee"
@@ -265,7 +265,7 @@ export default function Pricing({ data }: any) {
           {formik.touched.cleaningFee && formik.errors.cleaningFee ? (
             <div className="text-red-600">{formik.errors.cleaningFee}</div>
           ) : null}
-          <hr />
+
           <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
             <Label
               htmlFor="petFee"
@@ -291,7 +291,6 @@ export default function Pricing({ data }: any) {
           {formik.touched.petFee && formik.errors.petFee ? (
             <div className="text-red-600">{formik.errors.petFee}</div>
           ) : null}
-          <hr />
           <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
             <Label
               htmlFor="securityDeposit"
@@ -320,7 +319,6 @@ export default function Pricing({ data }: any) {
 
           {/* <AmenityEditor /> */}
 
-          <hr className="mb-5" />
           <EditorSaveButton
             dirty={formik.dirty}
             submitted={submitted}

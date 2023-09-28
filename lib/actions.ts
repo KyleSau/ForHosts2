@@ -5,6 +5,7 @@ import { Post, Site } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { withPostAuth, withSiteAuth } from "./auth";
 import { getSession } from "@/lib/auth";
+import approximateLocation from "@/lib/utils/geo"
 import {
   addDomainToVercel,
   // getApexDomain,
@@ -278,80 +279,66 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
       location: {
         create: {
           // Fill in default or form values for Location fields
-          street: "",
-          zip: "",
-          city: "",
-          state: "",
-          country: "",
-          longitude: "",
-          latitude: "",
-          radius: 0,
+
         },
       },
       pricing: {
         create: {
           // Fill in default or form values for Pricing fields
-          price: 0,
-          weekendPrice: 0,
-          cleaningFee: 0,
-          securityDeposit: 0,
-          petFee: 0,
-          weeklyDiscount: 0.0,
-          monthlyDiscount: 0.0,
         },
       },
       availability: {
         create: {
           // Fill in default or form values for Availability fields
-          instantBooking: false,
-          minStay: 1,
-          maxStay: 365,
-          advanceNotice: 0,
-          sameDayAdvanceNotice: 6,
-          preparationTime: 0,
-          availabilityWindow: 3,
-          restrictedCheckIn: [],
-          restrictedCheckOut: [],
-          checkInWindowStart: "00:00",
-          checkInWindowEnd: "00:00",
-          checkInTime: "00:00",
-          checkOutTime: "00:00",
+          // instantBooking: false,
+          // minStay: 1,
+          // maxStay: 365,
+          // advanceNotice: 0,
+          // sameDayAdvanceNotice: 6,
+          // preparationTime: 0,
+          // availabilityWindow: 3,
+          // restrictedCheckIn: [],
+          // restrictedCheckOut: [],
+          // checkInWindowStart: "00:00",
+          // checkInWindowEnd: "00:00",
+          // checkInTime: "00:00",
+          // checkOutTime: "00:00",
         },
       },
       propertyRules: {
         create: {
           // Fill in default or form values for PropertyRules fields
-          petsAllowed: false,
-          eventsAllowed: false,
-          smokingAllowed: false,
-          photographyAllowed: false,
-          checkInMethod: "",
-          quietHoursStart: "00:00",
-          quietHoursEnd: "00:00",
-          interactionPreferences: "",
-          additionalRules: "",
-          cancellationPolicy: "",
+          // petsAllowed: false,
+          // eventsAllowed: false,
+          // smokingAllowed: false,
+          // photographyAllowed: false,
+          // checkInMethod: "",
+          // quietHoursStart: "00:00",
+          // quietHoursEnd: "00:00",
+          // interactionPreferences: "",
+          // additionalRules: "",
+          // cancellationPolicy: "",
         },
       },
       propertyDetails: {
         create: {
           // Fill in default or form values for PropertyDetails fields
-          propertyType: "",
-          maxGuests: 0,
-          bedrooms: 0,
-          bathrooms: 0,
-          totalBeds: 0,
-          amenities: [],
+          // propertyType: "",
+          // maxGuests: 0,
+          // bedrooms: 0,
+          // bathrooms: 0,
+          // totalBeds: 0,
+          // amenities: [],
         },
       },
       afterBookingInfo: {
         create: {
           // Fill in default or form values for AfterBookingInfo fields
-          wifiName: "",
-          wifiPassword: "",
-          houseManual: "",
-          checkoutInstructions: "",
-          afterBookingDirections: "",
+          // wifiName: "",
+          // wifiPassword: "",
+          // houseManual: "",
+          // checkoutInstructions: "",
+          // afterBookingDirections: "",
         },
       },
     },
@@ -404,7 +391,21 @@ export const updatePost = async (data: Post) => {
       },
     });
 
+    // LocationUpdateRequest
     if (data.location) {
+      const { longitude, latitude, radius } = data.location;
+      const randomizedLocation = approximateLocation(parseFloat(latitude), parseFloat(longitude), radius ?? 0);
+
+      console.log('radius: ', radius);
+
+      const lng: string = randomizedLocation.lng + '';
+      const lat: string = randomizedLocation.lat + '';
+
+      data.location.longitude = lng
+      data.location.latitude = lat
+
+      console.log('ideal location: ', JSON.stringify(data.location));
+
       await prisma.location.update({
         where: { id: post.location!.id },
         data: data.location,

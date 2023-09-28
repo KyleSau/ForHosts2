@@ -34,8 +34,8 @@ function approximateLocation(lat: number, lng: number, maxOffsetInKm: number) {
     return { lat: newLat, lng: newLng };
 }
 
-export default function Map() {
-    const [geoData, setGeoData] = useState(approximateLocation(34.442270, -119.842010, 2));
+export default function Map({ lat, lng }) {
+    const [geoData, setGeoData] = useState({ lat: lat, lng: lng });
 
     return (
         <MapContainer center={geoData} zoom={13} style={{ height: '500px' }} scrollWheelZoom={false} className="rounded-lg z-20">
