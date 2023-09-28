@@ -279,26 +279,12 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
       location: {
         create: {
           // Fill in default or form values for Location fields
-          street: "",
-          zip: "",
-          city: "",
-          state: "",
-          country: "",
-          longitude: "",
-          latitude: "",
-          radius: 0,
+
         },
       },
       pricing: {
         create: {
           // Fill in default or form values for Pricing fields
-          price: 0,
-          weekendPrice: 0,
-          cleaningFee: 0,
-          securityDeposit: 0,
-          petFee: 0,
-          weeklyDiscount: 0.0,
-          monthlyDiscount: 0.0,
         },
       },
       availability: {

@@ -166,7 +166,7 @@ model Location {
   address   String?
   longitude String?
   latitude  String?
-  radius    Int?    @default(0) // Miles
+  radius    Int     @default(0) // Miles
 
   post Post?
 
@@ -176,8 +176,8 @@ model Location {
 
 model Pricing {
   id              String @id @default(cuid())
-  price           Int
-  weekendPrice    Int
+  price           Int?
+  weekendPrice    Int?
   cleaningFee     Int    @default(0)
   securityDeposit Int    @default(0)
   petFee          Int    @default(0)
@@ -247,7 +247,7 @@ model PropertyRules {
   quietHoursStart            String  @default("22:00") // "HH:mm"
   quietHoursEnd              String  @default("7:00") // "HH:mm"
   interactionPreferences     String  @default("I won’t be available in person, and prefer communicating through the app.")
-  additionalRules            String
+  additionalRules            String?
   standardCancellationPolicy String  @default("Flexible")
   longTermCancellationPolicy String  @default("Firm")
 
@@ -259,8 +259,8 @@ model PropertyRules {
 
 model PropertyDetails {
   id            String    @id @default(cuid())
-  propertyType  String    @default("")
-  placeType     String    @default("Entire House") // Types: Entire Home, Room
+  propertyType  String    @default("House")
+  placeType     String    @default("Entire Home") // Types: Entire Home, Room
   maxGuests     Int?      @default(2)
   maxPets       Int?      @default(0) // disable this if !petsAllowed
   totalBedrooms Int?      @default(1)
@@ -275,12 +275,12 @@ model PropertyDetails {
 }
 
 model AfterBookingInfo {
-  id                     String @id @default(cuid())
-  wifiName               String
-  wifiPassword           String
-  houseManual            String
-  checkoutInstructions   String
-  afterBookingDirections String
+  id                     String  @id @default(cuid())
+  wifiName               String?
+  wifiPassword           String?
+  houseManual            String?
+  checkoutInstructions   String?
+  afterBookingDirections String?
 
   post Post?
 
