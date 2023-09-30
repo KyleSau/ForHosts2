@@ -279,26 +279,33 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
         },
       },
       location: {
+        create: {},
         create: {
         },
       },
       pricing: {
+        create: {},
         create: {
         },
       },
       availability: {
+        create: {},
         create: {
         },
       },
       propertyRules: {
+        create: {},
         create: {
         },
       },
       propertyDetails: {
+        create: {},
         create: {
         },
       },
       afterBookingInfo: {
+        create: {},
+      }
         create: {
         },
       },
