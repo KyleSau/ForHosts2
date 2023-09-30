@@ -166,7 +166,7 @@ model Location {
   address   String?
   longitude String?
   latitude  String?
-  radius    Int     @default(0) // Miles
+  radius    Int?    @default(0) // Miles
 
   post Post?
 
@@ -178,11 +178,11 @@ model Pricing {
   id              String @id @default(cuid())
   price           Int?
   weekendPrice    Int?
-  cleaningFee     Int?
-  securityDeposit Int?
-  petFee          Int?
-  weeklyDiscount  Float?
-  monthlyDiscount Float?
+  cleaningFee     Int    @default(0)
+  securityDeposit Int    @default(0)
+  petFee          Int    @default(0)
+  weeklyDiscount  Float  @default(0)
+  monthlyDiscount Float  @default(0)
 
   post Post?
 
@@ -238,18 +238,18 @@ model Bedroom {
 }
 
 model PropertyRules {
-  id                         String   @id @default(cuid())
-  petsAllowed                Boolean? @default(false)
-  eventsAllowed              Boolean? @default(false)
-  smokingAllowed             Boolean? @default(false)
-  photographyAllowed         Boolean? @default(false)
-  checkInMethod              String?  @default("Keypad")
-  quietHoursStart            String?  @default("22:00") // "HH:mm"
-  quietHoursEnd              String?  @default("7:00") // "HH:mm"
-  interactionPreferences     String?  @default("I won’t be available in person, and prefer communicating through the app.")
+  id                         String  @id @default(cuid())
+  petsAllowed                Boolean @default(false)
+  eventsAllowed              Boolean @default(false)
+  smokingAllowed             Boolean @default(false)
+  photographyAllowed         Boolean @default(false)
+  checkInMethod              String  @default("Keypad")
+  quietHoursStart            String  @default("22:00") // "HH:mm"
+  quietHoursEnd              String  @default("7:00") // "HH:mm"
+  interactionPreferences     String  @default("I won’t be available in person, and prefer communicating through the app.")
   additionalRules            String?
-  standardCancellationPolicy String?  @default("Flexible")
-  longTermCancellationPolicy String?  @default("Firm")
+  standardCancellationPolicy String  @default("Flexible")
+  longTermCancellationPolicy String  @default("Firm")
 
   post Post?
 
@@ -259,14 +259,15 @@ model PropertyRules {
 
 model PropertyDetails {
   id            String    @id @default(cuid())
-  propertyType  String?   @default("House")
-  placeType     String?   @default("Entire Home") // Types: Entire Home, Room
+  placeType     String?   @default("House") // Types: Entire Home, Room
+  listingType   String?   @default("Entire Place") // 'Entire Place', 'Room', 'Share Room'
+  propertyType  String?   @default("Home")
   maxGuests     Int?      @default(2)
   maxPets       Int?      @default(0) // disable this if !petsAllowed
   totalBedrooms Int?      @default(1)
   bathrooms     Int?      @default(1)
   bedrooms      Bedroom[]
-  amenities     String[]  @default([])
+  amenities     String[]
 
   post Post?
 

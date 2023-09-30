@@ -278,67 +278,26 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
       },
       location: {
         create: {
-          // Fill in default or form values for Location fields
-
         },
       },
       pricing: {
         create: {
-          // Fill in default or form values for Pricing fields
         },
       },
       availability: {
         create: {
-          // Fill in default or form values for Availability fields
-          // instantBooking: false,
-          // minStay: 1,
-          // maxStay: 365,
-          // advanceNotice: 0,
-          // sameDayAdvanceNotice: 6,
-          // preparationTime: 0,
-          // availabilityWindow: 3,
-          // restrictedCheckIn: [],
-          // restrictedCheckOut: [],
-          // checkInWindowStart: "00:00",
-          // checkInWindowEnd: "00:00",
-          // checkInTime: "00:00",
-          // checkOutTime: "00:00",
         },
       },
       propertyRules: {
         create: {
-          // Fill in default or form values for PropertyRules fields
-          // petsAllowed: false,
-          // eventsAllowed: false,
-          // smokingAllowed: false,
-          // photographyAllowed: false,
-          // checkInMethod: "",
-          // quietHoursStart: "00:00",
-          // quietHoursEnd: "00:00",
-          // interactionPreferences: "",
-          // additionalRules: "",
-          // cancellationPolicy: "",
         },
       },
       propertyDetails: {
         create: {
-          // Fill in default or form values for PropertyDetails fields
-          // propertyType: "",
-          // maxGuests: 0,
-          // bedrooms: 0,
-          // bathrooms: 0,
-          // totalBeds: 0,
-          // amenities: [],
         },
       },
       afterBookingInfo: {
         create: {
-          // Fill in default or form values for AfterBookingInfo fields
-          // wifiName: "",
-          // wifiPassword: "",
-          // houseManual: "",
-          // checkoutInstructions: "",
-          // afterBookingDirections: "",
         },
       },
     },
@@ -438,7 +397,7 @@ export const updatePost = async (data: Post) => {
 
     // Check if the totalBedrooms field is being updated
     if (data.propertyDetails && typeof data.propertyDetails.totalBedrooms !== "undefined") {
-      const newTotalBedrooms = data.propertyDetails.totalBedrooms;
+      /*const newTotalBedrooms = data.propertyDetails.totalBedrooms;
       const currentTotalBedrooms = post.propertyDetails.totalBedrooms;
 
       // If there's an increase in totalBedrooms
@@ -470,7 +429,7 @@ export const updatePost = async (data: Post) => {
           // Delete the Bedroom entry
           await prisma.bedroom.delete({ where: { id: bedroom.id } });
         }
-      }
+      }*/
 
       // Now, update the propertyDetails
       await prisma.propertyDetails.update({

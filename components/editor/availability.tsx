@@ -54,9 +54,8 @@ const validationSchema = Yup.object().shape({
   maxStay: Yup.number()
     .required("Maximum stay is required")
     .positive("Maximum stay must be a positive number"),
-  advanceNotice: Yup.number()
-    .required("Advance notice is required")
-    .positive("Advance notice must be a positive number"),
+  advanceNotice: Yup.number().min(0)
+    .required("Advance notice is required"),
   // sameDayAdvanceNotice: Yup.number()
   //   .required("Same-day advance notice is required")
   //   .positive("Same-day advance notice must be a positive number"),

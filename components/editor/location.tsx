@@ -9,18 +9,32 @@ import PlacesAutocomplete, {
   getLatLng,
 } from "react-places-autocomplete";
 import { Label } from "../ui/label";
-import { Input } from "../ui/input";
 import IncrementDecrementButton from "../increment-decrement-buttons";
 import { updatePost } from "@/lib/actions";
-import dynamic from 'next/dynamic'
+import Map from "../users-sites/open-street-map";
+import { useMap, Circle } from "react-leaflet";
 
-const Map = dynamic(() => import('@/components/users-sites/open-street-map'), {
-  ssr: false,
-})
+function MapViewUpdater({ coordinates }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (coordinates.lat && coordinates.lng) {
+      map.setView(coordinates, 12);
+    }
+  }, [coordinates, map]);
+
+  return <Circle center={[coordinates.lat, coordinates.lng]} radius={1000} />;
+}
 
 export default function Location({ data }) {
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [coordinates, setCoordinates] = useState<{ lat: number, lng: number }>(
+    {
+      lat: parseFloat(data.location.latitude),
+      lng: parseFloat(data.location.longitude)
+    });
+
 
   const validationSchema = Yup.object().shape({
     address: Yup.string().required("Address is required"),
@@ -56,8 +70,15 @@ export default function Location({ data }) {
 
         const result = await updatePost(transformedValues);
         if (result) {
-
+          // force a rerender
           console.log("Post updated successfully:", result);
+          setCoordinates({
+            lat: parseFloat(transformedValues.location.latitude),
+            lng: parseFloat(transformedValues.location.longitude)
+          });
+
+          console.log('new coordinates: ', JSON.stringify(coordinates));
+          // map.setView(coordinates, 12);
           setSubmitted(true);
           setIsLoading(false);
         }
@@ -82,6 +103,9 @@ export default function Location({ data }) {
   const decrementRadius = () => {
     formik.setFieldValue("radius", Math.max(0, formik.values.radius - 1));
   };
+
+  // }, coordinates);
+
   useEffect(() => {
     window.addEventListener("beforeunload", handleBeforeUnload);
 
@@ -89,6 +113,7 @@ export default function Location({ data }) {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [formik.dirty]);
+
   return (
     <EditorWrapper>
       <form onSubmit={formik.handleSubmit}>
@@ -158,9 +183,15 @@ export default function Location({ data }) {
               How far out should we approximate the location of your property until someone has booked (in miles)?
             </Label>
 
-            <div className="col-span-2 flex items-center justify-end">
+
+            <div className="grid grid-cols-2 items-center">
               {/* <div className="col-start flex justify-start">Proximity Range</div> */}
-              <IncrementDecrementButton increment={incrementRadius} decrement={decrementRadius} value={formik.values.radius} />
+              <div className="flex col-start-1">
+                Proximity Range
+              </div>
+              <div className="flex col-start-2 justify-end">
+                <IncrementDecrementButton increment={incrementRadius} decrement={decrementRadius} value={formik.values.radius} />
+              </div>
             </div>
           </div>
           <hr />
@@ -171,7 +202,12 @@ export default function Location({ data }) {
           />
         </div >
       </form >
-      <Map lat={data.location.latitude} lng={data.location.longitude} />
+      Coordinates: {JSON.stringify(coordinates)}
+      <Map lat={coordinates.lat} lng={coordinates.lng}>
+        <MapViewUpdater coordinates={coordinates} />
+      </Map>
+
+      {/* <Map lat={coordinates.lat} lng={coordinates.lng} /> */}
     </EditorWrapper >
   );
 }

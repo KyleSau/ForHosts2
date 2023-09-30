@@ -31,6 +31,7 @@ export default function TitleDescriptionEditor({ post }: { post: PostWithSite })
         : `http://${data.site?.subdomain}.localhost:3000/${data.slug}`;
 
     const [debouncedData] = useDebounce(data, 1000);
+
     useEffect(() => {
         if (debouncedData !== post) {
             startTransitionSaving(async () => {
@@ -208,7 +209,7 @@ export default function TitleDescriptionEditor({ post }: { post: PostWithSite })
             </div>
             <Label>Description</Label>
             {editor && <EditorBubbleMenu editor={editor} />}
-            <EditorContent type="textarea" className="h-96 px-1 py-1 overflow-scroll border border-gray-200 rounded-md" editor={editor} />
+            <EditorContent placeholder="Enter text here..." className="px-1 py-1 overflow-scroll border border-gray-200 rounded-md" editor={editor} />
         </div>
     );
 }
