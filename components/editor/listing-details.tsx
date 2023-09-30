@@ -12,9 +12,10 @@ import { updatePostMetadata } from '@/lib/actions';
 import { ExternalLink } from 'lucide-react';
 import clsx from "clsx";
 import EditorWrapper from './editor-container-wrapper';
-import AmenityEditor from '../amenities/amenity-editor';
 import AmenityDataTable from '../amenities/amenity-data-table';
 import BedroomList from '../bedroom-list';
+import IncrementDecrementButton from '../increment-decrement-buttons';
+import { useDebounce } from 'use-debounce';
 
 export default function ListingDetails({ data }) {
   const id = data['id'];
@@ -25,33 +26,18 @@ export default function ListingDetails({ data }) {
   const url = process.env.NEXT_PUBLIC_VERCEL_ENV
     ? `https://${data.site?.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${data.slug}`
     : `http://${data.site?.subdomain}.localhost:3000/${data.slug}`;
+
   const validationSchema = Yup.object().shape({
     title: Yup.string().required('Title is required'),
     description: Yup.string().required('Description is required'),
-    // bedrooms: Yup.number().required('Number of bedrooms is required').min(1, 'Must be at least 1'),
-    // bathrooms: Yup.number().required('Number of bathrooms is required').min(1, 'Must be at least 1'),
-    // location: Yup.string().required('Street Address is required'),
-    // streetAddress: Yup.string().required('Street address is required'),
-    // city: Yup.string().required('City is required'),
-    // region: Yup.string().required('State / Province is required'),
-    // postalCode: Yup.string().required('ZIP / Postal code is required'),
   });
 
   const formik = useFormik({
     initialValues: {
-      id: id,
-      site: data.site,
-      siteId: data.siteId,
-      title: data.title,
-      description: data.description,
-      // bedrooms: data.bedrooms,
-      // bathrooms: data.bathrooms,
-      // location: data.location,
-      // country: '',
-      // streetAddress: '',
-      // city: '',
-      // region: '',
-      // postalCode: '',
+      maxGuests: data.propertyDetails.maxGuests,
+      maxPets: data.propertyDetails.maxPets,
+      totalBedrooms: data.propertyDetails.totalBedrooms,
+      bathrooms: data.propertyDetails.bathrooms,
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -59,41 +45,41 @@ export default function ListingDetails({ data }) {
       setIsLoading(true);
       const formData = new FormData();
       formData.append("published", String(!data.published));
-
-      console.log(data.published, typeof data.published);
-      console.log(formData)
-      // Your form submission logic
-      console.log('data: ', JSON.stringify(data));
-      console.log('values: ', JSON.stringify(values));
-      const result = await updatePost(values);
-
+      const updateRequest = {
+        id: data.id,
+        propertyDetails: {
+          maxGuests: values.maxGuests,
+          maxPets: values.maxPets,
+          totalBedrooms: values.totalBedrooms,
+          bathrooms: values.bathrooms
+        }
+      }
+      const result = await updatePost(updateRequest);
       if (result?.error) {
-        // Handle the error, e.g., display an error message
         console.error(result.error);
         setSubmitted(false);
       } else {
-        // Handle success, e.g., navigate to a success page or show a success message
         console.log('Post updated successfully:', result);
         setSubmitted(true);
         setIsLoading(false);
-
       }
-      // You can add your logic to send this data to the server or handle it as needed
     },
   });
+
   const handleBeforeUnload = (e: any) => {
     if (formik.dirty) {
       e.preventDefault();
       e.returnValue = "You have unsaved changes. Are you sure you want to leave?";
     }
   };
+
   useEffect(() => {
     window.addEventListener("beforeunload", handleBeforeUnload);
-
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [formik.dirty]);
+
   return (
     <EditorWrapper>
       <form onSubmit={formik.handleSubmit}>
@@ -108,22 +94,18 @@ export default function ListingDetails({ data }) {
               <ExternalLink className="h-4 w-4" />
             </a>
           )}
-
           <button
             onClick={() => {
               setSubmitted(false);
               const formData = new FormData();
-              console.log(data.published, typeof data.published);
               formData.append("published", String(!data.published));
               startTransitionPublishing(async () => {
                 await updatePostMetadata(formData, data.id, "published").then(
                   () => {
                     toast.success(
-                      `Successfully ${data.published ? "unpublished" : "published"
-                      } your post.`,
+                      `Successfully ${data.published ? "unpublished" : "published"} your post.`
                     );
-
-                  },
+                  }
                 );
               });
             }}
@@ -144,76 +126,50 @@ export default function ListingDetails({ data }) {
         </div>
         <TabTitle title="Facilities" desc="Choose the amount for various facilities in your property" />
         <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8">
-          <div>
-            <label htmlFor="maxGuests" className="block text-sm font-medium leading-6 text-gray-900">
-              Max Guests
-            </label>
-            <input
-              type="number"
-              name="maxGuests"
-              id="maxGuests"
-              className={`block w-[50px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.bedrooms && formik.errors.bedrooms ? 'border-red-500' : ''
-                }`}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.maxGuests}
-              min="0"
-              onWheel={event => event.currentTarget.blur()}
-            />
+          <label htmlFor="maxGuests" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
+            Max Guests
+          </label>
+          <div className='flex flex-col col-start-2'>
+            <IncrementDecrementButton increment={() => (formik.setFieldValue("maxGuests", formik.values.maxGuests + 1))} decrement={() => (formik.setFieldValue("maxGuests", formik.values.maxGuests - 1))} value={formik.values.maxGuests} />
             {formik.touched.maxGuests && formik.errors.maxGuests && (
               <div className="text-red-600 text-sm mt-2">{formik.errors.maxGuests}</div>
             )}
           </div>
-          <div>
-            <label htmlFor="bedrooms" className="block text-sm font-medium leading-6 text-gray-900">
-              Number of Bedrooms
-            </label>
-            <input
-              type="number"
-              name="bedrooms"
-              id="bedrooms"
-              className={`block w-[50px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.bedrooms && formik.errors.bedrooms ? 'border-red-500' : ''
-                }`}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.bedrooms}
-              min="0"
-              onWheel={event => event.currentTarget.blur()}
-            />
+
+          <label htmlFor="maxPets" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
+            Max Pets (disabled if pets not allowed)
+          </label>
+          <div className='flex flex-col col-start-2'>
+            <IncrementDecrementButton increment={() => (formik.setFieldValue("maxPets", formik.values.maxPets + 1))} decrement={() => (formik.setFieldValue("maxPets", formik.values.maxPets - 1))} value={formik.values.maxPets} />
+            {formik.touched.maxPets && formik.errors.maxPets && (
+              <div className="text-red-600 text-sm mt-2">{formik.errors.maxPets}</div>
+            )}
+          </div>
+
+          <label htmlFor="bedrooms" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
+            Number of Bedrooms
+          </label>
+          <div className='flex flex-col col-start-2'>
+            <IncrementDecrementButton increment={() => (formik.setFieldValue("totalBedrooms", formik.values.totalBedrooms + 1))} decrement={() => (formik.setFieldValue("totalBedrooms", formik.values.totalBedrooms - 1))} value={formik.values.totalBedrooms} />
             {formik.touched.bedrooms && formik.errors.bedrooms && (
               <div className="text-red-600 text-sm mt-2">{formik.errors.bedrooms}</div>
             )}
           </div>
-          <div>
-            <label htmlFor="bathrooms" className="block text-sm font-medium leading-6 text-gray-900">
-              Number of Bathrooms
-            </label>
-            <input
-              type="number"
-              name="bathrooms"
-              id="bathrooms"
-              className={`block w-[50px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.bathrooms && formik.errors.bathrooms ? 'border-red-500' : ''
-                }`}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.bathrooms}
-              min="0"
-              onWheel={event => event.currentTarget.blur()}
-            />
+
+          <label htmlFor="bathrooms" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
+            Number of Bathrooms
+          </label>
+          <div className='flex flex-col col-start-2'>
+            <IncrementDecrementButton increment={() => (formik.setFieldValue("bathrooms", formik.values.bathrooms + 1))} decrement={() => (formik.setFieldValue("bathrooms", formik.values.bathrooms - 1))} value={formik.values.bathrooms} />
             {formik.touched.bathrooms && formik.errors.bathrooms && (
               <div className="text-red-600 text-sm mt-2">{formik.errors.bathrooms}</div>
             )}
           </div>
         </div>
-        <hr className="mt-5 mb-5" />
-        <BedroomList totalBedrooms={4} />
-        <div className='text-slate-800 text-xl'>Amenities</div>
-        <hr />
-        <AmenityDataTable />
-        <div className='mt-4'>
-          <EditorSaveButton dirty={formik.dirty} submitted={submitted} isLoading={isLoading} />
-        </div>
+        <BedroomList key={formik.values.totalBedrooms} totalBedrooms={formik.values.totalBedrooms} />
+
+        {/* <BedroomList totalBedrooms={formik.values.totalBedrooms} /> */}
       </form>
-    </EditorWrapper>
+    </EditorWrapper >
   );
 }

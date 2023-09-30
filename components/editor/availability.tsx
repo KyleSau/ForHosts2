@@ -7,15 +7,6 @@ import TabTitle from "./tab-title";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Toggle } from "@/components/ui/toggle";
-import CalendarImportForm from "./calendar-import";
-import { CalendarModal } from "./calendar-editor-modal";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 import EditorSaveButton from "./editor-save-button";
 import EditorWrapper from "./editor-container-wrapper";
 

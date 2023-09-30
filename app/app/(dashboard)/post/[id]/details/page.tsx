@@ -13,6 +13,7 @@ export default async function listingDetailsPage({ params }: { params: { id: str
       id: params.id,
     },
     include: {
+      propertyDetails: true,
       site: {
         select: {
           subdomain: true,

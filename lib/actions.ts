@@ -360,6 +360,8 @@ export const updatePost = async (data: Post) => {
   }
 
   // Fetch the post and its related sub-tables
+  console.log();
+
   const post = await prisma.post.findUnique({
     where: {
       id: data.id,
@@ -434,12 +436,56 @@ export const updatePost = async (data: Post) => {
       });
     }
 
-    if (data.propertyDetails) {
+    // Check if the totalBedrooms field is being updated
+    if (data.propertyDetails && typeof data.propertyDetails.totalBedrooms !== "undefined") {
+      const newTotalBedrooms = data.propertyDetails.totalBedrooms;
+      const currentTotalBedrooms = post.propertyDetails.totalBedrooms;
+
+      // If there's an increase in totalBedrooms
+      if (newTotalBedrooms > currentTotalBedrooms) {
+        const difference = newTotalBedrooms - currentTotalBedrooms;
+        for (let i = 0; i < difference; i++) {
+          // Create a new Bedroom entry with default values
+          await prisma.bedroom.create({
+            data: {
+              // Add any other default values if necessary
+              propertyDetailsId: post.propertyDetails.id,
+            },
+          });
+        }
+      }
+
+      // If there's a decrease in totalBedrooms
+      if (newTotalBedrooms < currentTotalBedrooms) {
+        const difference = currentTotalBedrooms - newTotalBedrooms;
+        // Fetch the latest 'difference' number of Bedroom entries
+        // Assuming a createdAt field exists in the Bedroom model
+        const bedroomsToDelete = await prisma.bedroom.findMany({
+          where: { propertyDetailsId: post.propertyDetails.id },
+          orderBy: { createdAt: 'desc' },
+          take: difference
+        });
+
+        for (const bedroom of bedroomsToDelete) {
+          // Delete the Bedroom entry
+          await prisma.bedroom.delete({ where: { id: bedroom.id } });
+        }
+      }
+
+      // Now, update the propertyDetails
       await prisma.propertyDetails.update({
-        where: { id: post.propertyDetails!.id },
+        where: { id: post.propertyDetails.id },
         data: data.propertyDetails,
       });
     }
+    // if (data.propertyDetails) {
+    //   const totalBedrooms = data.propertyDetails.totalBedrooms;
+
+    //   await prisma.propertyDetails.update({
+    //     where: { id: post.propertyDetails!.id },
+    //     data: data.propertyDetails,
+    //   });
+    // }
 
     if (data.afterBookingInfo) {
       await prisma.afterBookingInfo.update({

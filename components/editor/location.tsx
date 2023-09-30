@@ -11,7 +11,6 @@ import PlacesAutocomplete, {
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import IncrementDecrementButton from "../increment-decrement-buttons";
-import { PlusCircle, MinusCircle, XCircle } from "lucide-react";
 import { updatePost } from "@/lib/actions";
 import dynamic from 'next/dynamic'
 
@@ -41,13 +40,8 @@ export default function Location({ data }) {
       try {
         const results = await geocodeByAddress(values.address);
         const coordinates = await getLatLng(results[0]);
-        // const proximity = approximateLocation(coordinates.lat, coordinates.lng, values.radius);
-        // const latLng = await getLatLng(results[0]);
-        // const proximity = approximateLocation(
-        //   latLng.lat,
-        //   latLng.lng,
-        //   values.radius,
-        // );
+
+        // this will follow UpdateLocationRequest type
         const transformedValues = {
           id: values.id,
           location: {
@@ -165,8 +159,8 @@ export default function Location({ data }) {
             </Label>
 
             <div className="col-span-2 flex items-center justify-end">
-            <IncrementDecrementButton increment={incrementRadius} decrement={decrementRadius} value={formik.values.radius} />
-
+              {/* <div className="col-start flex justify-start">Proximity Range</div> */}
+              <IncrementDecrementButton increment={incrementRadius} decrement={decrementRadius} value={formik.values.radius} />
             </div>
           </div>
           <hr />

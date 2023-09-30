@@ -113,7 +113,7 @@ function BedroomList({ totalBedrooms }) {
                                     {bedTypes.map((bedType) => (
                                         <div key={bedType} className="flex justify-between items-center">
                                             <span className="text-gray-800">{bedType}</span>
-                                            <div className="flex items-center space-x-2">
+                                            <div className="flex items-center space-x-2 mr-5">
                                                 <button
                                                     disabled={!bedroomData[index].beds[bedType]}
                                                     onClick={() => handleBedChange(index, bedType, -1)}
