@@ -38,9 +38,7 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
   //states for confirmation modal for deleting pictures
   const [editorWarningModalOpen, setEditorWarningModalOpen] = useState<boolean>(false);
   const [editorWarningModalData, setEditorWarningModalData] = useState<EditorWarningModalDataType>(EditorWarningModalDataTemplate);
-  const [isUploading, setIsUploading] = useState<boolean>(false); 
-  // const [isUploading, setIsUploading] = useRef(false); 
-
+  const [isUploading, setIsUploading] = useState<boolean>(false);
 
   //TEST
   const [blobsFromStoreTest, setBlobsFromStoreTest] = useState<BlobResult[]>([]);
@@ -66,142 +64,9 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
     refreshMetadata();
   }, []);
 
-  const addFilesToLocalState = (newFiles: (File | null)[]) => {
-    //first check if adding the new files causes currently uploaded pics to surpass the upload threshold; show modal if so
-    if (fileDataObjects.length > IMAGE_UPLOAD_QUANTITY_LIMIT || fileDataObjects.length + newFiles.length > IMAGE_UPLOAD_QUANTITY_LIMIT) {
-      setEditorWarningModalData({
-        ...editorWarningModalData,
-        idxToRemove: -1,
-        message: `Only ${IMAGE_UPLOAD_QUANTITY_LIMIT} images may be uploaded for this listing`
-      });
-      setEditorWarningModalOpen(true);
-    } else {
-      const newFilesAboveSizeLimit: (File | null)[] = [];
-      const newFilesBelowSizeLimit: FileDataObject[] = [];
-      const a = hostname;
-      console.log("HOSTNAME: ", a);
-
-      newFiles.forEach((file: File|null, fileIdx: number) => {
-        console.log("new file: ", file);
-        if (file) {
-          const fileSizeBytes = file?.size ? file.size : IMAGE_SIZE_LIMIT_BYTES; 
-          if (fileSizeBytes > IMAGE_SIZE_LIMIT_BYTES) {
-            newFilesAboveSizeLimit.push(file);
-          } else {
-            const localBlobUrl = URL.createObjectURL(file);
-            console.log("localBlobUrl: ", localBlobUrl);
-
-            const newFileNotStored: FileDataObject = {
-              file,
-              localBlobUrl,
-              inBlobStore: false,
-              orderIndex: fileDataObjects.length + fileIdx
-            }
-            newFilesBelowSizeLimit.push(newFileNotStored);
-          }
-        }
-      });
-      const updatedFdoArray = [...fileDataObjects, ...newFilesBelowSizeLimit];
-      console.log("updatedFdoArray: ", updatedFdoArray);
-      setFileDataObjects(updatedFdoArray);
-      setIsUploading(false);
-
-      //if needed, throw up modal informing user that files above the size limit were not added
-      if (newFilesAboveSizeLimit.length > 0) {
-        const filesAndSizes = newFilesAboveSizeLimit.map((file: File | null) => `${file?.name} (${humanReadableFileSize(file?.size)})`).join("\n");
-        setEditorWarningModalData({
-          ...editorWarningModalData,
-          idxToRemove: -2,
-          message: `The following files were not uploaded because they exceed the file size limit of ${IMAGE_SIZE_LIMIT_MB} MB:\n` + filesAndSizes
-        });
-        setEditorWarningModalOpen(true);
-      }
-    }
-  };
-
-  const deleteFileFromLocalStateAndDB = (idxToRemove: number) => {
-    const fileDataObjectsWithItemRemoved = fileDataObjects.filter((fdo: FileDataObject, itemIdx: number) => {
-      //perform the actual removal of the metadata from the DB and blob from the store
-      if(itemIdx === idxToRemove && fdo.id && fdo.inBlobStore) {
-        const deleteMetadataResponse = deleteBlobMetadata(fdo.id);
-        console.log("deleteMetadataResponse: ", deleteMetadataResponse);
-        deleteMetadataResponse.then((value: ImagePrismaSchema) => {
-          console.log("=== value: ", value);
-          deleteBlobFromStore(value.url);
-        });
-      }
-      return itemIdx !== idxToRemove;
-    });
-    setFileDataObjects(fileDataObjectsWithItemRemoved);
-    setEditorWarningModalOpen(false); //remove modal
-  };
-
-  const handleAddFilesToLocalStateViaOpenWindow = (event: any) => {
-    console.log("handleAddFilesToLocalStateViaOpenWindow entered");
-    event.preventDefault();
-    const newFiles: Array<File> = Array.from(event.target.files as ArrayLike<File>)
-      .filter((file: File) => PERMITTED_FILE_TYPES.has(file.type));
-    addFilesToLocalState(newFiles);
-  };
-
-  const handleDropNewFilesToLocalState = (event: any) => {
-    console.log("handleDropNewFilesToLocalState entered");
-    event.preventDefault();
-    const dataTransferItems: DataTransferItemList = event.dataTransfer.items;
-    let newFiles: (File | null)[] = [];
-    if (dataTransferItems) {
-      newFiles = Array.from(dataTransferItems)
-        .filter((item: DataTransferItem) => item.kind === FILE_CONSTS.FILE && PERMITTED_FILE_TYPES.has(item.type))
-        .map((item: DataTransferItem) => item.getAsFile());
-    } else {
-      const dataTransferFiles: FileList = event.dataTransfer.files;
-      newFiles = Array.from(dataTransferFiles);
-    }
-    addFilesToLocalState(newFiles);
-  };
-
-  const handleImageDeleteIconClicked = (idxToRemove: number) => {
-    const fdoToRemove = fileDataObjects[idxToRemove];
-    const fileName = fdoToRemove.inBlobStore? fdoToRemove.fileName: fdoToRemove.file?.name;
-    setEditorWarningModalData({
-      ...editorWarningModalData,
-      idxToRemove,
-      message: "Are you sure you want to delete picture: " + fileName
-    });
-    setEditorWarningModalOpen(true);
-  };
-
-  const handleDragStart = (event: any, idx: number) => {
-    console.log("handleDragStart entered: idx chosen:", idx);
-    setDraggedIdx(idx);
-    event.dataTransfer.effectAllowed = "move";
-  };
-
-  const handleDragOver = (event: any) => {
-    console.log("handleDragOver entered");
-    event.preventDefault();
-    event.stopPropagation();
-  };
-
-  const handleDropForMove = (event: any, idx: number) => {
-    console.log("handleDropForMove entered: idx chosen:", idx); //to idx
-    console.log("draggedIdx: ", draggedIdx); //from idx
-    event.preventDefault();
-
-    if (draggedIdx !== null && draggedIdx !== idx) {
-      // Swap in addedFileArray
-      const fileDataObjectsCopy = [...fileDataObjects];
-      const tempFile = fileDataObjectsCopy[draggedIdx];
-      fileDataObjectsCopy[draggedIdx] = fileDataObjectsCopy[idx];
-      fileDataObjectsCopy[idx] = tempFile;
-      setFileDataObjects([...fileDataObjectsCopy]);
-    }
-    setDraggedIdx(null); // Reset the dragged item index
-  };
-
-
-  const uploadPromiseWrapper = async (fileDataObjects: FileDataObject[]) => {
+  const uploadFileDataObjects = async (fileDataObjects: FileDataObject[]) => {
     const fileDataObjectsCopy = [...fileDataObjects];
+    console.log("fileDataObjectsCopy: ", fileDataObjectsCopy);
 
     for (let fdoIdx: number = 0; fdoIdx < fileDataObjects.length; fdoIdx++) {
       const fdo: FileDataObject = fileDataObjects[fdoIdx];
@@ -242,6 +107,154 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
     return fileDataObjectsCopy;
   }
 
+  const addFilesToLocalStateAndDoUpload = async (newFiles: (File | null)[]) => {
+    setIsUploading(true);
+
+    //first check if adding the new files causes currently uploaded pics to surpass the upload threshold; show modal if so
+    if (fileDataObjects.length > IMAGE_UPLOAD_QUANTITY_LIMIT || fileDataObjects.length + newFiles.length > IMAGE_UPLOAD_QUANTITY_LIMIT) {
+      setEditorWarningModalData({
+        ...editorWarningModalData,
+        idxToRemove: -1,
+        message: `Only ${IMAGE_UPLOAD_QUANTITY_LIMIT} images may be uploaded for this listing`
+      });
+      setEditorWarningModalOpen(true);
+    } else {
+      const newFilesAboveSizeLimit: (File | null)[] = [];
+      const newFilesBelowSizeLimit: FileDataObject[] = [];
+      const a = hostname;
+      console.log("HOSTNAME: ", a);
+
+      newFiles.forEach((file: File|null, fileIdx: number) => {
+        console.log("new file: ", file);
+        if (file) {
+          const fileSizeBytes = file?.size ? file.size : IMAGE_SIZE_LIMIT_BYTES; 
+          if (fileSizeBytes > IMAGE_SIZE_LIMIT_BYTES) {
+            newFilesAboveSizeLimit.push(file);
+          } else {
+            const localBlobUrl = URL.createObjectURL(file);
+            console.log("localBlobUrl: ", localBlobUrl);
+
+            const newFileNotStored: FileDataObject = {
+              file,
+              localBlobUrl,
+              inBlobStore: false,
+              orderIndex: fileDataObjects.length + fileIdx
+            }
+            newFilesBelowSizeLimit.push(newFileNotStored);
+          }
+        }
+      });
+      const updatedFdoArray = [...fileDataObjects, ...newFilesBelowSizeLimit];
+      console.log("updatedFdoArray first time: ", updatedFdoArray);
+      setFileDataObjects(updatedFdoArray);
+
+      //if needed, throw up modal informing user that files above the size limit were not added
+      if (newFilesAboveSizeLimit.length > 0) {
+        const filesAndSizes = newFilesAboveSizeLimit.map((file: File | null) => `${file?.name} (${humanReadableFileSize(file?.size)})`).join("\n");
+        setEditorWarningModalData({
+          ...editorWarningModalData,
+          idxToRemove: -2,
+          message: `The following files were not uploaded because they exceed the file size limit of ${IMAGE_SIZE_LIMIT_MB} MB:\n` + filesAndSizes
+        });
+        setEditorWarningModalOpen(true);
+      }
+
+      const updatedFdoArrayAfterUploadPromise = uploadFileDataObjects(updatedFdoArray);
+      updatedFdoArrayAfterUploadPromise.then((updatedFdoArrayAfterUpload: FileDataObject[]) => {
+        console.log("updatedFdoArray second time: ", updatedFdoArrayAfterUpload);
+        setFileDataObjects(updatedFdoArrayAfterUpload);
+        setIsUploading(false);
+      });
+    }
+  };
+
+
+  const handleAddFilesToLocalStateViaOpenWindow = (event: any) => {
+    console.log("handleAddFilesToLocalStateViaOpenWindow entered");
+    event.preventDefault();
+    const newFiles: Array<File> = Array.from(event.target.files as ArrayLike<File>)
+      .filter((file: File) => PERMITTED_FILE_TYPES.has(file.type));
+    addFilesToLocalStateAndDoUpload(newFiles);
+  };
+
+  const handleDropNewFilesToLocalState = (event: any) => {
+    console.log("handleDropNewFilesToLocalState entered");
+    event.preventDefault();
+    const dataTransferItems: DataTransferItemList = event.dataTransfer.items;
+    let newFiles: (File | null)[] = [];
+    if (dataTransferItems) {
+      newFiles = Array.from(dataTransferItems)
+        .filter((item: DataTransferItem) => item.kind === FILE_CONSTS.FILE && PERMITTED_FILE_TYPES.has(item.type))
+        .map((item: DataTransferItem) => item.getAsFile());
+    } else {
+      const dataTransferFiles: FileList = event.dataTransfer.files;
+      newFiles = Array.from(dataTransferFiles);
+    }
+    addFilesToLocalStateAndDoUpload(newFiles);
+  };
+
+  const deleteFileFromLocalStateAndDB = (idxToRemove: number) => {
+    const fileDataObjectsWithItemRemoved = fileDataObjects.filter((fdo: FileDataObject, itemIdx: number) => {
+      //perform the actual removal of the metadata from the DB and blob from the store
+      if(itemIdx === idxToRemove && fdo.id && fdo.inBlobStore) {
+        const deleteMetadataResponse = deleteBlobMetadata(fdo.id);
+        console.log("deleteMetadataResponse: ", deleteMetadataResponse);
+        deleteMetadataResponse.then((value: ImagePrismaSchema) => {
+          console.log("=== value: ", value);
+          deleteBlobFromStore(value.url);
+        });
+      }
+      return itemIdx !== idxToRemove;
+    });
+    setFileDataObjects(fileDataObjectsWithItemRemoved);
+    setEditorWarningModalOpen(false); //remove modal
+  };
+
+  const handleImageDeleteIconClicked = (idxToRemove: number) => {
+    const fdoToRemove = fileDataObjects[idxToRemove];
+    const fileName = fdoToRemove.inBlobStore? fdoToRemove.fileName: fdoToRemove.file?.name;
+    setEditorWarningModalData({
+      ...editorWarningModalData,
+      idxToRemove,
+      message: "Are you sure you want to delete picture: " + fileName
+    });
+    setEditorWarningModalOpen(true);
+  };
+
+  const handleDragStart = (event: any, idx: number) => {
+    console.log("handleDragStart entered: idx chosen:", idx);
+    setDraggedIdx(idx);
+    event.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDragOver = (event: any) => {
+    console.log("handleDragOver entered");
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
+  const handleDropForMove = async (event: any, idx: number) => {
+    console.log("handleDropForMove entered: idx chosen:", idx); //to idx
+    console.log("draggedIdx: ", draggedIdx); //from idx
+    event.preventDefault();
+
+    if (draggedIdx !== null && draggedIdx !== idx) {
+      // Swap in addedFileArray
+      const fileDataObjectsCopy = [...fileDataObjects];
+      const tempFile = fileDataObjectsCopy[draggedIdx];
+      fileDataObjectsCopy[draggedIdx] = fileDataObjectsCopy[idx];
+      fileDataObjectsCopy[idx] = tempFile;
+      console.log("AAAAA: ", fileDataObjectsCopy)
+      setFileDataObjects(fileDataObjectsCopy);
+      const fileDataObjectsCopyAfterUploadPromise = uploadFileDataObjects(fileDataObjectsCopy);
+      fileDataObjectsCopyAfterUploadPromise.then((fileDataObjectsCopyAfterUpload: FileDataObject[]) => {
+        console.log("BBBBB: ", fileDataObjectsCopyAfterUpload);
+        setFileDataObjects(fileDataObjectsCopyAfterUpload);
+      });
+    }
+    setDraggedIdx(null); // Reset the dragged item index
+  };
+
   const uploadFilesToBlobStoreAndMetadataToDB = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     console.log("uploadFilesToBlobStoreAndMetadataToDB entered");
     console.log("event: ", event);
@@ -250,7 +263,7 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
     setIsUploading(true);
     console.log("setIsUploading to TRUE");
 
-    const uploadPromiseResponse = await uploadPromiseWrapper(fileDataObjects);
+    const uploadPromiseResponse = await uploadFileDataObjects(fileDataObjects);
     console.log("uploadPromiseResponse: ", uploadPromiseResponse);
     
     setFileDataObjects(uploadPromiseResponse as FileDataObject[]);

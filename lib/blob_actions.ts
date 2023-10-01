@@ -23,7 +23,6 @@ export const uploadBlobMetadata = async (blobResult: BlobResult, orderIndex: num
     const response = await prisma.image.create({
       data: {
         url: blobResult.url,
-        blurHash: await getBlurDataURL(blobResult.url),
         uploadedAt: blobResult.uploadedAt,
         size: blobResult.size.toString(),
         fileName: blobResult.pathname,
