@@ -19,6 +19,7 @@ import { useDebounce } from 'use-debounce';
 import { Label } from '../ui/label';
 import { ListingTypesArray, PlaceTypesArray, PropertyTypesArray } from './place-utils';
 import PlaceTypes from './place-types';
+import AmenityEditor from '../amenities/amenity-editor';
 
 export default function ListingDetails({ data }) {
   const id = data['id'];
@@ -240,7 +241,7 @@ export default function ListingDetails({ data }) {
           </div>
         </div>
         <BedroomList key={formik.values.totalBedrooms} totalBedrooms={formik.values.totalBedrooms} />
-
+        <AmenityDataTable />
         {/* <BedroomList totalBedrooms={formik.values.totalBedrooms} /> */}
       </form>
     </EditorWrapper >

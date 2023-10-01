@@ -191,20 +191,20 @@ model Pricing {
 }
 
 model Availability {
-  id                   String   @id @default(cuid())
-  instantBooking       Boolean? @default(true)
-  minStay              Int?     @default(1) // days (1)
-  maxStay              Int?     @default(28) // days (365)
-  advanceNotice        Int?     @default(0) // days (0 - 7)
-  sameDayAdvanceNotice String?  @default("15:00") // hours (6AM - Midnight) or none
-  preparationTime      Int?     @default(0) // days (0 - 2 days)
-  availabilityWindow   Int?     @default(12) // months (3 - 24 months)
-  restrictedCheckIn    Int[]    @default([]) // days of the week restricted [0...6]
-  restrictedCheckOut   Int[]    @default([]) // days of the week restricted [0...6]
-  checkInWindowStart   String?  @default("15:00") // "HH:mm" // <-- should this be removed? (in place of checkInTime)
-  checkInWindowEnd     String?  @default("21:00") // "HH:mm"
-  checkInTime          String?  @default("15:00") // "HH:mm"
-  checkOutTime         String?  @default("10:00") // "HH:mm"
+  id                   String    @id @default(cuid())
+  instantBooking       Boolean?  @default(true)
+  minStay              Int?      @default(1) // days (1)
+  maxStay              Int?      @default(28) // days (365)
+  advanceNotice        Int?      @default(0) // days (0 - 7)
+  sameDayAdvanceNotice String?   @default("15:00") // hours (6AM - Midnight) or none
+  preparationTime      Int?      @default(0) // days (0 - 2 days)
+  availabilityWindow   Int?      @default(12) // months (3 - 24 months)
+  restrictedCheckIn    Boolean[] @default([false, false, false, false, false, false, false]) // days of the week restricted
+  restrictedCheckOut   Boolean[] @default([false, false, false, false, false, false, false]) // days of the week restricted
+  checkInWindowStart   String?   @default("15:00") // "HH:mm" // <-- should this be removed? (in place of checkInTime)
+  checkInWindowEnd     String?   @default("21:00") // "HH:mm"
+  checkInTime          String?   @default("15:00") // "HH:mm"
+  checkOutTime         String?   @default("10:00") // "HH:mm"
 
   post Post?
 
@@ -260,7 +260,7 @@ model PropertyRules {
 model PropertyDetails {
   id            String    @id @default(cuid())
   placeType     String?   @default("House") // Types: Entire Home, Room
-  listingType   String?   @default("Entire Place") // 'Entire Place', 'Room', 'Share Room'
+  listingType   String?   @default("Entire Place") // 'Entire Place', 'Room', 'Shared Room'
   propertyType  String?   @default("Home")
   maxGuests     Int?      @default(2)
   maxPets       Int?      @default(0) // disable this if !petsAllowed
