@@ -97,10 +97,10 @@ const daysToBooleanArray = (daysArray: number[]) => {
 export default function Availability({ data }) {
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const availability = data.availability;
 
   // const [restrictedCheckIn, setRestrictedCheckIn] = useState(data.availability.restrictedCheckIn);
   // const [restrictedCheckOut, setRestrictedCheckOut] = useState(data.availability.restrictedCheckOut);
+  const availability = data.availability;
 
   const formik = useFormik({
     initialValues: {
@@ -138,8 +138,7 @@ export default function Availability({ data }) {
           restrictedCheckOut: values.restrictedCheckOut,
         },
       };
-      alert(JSON.stringify(values.restrictedCheckIn));
-      debugger;
+
       const result = await updatePost(transformedValues);
       if (result) {
         console.log("Post updated successfully:", result);
