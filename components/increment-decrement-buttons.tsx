@@ -2,13 +2,13 @@ import React from 'react';
 import { PlusCircle, MinusCircle, XCircle } from "lucide-react";
 
 interface IncrementDecrementButtonProps {
-    value: number;
-    decrement: () => void;
-    increment: () => void;
-  }
-  
-  const IncrementDecrementButton: React.FC<IncrementDecrementButtonProps> = ({ value, decrement, increment }) => {
-    return (
+  value: number;
+  decrement: () => void;
+  increment: () => void;
+}
+
+const IncrementDecrementButton: React.FC<IncrementDecrementButtonProps> = ({ value, decrement, increment }) => {
+  return (
     <div className="col-span-2 flex items-center justify-end">
       <div className="flex items-center space-x-2 ml-auto">
         <button
