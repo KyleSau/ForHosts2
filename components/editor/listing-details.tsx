@@ -128,81 +128,77 @@ export default function ListingDetails({ data }) {
           </button>
         </div>
         <TabTitle title="Facilities" desc="Choose the amount for various facilities in your property" />
-        <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8">
-          {/* <PlaceTypes formik={formik} /> */}
-          <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
-            {/* Dropdown for Property Types */}
-            <Label htmlFor="propertyType" className="col-span-1 col-start-1 flex items-center">
-              Property Type
-            </Label>
-            <div className="col-span-1 col-start-2 flex items-center sm:col-span-3 sm:col-start-5 md:col-span-2 md:col-start-4">
-              <select
-                id="propertyType"
-                name="propertyType"
-                value={formik.values.propertyType}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="w-full rounded-md border p-2 "
-              >
-                <option value="" disabled>
-                  Select Property Type
-                </option>
-                {PropertyTypesArray.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-            </div>
+        <div className="mt-10 grid grid-cols-3 gap-x-6 gap-y-8">
 
-            {/* Dropdown for Listing Types */}
-            <Label htmlFor="listingType" className="col-span-1 col-start-1 flex items-center">
-              Listing Type
-            </Label>
-            <div className="col-span-1 col-start-3 flex items-center sm:col-span-3 sm:col-start-5 md:col-span-2 md:col-start-4">
-              <select
-                id="listingType"
-                name="listingType"
-                value={formik.values.listingType}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="w-full rounded-md border p-2"
-              >
-                <option value="" disabled>
-                  Select Listing Type
+          <label htmlFor="maxGuests" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
+            Listing Type
+          </label>
+          <div className='flex flex-col col-start-2 col-span-2 sm:col-start-3 sm:col-span-1'>
+            <select
+              id="listingType"
+              name="listingType"
+              value={formik.values.listingType}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className="w-full rounded-md border p-2"
+            >
+              <option value="" disabled>
+                Select Listing Type
+              </option>
+              {ListingTypesArray.map((type) => (
+                <option key={type} value={type}>
+                  {type}
                 </option>
-                {ListingTypesArray.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Dropdown for Place Types */}
-            <Label htmlFor="placeType" className="col-span-1 col-start-1 flex items-center">
-              Place Type
-            </Label>
-            <div className="col-span-1 col-start-3 flex items-center sm:col-span-3 sm:col-start-5 md:col-span-2 md:col-start-4">
-              <select
-                id="placeType"
-                name="placeType"
-                value={formik.values.placeType}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="w-full rounded-md border p-2"
-              >
-                <option value="" disabled>
-                  Select Place Type
-                </option>
-                {PlaceTypesArray.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-            </div>
+              ))}
+            </select>
           </div>
+
+          <label htmlFor="propertyType" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
+            Property Type
+          </label>
+          <div className='flex flex-col justify-end sm:col-span-2 sm:col-start-2 col-start-3'>
+            <select
+              id="propertyType"
+              name="propertyType"
+              value={formik.values.propertyType}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className="w-full rounded-md border p-2"
+            >
+              <option value="" disabled>
+                Select Property Type
+              </option>
+              {PropertyTypesArray.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <label htmlFor="maxGuests" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
+            Place Type
+          </label>
+          <div className='flex flex-col col-start-2'>
+            <select
+              id="placeType"
+              name="placeType"
+              value={formik.values.placeType}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className="max-w-[140px] rounded-md border p-2"
+            >
+              <option value="" disabled>
+                Select Place Type
+              </option>
+              {PlaceTypesArray.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <label htmlFor="maxGuests" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
             Max Guests
           </label>
