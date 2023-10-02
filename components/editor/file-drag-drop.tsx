@@ -12,9 +12,7 @@ import { uploadBlobMetadata, listAllBlobsInStore, deleteBlobFromStore, getBlobMe
   updateBlobMetadata
 } from '@/lib/blob_actions';
 import { Image as ImagePrismaSchema, Post } from "@prisma/client";
-import { headers } from 'next/headers';
 import { hostname } from 'os';
-import { PrismaClientRustPanicError } from '@prisma/client/runtime';
 
 //DEV MODE
 const DEBUG_TOGGLE = false;
@@ -23,13 +21,14 @@ const DEBUG_TOGGLE = false;
 interface FileDataObject extends Partial<ImagePrismaSchema> {
   file?: File | null, //for handling local-only files
   localBlobUrl?: string,
-  inBlobStore: boolean
+  inBlobStore: boolean,
+  isUploading: boolean
 }
 
 export function FileClickDragDrop({ componentId, data }: { componentId: string, data: any }) {
   //important consts
-  const POST_ID = data["id"]; 
   const SITE_ID = data["site"]["id"];
+  const POST_ID = data["id"]; 
 
   const PERMITTED_FILE_TYPES = new Set([FILE_CONSTS.JPEG, FILE_CONSTS.PNG]);
   const [fileDataObjects, setFileDataObjects] = useState<FileDataObject[]>([]);
@@ -38,7 +37,7 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
   //states for confirmation modal for deleting pictures
   const [editorWarningModalOpen, setEditorWarningModalOpen] = useState<boolean>(false);
   const [editorWarningModalData, setEditorWarningModalData] = useState<EditorWarningModalDataType>(EditorWarningModalDataTemplate);
-  const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [uploadInProgress, setUploadInProgress] = useState<boolean>(false);
 
   //TEST
   const [blobsFromStoreTest, setBlobsFromStoreTest] = useState<BlobResult[]>([]);
@@ -50,6 +49,7 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
       (blobMetadata: ImagePrismaSchema & { post: Post | null }) => {
         const fileDataObject: FileDataObject = {
           inBlobStore: true,
+          isUploading: false,
           ... blobMetadata
         }
         return fileDataObject;
@@ -73,17 +73,20 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
       console.log(">>> fdo: ", fdo);
       if(fdo.inBlobStore)
       {
+        console.log("111111111111111111111111111111111111111");
         if(fdo?.id && fdo.orderIndex != fdoIdx) {
           const updateBlobMetadataResponse = await updateBlobMetadata(fdo.id, {orderIndex: fdoIdx});
           const newUpdatedFile: FileDataObject = {
             inBlobStore: true,
+            isUploading: false,
             ...updateBlobMetadataResponse
           }
           fileDataObjectsCopy[fdoIdx] = newUpdatedFile;
         }
       } 
-      else 
+      else
       {
+        console.log("2222222222222222222222222222222222222222222");
         const file = fdo?.file;
         if(file) {
           console.log("file.name: ", file.name);
@@ -97,19 +100,18 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
           console.log("uploadBlobMetadataResponse: fdoIdx: ", fdoIdx,"    responseValue: ", uploadBlobMetadataResponse);
           const newUploadedFile: FileDataObject = {
             inBlobStore: true,
+            isUploading: false,
             ...uploadBlobMetadataResponse
           }
           fileDataObjectsCopy[fdoIdx] = newUploadedFile;
         }
-      }
+      } 
+      setFileDataObjects([...fileDataObjectsCopy]); // this enables async spinner for each image 
     };
-
     return fileDataObjectsCopy;
   }
 
   const addFilesToLocalStateAndDoUpload = async (newFiles: (File | null)[]) => {
-    setIsUploading(true);
-
     //first check if adding the new files causes currently uploaded pics to surpass the upload threshold; show modal if so
     if (fileDataObjects.length > IMAGE_UPLOAD_QUANTITY_LIMIT || fileDataObjects.length + newFiles.length > IMAGE_UPLOAD_QUANTITY_LIMIT) {
       setEditorWarningModalData({
@@ -133,12 +135,12 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
           } else {
             const localBlobUrl = URL.createObjectURL(file);
             console.log("localBlobUrl: ", localBlobUrl);
-
             const newFileNotStored: FileDataObject = {
               file,
               localBlobUrl,
               inBlobStore: false,
-              orderIndex: fileDataObjects.length + fileIdx
+              orderIndex: fileDataObjects.length + fileIdx,
+              isUploading: true
             }
             newFilesBelowSizeLimit.push(newFileNotStored);
           }
@@ -147,6 +149,7 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
       const updatedFdoArray = [...fileDataObjects, ...newFilesBelowSizeLimit];
       console.log("updatedFdoArray first time: ", updatedFdoArray);
       setFileDataObjects(updatedFdoArray);
+      setUploadInProgress(true);
 
       //if needed, throw up modal informing user that files above the size limit were not added
       if (newFilesAboveSizeLimit.length > 0) {
@@ -159,15 +162,21 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
         setEditorWarningModalOpen(true);
       }
 
-      const updatedFdoArrayAfterUploadPromise = uploadFileDataObjects(updatedFdoArray);
-      updatedFdoArrayAfterUploadPromise.then((updatedFdoArrayAfterUpload: FileDataObject[]) => {
-        console.log("updatedFdoArray second time: ", updatedFdoArrayAfterUpload);
-        setFileDataObjects(updatedFdoArrayAfterUpload);
-        setIsUploading(false);
-      });
+      const updatedFdoArrayAfterUpload = await uploadFileDataObjects(updatedFdoArray);
+      console.log("updatedFdoArray second time: ", updatedFdoArrayAfterUpload);
+      setFileDataObjects(updatedFdoArrayAfterUpload);
+      setUploadInProgress(false);
     }
   };
 
+  const uploadFilesToBlobStoreAndMetadataToDB = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    console.log("uploadFilesToBlobStoreAndMetadataToDB entered");
+    console.log("event: ", event);
+    event.preventDefault();
+    const uploadPromiseResponse = await uploadFileDataObjects(fileDataObjects);
+    console.log("uploadPromiseResponse: ", uploadPromiseResponse);
+    setFileDataObjects(uploadPromiseResponse as FileDataObject[]);
+  };
 
   const handleAddFilesToLocalStateViaOpenWindow = (event: any) => {
     console.log("handleAddFilesToLocalStateViaOpenWindow entered");
@@ -221,56 +230,46 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
     setEditorWarningModalOpen(true);
   };
 
+  // const uploadingInProgress = () => {
+  //   return fileDataObjects.filter((fdo: FileDataObject) => fdo.isUploading).length > 0;
+  // };
+
   const handleDragStart = (event: any, idx: number) => {
-    console.log("handleDragStart entered: idx chosen:", idx);
-    setDraggedIdx(idx);
-    event.dataTransfer.effectAllowed = "move";
+    if(!uploadInProgress) {
+      console.log("handleDragStart entered: idx chosen:", idx);
+      setDraggedIdx(idx);
+      event.dataTransfer.effectAllowed = "move";
+    }
   };
 
   const handleDragOver = (event: any) => {
-    console.log("handleDragOver entered");
-    event.preventDefault();
-    event.stopPropagation();
+    if(!uploadInProgress) {
+      console.log("handleDragOver entered");
+      event.preventDefault();
+      event.stopPropagation();
+    }
   };
 
   const handleDropForMove = async (event: any, idx: number) => {
-    console.log("handleDropForMove entered: idx chosen:", idx); //to idx
-    console.log("draggedIdx: ", draggedIdx); //from idx
-    event.preventDefault();
-
-    if (draggedIdx !== null && draggedIdx !== idx) {
-      // Swap in addedFileArray
-      const fileDataObjectsCopy = [...fileDataObjects];
-      const tempFile = fileDataObjectsCopy[draggedIdx];
-      fileDataObjectsCopy[draggedIdx] = fileDataObjectsCopy[idx];
-      fileDataObjectsCopy[idx] = tempFile;
-      console.log("AAAAA: ", fileDataObjectsCopy)
-      setFileDataObjects(fileDataObjectsCopy);
-      const fileDataObjectsCopyAfterUploadPromise = uploadFileDataObjects(fileDataObjectsCopy);
-      fileDataObjectsCopyAfterUploadPromise.then((fileDataObjectsCopyAfterUpload: FileDataObject[]) => {
+    if(!uploadInProgress) {
+      console.log("handleDropForMove entered: idx chosen:", idx); //to idx
+      console.log("draggedIdx: ", draggedIdx); //from idx
+      event.preventDefault();
+      if (draggedIdx !== null && draggedIdx !== idx) {
+        // Swap in addedFileArray
+        const fileDataObjectsCopy = [...fileDataObjects];
+        const tempFile = fileDataObjectsCopy[draggedIdx];
+        fileDataObjectsCopy[draggedIdx] = fileDataObjectsCopy[idx];
+        fileDataObjectsCopy[idx] = tempFile;
+        console.log("AAAAA: ", fileDataObjectsCopy)
+        // setFileDataObjects(fileDataObjectsCopy);
+        const fileDataObjectsCopyAfterUpload = await uploadFileDataObjects(fileDataObjectsCopy);
         console.log("BBBBB: ", fileDataObjectsCopyAfterUpload);
         setFileDataObjects(fileDataObjectsCopyAfterUpload);
-      });
+      }
+      setDraggedIdx(null); // Reset the dragged item index
     }
-    setDraggedIdx(null); // Reset the dragged item index
   };
-
-  const uploadFilesToBlobStoreAndMetadataToDB = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    console.log("uploadFilesToBlobStoreAndMetadataToDB entered");
-    console.log("event: ", event);
-    event.preventDefault();
-
-    setIsUploading(true);
-    console.log("setIsUploading to TRUE");
-
-    const uploadPromiseResponse = await uploadFileDataObjects(fileDataObjects);
-    console.log("uploadPromiseResponse: ", uploadPromiseResponse);
-    
-    setFileDataObjects(uploadPromiseResponse as FileDataObject[]);
-    setIsUploading(false);
-    console.log("setIsUploading to FALSE");    
-  };
-
 
   //TEST
   const handleListAllblobsInStore = async () => { 
@@ -321,15 +320,17 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
     })
   };
 
-  const renderActionButtonForImage = (isUploading: boolean, fdo: FileDataObject, imageIdx: number) => {
-    if (isUploading && !fdo.inBlobStore) {
+  const renderActionButtonForImage = (fdo: FileDataObject, imageIdx: number) => {
+    // console.log("renderActionButtonForImage: imageIdx: ", imageIdx);
+    // console.log("renderActionButtonForImage: fdo: ", fdo);
+    if (fdo.isUploading && !fdo.inBlobStore) {
       return (
         <button
-        type="button"
-        className="absolute top-0 right-0 z-50 p-1 bg-white rounded-bl focus:outline-none"
-        onClick={() => {}}
+          type="button"
+          className="absolute top-0 right-0 z-50 p-1 bg-white rounded-bl focus:outline-none"
+          onClick={() => {}}
         >
-        <Loader2 className='animate-spin'/> 
+          <Loader2 className='animate-spin'/> 
         </button>
       );
     } 
@@ -345,7 +346,6 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
     );
   };
 
-  console.log("12345 isUploading: ", isUploading);
   return (<>
     <div
       id={componentId}
@@ -396,13 +396,13 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
               id={componentId + "-image-container" + idx}
               key={idx}
               className="relative flex flex-col items-center overflow-hidden text-center bg-gray-100 border rounded cursor-move select-none"
-              draggable={true}
+              draggable={uploadInProgress? false : true}
               onDragStart={(e) => handleDragStart(e, idx)}
               onDrop={(e) => handleDropForMove(e, idx)}
               onDragOver={handleDragOver}
             >
               {
-                renderActionButtonForImage(isUploading, fdo, idx)
+                renderActionButtonForImage(fdo, idx)
               }
               <img
                 className="relative inset-0 z-0 object-cover w-full h-full border-4 border-white preview"
