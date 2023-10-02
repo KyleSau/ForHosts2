@@ -96,12 +96,11 @@ export default function ListingDetails({ data, bedrooms }) {
 
           <TabTitle title="Facilities" desc="Choose the amount for various facilities in your property" />
           <hr />
-          <div className="mt-10 grid grid-cols-3 gap-x-6 gap-y-8">
-
+          <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
             <label htmlFor="listingType" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
               Listing Type
             </label>
-            <div className='flex flex-col col-start-2 col-span-2 sm:col-start-3 sm:col-span-1'>
+            <div className="col-span-1 col-start-3 flex items-center sm:col-span-3 sm:col-start-5 md:col-span-2 md:col-start-4">
               <select
                 id="listingType"
                 name="listingType"
@@ -124,7 +123,7 @@ export default function ListingDetails({ data, bedrooms }) {
             <label htmlFor="propertyType" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
               Property Type
             </label>
-            <div className='flex flex-col justify-end sm:col-span-2 sm:col-start-2 col-start-3'>
+            <div className="col-span-1 col-start-3 flex items-center sm:col-span-3 sm:col-start-5 md:col-span-2 md:col-start-4">
               <select
                 id="propertyType"
                 name="propertyType"
@@ -147,14 +146,14 @@ export default function ListingDetails({ data, bedrooms }) {
             <label htmlFor="placeType" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
               Place Type
             </label>
-            <div className='flex flex-col col-start-2'>
+            <div className="col-span-1 col-start-3 flex items-center sm:col-span-3 sm:col-start-5 md:col-span-2 md:col-start-4">
               <select
                 id="placeType"
                 name="placeType"
                 value={formik.values.placeType}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className="max-w-[140px] rounded-md border p-2"
+                className="w-full rounded-md border p-2"
               >
                 <option value="" disabled>
                   Select Place Type
@@ -166,10 +165,11 @@ export default function ListingDetails({ data, bedrooms }) {
                 ))}
               </select>
             </div>
+           
             <label htmlFor="maxGuests" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
               Max Guests
             </label>
-            <div className='flex flex-col col-start-2'>
+            <div className='flex flex-col col-start-3 md:col-start-4'>
               <IncrementDecrementButton increment={() => (formik.setFieldValue("maxGuests", formik.values.maxGuests + 1))} decrement={() => (formik.setFieldValue("maxGuests", formik.values.maxGuests - 1))} value={formik.values.maxGuests} />
               {formik.touched.maxGuests && formik.errors.maxGuests && (
                 <div className="text-red-600 text-sm mt-2">{formik.errors.maxGuests}</div>
@@ -179,7 +179,8 @@ export default function ListingDetails({ data, bedrooms }) {
             <label htmlFor="maxPets" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
               Max Pets (disabled if pets not allowed)
             </label>
-            <div className='flex flex-col col-start-2'>
+            <div className='flex flex-col col-start-3 md:col-start-4'>
+              
               <IncrementDecrementButton increment={() => (formik.setFieldValue("maxPets", formik.values.maxPets + 1))} decrement={() => (formik.setFieldValue("maxPets", formik.values.maxPets - 1))} value={formik.values.maxPets} />
               {formik.touched.maxPets && formik.errors.maxPets && (
                 <div className="text-red-600 text-sm mt-2">{formik.errors.maxPets}</div>
@@ -189,7 +190,7 @@ export default function ListingDetails({ data, bedrooms }) {
             <label htmlFor="totalBedrooms" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
               Number of Bedrooms
             </label>
-            <div className='flex flex-col col-start-2'>
+            <div className='flex flex-col col-start-3 md:col-start-4'>
               <IncrementDecrementButton increment={() => (formik.setFieldValue("totalBedrooms", formik.values.totalBedrooms + 1))} decrement={() => (formik.setFieldValue("totalBedrooms", formik.values.totalBedrooms - 1))} value={formik.values.totalBedrooms} />
               {formik.touched.totalBedrooms && formik.errors.totalBedrooms && (
                 <div className="text-red-600 text-sm mt-2">{formik.errors.totalBedrooms}</div>
@@ -199,7 +200,7 @@ export default function ListingDetails({ data, bedrooms }) {
             <label htmlFor="bathrooms" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
               Number of Bathrooms
             </label>
-            <div className='flex flex-col col-start-2 mb-5'>
+            <div className='flex flex-col col-start-3 md:col-start-4 mb-5'>
               <IncrementDecrementButton increment={() => (formik.setFieldValue("bathrooms", formik.values.bathrooms + 1))} decrement={() => (formik.setFieldValue("bathrooms", formik.values.bathrooms - 1))} value={formik.values.bathrooms} />
               {formik.touched.bathrooms && formik.errors.bathrooms && (
                 <div className="text-red-600 text-sm mt-2">{formik.errors.bathrooms}</div>
