@@ -128,121 +128,118 @@ export default function ListingDetails({ data }) {
           </button>
         </div>
         <TabTitle title="Facilities" desc="Choose the amount for various facilities in your property" />
-        <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8">
-          {/* <PlaceTypes formik={formik} /> */}
-          <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
-            {/* Dropdown for Property Types */}
-            <Label htmlFor="propertyType" className="col-span-1 col-start-1 flex items-center">
-              Property Type
-            </Label>
-            <div className="col-span-1 col-start-2 flex items-center sm:col-span-3 sm:col-start-5 md:col-span-2 md:col-start-4">
-              <select
-                id="propertyType"
-                name="propertyType"
-                value={formik.values.propertyType}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="w-full rounded-md border p-2 "
-              >
-                <option value="" disabled>
-                  Select Property Type
-                </option>
-                {PropertyTypesArray.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Dropdown for Listing Types */}
-            <Label htmlFor="listingType" className="col-span-1 col-start-1 flex items-center">
-              Listing Type
-            </Label>
-            <div className="col-span-1 col-start-3 flex items-center sm:col-span-3 sm:col-start-5 md:col-span-2 md:col-start-4">
-              <select
-                id="listingType"
-                name="listingType"
-                value={formik.values.listingType}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="w-full rounded-md border p-2"
-              >
-                <option value="" disabled>
-                  Select Listing Type
-                </option>
-                {ListingTypesArray.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Dropdown for Place Types */}
-            <Label htmlFor="placeType" className="col-span-1 col-start-1 flex items-center">
-              Place Type
-            </Label>
-            <div className="col-span-1 col-start-3 flex items-center sm:col-span-3 sm:col-start-5 md:col-span-2 md:col-start-4">
-              <select
-                id="placeType"
-                name="placeType"
-                value={formik.values.placeType}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="w-full rounded-md border p-2"
-              >
-                <option value="" disabled>
-                  Select Place Type
-                </option>
-                {PlaceTypesArray.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <label htmlFor="maxGuests" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
-            Max Guests
-          </label>
-          <div className='flex flex-col col-start-2'>
-            <IncrementDecrementButton increment={() => (formik.setFieldValue("maxGuests", formik.values.maxGuests + 1))} decrement={() => (formik.setFieldValue("maxGuests", formik.values.maxGuests - 1))} value={formik.values.maxGuests} />
-            {formik.touched.maxGuests && formik.errors.maxGuests && (
-              <div className="text-red-600 text-sm mt-2">{formik.errors.maxGuests}</div>
-            )}
-          </div>
-
-          <label htmlFor="maxPets" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
-            Max Pets (disabled if pets not allowed)
-          </label>
-          <div className='flex flex-col col-start-2'>
-            <IncrementDecrementButton increment={() => (formik.setFieldValue("maxPets", formik.values.maxPets + 1))} decrement={() => (formik.setFieldValue("maxPets", formik.values.maxPets - 1))} value={formik.values.maxPets} />
-            {formik.touched.maxPets && formik.errors.maxPets && (
-              <div className="text-red-600 text-sm mt-2">{formik.errors.maxPets}</div>
-            )}
-          </div>
-
-          <label htmlFor="bedrooms" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
-            Number of Bedrooms
-          </label>
-          <div className='flex flex-col col-start-2'>
-            <IncrementDecrementButton increment={() => (formik.setFieldValue("totalBedrooms", formik.values.totalBedrooms + 1))} decrement={() => (formik.setFieldValue("totalBedrooms", formik.values.totalBedrooms - 1))} value={formik.values.totalBedrooms} />
-            {formik.touched.bedrooms && formik.errors.bedrooms && (
-              <div className="text-red-600 text-sm mt-2">{formik.errors.bedrooms}</div>
-            )}
-          </div>
-
-          <label htmlFor="bathrooms" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
-            Number of Bathrooms
-          </label>
-          <div className='flex flex-col col-start-2 mb-5'>
-            <IncrementDecrementButton increment={() => (formik.setFieldValue("bathrooms", formik.values.bathrooms + 1))} decrement={() => (formik.setFieldValue("bathrooms", formik.values.bathrooms - 1))} value={formik.values.bathrooms} />
-            {formik.touched.bathrooms && formik.errors.bathrooms && (
-              <div className="text-red-600 text-sm mt-2">{formik.errors.bathrooms}</div>
-            )}
-          </div>
+        {/* <PlaceTypes formik={formik} /> */}
+        {/* Dropdown for Property Types */}
+        <label htmlFor="propertyType" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
+          Property Type
+        </label>
+        <div className="col-span-2 flex items-center justify-end">
+          <select
+            id="propertyType"
+            name="propertyType"
+            value={formik.values.propertyType}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="w-full rounded-md border p-2"
+          >
+            <option value="" disabled>
+              Select Property Type
+            </option>
+            {PropertyTypesArray.map((type) => (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            ))}
+          </select>
         </div>
+
+        {/* Dropdown for Listing Types */}
+        <label htmlFor="listingType" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
+          Listing Type
+        </label>
+        <div className="col-span-1 col-start-2 flex items-center">
+          <select
+            id="listingType"
+            name="listingType"
+            value={formik.values.listingType}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="w-full rounded-md border p-2"
+          >
+            <option value="" disabled>
+              Select Listing Type
+            </option>
+            {ListingTypesArray.map((type) => (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Dropdown for Place Types */}
+        <label htmlFor="placeType" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
+          Place Type
+        </label>
+        <div className="col-span-2 col-start-2 flex items-center sm:col-span-3 sm:col-start-3 md:col-span-2 md:col-start-3">
+          <select
+            id="placeType"
+            name="placeType"
+            value={formik.values.placeType}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="w-full rounded-md border p-2"
+          >
+            <option value="" disabled>
+              Select Place Type
+            </option>
+            {PlaceTypesArray.map((type) => (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            ))}
+          </select>
+        </div>
+        <label htmlFor="maxGuests" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
+          Max Guests
+        </label>
+        <div className='flex flex-col col-start-2'>
+          <IncrementDecrementButton increment={() => (formik.setFieldValue("maxGuests", formik.values.maxGuests + 1))} decrement={() => (formik.setFieldValue("maxGuests", formik.values.maxGuests - 1))} value={formik.values.maxGuests} />
+          {formik.touched.maxGuests && formik.errors.maxGuests && (
+            <div className="text-red-600 text-sm mt-2">{formik.errors.maxGuests}</div>
+          )}
+        </div>
+
+        <label htmlFor="maxPets" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
+          Max Pets (disabled if pets not allowed)
+        </label>
+        <div className='flex flex-col col-start-2'>
+          <IncrementDecrementButton increment={() => (formik.setFieldValue("maxPets", formik.values.maxPets + 1))} decrement={() => (formik.setFieldValue("maxPets", formik.values.maxPets - 1))} value={formik.values.maxPets} />
+          {formik.touched.maxPets && formik.errors.maxPets && (
+            <div className="text-red-600 text-sm mt-2">{formik.errors.maxPets}</div>
+          )}
+        </div>
+
+        <label htmlFor="bedrooms" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
+          Number of Bedrooms
+        </label>
+        <div className='flex flex-col col-start-2'>
+          <IncrementDecrementButton increment={() => (formik.setFieldValue("totalBedrooms", formik.values.totalBedrooms + 1))} decrement={() => (formik.setFieldValue("totalBedrooms", formik.values.totalBedrooms - 1))} value={formik.values.totalBedrooms} />
+          {formik.touched.bedrooms && formik.errors.bedrooms && (
+            <div className="text-red-600 text-sm mt-2">{formik.errors.bedrooms}</div>
+          )}
+        </div>
+
+        <label htmlFor="bathrooms" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
+          Number of Bathrooms
+        </label>
+        <div className='flex flex-col col-start-2 mb-5'>
+          <IncrementDecrementButton increment={() => (formik.setFieldValue("bathrooms", formik.values.bathrooms + 1))} decrement={() => (formik.setFieldValue("bathrooms", formik.values.bathrooms - 1))} value={formik.values.bathrooms} />
+          {formik.touched.bathrooms && formik.errors.bathrooms && (
+            <div className="text-red-600 text-sm mt-2">{formik.errors.bathrooms}</div>
+          )}
+        </div>
+
         <BedroomList key={formik.values.totalBedrooms} totalBedrooms={formik.values.totalBedrooms} />
 
         {/* <BedroomList totalBedrooms={formik.values.totalBedrooms} /> */}
