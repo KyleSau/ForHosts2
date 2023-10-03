@@ -303,6 +303,13 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
     },
   });
 
+  await prisma.bedroom.create({
+    data: {
+      // Add any other default values if necessary
+      propertyDetailsId: response.propertyDetailsId,
+    },
+  });
+
   await revalidateTag(
     `${site.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}-posts`,
   );
@@ -389,8 +396,9 @@ export const updatePost = async (data: Post) => {
     }
 
     if (data.propertyRules) {
+      console.log(JSON.stringify(data.propertyRules));
       await prisma.propertyRules.update({
-        where: { id: post.propertyRules!.id },
+        where: { id: post.propertyRulesId! },
         data: data.propertyRules,
       });
     }
