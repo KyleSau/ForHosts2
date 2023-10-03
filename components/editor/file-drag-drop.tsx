@@ -12,6 +12,7 @@ import { uploadBlobMetadata, listAllBlobsInStore, deleteBlobFromStore, getBlobMe
   updateBlobMetadata
 } from '@/lib/blob_actions';
 import { Image as ImagePrismaSchema, Post } from "@prisma/client";
+import { default as NextImage } from 'next/image';
 import { hostname } from 'os';
 
 //DEV MODE
@@ -38,6 +39,7 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
   const [editorWarningModalOpen, setEditorWarningModalOpen] = useState<boolean>(false);
   const [editorWarningModalData, setEditorWarningModalData] = useState<EditorWarningModalDataType>(EditorWarningModalDataTemplate);
   const [uploadInProgress, setUploadInProgress] = useState<boolean>(false);
+  const [imageEaseTransition, setImageEaseTranstion] = useState<boolean>(false);
 
   //TEST
   const [blobsFromStoreTest, setBlobsFromStoreTest] = useState<BlobResult[]>([]);
@@ -106,12 +108,14 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
           fileDataObjectsCopy[fdoIdx] = newUploadedFile;
         }
       } 
-      setFileDataObjects([...fileDataObjectsCopy]); // this enables async spinner for each image 
+      setFileDataObjects(fileDataObjectsCopy); // this enables async spinner for each image 
     };
     return fileDataObjectsCopy;
   }
 
   const addFilesToLocalStateAndDoUpload = async (newFiles: (File | null)[]) => {
+    setUploadInProgress(true);
+
     //first check if adding the new files causes currently uploaded pics to surpass the upload threshold; show modal if so
     if (fileDataObjects.length > IMAGE_UPLOAD_QUANTITY_LIMIT || fileDataObjects.length + newFiles.length > IMAGE_UPLOAD_QUANTITY_LIMIT) {
       setEditorWarningModalData({
@@ -149,7 +153,6 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
       const updatedFdoArray = [...fileDataObjects, ...newFilesBelowSizeLimit];
       console.log("updatedFdoArray first time: ", updatedFdoArray);
       setFileDataObjects(updatedFdoArray);
-      setUploadInProgress(true);
 
       //if needed, throw up modal informing user that files above the size limit were not added
       if (newFilesAboveSizeLimit.length > 0) {
@@ -165,8 +168,8 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
       const updatedFdoArrayAfterUpload = await uploadFileDataObjects(updatedFdoArray);
       console.log("updatedFdoArray second time: ", updatedFdoArrayAfterUpload);
       setFileDataObjects(updatedFdoArrayAfterUpload);
-      setUploadInProgress(false);
     }
+    setUploadInProgress(false);
   };
 
   const uploadFilesToBlobStoreAndMetadataToDB = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -243,32 +246,27 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
   };
 
   const handleDragOver = (event: any) => {
-    if(!uploadInProgress) {
-      console.log("handleDragOver entered");
-      event.preventDefault();
-      event.stopPropagation();
-    }
+    console.log("handleDragOver entered");
+    event.preventDefault();
+    event.stopPropagation();
   };
 
   const handleDropForMove = async (event: any, idx: number) => {
-    if(!uploadInProgress) {
-      console.log("handleDropForMove entered: idx chosen:", idx); //to idx
-      console.log("draggedIdx: ", draggedIdx); //from idx
-      event.preventDefault();
-      if (draggedIdx !== null && draggedIdx !== idx) {
-        // Swap in addedFileArray
-        const fileDataObjectsCopy = [...fileDataObjects];
-        const tempFile = fileDataObjectsCopy[draggedIdx];
-        fileDataObjectsCopy[draggedIdx] = fileDataObjectsCopy[idx];
-        fileDataObjectsCopy[idx] = tempFile;
-        console.log("AAAAA: ", fileDataObjectsCopy)
-        // setFileDataObjects(fileDataObjectsCopy);
-        const fileDataObjectsCopyAfterUpload = await uploadFileDataObjects(fileDataObjectsCopy);
-        console.log("BBBBB: ", fileDataObjectsCopyAfterUpload);
-        setFileDataObjects(fileDataObjectsCopyAfterUpload);
-      }
-      setDraggedIdx(null); // Reset the dragged item index
+    console.log("handleDropForMove entered: idx chosen:", idx); //to idx
+    console.log("draggedIdx: ", draggedIdx); //from idx
+    event.preventDefault();
+    if (!uploadInProgress && (draggedIdx !== null && draggedIdx !== idx)) {
+      // Swap in addedFileArray
+      const fileDataObjectsCopy = [...fileDataObjects];
+      const tempFile = fileDataObjectsCopy[draggedIdx];
+      fileDataObjectsCopy[draggedIdx] = fileDataObjectsCopy[idx];
+      fileDataObjectsCopy[idx] = tempFile;
+      console.log("AAAAA: ", fileDataObjectsCopy)
+      const fileDataObjectsCopyAfterUpload = await uploadFileDataObjects(fileDataObjectsCopy);
+      console.log("BBBBB: ", fileDataObjectsCopyAfterUpload);
+      setFileDataObjects(fileDataObjectsCopyAfterUpload);
     }
+    setDraggedIdx(null); // Reset the dragged item index
   };
 
   //TEST
@@ -385,28 +383,40 @@ export function FileClickDragDrop({ componentId, data }: { componentId: string, 
       <div
         className="grid grid-cols-3 gap-4 mt-4 md:grid-cols-3"
         onDragOver={handleDragOver}
+        draggable={uploadInProgress? false: true}
       > 
         {fileDataObjects.map((fdo: FileDataObject, idx: number) => {
           //console.log("FileDataObject to be rendered: ", fdo);
           const inBlobStore = fdo?.inBlobStore;
           const fileObj = fdo.file;
           const fileObjSize = humanReadableFileSize(inBlobStore? parseInt(fdo.size? fdo.size: "0") : fileObj?.size);
+          const imageSrc=inBlobStore? fdo.url: fdo.localBlobUrl;
+          
           return (
             <div
               id={componentId + "-image-container" + idx}
               key={idx}
-              className="relative flex flex-col items-center overflow-hidden text-center bg-gray-100 border rounded cursor-move select-none"
+              className={`
+                ${imageEaseTransition && "transition ease-in-out delay-150 hover:scale-105 duration-300"} 
+                relative flex flex-col items-center overflow-hidden text-center bg-gray-100 border rounded cursor-move select-none
+              `}
               draggable={uploadInProgress? false : true}
               onDragStart={(e) => handleDragStart(e, idx)}
               onDrop={(e) => handleDropForMove(e, idx)}
               onDragOver={handleDragOver}
+              onMouseDownCapture={() => setImageEaseTranstion(true)}
+              onMouseUpCapture={() => setImageEaseTranstion(false)}
+              onMouseLeave={() => setImageEaseTranstion(false)}
             >
               {
                 renderActionButtonForImage(fdo, idx)
               }
-              <img
+              <NextImage
                 className="relative inset-0 z-0 object-cover w-full h-full border-4 border-white preview"
-                src={inBlobStore? fdo.url: fdo.localBlobUrl}
+                src={imageSrc? imageSrc: ""}
+                alt={fdo.fileName? fdo.fileName: ""}
+                height={400}
+                width={500}
               />
               <div className="absolute bottom-0 left-0 right-0 flex flex-col p-2 text-xs bg-white bg-opacity-50">
                 <span className="w-full font-bold text-gray-900 truncate">
