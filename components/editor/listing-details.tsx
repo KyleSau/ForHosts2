@@ -165,7 +165,7 @@ export default function ListingDetails({ data, bedrooms }) {
                 ))}
               </select>
             </div>
-           
+
             <label htmlFor="maxGuests" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
               Max Guests
             </label>
@@ -180,7 +180,7 @@ export default function ListingDetails({ data, bedrooms }) {
               Max Pets (disabled if pets not allowed)
             </label>
             <div className='flex flex-col col-start-3 md:col-start-4'>
-              
+
               <IncrementDecrementButton increment={() => (formik.setFieldValue("maxPets", formik.values.maxPets + 1))} decrement={() => (formik.setFieldValue("maxPets", formik.values.maxPets - 1))} value={formik.values.maxPets} />
               {formik.touched.maxPets && formik.errors.maxPets && (
                 <div className="text-red-600 text-sm mt-2">{formik.errors.maxPets}</div>
