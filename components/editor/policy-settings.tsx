@@ -493,7 +493,7 @@ export default function PolicySettings({ data }) {
                 value={formik.values.additionalRules}
               />
             </div>
-            <WYSIWYGEditor formik={formik} />
+            <WYSIWYGEditor formik={formik} field={"additionalRules"} />
           </div>
 
           {/* Display form errors */}
