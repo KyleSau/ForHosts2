@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { Post, Site } from "@prisma/client";
+import { Bedroom, Post, Site } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { withPostAuth, withSiteAuth } from "./auth";
 import { getSession } from "@/lib/auth";
@@ -397,7 +397,7 @@ export const updatePost = async (data: Post) => {
 
     // Check if the totalBedrooms field is being updated
     if (data.propertyDetails && typeof data.propertyDetails.totalBedrooms !== "undefined") {
-      /*const newTotalBedrooms = data.propertyDetails.totalBedrooms;
+      const newTotalBedrooms = data.propertyDetails.totalBedrooms;
       const currentTotalBedrooms = post.propertyDetails.totalBedrooms;
 
       // If there's an increase in totalBedrooms
@@ -429,7 +429,7 @@ export const updatePost = async (data: Post) => {
           // Delete the Bedroom entry
           await prisma.bedroom.delete({ where: { id: bedroom.id } });
         }
-      }*/
+      }
 
       // Now, update the propertyDetails
       await prisma.propertyDetails.update({
@@ -459,6 +459,35 @@ export const updatePost = async (data: Post) => {
     return { error: error.message };
   }
 };
+
+export const getBedrooms = async (postId: string) => {
+  const post = await prisma.post.findUnique({
+    where: { id: postId },
+    include: {
+      propertyDetails: {
+        include: {
+          bedrooms: {
+            orderBy: {
+              createdAt: 'asc' // Order by createdAt in descending order (LIFO)
+            }
+          }
+        }
+      }
+    }
+  });
+
+  return post?.propertyDetails?.bedrooms || [];
+};
+
+export const updateBedroom = async (bedroom: Bedroom) => {
+  const updatedBedroom = await prisma.bedroom.update({
+    where: { id: bedroom.id },
+    data: bedroom
+  });
+  return updatedBedroom;
+};
+
+
 
 export const getPosts = async (
   userId: string,

@@ -2,7 +2,8 @@ import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
 import ListingDetails from "@/components/editor/listing-details";
-import BedroomList from "@/components/bedroom-list";
+import BedroomManager from "@/components/bedroom-manager";
+import { getBedrooms } from "@/lib/actions";
 export default async function listingDetailsPage({ params }: { params: { id: string } }) {
   const session = await getSession();
   if (!session) {
@@ -24,10 +25,11 @@ export default async function listingDetailsPage({ params }: { params: { id: str
   if (!post || post.userId !== session.user.id) {
     notFound();
   }
+  const bedrooms = await getBedrooms(post.id);
   return (
 
     <div>
-      <ListingDetails data={post} />
+      <ListingDetails data={post} bedrooms={bedrooms} />
     </div>
     //
   )

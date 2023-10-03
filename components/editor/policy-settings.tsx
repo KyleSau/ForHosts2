@@ -25,6 +25,7 @@ import { TextareaAutosize } from "@mui/material";
 import { Input } from "../ui/input";
 import EditorWrapper from "./editor-container-wrapper";
 import { updatePost } from "@/lib/actions";
+import { EditorContent } from "@tiptap/react";
 const hours = [
   "None",
   "12:00 AM",
@@ -100,22 +101,22 @@ export default function PolicySettings({ data }) {
     },
 
     validationSchema: validationSchema,
-      onSubmit: async (values: any) => {
-        setSubmitted(false);
+    onSubmit: async (values: any) => {
+      setSubmitted(false);
       setIsLoading(true);
       const transformedValues = {
         id: values.id,
         propertyRules: {
-            petsAllowed: values.petsAllowed,
-            eventsAllowed: values.eventsAllowed,
-            smokingAllowed: values.smokingAllowed,
-            photographyAllowed: values.photographyAllowed,
-            quietHoursStart: values.quietHoursStart,
-            quietHoursEnd: values.quietHoursEnd,
-            cancellationPolicy: "test",
-            interactionPreferences: "test",
-            checkInMethod: "test",
-            additionalRules: values.additionalRules,
+          petsAllowed: values.petsAllowed,
+          eventsAllowed: values.eventsAllowed,
+          smokingAllowed: values.smokingAllowed,
+          photographyAllowed: values.photographyAllowed,
+          quietHoursStart: values.quietHoursStart,
+          quietHoursEnd: values.quietHoursEnd,
+          cancellationPolicy: "test",
+          interactionPreferences: "test",
+          checkInMethod: "test",
+          additionalRules: values.additionalRules,
         },
       };
       console.log(transformedValues);
@@ -132,6 +133,7 @@ export default function PolicySettings({ data }) {
       }
     },
   });
+
   const handleBeforeUnload = (e) => {
     if (formik.dirty) {
       e.preventDefault();
@@ -147,6 +149,7 @@ export default function PolicySettings({ data }) {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [formik.dirty]);
+
   return (
     <EditorWrapper>
       <form onSubmit={formik.handleSubmit}>
@@ -321,16 +324,14 @@ export default function PolicySettings({ data }) {
                 }
               />
               <div
-                className={`h-6 w-12 bg-${
-                  formik.values.petsAllowed ? "black" : "gray-300"
-                } rounded-full p-1 transition-transform duration-300`}
+                className={`h-6 w-12 bg-${formik.values.petsAllowed ? "black" : "gray-300"
+                  } rounded-full p-1 transition-transform duration-300`}
               >
                 <div
-                  className={`h-4 w-4 transform rounded-full bg-white shadow-md ${
-                    formik.values.petsAllowed
-                      ? "translate-x-6"
-                      : "translate-x-0"
-                  }`}
+                  className={`h-4 w-4 transform rounded-full bg-white shadow-md ${formik.values.petsAllowed
+                    ? "translate-x-6"
+                    : "translate-x-0"
+                    }`}
                 ></div>
               </div>
             </label>
@@ -351,16 +352,14 @@ export default function PolicySettings({ data }) {
                 }
               />
               <div
-                className={`h-6 w-12 bg-${
-                  formik.values.eventsAllowed ? "black" : "gray-300"
-                } rounded-full p-1 transition-transform duration-300`}
+                className={`h-6 w-12 bg-${formik.values.eventsAllowed ? "black" : "gray-300"
+                  } rounded-full p-1 transition-transform duration-300`}
               >
                 <div
-                  className={`h-4 w-4 transform rounded-full bg-white shadow-md ${
-                    formik.values.eventsAllowed
-                      ? "translate-x-6"
-                      : "translate-x-0"
-                  }`}
+                  className={`h-4 w-4 transform rounded-full bg-white shadow-md ${formik.values.eventsAllowed
+                    ? "translate-x-6"
+                    : "translate-x-0"
+                    }`}
                 ></div>
               </div>
             </label>
@@ -381,16 +380,14 @@ export default function PolicySettings({ data }) {
                 }
               />
               <div
-                className={`h-6 w-12 bg-${
-                  formik.values.smokingAllowed ? "black" : "gray-300"
-                } rounded-full p-1 transition-transform duration-300`}
+                className={`h-6 w-12 bg-${formik.values.smokingAllowed ? "black" : "gray-300"
+                  } rounded-full p-1 transition-transform duration-300`}
               >
                 <div
-                  className={`h-4 w-4 transform rounded-full bg-white shadow-md ${
-                    formik.values.smokingAllowed
-                      ? "translate-x-6"
-                      : "translate-x-0"
-                  }`}
+                  className={`h-4 w-4 transform rounded-full bg-white shadow-md ${formik.values.smokingAllowed
+                    ? "translate-x-6"
+                    : "translate-x-0"
+                    }`}
                 ></div>
               </div>
             </label>
@@ -411,16 +408,14 @@ export default function PolicySettings({ data }) {
                 }
               />
               <div
-                className={`h-6 w-12 bg-${
-                  formik.values.photographyAllowed ? "black" : "gray-300"
-                } rounded-full p-1 transition-transform duration-300`}
+                className={`h-6 w-12 bg-${formik.values.photographyAllowed ? "black" : "gray-300"
+                  } rounded-full p-1 transition-transform duration-300`}
               >
                 <div
-                  className={`h-4 w-4 transform rounded-full bg-white shadow-md ${
-                    formik.values.photographyAllowed
-                      ? "translate-x-6"
-                      : "translate-x-0"
-                  }`}
+                  className={`h-4 w-4 transform rounded-full bg-white shadow-md ${formik.values.photographyAllowed
+                    ? "translate-x-6"
+                    : "translate-x-0"
+                    }`}
                 ></div>
               </div>
             </label>

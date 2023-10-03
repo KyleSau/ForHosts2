@@ -10,6 +10,19 @@ import { Toggle } from "@/components/ui/toggle";
 import EditorSaveButton from "./editor-save-button";
 import EditorWrapper from "./editor-container-wrapper";
 
+type DayName = "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday" | "Sunday";
+
+const dayMapping: Record<DayName, number> = {
+  "Monday": 0,
+  "Tuesday": 1,
+  "Wednesday": 2,
+  "Thursday": 3,
+  "Friday": 4,
+  "Saturday": 5,
+  "Sunday": 6
+};
+
+
 const hourAN = [
   "6:00 AM",
   "7:00 AM",
@@ -73,19 +86,32 @@ const validationSchema = Yup.object().shape({
   // checkOutTime: Yup.string().required("Check-out time is required"),
 });
 
+const daysToBooleanArray = (daysArray: number[]) => {
+  const week = new Array(7).fill(false);
+  daysArray.forEach(day => {
+    week[day] = true;
+  });
+  return week;
+}
+
 export default function Availability({ data }) {
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const avaData = data.availability;
+
+  // const [restrictedCheckIn, setRestrictedCheckIn] = useState(data.availability.restrictedCheckIn);
+  // const [restrictedCheckOut, setRestrictedCheckOut] = useState(data.availability.restrictedCheckOut);
+  const availability = data.availability;
 
   const formik = useFormik({
     initialValues: {
       id: data.id,
-      availabilityId: avaData.id,
-      instantBooking: avaData.instantBooking,
-      minStay: avaData.minStay,
-      maxStay: avaData.maxStay,
-      advanceNotice: avaData.advanceNotice,
+      availabilityId: availability.id,
+      instantBooking: availability.instantBooking,
+      minStay: availability.minStay,
+      maxStay: availability.maxStay,
+      advanceNotice: availability.advanceNotice,
+      restrictedCheckIn: availability.restrictedCheckIn,
+      restrictedCheckOut: availability.restrictedCheckOut,
       // sameDayAdvanceNotice: data.sameDayAdvanceNotice,
       // preparationTime: data.preparationTime,
       // availabilityWindow: data.availabilityWindow,
@@ -107,11 +133,12 @@ export default function Availability({ data }) {
           instantBooking: values.instantBooking,
           minStay: values.minStay,
           maxStay: values.maxStay,
-          advanceNotice: parseInt(values.advanceNotice),
-          restrictedCheckIn: [],
-          restrictedCheckOut: [],
+          advanceNotice: values.advanceNotice,
+          restrictedCheckIn: values.restrictedCheckIn,
+          restrictedCheckOut: values.restrictedCheckOut,
         },
       };
+
       const result = await updatePost(transformedValues);
       if (result) {
         console.log("Post updated successfully:", result);
@@ -127,9 +154,67 @@ export default function Availability({ data }) {
     },
   });
 
-  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-  const togglesArray = days.map(day => <Toggle className="mr-2 mb-2" key={day}>{day}</Toggle>);
+  // const toggleRestrictedCheckinDay = (dayName: DayName): void => {
+  //   console.log('day: ' + dayName);
+  //   const dayIndex = dayMapping[dayName];
+  //   setRestrictedCheckIn(prevState => {
+  //     const updatedState = [...prevState];
+  //     updatedState[dayIndex] = !updatedState[dayIndex];
+  //     return updatedState;
+  //   });
+  // }
+  // const toggleRestrictedCheckinDay = (dayName: DayName): void => {
+  //   const idx = dayMapping[dayName];
+  //   const arr = formik.values.restrictedCheckIn;
+  //   arr[idx] = !arr[idx];
+  //   formik.setFieldValue("restrictedCheckIn", arr);
+  //   return arr;
+  //   debugger;
+  //   // formik.setFieldValue("restrictedCheckIn", prevState => {
+  //   //   const updatedState = [...prevState];
+  //   //   updatedState[dayIndex] = !updatedState[dayIndex];
+  //   //   return updatedState;
+  //   // });
+  // };
 
+  const toggleRestrictedCheckinDay = (dayName: DayName): void => {
+    const idx = dayMapping[dayName];
+
+    // Copy the current array to a new one so we're not mutating Formik's values directly
+    const updatedCheckInDays = [...formik.values.restrictedCheckIn];
+
+    // Toggle the value for the specified day
+    updatedCheckInDays[idx] = !updatedCheckInDays[idx];
+
+    // Set the updated array back into Formik's state
+    formik.setFieldValue("restrictedCheckIn", updatedCheckInDays);
+  };
+
+  const renderRestrictedCheckInDaysToggle = () => {
+    return (
+      days.map(day => (
+        <Toggle
+          data-state={formik.values.restrictedCheckIn[dayMapping[day]] ? "on" : "off"}
+          // value={formik.values.restrictedCheckIn[dayMapping[day]]}
+          onClick={() => toggleRestrictedCheckinDay(day as DayName)}
+          className="mr-2 mb-2"
+          key={day}
+        >
+          {day}
+        </Toggle>
+      ))
+    );
+  }
+
+  const renderRestrictedCheckOutDaysToggle = () => {
+    /*return (
+      days.map(day => <Toggle onClick={() => toggleRestrictedCheckinDay(day as DayName)} className="mr-2 mb-2" key={day}>{day}</Toggle>
+      ));*/
+  }
+
+  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  const togglesArray = days.map(day => <Toggle onClick={() => toggleRestrictedCheckinDay(day as DayName)} className="mr-2 mb-2" key={day}>{day}</Toggle>);
+  // formik
 
   const handleBeforeUnload = (e) => {
     if (formik.dirty) {
@@ -350,6 +435,7 @@ export default function Availability({ data }) {
           <div>
             <TabTitle title="Restricted Days" desc="" />
             <hr className="mt-4" />
+            {/* {JSON.stringify(restrictedCheckIn)} */}
             <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
               <Label
                 htmlFor="restrictedCheckIn"
@@ -359,7 +445,8 @@ export default function Availability({ data }) {
               </Label>
               <div className="col-span-4 col-start-2 flex flex-wrap items-center">
                 {/* Create custom Toggle component or use your own implementation */}
-                {togglesArray}
+                {/* {togglesArray} */}
+                {renderRestrictedCheckInDaysToggle()}
               </div>
             </div>
             <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
@@ -371,7 +458,7 @@ export default function Availability({ data }) {
               </Label>
               <div className="col-span-4 col-start-2 flex flex-wrap items-center">
                 {/* Create custom Toggle component or use your own implementation */}
-                {togglesArray}
+                {/* {togglesArray} */}
               </div>
             </div>
           </div>
