@@ -41,7 +41,8 @@ export default function WYSIWYGEditor({ formik, field }: any) {
                 va.track("Autocomplete Shortcut Used");
             } else {
                 // setData(text);
-                formik.setFieldValue(field, editor?.getText());
+                formik.setFieldValue(field, e.editor.storage.markdown.getMarkdown());
+
                 /*setData((prevData) => ({
                     ...prevData,
                     text: e.editor.storage.markdown.getMarkdown(),
@@ -130,9 +131,12 @@ export default function WYSIWYGEditor({ formik, field }: any) {
     useEffect(() => {
         if (editor) {
             editor.commands.setContent(formik.values[field]);
-            // setData(text);
-            formik.setFieldValue(field, editor?.getText());
-            console.log('text/editor', editor.getText());
+            // IF THERE IS A BUG:
+            // use this here: e.editor.storage.markdown.getMarkdown()
+            // formik.setFieldValue(field, editor?.getText());
+            // console.log('text/editor', editor.getText());
+            // IF THERE IS ANOTHER BUG:
+            // use useHydration
         }
     }, [editor, field]);
 
