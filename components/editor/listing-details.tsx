@@ -170,7 +170,10 @@ export default function ListingDetails({ data, bedrooms }) {
               Max Guests
             </label>
             <div className='flex flex-col col-start-3 md:col-start-4'>
-              <IncrementDecrementButton increment={() => (formik.setFieldValue("maxGuests", formik.values.maxGuests + 1))} decrement={() => (formik.setFieldValue("maxGuests", formik.values.maxGuests - 1))} value={formik.values.maxGuests} />
+            <IncrementDecrementButton
+  value={formik.values.maxGuests}
+  setValue={(newValue) => formik.setFieldValue('maxGuests', newValue)}
+              />
               {formik.touched.maxGuests && formik.errors.maxGuests && (
                 <div className="text-red-600 text-sm mt-2">{formik.errors.maxGuests}</div>
               )}
@@ -181,7 +184,11 @@ export default function ListingDetails({ data, bedrooms }) {
             </label>
             <div className='flex flex-col col-start-3 md:col-start-4'>
               
-              <IncrementDecrementButton increment={() => (formik.setFieldValue("maxPets", formik.values.maxPets + 1))} decrement={() => (formik.setFieldValue("maxPets", formik.values.maxPets - 1))} value={formik.values.maxPets} />
+            <IncrementDecrementButton
+  value={formik.values.maxPets}
+  setValue={(newValue) => formik.setFieldValue('maxPets', newValue)}
+              />
+
               {formik.touched.maxPets && formik.errors.maxPets && (
                 <div className="text-red-600 text-sm mt-2">{formik.errors.maxPets}</div>
               )}
@@ -191,7 +198,10 @@ export default function ListingDetails({ data, bedrooms }) {
               Number of Bedrooms
             </label>
             <div className='flex flex-col col-start-3 md:col-start-4'>
-              <IncrementDecrementButton increment={() => (formik.setFieldValue("totalBedrooms", formik.values.totalBedrooms + 1))} decrement={() => (formik.setFieldValue("totalBedrooms", formik.values.totalBedrooms - 1))} value={formik.values.totalBedrooms} />
+            <IncrementDecrementButton
+  value={formik.values.totalBedrooms}
+  setValue={(newValue) => formik.setFieldValue('totalBedrooms', newValue)}
+              />
               {formik.touched.totalBedrooms && formik.errors.totalBedrooms && (
                 <div className="text-red-600 text-sm mt-2">{formik.errors.totalBedrooms}</div>
               )}
@@ -201,7 +211,10 @@ export default function ListingDetails({ data, bedrooms }) {
               Number of Bathrooms
             </label>
             <div className='flex flex-col col-start-3 md:col-start-4 mb-5'>
-              <IncrementDecrementButton increment={() => (formik.setFieldValue("bathrooms", formik.values.bathrooms + 1))} decrement={() => (formik.setFieldValue("bathrooms", formik.values.bathrooms - 1))} value={formik.values.bathrooms} />
+            <IncrementDecrementButton
+  value={formik.values.bathrooms}
+  setValue={(newValue) => formik.setFieldValue('bathrooms', newValue)}
+              />
               {formik.touched.bathrooms && formik.errors.bathrooms && (
                 <div className="text-red-600 text-sm mt-2">{formik.errors.bathrooms}</div>
               )}
