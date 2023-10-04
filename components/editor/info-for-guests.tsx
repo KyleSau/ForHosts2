@@ -6,9 +6,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import EditorWrapper from './editor-container-wrapper';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 import WYSIWYGEditor from './wysiwyg-editor';
-
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 
 export default function InfoForGuests({ data }) {
@@ -79,6 +83,7 @@ export default function InfoForGuests({ data }) {
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
+
                             </Select>
                             <Select>
                                 <SelectTrigger className="max-w-[205px] justify-center border p-2 rounded">
