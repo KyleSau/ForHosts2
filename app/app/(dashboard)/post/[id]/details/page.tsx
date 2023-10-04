@@ -31,6 +31,5 @@ export default async function listingDetailsPage({ params }: { params: { id: str
     <div>
       <ListingDetails data={post} bedrooms={bedrooms} />
     </div>
-    //
   )
 }

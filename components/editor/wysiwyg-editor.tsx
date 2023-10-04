@@ -129,8 +129,9 @@ export default function WYSIWYGEditor({ formik, field }: any) {
     //     }
     // }, [editor, text, hydrated]);
     useEffect(() => {
-        if (editor) {
+        if (editor && !hydrated) {
             editor.commands.setContent(formik.values[field]);
+            setHydrated(true);
             // IF THERE IS A BUG:
             // use this here: e.editor.storage.markdown.getMarkdown()
             // formik.setFieldValue(field, editor?.getText());
@@ -142,9 +143,9 @@ export default function WYSIWYGEditor({ formik, field }: any) {
 
 
     return (
-        <div>
+        <div className="w-full h-full">
             {editor && <EditorBubbleMenu editor={editor} />}
-            <EditorContent placeholder="Enter text here..." className="px-1 py-1 overflow-scroll border border-gray-200 rounded-md" editor={editor} />
+            <EditorContent placeholder="Enter text here..." className="p-[15px] border border-gray-200 rounded-md leading-normal overflow-none " editor={editor} />
         </div>
     );
 }

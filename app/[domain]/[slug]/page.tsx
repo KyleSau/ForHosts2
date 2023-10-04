@@ -58,7 +58,7 @@ export default async function SitePostPage({
 
   return (
     <>
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-5 grid-rows-10 bg-gradient-to-b from-gray-50 via-gray-100 to-gray-50 shadow-[0_3px_10px_rgb(0,0,0,0.2)] rounded-2xl">
+      <div className="container mb-5 grid grid-cols-1 md:grid-cols-5 grid-rows-10 bg-gradient-to-b from-gray-50 via-gray-100 to-gray-50 shadow-[0_3px_10px_rgb(0,0,0,0.2)] rounded-2xl">
         {/* <div className="col-span-1 md:col-span-full justify-center m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
           <ImageGallery images={data.photoGallery} imageBlurhash={data.photoGalleryBlurhash} />
         </div>
@@ -94,7 +94,8 @@ export default async function SitePostPage({
         </div>
         <div className="bg-white col-start-1 md:col-start-3 md:col-span-3 p-8 m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
           <div className="flex justify-center">
-            <AmenitiesModal amenityDetails={amenityDetails} />
+            Amenities
+            {/* <AmenitiesModal amenityDetails={amenityDetails} /> */}
           </div>
         </div>
         <div className="bg-white col-start-1 md:col-start-3 md:col-span-3 m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
@@ -104,7 +105,8 @@ export default async function SitePostPage({
         </div>
         <hr className="m-5 col-span-1 md:col-span-full" />
         <div className="col-span-1 md:col-span-full m-2">
-          <div className="">
+          <div className="flex justify-center">
+            Map
             {/* <Map /> */}
           </div>
         </div>
@@ -143,8 +145,8 @@ export default async function SitePostPage({
         </div>
       </div >
 
-      <MDX source={data.mdxSource} />
-      {
+      {/* <MDX source={data.mdxSource} /> */}
+      {/* {
         data.adjacentPosts.length > 0 && (
           <div className="relative mb-20 mt-10 sm:mt-20">
             <div
@@ -169,7 +171,7 @@ export default async function SitePostPage({
             ))}
           </div>
         )
-      }
+      } */}
     </>
   );
 }
