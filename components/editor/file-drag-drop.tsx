@@ -238,7 +238,6 @@ export function FileClickDragDrop({ componentId, data, currentFileDataObjects }:
   };
 
   const handleDropForMove = async (event: any, idx: number) => {
-    //debugger;
     console.log("handleDropForMove entered: idx chosen:", idx); //to idx
     console.log("draggedIdx: ", draggedIdx); //from idx
     event.preventDefault();
@@ -248,11 +247,12 @@ export function FileClickDragDrop({ componentId, data, currentFileDataObjects }:
       const tempFile = fileDataObjectsCopy[draggedIdx];
       fileDataObjectsCopy[draggedIdx] = fileDataObjectsCopy[idx];
       fileDataObjectsCopy[idx] = tempFile;
-      console.log("AAAAA: ", fileDataObjectsCopy)
-      const swapRequest = await swapBlobMetadata(data.id, idx, tempFile.id!);
+      setFileDataObjects(fileDataObjectsCopy);
+
+      swapBlobMetadata(data.id, idx, tempFile.id!);
+
       // const fileDataObjectsCopyAfterUpload = await uploadFileDataObjects(fileDataObjectsCopy);
       // console.log("BBBBB: ", fileDataObjectsCopyAfterUpload);
-      setFileDataObjects(fileDataObjectsCopy);
     }
     setDraggedIdx(null); // Reset the dragged item index
   };
@@ -424,7 +424,7 @@ export function FileClickDragDrop({ componentId, data, currentFileDataObjects }:
         })}
 
         {/* Add this "upload image" card at the end */}
-        /<div className="relative flex flex-col items-center justify-center border rounded cursor-pointer hover:bg-gray-200">
+        <div className="relative flex flex-col items-center justify-center border rounded cursor-pointer hover:bg-gray-200">
           <Image id="drag-drop-image-icon" />
           <p className="m-0">Drag your files here or click in this area.</p>
           <input accept="image/png, image/jpeg" type="file" title="" multiple

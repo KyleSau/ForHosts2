@@ -134,6 +134,12 @@ import { promiseHooks } from "v8";
 const prisma = new PrismaClient();
 
 export async function swapBlobMetadata(postId: string, slotIdx: number, imageId: string) {
+
+  if (!postId || slotIdx === undefined || !imageId) {
+    console.log('swapping blob meta data was missing server action arguments');
+    return;
+  }
+
   // Retrieve currentImage using its imageId and get its orderIndex
   const currentImage = await prisma.image.findUnique({
     where: {
