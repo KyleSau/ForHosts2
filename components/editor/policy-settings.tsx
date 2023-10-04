@@ -194,6 +194,58 @@ export default function PolicySettings({ data }) {
                             </Label>
                           </div>
                           <br />
+
+
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="custom" id="custom" />
+                            <Label htmlFor="custom">
+                              <div className="bg-white p-5 rounded-md grid grid-cols-3 gap-5 items-center">
+                                <span className="col-span-1">Custom Refund Policy</span>
+                                <div className="col-start-3 flex justify-end">
+                                  <Select>
+                                    <SelectTrigger className="mr-4 max-w-[205px] justify-center border p-2 rounded">
+                                      <SelectValue
+                                        placeholder={formik.values.checkinWindowStart}
+                                        onChange={formik.handleChange}
+                                      ></SelectValue>
+                                    </SelectTrigger>
+                                    <SelectContent className="max-w-[205px] mt-2 border rounded shadow-lg h-[200px]">
+                                      {hours.map((hour) => (
+                                        <SelectItem
+                                          value="custom"
+                                          key={hour}
+                                        >
+                                          {hour}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                  <Select>
+                                    <SelectTrigger className="max-w-[205px] justify-center border p-2 rounded">
+                                      <SelectValue
+                                        placeholder={formik.values.checkinWindowEnd}
+                                        onChange={formik.handleChange}
+                                      ></SelectValue>
+                                    </SelectTrigger>
+                                    <SelectContent className="max-w-[205px] mt-2 border rounded shadow-lg h-[200px]">
+                                      {hours.map((hour) => (
+                                        <SelectItem
+                                          value="custom"
+                                          key={hour}
+                                        >
+                                          {hour}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                              </div>
+                            </Label>
+                          </div>
+
+
+
+
                           <div className="flex items-center space-x-2">
                             <RadioGroupItem value="Moderate" id="Moderate" />
                             <Label htmlFor="Moderate">
@@ -482,20 +534,10 @@ export default function PolicySettings({ data }) {
             >
               Additional Rules
             </Label>
-            <div className="col-span-2 col-start-2 flex items-center sm:col-span-4 sm:col-start-2 md:col-span-3 md:col-start-2">
-              <input
-                type="text"
-                id="additionalRules"
-                name="additionalRules"
-                className="h-[200px] w-full rounded-md border border-black"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.additionalRules}
-              />
+            <div className="col-span-3 md:col-span-4 sm:col-span-5 col-start-1 md:col-start-1 sm:col-start-1 flex items-center">
+              <WYSIWYGEditor formik={formik} field={"additionalRules"} />
             </div>
-            <WYSIWYGEditor formik={formik} field={"additionalRules"} />
           </div>
-
           {/* Display form errors */}
           {formik.errors.additionalRules && formik.touched.additionalRules && (
             <div className="text-red-500">{formik.errors.additionalRules}</div>

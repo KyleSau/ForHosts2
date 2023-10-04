@@ -109,14 +109,14 @@ export default function InfoForGuests({ data }) {
                         <span className="col-span-1">Checkout Time</span>
                         <div className="flex justify-end col-start-3 col-span-1">
                             <Select>
-                                <SelectTrigger className="justify-center max-w-[205px] border p-2 rounded">
+                                <SelectTrigger className="justify-center max-w-[133px] border p-2 rounded">
                                     <SelectValue
                                         placeholder={formik.values.checkoutTime}
                                         onChange={formik.handleChange}
                                    
                                     ></SelectValue>
                                 </SelectTrigger>
-                                <SelectContent className="max-w-[205px] mt-2 border rounded h-[200px]">
+                                <SelectContent className="max-w-[133px] mt-2 border rounded h-[200px]">
                                     {hours.map((hour) => (
                                         <SelectItem
                                             value={hour}
@@ -216,11 +216,10 @@ export default function InfoForGuests({ data }) {
                         <Label htmlFor="Directions" className="col-span-1 col-start-1 flex">
                             Directions
                         </Label>
-                        <div className="col-span-2 md:col-span-3 sm:col-span-4 col-start-2 md:col-start-2 sm:col-start-2 flex">
-                            <Input type="text" className="w-full h-[200px]" />
+                        <div className="col-span-3 md:col-span-4 sm:col-span-5 col-start-1 md:col-start-1 sm:col-start-1 flex items-center">
+                            <WYSIWYGEditor formik={formik} field={"directions"} />
                         </div>
                     </div>
-                    <hr />
                     <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
                         <Label htmlFor="Wifi" className="flex items-center">
                             Wifi Details
@@ -238,7 +237,6 @@ export default function InfoForGuests({ data }) {
                             <Input type="text" className="w-full" />
                         </div>
                     </div>
-                    <hr />
                     <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
                         {/* <TooltipProvider>
                             <Tooltip>
@@ -248,7 +246,7 @@ export default function InfoForGuests({ data }) {
                                     </Label>
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                    <p>Give guests essential information of the property, such as how to turn on hot water.</p>
+                                    Give guests essential information of the property, such as how to turn on hot water.
                                 </TooltipContent>
                             </Tooltip>
                         </TooltipProvider> */}
@@ -258,12 +256,10 @@ export default function InfoForGuests({ data }) {
                     </div>
                     <div className="mt-10 mb-10 grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <h2 className="text-2xl font-semibold text-gray-800 mb-5 col-span-full">Check-In Method</h2>
-
                         <Label htmlFor="checkInMethod" className="flex items-center">
                             Check-In Options
                         </Label>
-
-                        <div className="p-6 bg-white rounded-md col-span-full flex flex-col">
+                        <div className="p-6 rounded-md col-span-full flex flex-col">
                             <div className="space-y-4">
                                 <div className="flex items-center space-x-4">
                                     <input
@@ -359,12 +355,20 @@ export default function InfoForGuests({ data }) {
                     </div>
 
                     <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
-                        <Label htmlFor="Directions" className="col-span-1 col-start-1 flex items-center">Checkout Instructions</Label>
-                        <div className="col-span-2 md:col-span-3 sm:col-span-4 col-start-2 md:col-start-2 sm:col-start-2 flex items-center">
-                            <Input type="text" className="w-full h-[200px]" />
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger>
+                                    <Label htmlFor="checkoutInstructions" className="col-span-1 col-start-1 flex items-center">Checkout Instructions</Label>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    Explain whats essential for guests to do in the few minutes before they leave. Anyone can read these before they book.
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                        <div className="col-span-3 md:col-span-4 sm:col-span-5 col-start-1 md:col-start-1 sm:col-start-1 flex items-center">
+                            <WYSIWYGEditor formik={formik} field={"checkoutInstructions"} />
                         </div>
                     </div>
-                    <hr />
                     <br />
                     <div className="flex-auto flex flex-row-reverse">
                         <button
