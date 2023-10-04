@@ -1,7 +1,6 @@
 "use server";
 
 import { getSession } from "@/lib/auth";
-import prisma from "@/lib/prisma";
 import { list, del, BlobResult } from '@vercel/blob';
 import { getBlurDataURL } from "./utils";
 
@@ -52,7 +51,7 @@ export const updateBlobMetadata = async (cuid: string, updatedFields: any) => {
     console.log("cuid: ", cuid);
     const response = await prisma.image.update({
       where: {
-        id: cuid    
+        id: cuid
       },
       data: {
         orderIndex: updatedFields.orderIndex
@@ -95,7 +94,7 @@ export const deleteBlobMetadata = async (id: string) => {
   return response;
 };
 
-export const listAllBlobsInStore = async () => { 
+export const listAllBlobsInStore = async () => {
   console.log("listAllBlobsInStoreAction called");
   const { blobs } = await list();
   // console.log("type of blobs: ", typeof(blobs));
@@ -108,14 +107,14 @@ export const listAllBlobsInStore = async () => {
 export const deleteBlobFromStore = async (urlToDelete: string) => {
   console.log("deleteBlobFromStore called");
 
-  if(urlToDelete !== null) {
+  if (urlToDelete !== null) {
     const deletedBlob: any = await del(urlToDelete);
     console.log("deletedBlob: ", deletedBlob);
 
     const blobUrl = deletedBlob?.url;
     console.log("blobUrl: ", blobUrl);
 
-    if(urlToDelete === blobUrl) {
+    if (urlToDelete === blobUrl) {
       const successJson = {
         message: "Success",
         ...deletedBlob
@@ -129,6 +128,53 @@ export const deleteBlobFromStore = async (urlToDelete: string) => {
   };
   return errorJson;
 };
+
+import { PrismaClient } from "@prisma/client";
+import { promiseHooks } from "v8";
+const prisma = new PrismaClient();
+
+export async function swapBlobMetadata(postId: string, slotIdx: number, imageId: string) {
+  // Retrieve currentImage using its imageId and get its orderIndex
+  const currentImage = await prisma.image.findUnique({
+    where: {
+      id: imageId
+    }
+  });
+
+  if (!currentImage) {
+    throw new Error(`Image with ID ${imageId} not found.`);
+  }
+
+  // Retrieve prevImage using the slotIdx and postId
+  const prevImage = await prisma.image.findFirst({
+    where: {
+      postId: postId,
+      orderIndex: slotIdx,
+    }
+  });
+
+  if (!prevImage) {
+    throw new Error(`Image with postId ${postId} and orderIndex ${slotIdx} not found.`);
+  }
+
+  // Use Prisma's transaction to ensure both updates happen or none of them does
+  await prisma.$transaction([
+    prisma.image.update({
+      where: { id: currentImage.id },
+      data: { orderIndex: slotIdx }
+    }),
+    prisma.image.update({
+      where: { id: prevImage.id },
+      data: { orderIndex: currentImage.orderIndex }
+    }),
+  ]);
+
+  return {
+    swappedImage: currentImage,
+    replacedImage: prevImage
+  };
+}
+
 
 export const listAllBlobMetadata = async () => {
   try {
