@@ -6,12 +6,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import EditorWrapper from './editor-container-wrapper';
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/components/ui/tooltip"
+// import {
+//     Tooltip,
+//     TooltipContent,
+//     TooltipProvider,
+//     TooltipTrigger,
+// } from "@/components/ui/tooltip"
 
 
 export default function InfoForGuests({ data }) {
@@ -73,15 +73,16 @@ export default function InfoForGuests({ data }) {
                                     ></SelectValue>
                                 </SelectTrigger>
                                 <SelectContent className="max-w-[205px] mt-2 border rounded shadow-lg h-[200px]">
-                                    {hours.map((hour) => (
-                                        <SelectItem
-                                            value="checkinWindowStart"
-                                            key={hour}
-                                        >
-                                            {hour}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
+  {hours.map((hour) => (
+    <SelectItem
+      value={hour} // Use the current hour as the value
+      key={hour}
+    >
+      {hour}
+    </SelectItem>
+  ))}
+</SelectContent>
+
                             </Select>
                             <Select>
                                 <SelectTrigger className="max-w-[205px] justify-center border p-2 rounded">
@@ -92,14 +93,14 @@ export default function InfoForGuests({ data }) {
                                 </SelectTrigger>
                                 <SelectContent className="max-w-[205px] mt-2 border rounded shadow-lg h-[200px]">
                                     {hours.map((hour) => (
-                                        <SelectItem
-                                            value="CheckinWindowEnd"
-                                            key={hour}
-                                        >
-                                            {hour}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
+                         <SelectItem
+                         value={hour} // Use the current hour as the value
+                         key={hour}
+                       >
+                         {hour}
+                       </SelectItem>
+                     ))}
+                   </SelectContent>
                             </Select>
                         </div>
                     </div>
@@ -112,12 +113,13 @@ export default function InfoForGuests({ data }) {
                                     <SelectValue
                                         placeholder={formik.values.checkoutTime}
                                         onChange={formik.handleChange}
+                                   
                                     ></SelectValue>
                                 </SelectTrigger>
                                 <SelectContent className="max-w-[205px] mt-2 border rounded h-[200px]">
                                     {hours.map((hour) => (
                                         <SelectItem
-                                            value="checkoutTime"
+                                            value={hour}
                                             key={hour}
                                         >
                                             {hour}
@@ -238,7 +240,7 @@ export default function InfoForGuests({ data }) {
                     </div>
                     <hr />
                     <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
-                        <TooltipProvider>
+                        {/* <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger>
                                     <Label htmlFor="HouseManual" className="col-span-1 col-start-1 flex items-center">
@@ -249,7 +251,7 @@ export default function InfoForGuests({ data }) {
                                     <p>Give guests essential information of the property, such as how to turn on hot water.</p>
                                 </TooltipContent>
                             </Tooltip>
-                        </TooltipProvider>
+                        </TooltipProvider> */}
                         <div className="col-span-2 md:col-span-3 sm:col-span-4 col-start-2 md:col-start-2 sm:col-start-2 flex items-center">
                             <Input type="text" className="w-full h-[200px]" />
                         </div>
