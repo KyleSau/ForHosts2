@@ -20,6 +20,19 @@ export default async function PostSettings({
     },
     include: {
       images: true
+      // images: true,
+      // calendars: true,
+      // reservations: true,
+      // reviews: true,
+      // site: true,
+      // user: true,
+      // location: true,
+      // pricing: true,
+      // availability: true,
+      // propertyDetails: true,
+      // afterBookingInfo: true,
+      // propertyRules: true,
+      // _count: true
     }
   });
 
@@ -39,13 +52,13 @@ export default async function PostSettings({
           inputAttrs={{
             name: "slug",
             type: "text",
-            defaultValue: data?.slug!,
+            defaultValue: data.slug,
             placeholder: "slug",
           }}
           handleSubmit={updatePostMetadata}
         />
 
-        <Form
+        {/* <Form
           title="Thumbnail image"
           description="The thumbnail image for your post. Accepted formats: .png, .jpg, .jpeg"
           helpText="Max file size 50MB. Recommended size 1200x630."
@@ -55,7 +68,7 @@ export default async function PostSettings({
             defaultValue: data?.images[0],
           }}
           handleSubmit={updatePostMetadata}
-        />
+        /> */}
 
         <DeletePostForm postName={data?.title!} />
       </div>

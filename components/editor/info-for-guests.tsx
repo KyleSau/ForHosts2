@@ -6,12 +6,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import EditorWrapper from './editor-container-wrapper';
-// import {
-//     Tooltip,
-//     TooltipContent,
-//     TooltipProvider,
-//     TooltipTrigger,
-// } from "@/components/ui/tooltip"
+import WYSIWYGEditor from './wysiwyg-editor';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 
 export default function InfoForGuests({ data }) {
@@ -73,15 +74,15 @@ export default function InfoForGuests({ data }) {
                                     ></SelectValue>
                                 </SelectTrigger>
                                 <SelectContent className="max-w-[205px] mt-2 border rounded shadow-lg h-[200px]">
-  {hours.map((hour) => (
-    <SelectItem
-      value={hour} // Use the current hour as the value
-      key={hour}
-    >
-      {hour}
-    </SelectItem>
-  ))}
-</SelectContent>
+                                    {hours.map((hour) => (
+                                        <SelectItem
+                                            value={hour} // Use the current hour as the value
+                                            key={hour}
+                                        >
+                                            {hour}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
 
                             </Select>
                             <Select>
@@ -93,14 +94,14 @@ export default function InfoForGuests({ data }) {
                                 </SelectTrigger>
                                 <SelectContent className="max-w-[205px] mt-2 border rounded shadow-lg h-[200px]">
                                     {hours.map((hour) => (
-                         <SelectItem
-                         value={hour} // Use the current hour as the value
-                         key={hour}
-                       >
-                         {hour}
-                       </SelectItem>
-                     ))}
-                   </SelectContent>
+                                        <SelectItem
+                                            value={hour} // Use the current hour as the value
+                                            key={hour}
+                                        >
+                                            {hour}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
                             </Select>
                         </div>
                     </div>
@@ -113,7 +114,7 @@ export default function InfoForGuests({ data }) {
                                     <SelectValue
                                         placeholder={formik.values.checkoutTime}
                                         onChange={formik.handleChange}
-                                   
+
                                     ></SelectValue>
                                 </SelectTrigger>
                                 <SelectContent className="max-w-[133px] mt-2 border rounded h-[200px]">
