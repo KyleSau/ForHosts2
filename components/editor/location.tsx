@@ -190,7 +190,10 @@ export default function Location({ data }) {
                 Proximity Range
               </div>
               <div className="flex col-start-2 justify-end">
-                <IncrementDecrementButton increment={incrementRadius} decrement={decrementRadius} value={formik.values.radius} />
+              <IncrementDecrementButton
+  value={formik.values.radius}
+  setValue={(newValue) => formik.setFieldValue('radius', newValue)}
+/>
               </div>
             </div>
           </div>
