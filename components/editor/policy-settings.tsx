@@ -26,6 +26,7 @@ import { Input } from "../ui/input";
 import EditorWrapper from "./editor-container-wrapper";
 import { updatePost } from "@/lib/actions";
 import { EditorContent } from "@tiptap/react";
+import WYSIWYGEditor from "./wysiwyg-editor";
 const hours = [
   "None",
   "12:00 AM",
@@ -58,12 +59,6 @@ export default function PolicySettings({ data }) {
   const [isLoading, setIsLoading] = useState(false);
   const rulesData = data.propertyRules;
   const validationSchema = Yup.object().shape({
-    // StandardCancelPolicy: Yup.string().required(
-    //   "Cancellation policy is required",
-    // ),
-    // LTCancelPolicy: Yup.string().required(
-    //   "Long-term stay cancellation policy is required",
-    // ),
 
     petsAllowed: Yup.boolean(),
     eventsAllowed: Yup.boolean(),
@@ -72,6 +67,7 @@ export default function PolicySettings({ data }) {
     quietHoursStart: Yup.string().required(
       "Start time for quiet hours is required",
     ),
+
     quietHoursEnd: Yup.string().required(
       "End time for quiet hours is required",
     ),
@@ -88,11 +84,12 @@ export default function PolicySettings({ data }) {
       smokingAllowed: rulesData.smokingAllowed,
       photographyAllowed: rulesData.photographyAllowed,
       additionalRules: rulesData.additionalRules,
-      checkInMethod: "1",
+      checkInMethod: rulesData.checkInMethod,
       quietHoursStart: rulesData.quietHoursStart,
       quietHoursEnd: rulesData.quietHoursEnd,
-      cancellationPolicy: "1",
-      interactionPreferences: "1",
+      standardCancellationPolicy: rulesData.standardCancellationPolicy,
+      longTermCancellationPolicy: rulesData.longTermCancellationPolicy,
+      interactionPreferences: rulesData.interactionPreferences,
       //   checkinWindowStart: "03:00 PM",
       //   checkinWindowEnd: "09:00 PM",
       //   checkoutTime: "11:00 AM",
@@ -113,13 +110,13 @@ export default function PolicySettings({ data }) {
           photographyAllowed: values.photographyAllowed,
           quietHoursStart: values.quietHoursStart,
           quietHoursEnd: values.quietHoursEnd,
-          cancellationPolicy: "test",
+          standardCancellationPolicy: values.standardCancellationPolicy,
           interactionPreferences: "test",
           checkInMethod: "test",
           additionalRules: values.additionalRules,
         },
       };
-      console.log(transformedValues);
+      console.log('transformed values: ' + JSON.stringify(transformedValues));
       const result = await updatePost(transformedValues);
       if (result) {
         console.log("Post updated successfully:", result);
@@ -171,10 +168,10 @@ export default function PolicySettings({ data }) {
                         />
                         <br />
                         <RadioGroup
-                          name="StandardCancelPolicy"
-                          defaultValue={formik.values.StandardCancelPolicy}
+                          name="standardCancellationPolicy"
+                          defaultValue={formik.values.standardCancellationPolicy}
                           onChange={(value) =>
-                            formik.setFieldValue("StandardCancelPolicy", value)
+                            formik.setFieldValue("standardCancellationPolicy", value)
                           }
                         >
                           <div className="flex items-center space-x-2">
@@ -275,10 +272,10 @@ export default function PolicySettings({ data }) {
                         />
                         <br />
                         <RadioGroup
-                          name="LTCancelPolicy"
-                          defaultValue={formik.values.LTCancelPolicy}
+                          name="longTermCancellationPolicy"
+                          defaultValue={formik.values.longTermCancellationPolicy}
                           onChange={(value) =>
-                            formik.setFieldValue("LTCancelPolicy", value)
+                            formik.setFieldValue("longTermCancellationPolicy", value)
                           }
                         >
                           <div className="flex items-center space-x-2">
@@ -496,6 +493,7 @@ export default function PolicySettings({ data }) {
                 value={formik.values.additionalRules}
               />
             </div>
+            <WYSIWYGEditor formik={formik} field={"additionalRules"} />
           </div>
 
           {/* Display form errors */}

@@ -165,7 +165,7 @@ export default function ListingDetails({ data, bedrooms }) {
                 ))}
               </select>
             </div>
-           
+
             <label htmlFor="maxGuests" className="col-start-1 block text-sm font-medium leading-6 text-gray-900">
               Max Guests
             </label>

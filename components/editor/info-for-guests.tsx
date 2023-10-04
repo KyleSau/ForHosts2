@@ -1,13 +1,18 @@
 "use client"
-import React, { useState } from 'react';
+import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import TabTitle from './tab-title';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import EditorWrapper from './editor-container-wrapper';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
+
 
 export default function InfoForGuests({ data }) {
 
@@ -56,225 +61,312 @@ export default function InfoForGuests({ data }) {
         <div>
             <EditorWrapper>
                 <form onSubmit={formik.handleSubmit}>
-                    {/* <TabTitle title="Before Booking" desc="" /> */}
-                    <span className="text-xl font-semibold text-gray-800 block mb-5">Before Booking</span>
+                    <span className="text-2xl font-semibold text-gray-800 mb-5">Before Booking</span>
+                    <div className="bg-white p-5 rounded-md grid grid-cols-3 gap-5 items-center">
+                        <span className="col-span-1">Check-in Window</span>
+                        <div className="col-start-3 flex justify-end">
+                            <Select>
+                                <SelectTrigger className="mr-4 max-w-[205px] justify-center border p-2 rounded">
+                                    <SelectValue
+                                        placeholder={formik.values.checkinWindowStart}
+                                        onChange={formik.handleChange}
+                                    ></SelectValue>
+                                </SelectTrigger>
+                                <SelectContent className="max-w-[205px] mt-2 border rounded shadow-lg h-[200px]">
+                                    {hours.map((hour) => (
+                                        <SelectItem
+                                            value="checkinWindowStart"
+                                            key={hour}
+                                        >
+                                            {hour}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <Select>
+                                <SelectTrigger className="max-w-[205px] justify-center border p-2 rounded">
+                                    <SelectValue
+                                        placeholder={formik.values.checkinWindowEnd}
+                                        onChange={formik.handleChange}
+                                    ></SelectValue>
+                                </SelectTrigger>
+                                <SelectContent className="max-w-[205px] mt-2 border rounded shadow-lg h-[200px]">
+                                    {hours.map((hour) => (
+                                        <SelectItem
+                                            value="CheckinWindowEnd"
+                                            key={hour}
+                                        >
+                                            {hour}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
+
+                    <div className="bg-white p-5 rounded-md grid grid-cols-3 gap-5 items-center">
+                        <span className="col-span-1">Checkout Time</span>
+                        <div className="flex justify-end col-start-3 col-span-1">
+                            <Select>
+                                <SelectTrigger className="justify-center max-w-[205px] border p-2 rounded">
+                                    <SelectValue
+                                        placeholder={formik.values.checkoutTime}
+                                        onChange={formik.handleChange}
+                                    ></SelectValue>
+                                </SelectTrigger>
+                                <SelectContent className="max-w-[205px] mt-2 border rounded h-[200px]">
+                                    {hours.map((hour) => (
+                                        <SelectItem
+                                            value="checkoutTime"
+                                            key={hour}
+                                        >
+                                            {hour}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
+
+                    <div className="mt-10 mb-10 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <Label htmlFor="checkInMethod" className="flex items-center">
+                            Interaction Options
+                        </Label>
+                        <div className="p-6 col-span-full flex flex-col">
+                            <div className="space-y-4">
+                                <div className="flex items-center space-x-4">
+                                    <input
+                                        type="radio"
+                                        id="appCommunication"
+                                        name="interactionPreferences"
+                                        value="appCommunication"
+                                        className="mt-1 form-radio text-indigo-600"
+                                        checked={formik.values.interactionPreferences === "appCommunication"}
+                                        onChange={() => formik.setFieldValue("interactionPreferences", "appCommunication")}
+                                    />
+                                    <label htmlFor="appCommunication" className="text-lg text-gray-700">
+                                        Remote
+                                    </label>
+                                    <p className="text-gray-500">
+                                        I won&apos;t be available in person and prefer communicating through email or text message/phone
+                                    </p>
+                                </div>
+                                <hr />
+                                <div className="flex items-center space-x-4">
+                                    <input
+                                        type="radio"
+                                        id="sayHello"
+                                        name="interactionPreferences"
+                                        value="sayHello"
+                                        className="mt-1 form-radio text-indigo-600"
+                                        checked={formik.values.interactionPreferences === "sayHello"}
+                                        onChange={() => formik.setFieldValue("interactionPreferences", "sayHello")}
+                                    />
+                                    <label htmlFor="sayHello" className="text-lg text-gray-700">
+                                        Say Hello In Person
+                                    </label>
+                                    <p className="text-gray-500">
+                                        I like to say hello in person but keep to myself otherwise.
+                                    </p>
+                                </div>
+                                <hr />
+                                <div className="flex items-center space-x-4">
+                                    <input
+                                        type="radio"
+                                        id="socializeWithGuests"
+                                        name="interactionPreferences"
+                                        value="socializeWithGuests"
+                                        className="mt-1 form-radio text-indigo-600"
+                                        checked={formik.values.interactionPreferences === "socializeWithGuests"}
+                                        onChange={() => formik.setFieldValue("interactionPreferences", "socializeWithGuests")}
+                                    />
+                                    <label htmlFor="socializeWithGuests" className="text-lg text-gray-700">
+                                        Socialize With Guests
+                                    </label>
+                                    <p className="text-gray-500">
+                                        I like socializing and spending time with guests.
+                                    </p>
+                                </div>
+                                <hr />
+                                <div className="flex items-center space-x-4">
+                                    <input
+                                        type="radio"
+                                        id="noPreference"
+                                        name="interactionPreferences"
+                                        value="noPreference"
+                                        className="mt-1 form-radio text-indigo-600"
+                                        checked={formik.values.interactionPreferences === "noPreference"}
+                                        onChange={() => formik.setFieldValue("interactionPreferences", "noPreference")}
+                                    />
+                                    <label htmlFor="noPreference" className="text-lg text-gray-700">
+                                        No Preference
+                                    </label>
+                                    <p className="text-gray-500">
+                                        I&apos;ll follow my guests lead.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <span className="text-2xl font-semibold text-gray-800 mb-5">After Booking</span>
+                    <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
+                        <Label htmlFor="Directions" className="col-span-1 col-start-1 flex">
+                            Directions
+                        </Label>
+                        <div className="col-span-2 md:col-span-3 sm:col-span-4 col-start-2 md:col-start-2 sm:col-start-2 flex">
+                            <Input type="text" className="w-full h-[200px]" />
+                        </div>
+                    </div>
                     <hr />
-                    <div className="mt-10">
-                        <div className="mt-10 mb-10">
+                    <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
+                        <Label htmlFor="Wifi" className="flex items-center">
+                            Wifi Details
+                        </Label>
+                        <div className="col-span-1 md:col-span-1 sm:col-span-1 col-start-1 md:col-start-1 sm:col-start-1 flex items-center">
+                            <p className="p-2">Name</p>
+                        </div>
+                        <div className="col-span-2 md:col-span-3 sm:col-span-4 col-start-2 md:col-start-2 sm:col-start-2 flex items-center">
+                            <Input type="text" className="w-full" />
+                        </div>
+                        <div className="col-span-1 md:col-span-1 sm:col-span-1 col-start-1 md:col-start-1 sm:col-start-1 flex items-center">
+                            <p className="p-2">Password</p>
+                        </div>
+                        <div className="col-span-2 md:col-span-3 sm:col-span-4 col-start-2 md:col-start-2 sm:col-start-2 flex items-center">
+                            <Input type="text" className="w-full" />
+                        </div>
+                    </div>
+                    <hr />
+                    <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger>
+                                    <Label htmlFor="HouseManual" className="col-span-1 col-start-1 flex items-center">
+                                        House Manual
+                                    </Label>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Give guests essential information of the property, such as how to turn on hot water.</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                        <div className="col-span-2 md:col-span-3 sm:col-span-4 col-start-2 md:col-start-2 sm:col-start-2 flex items-center">
+                            <Input type="text" className="w-full h-[200px]" />
+                        </div>
+                    </div>
+                    <div className="mt-10 mb-10 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <h2 className="text-2xl font-semibold text-gray-800 mb-5 col-span-full">Check-In Method</h2>
 
-                            <div className="bg-white p-5 rounded-md grid grid-cols-3 gap-5 items-center">
-                                {/* Label */}
-                                <span className="col-span-1">Check-in Window</span>
+                        <Label htmlFor="checkInMethod" className="flex items-center">
+                            Check-In Options
+                        </Label>
 
-                                {/* Start Time Select */}
-                                <div className="col-start-3 flex justify-end">
-                                    <Select>
-                                        <SelectTrigger className="mr-4 max-w-[205px] justify-center border p-2 rounded">
-                                            <SelectValue
-                                                placeholder={formik.values.checkinWindowStart}
-                                                onChange={formik.handleChange}
-                                            ></SelectValue>
-                                        </SelectTrigger>
-                                        <SelectContent className="max-w-[205px] mt-2 border rounded shadow-lg h-[200px]">
-                                            {hours.map((hour) => (
-                                                <SelectItem
-                                                    value="checkinWindowStart"
-                                                    key={hour}
-                                                >
-                                                    {hour}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-
-                                    {/* End Time Select */}
-                                    <Select>
-                                        <SelectTrigger className="max-w-[205px] justify-center border p-2 rounded">
-                                            <SelectValue
-                                                placeholder={formik.values.checkinWindowEnd}
-                                                onChange={formik.handleChange}
-                                            ></SelectValue>
-                                        </SelectTrigger>
-                                        <SelectContent className="max-w-[205px] mt-2 border rounded shadow-lg h-[200px]">
-                                            {hours.map((hour) => (
-                                                <SelectItem
-                                                    value="CheckinWindowEnd"
-                                                    key={hour}
-                                                >
-                                                    {hour}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                        <div className="p-6 bg-white rounded-md col-span-full flex flex-col">
+                            <div className="space-y-4">
+                                <div className="flex items-center space-x-4">
+                                    <input
+                                        type="radio"
+                                        id="smartLock"
+                                        name="checkInMethod"
+                                        value="smartLock"
+                                        className="mt-1 form-radio text-indigo-600"
+                                        checked={formik.values.checkInMethod === "smartLock"}
+                                        onChange={() => formik.setFieldValue("checkInMethod", "smartLock")}
+                                    />
+                                    <label htmlFor="smartLock" className="text-lg text-gray-700">
+                                        Smart Lock
+                                    </label>
+                                    <p className="text-gray-500">
+                                        A lock guests can open with a mobile app or keypad.
+                                    </p>
+                                </div>
+                                <hr />
+                                <div className="flex items-center space-x-4">
+                                    <input
+                                        type="radio"
+                                        id="keypad"
+                                        name="checkInMethod"
+                                        value="keypad"
+                                        className="mt-1 form-radio text-indigo-600"
+                                        checked={formik.values.checkInMethod === "keypad"}
+                                        onChange={() => formik.setFieldValue("checkInMethod", "keypad")}
+                                    />
+                                    <label htmlFor="keypad" className="text-lg text-gray-700">
+                                        Keypad
+                                    </label>
+                                    <p className="text-gray-500">
+                                        Guests can open the door with a code.
+                                    </p>
+                                </div>
+                                <hr />
+                                <div className="flex items-center space-x-4">
+                                    <input
+                                        type="radio"
+                                        id="lockbox"
+                                        name="checkInMethod"
+                                        value="lockbox"
+                                        className="mt-1 form-radio text-indigo-600"
+                                        checked={formik.values.checkInMethod === "lockbox"}
+                                        onChange={() => formik.setFieldValue("checkInMethod", "lockbox")}
+                                    />
+                                    <label htmlFor="lockbox" className="text-lg text-gray-700">
+                                        Lockbox
+                                    </label>
+                                    <p className="text-gray-500">
+                                        The key is stored in a small safe, which guests can open with a code.
+                                    </p>
+                                </div>
+                                <hr />
+                                <div className="flex items-center space-x-4">
+                                    <input
+                                        type="radio"
+                                        id="buildingStaff"
+                                        name="checkInMethod"
+                                        value="buildingStaff"
+                                        className="mt-1 form-radio text-indigo-600"
+                                        checked={formik.values.checkInMethod === "buildingStaff"}
+                                        onChange={() => formik.setFieldValue("checkInMethod", "buildingStaff")}
+                                    />
+                                    <label htmlFor="buildingStaff" className="text-lg text-gray-700">
+                                        Building Staff
+                                    </label>
+                                    <p className="text-gray-500">
+                                        Someone will be available 24 hours a day to let guests in.
+                                    </p>
+                                </div>
+                                <hr />
+                                <div className="flex items-center space-x-4">
+                                    <input
+                                        type="radio"
+                                        id="greet"
+                                        name="checkInMethod"
+                                        value="greet"
+                                        className="mt-1 form-radio text-indigo-600"
+                                        checked={formik.values.checkInMethod === "greet"}
+                                        onChange={() => formik.setFieldValue("checkInMethod", "greet")}
+                                    />
+                                    <label htmlFor="greet" className="text-lg text-gray-700">
+                                        Host Greets You
+                                    </label>
+                                    <p className="text-gray-500">
+                                        The host or co-host will meet guests to exchange the key.
+                                    </p>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div className="mt-10 mb-10">
-                            <div className="bg-white p-5 rounded-md grid grid-cols-2 gap-5 items-center">
-                                {/* Label */}
-                                <span className="col-span-1">Checkout Time</span>
-
-                                {/* Checkout Time Select */}
-                                <div className="flex justify-end">
-                                    <Select>
-                                        <SelectTrigger className="justify-center col-start-2 max-w-[205px] border p-2 rounded">
-                                            <SelectValue
-                                                placeholder={formik.values.checkoutTime}
-                                                onChange={formik.handleChange}
-                                            ></SelectValue>
-                                        </SelectTrigger>
-                                        <SelectContent className="max-w-[205px] mt-2 border rounded h-[200px]">
-                                            {hours.map((hour) => (
-                                                <SelectItem
-                                                    value="checkoutTime"
-                                                    key={hour}
-                                                >
-                                                    {hour}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="mt-10 mb-10">
-                            <span className="text-xl font-semibold text-gray-800 block mb-5">Interaction Preferences</span>
-                            <hr />
-                            <div className="bg-white p-5 rounded-md">
-                                <RadioGroup
-                                    name="interactionPreferences"
-                                    defaultValue={formik.values.interactionPreferences}
-                                    onChange={(value) => formik.setFieldValue("interactionPreferences", value)}
-                                    className="space-y-4"
-                                >
-                                    <div className="flex items-center space-x-4">
-                                        <RadioGroupItem value="appCommunication" id="appCommunication" className="mt-1" />
-                                        <Label htmlFor="appCommunication" className="text-md text-gray-700">
-                                            I won’t be available in person, and prefer communicating through the app.
-                                        </Label>
-                                    </div>
-
-                                    <div className="flex items-center space-x-4">
-                                        <RadioGroupItem value="sayHello" id="sayHello" className="mt-1" />
-                                        <Label htmlFor="sayHello" className="text-md text-gray-700">
-                                            I like to say hello in person, but keep to myself otherwise.
-                                        </Label>
-                                    </div>
-
-                                    <div className="flex items-center space-x-4">
-                                        <RadioGroupItem value="socializeWithGuests" id="socializeWithGuests" className="mt-1" />
-                                        <Label htmlFor="socializeWithGuests" className="text-md text-gray-700">
-                                            I like socializing and spending time with guests.
-                                        </Label>
-                                    </div>
-
-                                    <div className="flex items-center space-x-4">
-                                        <RadioGroupItem value="noPreference" id="noPreference" className="mt-1" />
-                                        <Label htmlFor="noPreference" className="text-md text-gray-700">
-                                            No preference. I’ll follow my guests’ lead.
-                                        </Label>
-                                    </div>
-                                </RadioGroup>
-                            </div>
-                        </div>
-
-                        {/* <TabTitle title="After Booking" desc="" /> */}
-                        <span className="text-xl font-semibold text-gray-800 block mb-5">After Booking</span>
-                        <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
-                            <Label htmlFor="Directions" className="col-span-1 col-start-1 flex items-center">
-                                Directions
-                            </Label>
-                            <div className="col-span-2 md:col-span-3 sm:col-span-4 col-start-2 md:col-start-2 sm:col-start-2 flex">
-                                <Input type="text" className="w-full h-[200px]" />
-                            </div>
-                        </div>
-                        <hr />
-                        <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
-                            <Label htmlFor="Wifi" className="flex items-center">
-                                Wifi Details
-                            </Label>
-                            <div className="col-span-2 md:col-span-3 sm:col-span-4 col-start-2 md:col-start-2 sm:col-start-2 flex items-center">
-                                <p className="p-2">Network Name</p>
-                                <Input type="text" className="w-full" />
-                            </div>
-                            <div className="col-span-2 md:col-span-3 sm:col-span-4 col-start-2 md:col-start-2 sm:col-start-2 flex items-center">
-                                <p className="p-2">Password</p>
-                                <Input type="text" className="w-full" />
-                            </div>
-                        </div>
-                        <hr />
-                        <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
-                            <Label htmlFor="HouseManual" className="col-span-1 col-start-1 flex items-center">
-                                House Manual
-                            </Label>
-                            <div className="col-span-2 md:col-span-3 sm:col-span-4 col-start-2 md:col-start-2 sm:col-start-2 flex items-center">
-                                <Input type="text" className="w-full h-[200px]" />
-                            </div>
-                        </div>
-                        <hr />
-                        <div className="mt-10 mb-10">
-                            <span className="text-xl font-semibold text-gray-800 block mb-5">Check-In Method</span>
-
-                            <div className="bg-white p-5 rounded-md">
-                                <RadioGroup
-                                    name="checkInMethod"
-                                    defaultValue={formik.values.checkInMethod}
-                                    onChange={(value) => formik.setFieldValue("checkInMethod", value)}
-                                    className="space-y-4"
-                                >
-                                    <div className="flex items-center space-x-4">
-                                        <RadioGroupItem value="smartLock" id="smartLock" className="mt-1" />
-                                        <Label htmlFor="smartLock" className="text-md text-gray-700">
-                                            Smart lock - A lock guests open with a mobile app or keypad
-                                        </Label>
-                                    </div>
-
-                                    <div className="flex items-center space-x-4">
-                                        <RadioGroupItem value="keypad" id="keypad" className="mt-1" />
-                                        <Label htmlFor="keypad" className="text-md text-gray-700">
-                                            Keypad - Guests can open the door with a code
-                                        </Label>
-                                    </div>
-
-                                    <div className="flex items-center space-x-4">
-                                        <RadioGroupItem value="lockbox" id="lockbox" className="mt-1" />
-                                        <Label htmlFor="lockbox" className="text-md text-gray-700">
-                                            Lockbox - The key is stored in a small safe, which guests can open with a code
-                                        </Label>
-                                    </div>
-
-                                    <div className="flex items-center space-x-4">
-                                        <RadioGroupItem value="buildingStaff" id="buildingStaff" className="mt-1" />
-                                        <Label htmlFor="buildingStaff" className="text-md text-gray-700">
-                                            Building staff - Someone will be available 24 hours a day to let guests in.
-                                        </Label>
-                                    </div>
-
-                                    <div className="flex items-center space-x-4">
-                                        <RadioGroupItem value="greet" id="greet" className="mt-1" />
-                                        <Label htmlFor="greet" className="text-md text-gray-700">
-                                            Host greets you - The host or co-host will meet guests to exchange the key
-                                        </Label>
-                                    </div>
-                                </RadioGroup>
-                            </div>
-                        </div>
-
-                        <hr />
-                        <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
-                            <Label htmlFor="Directions" className="col-span-1 col-start-1 flex items-center">Checkout Instructions</Label>
-                            <div className="col-span-2 md:col-span-3 sm:col-span-4 col-start-2 md:col-start-2 sm:col-start-2 flex items-center">
-                                <Input type="text" className="w-full h-[200px]" />
-                            </div>
+                    <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
+                        <Label htmlFor="Directions" className="col-span-1 col-start-1 flex items-center">Checkout Instructions</Label>
+                        <div className="col-span-2 md:col-span-3 sm:col-span-4 col-start-2 md:col-start-2 sm:col-start-2 flex items-center">
+                            <Input type="text" className="w-full h-[200px]" />
                         </div>
                     </div>
                     <hr />
                     <br />
                     <div className="flex-auto flex flex-row-reverse">
                         <button
-                            type="submit" // Specify the button type as "submit" to trigger form submission
+                            type="submit"
                             className="rounded-md hover:scale-110 duration-200 ease-in-out transition bg-indigo-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                             Save
                         </button>
