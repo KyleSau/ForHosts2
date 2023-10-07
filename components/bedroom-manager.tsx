@@ -4,6 +4,7 @@ import { PlusCircle, MinusCircle, XCircle } from 'lucide-react';
 import { getBedrooms, updateBedroom } from '@/lib/actions';
 import LoadingDots from './icons/loading-dots';
 import { Bedroom } from '@prisma/client';
+import IncrementDecrementButton from './increment-decrement-buttons';
 
 const bedTypes = [
     'double',
@@ -162,9 +163,15 @@ function BedroomManager({ totalBedrooms, postId, bedrooms }: BedroomListProps) {
                                 <div className="space-y-4 h-96 overflow-scroll">
                                     {bedTypes.map((bedType) => (
                                         <div key={bedType} className="flex justify-between items-center">
-                                            <span className="text-gray-800">{bedType}</span>
+                                            {/* <span className="text-gray-800">{bedType}</span> */}
                                             <div className="flex items-center space-x-2 mr-5">
-                                                <button
+                                            {/* <IncrementDecrementButton
+  value={bedroomData[index][bedType]}
+  setValue={(newValue) => handleBedChange(index, bedType, newValue)}
+/> */}
+
+{/* The rest of your code for Increment/Decrement buttons is now within the IncrementDecrementButton component */}
+                                                {/* <button
                                                     disabled={!bedroomData[index][bedType]}
                                                     onClick={() => handleBedChange(index, bedType, -1)}
                                                     className={`focus:outline-none ${!bedroomData[index][bedType] && 'text-gray-400'
@@ -180,7 +187,7 @@ function BedroomManager({ totalBedrooms, postId, bedrooms }: BedroomListProps) {
                                                     className="ml-5 focus:outline-none text-gray-700"
                                                 >
                                                     <PlusCircle strokeWidth={1} size={34} />
-                                                </button>
+                                                </button> */}
                                             </div>
                                         </div>
                                     ))}
