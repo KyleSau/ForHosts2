@@ -21,7 +21,7 @@ export default function CalendarManager({ postId }: CalendarManagerProps) {
             <EditorWrapper>
                 <div className="text-2xl font-semibold text-gray-800 mb-5">Export Calendar</div>
                 <CopyTextToClipboard text={exportLink} />
-                <div className="text-2xl font-semibold text-gray-800 mb-5">Import Calendars</div>
+                <div className="text-2xl font-semibold text-gray-800 mt-5 mb-5">Import Calendars</div>
                 <div className="mb-5">
                     <CreateCalendarButton>
                         <ImportCalendarModal />
