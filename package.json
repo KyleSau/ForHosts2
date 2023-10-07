@@ -72,6 +72,7 @@
     "date-fns": "^2.29.3",
     "decimal.js": "^10.4.3",
     "file-saver": "^2.0.5",
+    "flowbite": "^1.8.1",
     "focus-trap-react": "^10.1.4",
     "formik": "^2.4.3",
     "framer-motion": "^10.12.17",

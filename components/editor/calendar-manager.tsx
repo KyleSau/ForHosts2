@@ -1,53 +1,36 @@
 "use client";
 import React, { useState } from 'react';
-// Importing Lucide icons
-import { Clipboard, ClipboardCheck } from 'lucide-react';
-import { Button } from "@/components/ui/button"
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/components/ui/tooltip"
+import CopyTextToClipboard from './copy-text-to-clipboard';
+import CreateCalendarButton from './create-calendar-button';
+import ImportCalendarModal from './import-calendar-modal';
 
 interface CalendarManagerProps {
     postId: string;
 }
 
 export default function CalendarManager({ postId }: CalendarManagerProps) {
+    const [isModalOpen, setModalOpen] = useState(false);
     const exportLink = `https://forhosts.com/api/post/${postId}/calendar.ics`;
 
-    const [copied, setCopied] = useState(false);
-
-    const handleCopyClick = async () => {
-        await navigator.clipboard.writeText(exportLink);
-        setCopied(true);
-    };
+    const openModal = () => setModalOpen(true);
+    const closeModal = () => setModalOpen(false);
 
     return (
         <div>
             <p>Calendar Manager</p>
-            {/* Assuming you have imported TooltipProvider, Tooltip, TooltipTrigger, and TooltipContent */}
-            <TooltipProvider>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <Button onClick={handleCopyClick}>
-                            Export: {exportLink}
-                        </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        {copied ? (
-                            <>
-                                <ClipboardCheck size={18} color="black" /> Link copied!
-                            </>
-                        ) : (
-                            <>
-                                <Clipboard size={18} color="black" /> Click to copy link
-                            </>
-                        )}
-                    </TooltipContent>
-                </Tooltip>
-            </TooltipProvider>
+            <div className="text-2xl font-semibold text-gray-800 mb-2">Export Calendar</div>
+            {/* title for export calendar */}
+            <CopyTextToClipboard text={exportLink} />
+
+            {/* Title for import callendars */}
+            {/* (1) make sure they can't import the exported calendar or any calendar's from forhosts */}
+            <div className="text-2xl font-semibold text-gray-800 mb-2">Import Calendars</div>
+            <button onClick={openModal}>Import Calendar</button>
+            <CreateCalendarButton>
+                <ImportCalendarModal />
+            </CreateCalendarButton>
+
+            {isModalOpen && <ImportCalendarModal />}
         </div>
     );
 }
