@@ -82,6 +82,7 @@ function ImportCalendarFormButton() {
                     : "border-black bg-black text-white hover:bg-white hover:text-black dark:border-stone-700 dark:hover:border-stone-200 dark:hover:bg-black dark:hover:text-white dark:active:bg-stone-800",
             )}
             disabled={pending}
+            onClick={() => alert('ah')}
         >
             {pending ? <LoadingDots color="#808080" /> : <p>Import</p>}
         </button>
