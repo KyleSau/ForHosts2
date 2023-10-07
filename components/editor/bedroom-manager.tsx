@@ -80,11 +80,13 @@ function BedroomManager({ totalBedrooms, postId, bedrooms }: BedroomListProps) {
 
         setIsLoading(false);
     };
-
-    const handleModalClose = async () => {
+    const handleSave = async () => {
         if (editIndex !== null) {
             await saveBedroomData(editIndex);
         }
+        setEditIndex(null);
+    };
+    const handleModalClose = async () => {
         setEditIndex(null);
     };
 
@@ -152,6 +154,7 @@ function BedroomManager({ totalBedrooms, postId, bedrooms }: BedroomListProps) {
                             <div className="bg-white p-6 w-96 rounded-lg shadow-md relative">
                                 <button
                                     className="absolute top-2 right-2 p-1 hover:bg-gray-200 rounded-full focus:outline-none"
+                                    type="button"
                                     onClick={handleModalClose}
                                 >
                                     <XCircle size={36} color="gray" />
@@ -208,7 +211,7 @@ function BedroomManager({ totalBedrooms, postId, bedrooms }: BedroomListProps) {
                                     <button
                                         className={`bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 focus:outline-none relative ${isLoading ? 'flex items-center' : ''
                                             }`}
-                                        onClick={handleModalClose}
+                                        onClick={handleSave}
                                         disabled={isLoading}
                                     >
                                         {isLoading ? (
