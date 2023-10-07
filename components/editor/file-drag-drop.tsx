@@ -377,19 +377,19 @@ export function FileClickDragDrop({ componentId, data, currentFileDataObjects }:
           </p>
         </div>
       }
-      <DragDropContext onDragEnd={(event) => onDragEnd(event)}>
+      <DragDropContext onDragEnd={onDragEnd}>
           <div
             className="grid grid-cols-3 gap-4 mt-4 md:grid-cols-3"
             onDragOver={handleDragOver}
             draggable={uploadInProgress ? false : true}
           >
-            <Droppable droppableId='droppable-area-0'>
+            <Droppable droppableId='image-uploader-droppable-area'>
                 {(provided) => {
                     
                     console.log("FIRST provided: ", provided);
 
                     return (
-                          <div ref={provided.innerRef}>
+                          <div {...provided.droppableProps} ref={provided.innerRef}>
                               {
                                   fileDataObjects.map((fdo: FileDataObject, idx: number) => {
 
@@ -398,16 +398,18 @@ export function FileClickDragDrop({ componentId, data, currentFileDataObjects }:
                                       const fileObjSize = humanReadableFileSize(inBlobStore ? parseInt(fdo.size ? fdo.size : "0") : fileObj?.size);
                                       
                                       return(
-                                          <Draggable key={idx} draggableId={fdo.id? fdo.id: ""+idx} index={idx}>
+                                          <Draggable key={fdo.id} draggableId={fdo.id? fdo.id: ""+idx} index={idx}>
                                               {
                                                   (provided) => {
 
-                                                    console.log("SECOND provided: ", provided);
+                                                      console.log("SECOND provided: ", provided);
 
                                                       return (
-
+                                                          
                                                           <div
                                                             ref={provided.innerRef}
+                                                            {...provided.draggableProps}
+                                                            {...provided.dragHandleProps}
                                                             id={componentId + "-image-container" + idx}
                                                             key={idx}
                                                             className={`
