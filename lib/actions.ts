@@ -557,7 +557,7 @@ export const createCalendar = async (request: any) => {
 
   // Prevent creating duplicates
   const existingName = await prisma.calendar.findFirst({
-    where: { name: request.name },
+    where: { name: request.name, postId: request.postId },
   });
   if (existingName) {
     throw new Error('Duplicate calendar name');
@@ -565,7 +565,10 @@ export const createCalendar = async (request: any) => {
 
   // Prevent creating duplicates
   const existingCalendar = await prisma.calendar.findFirst({
-    where: { url: request.url },
+    where: {
+      url: request.url,
+      postId: request.postId
+    },
   });
   if (existingCalendar) {
     throw new Error('Duplicate calendar URL');
