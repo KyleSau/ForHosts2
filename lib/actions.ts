@@ -551,7 +551,8 @@ export const createCalendar = async (request: any) => {
   }
 
   if (!request.url || !request.postId || !request.name) {
-    throw new Error('Create calendar request missing attribute!');
+    // throw new Error('Create calendar request missing attribute!');
+    return { error: 'Create calendar request missing attribute!' }
   }
 
   // Prevent creating duplicates
@@ -588,11 +589,12 @@ export const createCalendar = async (request: any) => {
   }
 
   // Create calendar
-  await prisma.calendar.create({
+  const calendar = await prisma.calendar.create({
     data: {
       ...request
     },
   });
+  return calendar;
 }
 
 export const deleteCalendar = async (calendarId: string, postId: string) => {
