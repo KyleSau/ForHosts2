@@ -266,40 +266,32 @@ export default function Nav({ children }: { children: ReactNode }) {
   return (
     <>
       <button
-        className={`fixed z-20 ${
+        className={`fixed z-30 ${
           // left align for Editor, right align for other pages
           segments[0] === "post" && segments.length === 2 && !showSidebar
-            ? "left-5 top-5"
-            : "right-5 top-7"
+            ? "right-5 top-5"
+            : "right-5 top-5"
           } sm:hidden`}
         onClick={() => setShowSidebar(!showSidebar)}
       >
-        <Menu width={20} />
+        <Menu width={20} className="" />
       </button>
       <div
         className={`transform ${showSidebar ? "translate-x-0" : "-translate-x-full"
-          } fixed z-10 flex h-full w-full flex-col justify-between border-r border-stone-200 bg-stone-100 p-4 transition-all dark:border-stone-700 dark:bg-stone-900 sm:w-60 sm:translate-x-0`}
+          } fixed z-20 flex h-full w-full flex-col justify-between border-r border-stone-200 bg-stone-100 p-4 transition-all dark:border-stone-700 dark:bg-stone-900 sm:w-60 sm:translate-x-0`}
       >
         <div className="grid gap-2">
           <div className="flex items-center space-x-2 px-2 py-1.5">
             <Link
               href="/"
-              className=" p-2"
+              className="p-2"
             >
               <Logo />
-              {/* <Image
-                src="/ForHostsLogoWithoutSlug.svg"
-                width={160}
-                height={75}
-                alt="Logo"
-                className="dark:scale-110 dark:border-stone-400"
-              /> */}
             </Link>
           </div>
           <div className="grid gap-1">
             {tabs.map(({ name, href, isActive, icon }) => (
               <div key={name}>
-                {/* Render main menu item */}
                 <Link
                   key={name}
                   href={href}
@@ -309,8 +301,6 @@ export default function Nav({ children }: { children: ReactNode }) {
                   {icon}
                   <span className="text-sm font-medium">{name}</span>
                 </Link>
-
-                {/* Render suboptions */}
               </div>
             ))}
           </div>

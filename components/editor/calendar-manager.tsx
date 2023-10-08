@@ -57,13 +57,15 @@ export default function CalendarManager({ postId, importedCalendars }: CalendarM
     return (
         <div>
             <EditorWrapper>
-                <div className="text-2xl font-semibold text-gray-800 mb-5">Export Calendar</div>
-                <CopyTextToClipboard text={exportLink} />
-                <div className="text-2xl font-semibold text-gray-800 mt-5 mb-5">Import Calendars</div>
-                <div className="mb-5">
-                    <CreateCalendarButton>
-                        <ImportCalendarModal postId={postId} addCalendar={addCalendar} />
-                    </CreateCalendarButton>
+                <div className="w-full">
+                    <div className="text-2xl font-semibold text-gray-800 mb-5">Export Calendar</div>
+                    <CopyTextToClipboard text={exportLink} />
+                    <div className="text-2xl font-semibold text-gray-800 mt-5 mb-5">Import Calendars</div>
+                    <div className="mb-5">
+                        <CreateCalendarButton>
+                            <ImportCalendarModal postId={postId} addCalendar={addCalendar} />
+                        </CreateCalendarButton>
+                    </div>
                 </div>
                 <div>
                     {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"> */}

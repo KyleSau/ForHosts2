@@ -24,7 +24,7 @@ export default function Map({ lat, lng, children }) {
     const [geoData, setGeoData] = useState({ lat: lat, lng: lng });
 
     return (
-        <MapContainer center={geoData} zoom={13} style={{ height: '500px' }} scrollWheelZoom={false} className="rounded-lg z-20">
+        <MapContainer center={geoData} zoom={13} style={{ height: '500px' }} scrollWheelZoom={false} className="rounded-lg z-10">
             <TileLayer
                 attribution=''
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

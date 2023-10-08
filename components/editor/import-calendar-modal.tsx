@@ -7,10 +7,15 @@ import { experimental_useFormStatus as useFormStatus } from "react-dom";
 import LoadingDots from "../icons/loading-dots";
 import clsx from "clsx";
 import { createCalendar } from "@/lib/actions";
+import { XCircle } from "lucide-react";
 
 interface ImportCalendarModalProps {
     postId: string;
 }
+
+const handleCloseModal = () => {
+    onClose();
+};
 
 export default function ImportCalendarModal({ postId, addCalendar }: any) {
     const router = useRouter();
@@ -29,6 +34,12 @@ export default function ImportCalendarModal({ postId, addCalendar }: any) {
             className="w-full rounded-md bg-white dark:bg-black md:max-w-md md:border md:border-stone-200 md:shadow dark:md:border-stone-700"
         >
             <div className="relative flex flex-col space-y-4 p-5 md:p-10">
+                <div
+                    className="absolute top-4 right-4 cursor-pointer text-gray-500"
+                    onClick={handleCloseModal}
+                >
+                    <XCircle size={24} color="black" />
+                </div>
                 <h2 className="font-cal text-2xl dark:text-white">Import Calendar</h2>
 
                 <div className="flex flex-col space-y-2">

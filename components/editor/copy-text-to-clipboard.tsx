@@ -29,7 +29,7 @@ export default function CopyTextToClipboard({ text }: CalendarManagerProps) {
                         type="url"
                         value={text}
                         required
-                        className="rounded-md min-w-[400px] border border-stone-200 bg-stone-50 px-2 text-sm text-stone-600 placeholder:text-stone-400 focus:outline-none dark:bg-black dark:text-white dark:placeholder-stone-700"
+                        className="rounded-md border border-stone-200 bg-stone-50 px-2 text-sm text-stone-600 placeholder:text-stone-400 focus:outline-none dark:bg-black dark:text-white dark:placeholder-stone-700"
                     />
                     <button
                         onMouseEnter={() => setShowTooltip(true)}
