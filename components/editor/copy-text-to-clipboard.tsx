@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { CheckCircle2, Clipboard, ClipboardCheck } from 'lucide-react';
 import { toast } from "sonner";
+import { Input } from '../ui/input';
 
 interface CalendarManagerProps {
     text: string;
@@ -23,19 +24,19 @@ export default function CopyTextToClipboard({ text }: CalendarManagerProps) {
         <div>
             <div className="flex">
                 <div className="relative flex">
-                    <input
+                    <Input
                         name="url"
                         type="url"
                         value={text}
                         required
-                        className="rounded-md border border-stone-200 bg-stone-50 px-2 text-sm text-stone-600 placeholder:text-stone-400 focus:outline-none dark:bg-black dark:text-white dark:placeholder-stone-700"
+                        className="rounded-md min-w-[400px] border border-stone-200 bg-stone-50 px-2 text-sm text-stone-600 placeholder:text-stone-400 focus:outline-none dark:bg-black dark:text-white dark:placeholder-stone-700"
                     />
                     <button
                         onMouseEnter={() => setShowTooltip(true)}
                         onMouseLeave={() => { setShowTooltip(false); setCopied(false); }}
                         onClick={handleCopyClick}
                         className="ml-2 relative top-0 left-0 px-4 hover:bg-gray-600 bg-black text-white rounded-md">
-                        Copy
+                        {copied ? 'Copied' : 'Copy'}
                     </button>
                 </div>
             </div>

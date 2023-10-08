@@ -6,8 +6,13 @@ import { useState } from "react";
 import { experimental_useFormStatus as useFormStatus } from "react-dom";
 import LoadingDots from "../icons/loading-dots";
 import clsx from "clsx";
+import { createCalendar } from "@/lib/actions";
 
-export default function ImportCalendarModal() {
+interface ImportCalendarModalProps {
+    postId: string;
+}
+
+export default function ImportCalendarModal({ postId, addCalendar }: any) {
     const router = useRouter();
     const modal = useModal();
 
@@ -65,14 +70,24 @@ export default function ImportCalendarModal() {
                 </div>
             </div>
             <div className="flex items-center justify-end rounded-b-lg border-t border-stone-200 bg-stone-50 p-3 dark:border-stone-700 dark:bg-stone-800 md:px-10">
-                <ImportCalendarFormButton />
+                <ImportCalendarFormButton addCalendar={addCalendar} request={{ name: data.name, url: data.url, postId: postId }} />
             </div>
         </form>
     );
 }
 
-function ImportCalendarFormButton() {
+// interface ImportCalendarRequest {
+//     postId: string;
+//     url: string;
+//     name: string;
+// }
+
+function ImportCalendarFormButton({ request, addCalendar }: any) {
     const { pending } = useFormStatus();
+    const handleCreateCalendar = async (request) => {
+        const newCalendar = await createCalendar(request);
+        addCalendar(newCalendar);
+    };
     return (
         <button
             className={clsx(
@@ -82,7 +97,8 @@ function ImportCalendarFormButton() {
                     : "border-black bg-black text-white hover:bg-white hover:text-black dark:border-stone-700 dark:hover:border-stone-200 dark:hover:bg-black dark:hover:text-white dark:active:bg-stone-800",
             )}
             disabled={pending}
-            onClick={() => alert('ah')}
+            // onClick={() => createCalendar(request)}
+            onClick={() => handleCreateCalendar(request)}
         >
             {pending ? <LoadingDots color="#808080" /> : <p>Import</p>}
         </button>

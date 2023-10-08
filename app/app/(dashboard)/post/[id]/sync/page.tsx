@@ -30,7 +30,13 @@ export default async function CalendarSyncPage({ params }: { params: { id: strin
         notFound();
     }
 
+    const importedCalendars = await prisma.calendar.findMany({
+        where: {
+            postId: data.id
+        }
+    });
+
     return (
-        <CalendarManager postId={data.id} />
+        <CalendarManager importedCalendars={importedCalendars} postId={data.id} />
     )
 }
