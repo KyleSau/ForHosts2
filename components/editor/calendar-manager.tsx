@@ -45,15 +45,6 @@ export default function CalendarManager({ postId, importedCalendars }: CalendarM
         }
     };
 
-    // const removeCalendar = async (calendarId: string) => {
-    //     const result = await deleteCalendar(calendarId, postId);
-    //     if (result.success) {
-    //         setCalendars(prevCalendars => prevCalendars.filter(calendar => calendar.id !== calendarId));
-    //     } else {
-    //         console.error(result.error);
-    //     }
-    // };
-
     return (
         <div>
             <EditorWrapper>
