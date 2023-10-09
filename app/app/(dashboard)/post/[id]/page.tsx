@@ -2,8 +2,7 @@ import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
 import PreviewSite from "@/components/preview-site";
-
-// import Editor from "@/components/editor";
+// import PreviewSite from "@/components/preview-site";
 
 export default async function PostPage({ params }: { params: { id: string } }) {
   const session = await getSession();
