@@ -22,7 +22,7 @@ export default function CopyTextToClipboard({ text }: CalendarManagerProps) {
 
     return (
         <div>
-            <div className="flex">
+            <div className="">
                 <div className="relative flex">
                     <Input
                         name="url"
