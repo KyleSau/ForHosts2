@@ -239,20 +239,11 @@ export default function InfoForGuests({ data }) {
                         </div>
                     </div>
                     <div className="text-sm font-medium text-gray-900 grid grid-cols-3 md:grid-cols-4 sm:grid-cols-5 gap-4 mb-5 mt-5">
-                        {/* <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger>
-                                    <Label htmlFor="HouseManual" className="col-span-1 col-start-1 flex items-center">
-                                        House Manual
-                                    </Label>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    Give guests essential information of the property, such as how to turn on hot water.
-                                </TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider> */}
-                        <div className="col-span-2 md:col-span-3 sm:col-span-4 col-start-2 md:col-start-2 sm:col-start-2 flex items-center">
-                            <Input type="text" className="w-full h-[200px]" />
+                        <Label htmlFor="HouseManual" className="col-span-1 col-start-1 flex items-center">
+                            House Manual
+                        </Label>
+                        <div className="col-span-3 md:col-span-4 sm:col-span-5 col-start-1 md:col-start-1 sm:col-start-1 flex items-center">
+                            <WYSIWYGEditor formik={formik} field={"houseManual"} />
                         </div>
                     </div>
                     <div className="mt-10 mb-10 grid grid-cols-1 sm:grid-cols-3 gap-4">

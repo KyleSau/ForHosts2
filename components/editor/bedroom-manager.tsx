@@ -166,24 +166,24 @@ function BedroomManager({ totalBedrooms, postId, bedrooms }: BedroomListProps) {
                                 <div className="space-y-4 h-96 overflow-scroll">
                                     {bedTypes.map((bedType) => (
                                         <div key={bedType} className="flex justify-between items-center">
-                                            <span className="text-gray-800">{bedType}test</span>
+                                            <span className="text-gray-800">{bedType}</span>
                                             <div className="flex items-center space-x-2 mr-5">
-                                            <IncrementDecrementButton
-  value={bedroomData[index][bedType]}
-  setValue={(newValue) => {
-    // Create a copy of the bedroomData array
-    const newData = [...bedroomData];
+                                                <IncrementDecrementButton
+                                                    value={bedroomData[index][bedType]}
+                                                    setValue={(newValue) => {
+                                                        // Create a copy of the bedroomData array
+                                                        const newData = [...bedroomData];
 
-    // Update the value of the specific bedroom type at the given index
-    newData[index][bedType] = newValue;
+                                                        // Update the value of the specific bedroom type at the given index
+                                                        newData[index][bedType] = newValue;
 
-    // Set the updated data back to the state
-    setBedroomData(newData);
-  }}
-/>
+                                                        // Set the updated data back to the state
+                                                        setBedroomData(newData);
+                                                    }}
+                                                />
 
 
-{/* The rest of your code for Increment/Decrement buttons is now within the IncrementDecrementButton component */}
+                                                {/* The rest of your code for Increment/Decrement buttons is now within the IncrementDecrementButton component */}
 
                                                 {/* <button
                                                     disabled={!bedroomData[index][bedType]}

@@ -487,6 +487,156 @@ export const getBedrooms = async (postId: string) => {
   return post?.propertyDetails?.bedrooms || [];
 };
 
+export const getCalendars = async (postId: string) => {
+  if (!postId)
+    throw new Error('Create Calendar: invalid postId');
+
+  const session = await getSession();
+  if (!session?.user.id) {
+    return {
+      error: "Not authenticated",
+    };
+  }
+
+  const userId = session.user.id;
+
+  // check if this user has postId
+  const hasCrudAccess = await prisma.post.findFirst({
+    where: {
+      id: postId,
+      userId: userId
+    }
+  })
+
+  if (!hasCrudAccess)
+    throw new Error('Create calendar: user does not have access to this post!');
+
+  const calendars = prisma.calendar.findMany({
+    where: {
+      postId: postId
+    }
+  })
+
+  return calendars;
+}
+
+export const createCalendar = async (request: any) => {
+
+  if (!request.postId)
+    throw new Error('Create Calendar: invalid postId');
+
+  const session = await getSession();
+  if (!session?.user.id) {
+    return {
+      error: "Not authenticated",
+    };
+  }
+
+  const userId = session.user.id;
+
+  // check if this user has postId
+  const hasCrudAccess = await prisma.post.findFirst({
+    where: {
+      id: request.postId,
+      userId: userId
+    }
+  })
+
+  if (!hasCrudAccess)
+    throw new Error('Create calendar: user does not have access to this post!');
+
+  // Prevent internal URLs
+  if (request.url.includes('forhosts.com')) {
+    throw new Error('Internal URLs are not allowed');
+  }
+
+  if (!request.url || !request.postId || !request.name) {
+    // throw new Error('Create calendar request missing attribute!');
+    return { error: 'Create calendar request missing attribute!' }
+  }
+
+  // Prevent creating duplicates
+  const existingName = await prisma.calendar.findFirst({
+    where: { name: request.name, postId: request.postId },
+  });
+  if (existingName) {
+    throw new Error('Duplicate calendar name');
+  }
+
+  // Prevent creating duplicates
+  const existingCalendar = await prisma.calendar.findFirst({
+    where: {
+      url: request.url,
+      postId: request.postId
+    },
+  });
+  if (existingCalendar) {
+    throw new Error('Duplicate calendar URL');
+  }
+
+  // Fetch from URL to verify if .ics format
+  try {
+    const response = await fetch(request.url);
+    if (!response.ok) {
+      throw new Error('Failed to fetch the URL');
+    }
+
+    const data = await response.text();
+
+    if (!data.includes('BEGIN:VCALENDAR') || !data.includes('END:VCALENDAR')) {
+      throw new Error('Invalid .ics format');
+    }
+    console.log('parsed fetch url data: ', data);
+  } catch (error) {
+    throw new Error('Failed to fetch or validate .ics format: ' + error.message);
+  }
+
+  // Create calendar
+  const calendar = await prisma.calendar.create({
+    data: {
+      ...request
+    },
+  });
+  return calendar;
+}
+
+export const deleteCalendar = async (calendarId: string, postId: string) => {
+
+  console.log('calendarId: ', calendarId);
+  console.log('postId: ', postId);
+  const session = await getSession();
+  if (!session?.user.id) {
+    return {
+      error: "Not authenticated",
+    };
+  }
+
+  const userId = session.user.id;
+
+  // check if this user has postId
+  const hasCrudAccess = await prisma.post.findFirst({
+    where: {
+      id: postId,
+      userId: userId
+    }
+  })
+
+  if (!hasCrudAccess)
+    throw new Error('Create calendar: user does not have access to this post!');
+
+  try {
+    await prisma.calendar.delete({
+      where: {
+        id: calendarId
+      }
+    });
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting calendar: ", error);
+    return { error };
+  }
+}
+
 export const updateBedroom = async (bedroom: Bedroom) => {
   const updatedBedroom = await prisma.bedroom.update({
     where: { id: bedroom.id },
