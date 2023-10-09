@@ -9,6 +9,7 @@ import { Input } from "../ui/input";
 import { Toggle } from "@/components/ui/toggle";
 import EditorSaveButton from "./editor-save-button";
 import EditorWrapper from "./editor-container-wrapper";
+import { toast } from "sonner";
 
 type DayName = "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday" | "Sunday";
 
@@ -97,10 +98,12 @@ const daysToBooleanArray = (daysArray: number[]) => {
 export default function Availability({ data }) {
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
   // const [restrictedCheckIn, setRestrictedCheckIn] = useState(data.availability.restrictedCheckIn);
   // const [restrictedCheckOut, setRestrictedCheckOut] = useState(data.availability.restrictedCheckOut);
   const availability = data.availability;
+  const handleSubmittedChange = (newSubmitted:boolean) => {
+    setSubmitted(newSubmitted);
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -110,7 +113,7 @@ export default function Availability({ data }) {
       minStay: availability.minStay,
       maxStay: availability.maxStay,
       advanceNotice: availability.advanceNotice,
-      restrictedCheckIn: availability.restrictedCheckIn,
+      restrictedCheckIn: availability.restrictedCheckIn, // Initialize with an empty array if it's undefined
       restrictedCheckOut: availability.restrictedCheckOut,
       // sameDayAdvanceNotice: data.sameDayAdvanceNotice,
       // preparationTime: data.preparationTime,
@@ -133,7 +136,7 @@ export default function Availability({ data }) {
           instantBooking: values.instantBooking,
           minStay: values.minStay,
           maxStay: values.maxStay,
-          advanceNotice: values.advanceNotice,
+          advanceNotice: parseInt(values.advanceNotice),
           restrictedCheckIn: values.restrictedCheckIn,
           restrictedCheckOut: values.restrictedCheckOut,
         },
@@ -144,7 +147,18 @@ export default function Availability({ data }) {
         console.log("Post updated successfully:", result);
         setSubmitted(true);
         setIsLoading(false);
-        // formik.resetForm({ values: transformedValues });
+        toast.success(
+          `Your data has been sucessfully saved! `,
+        );
+        setTimeout(() => {
+          setSubmitted(false)
+          const resetValues = {
+            ...values, // Spread the transformedValues
+            id: formik.initialValues.id, // Include the 'id' from initialValues
+          };
+          formik.resetForm({ values: resetValues });
+        }, 2000);
+
       }
       if (result?.error) {
         console.error(result.error);
@@ -226,7 +240,7 @@ export default function Availability({ data }) {
 
   useEffect(() => {
     window.addEventListener("beforeunload", handleBeforeUnload);
-
+    setSubmitted(false);
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
@@ -245,6 +259,7 @@ export default function Availability({ data }) {
             <label className="relative inline-flex cursor-pointer items-center space-x-2">
               <input
                 type="checkbox"
+                disabled={isLoading}
                 className="hidden"
                 checked={formik.values.instantBooking}
                 onChange={() =>
@@ -275,6 +290,7 @@ export default function Availability({ data }) {
               <Input
                 type="number"
                 className="w-full"
+                disabled={isLoading}
                 id="minStay"
                 name="minStay"
                 value={formik.values.minStay}
@@ -300,6 +316,7 @@ export default function Availability({ data }) {
               <Input
                 type="number"
                 className="w-full"
+                disabled={isLoading}
                 id="maxStay"
                 name="maxStay"
                 value={formik.values.maxStay}
@@ -325,6 +342,7 @@ export default function Availability({ data }) {
             <div className="col-span-1 col-start-3 flex items-center sm:col-span-3 sm:col-start-5 md:col-span-2 md:col-start-4">
               <select
                 id="advanceNotice"
+                disabled={isLoading}
                 name="advanceNotice"
                 value={formik.values.advanceNotice}
                 onChange={formik.handleChange}
@@ -355,6 +373,7 @@ export default function Availability({ data }) {
             <div className="col-span-1 col-start-3 flex items-center sm:col-span-3 sm:col-start-5 md:col-span-2 md:col-start-4">
               <select
                 id="sameDayAdvanceNotice"
+                disabled={isLoading}
                 name="sameDayAdvanceNotice"
                 // value={formik.values.sameDayAdvancedNotice}
                 onChange={formik.handleChange}
@@ -388,6 +407,7 @@ export default function Availability({ data }) {
             <div className="col-span-1 col-start-3 flex items-center sm:col-span-3 sm:col-start-5 md:col-span-2 md:col-start-4">
               <select
                 id="preparationTime"
+                disabled={isLoading}
                 name="preparationTime"
                 // value={formik.values.preparationTime}
                 onChange={formik.handleChange}
@@ -415,6 +435,7 @@ export default function Availability({ data }) {
             <div className="col-span-1 col-start-3 flex items-center sm:col-span-3 sm:col-start-5 md:col-span-2 md:col-start-4">
               <select
                 id="availabilityWindow"
+                disabled={isLoading}
                 name="availabilityWindow"
                 // value={formik.values.availabilityWindow}
                 onChange={formik.handleChange}
@@ -463,7 +484,7 @@ export default function Availability({ data }) {
             </div>
           </div>
           <hr className="mb-5" />
-          <EditorSaveButton dirty={formik.dirty} submitted={submitted} isLoading={isLoading} />
+          <EditorSaveButton dirty={formik.dirty} submitted={submitted} isLoading={isLoading} onSubmittedChange={handleSubmittedChange}/>
 
         </div>
 
