@@ -3,6 +3,9 @@
 import { getSession } from "@/lib/auth";
 import { list, del, BlobResult } from '@vercel/blob';
 import { getBlurDataURL } from "./utils";
+import { PrismaClient } from "@prisma/client";
+import { promiseHooks } from "v8";
+const prisma = new PrismaClient();
 
 export const uploadBlobMetadata = async (blobResult: BlobResult, orderIndex: number, postId: string, siteId: string) => {
   console.log("entered uploadBlobMetadata");
@@ -85,6 +88,22 @@ export const getBlobMetadata = async (siteId: string, postId: string) => {
   }
 };
 
+
+export const listAllBlobMetadata = async () => {
+  try {
+    const response = await prisma.image.findMany({
+      orderBy: {
+        orderIndex: "asc"
+      }
+    });
+    return response;
+  } catch (error) {
+    console.log("error: ", error);
+    throw new Error('Could not update user');
+  }
+};
+
+
 export const deleteBlobMetadata = async (id: string) => {
   const response = await prisma.image.delete({
     where: {
@@ -93,6 +112,7 @@ export const deleteBlobMetadata = async (id: string) => {
   });
   return response;
 };
+
 
 export const listAllBlobsInStore = async () => {
   console.log("listAllBlobsInStoreAction called");
@@ -129,12 +149,9 @@ export const deleteBlobFromStore = async (urlToDelete: string) => {
   return errorJson;
 };
 
-import { PrismaClient } from "@prisma/client";
-import { promiseHooks } from "v8";
-const prisma = new PrismaClient();
-
+//slotIdx is the destination idx
 export async function swapBlobMetadata(postId: string, slotIdx: number, imageId: string) {
-
+  console.log("swapBlobMetadata entered: postId: ", postId, "    slotIdx: ", slotIdx, "   imageId: ", imageId);
   if (!postId || slotIdx === undefined || !imageId) {
     console.log('swapping blob meta data was missing server action arguments');
     return;
@@ -181,17 +198,23 @@ export async function swapBlobMetadata(postId: string, slotIdx: number, imageId:
   };
 }
 
-
-export const listAllBlobMetadata = async () => {
-  try {
-    const response = await prisma.image.findMany({
-      orderBy: {
-        orderIndex: "asc"
-      }
-    });
-    return response;
-  } catch (error) {
-    console.log("error: ", error);
-    throw new Error('Could not update user');
+/**
+ * 
+ * @param id cuid of the image metadata to delete
+ * @param slotIdxToDelete actual index in the array of images
+ * @returns 
+ */
+export async function deleteAndReindex(id: string, slotIdxToDelete: number) {
+  if (id !== undefined) {
+    return prisma.$transaction([
+      prisma.image.delete({
+        where: { id }
+      }),
+      prisma.image.updateMany({
+        where: { orderIndex: { gt: slotIdxToDelete } },
+        data: { orderIndex: { decrement: 1 } }
+      }),
+    ]);
   }
-};
+  return {}
+}
