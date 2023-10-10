@@ -36,7 +36,7 @@ export default async function PostPage({ params }: { params: { id: string } }) {
   return <div className="w-full h-full">
     <div className="flex md:justify-start justify-center">
       <div className="md:w-screen md:h-screen border border-black w-[300px] h-[500px]">
-        <div className="bg-gray-200 top-4 border border-black w-full absolute">LOL.com</div>
+        <div className="bg-gray-200 top-3 border border-black w-screen absolute rounded-lg"><p className="ml-2">{url}</p></div>
         <Iframe url={url}
           id=""
           className=""
