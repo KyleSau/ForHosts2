@@ -85,6 +85,7 @@ export default async function SitePostPage({
           <hr />
           
         </div> 
+        
         <div className="sticky top-0 right-0  ">
   <BookingComponent listing={data} />
 </div>
