@@ -1,21 +1,22 @@
 import React from 'react';
 
 function RegExURL({ inputURL }: any) {
+    // This regex captures the protocol and the domain separately.
     const regex = /^(https?:\/\/)?([\w.-]+)/;
     const match = inputURL.match(regex);
 
-    let protocolAndDomain = inputURL;
+    let domain = '';
     let restOfURL = '';
 
-    if (match && match[0]) {
-        protocolAndDomain = match[0];
-        restOfURL = inputURL.replace(protocolAndDomain, '');
+    if (match && match[2]) {
+        domain = match[2];
+        restOfURL = inputURL.replace(regex, '').trim();
     }
 
     return (
         <div className="flex">
-            <span className="text-white">{protocolAndDomain}</span>
-            <span className="text-gray-500">{restOfURL}</span>
+            <span className="text-white">{domain}</span>
+            <span className="text-zinc-400">{restOfURL}</span>
         </div>
     );
 }
