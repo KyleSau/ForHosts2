@@ -4,9 +4,12 @@ import {
     RotateCw,
     ArrowLeft,
     ArrowRight,
-    Loader2
+    Loader2,
+    Lock,
+    Info
 } from "lucide-react";
 import RegExURL from './regex-url';
+import Logo from './Logo';
 
 
 export default function PreviewSite({ url }) {
@@ -66,16 +69,25 @@ export default function PreviewSite({ url }) {
                     </button>
                     <div
                         ref={urlTextRef}
-                        className='overflow-hidden rounded-l-3xl w-full bg-zinc-800 text-white pl-2 pr-2 ml-2 my-2 p-2 cursor-text'
+                        className='overflow-hidden rounded-l-3xl w-full bg-zinc-800 text-white pl-2 pr-2 ml-2 my-2 p-2 cursor-text flex items-center'
                         onClick={handleUrlClick}
                     >
+                        {
+                            url.startsWith('https://') ?
+                                <Lock className='mx-2' width={16} height={16} color="lightgray" /> :
+                                <Info className='mx-2' width={16} height={16} color="lightgray" />
+                        }
                         <RegExURL inputURL={url} />
                     </div>
+
+
                 </div>
 
                 {isLoading && (
+
                     <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-                        <div className="text-black text-xl">Website Preview Loading</div>
+                        <Logo />
+                        {/* <div className="text-black text-xl">Website Preview Loading</div> */}
                         <Loader2 className='animate-spin ml-2' />
                     </div>
                 )}
