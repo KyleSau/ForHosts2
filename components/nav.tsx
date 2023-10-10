@@ -115,6 +115,13 @@ export default function Nav({ children }: { children: ReactNode }) {
           suboptions: [],
         },
         {
+          name: "Stepper",
+          href: `/post/${id}/stepper`,
+          isActive: segments[2] === undefined,
+          icon: <Home width={18} />,
+          suboptions: [],
+        },
+        {
           name: "Overview",
           href: `/post/${id}`,
           isActive: segments[2] === undefined,
