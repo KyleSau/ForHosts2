@@ -6,16 +6,14 @@ import AmenitiesModal from "@/components/amenities/amenities-modal";
 import { amenityDetails } from "@/components/amenities/amenities-data";
 import BookingComponent from "@/components/booking/booking-component";
 import ListingDescription from "@/components/users-sites/listing-description";
-import ImageGallery from "@/components/dash-site-page/image-gallery";
-import DashHeader from "@/components/dash-site-page/dash-header";
+import Map from "@/components/users-sites/open-street-map";
 import dynamic from 'next/dynamic'
 import { CalendarDemo } from "@/components/ui/uicalendar";
 import ShowMoreModal from "@/components/users-sites/show-more-modal"
-import Image from "next/image";
+import ImageGallery from "@/components/dash-site-page/image-gallery";
+import DashHeader from "@/components/dash-site-page/dash-header";
+import { useMap, Circle } from "react-leaflet";
 // import OpenStreetMap from '../component/OpenStreetMap'
-const Map = dynamic(() => import('@/components/users-sites/open-street-map'), {
-  ssr: false,
-})
 
 export async function generateMetadata({
   params,
@@ -28,7 +26,6 @@ export async function generateMetadata({
     return null;
   }
   const { id, title, description } = data;
-
   return {
     title,
     description,
@@ -45,7 +42,6 @@ export async function generateMetadata({
   };
 }
 
-
 export default async function SitePostPage({
   params,
 }: {
@@ -53,16 +49,18 @@ export default async function SitePostPage({
 }) {
   const { domain, slug } = params;
   const data = await getPostData(domain, slug);
-  
+
   if (!data) {
     notFound();
   }
+  const map = useMap();
   const post = await prisma.post.findUnique({
     where: {
       id: data.id,
     },
     include: {
       propertyDetails: true,
+      location: true,
       site: {
         select: {
           subdomain: true,
@@ -70,33 +68,52 @@ export default async function SitePostPage({
       },
     },
   });
-  const propertyDetails = post.propertyDetails;
+
+  const propertyDetails = post.propertyDetails
+  const location = post.location
 
   return (
     <>
-   
       <div className="container mb-5 grid grid-cols-1 md:grid-cols-5 grid-rows-10 bg-gradient-to-b from-gray-50 via-gray-100 to-gray-50 shadow-[0_3px_10px_rgb(0,0,0,0.2)] rounded-2xl">
-         <div className="col-span-1 md:col-span-full justify-center m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
-         <ImageGallery images={[data.site.image]} imageBlurhash={data.site.imageBlurhash} />
+        <div className="col-span-1 md:col-span-full justify-center m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+          <ImageGallery images={[data.site.image]} imageBlurhash={[data.site.imageBlurhash]} />
         </div>
-        
-         <div className=" col-span-1 md:col-span-full m-2 ">
-          <DashHeader title={data.title} guests={propertyDetails.maxGuests} bathrooms={propertyDetails.bathrooms} bedrooms={propertyDetails.totalBedrooms} />
+        <div className="bg-white col-span-1 md:col-span-full m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+          <DashHeader title={data.title} guests={propertyDetails.maxGuests} bedrooms={propertyDetails.totalBedrooms} bathrooms={propertyDetails.bathrooms} />
           <hr />
-          
-        </div> 
-        <div className="sticky top-0 right-0  ">
-  <BookingComponent listing={data} />
-</div>
-
-
-
-        <div className=" col-start-1 md:col-start-3 md:col-span-3 p-8 m-2 ">
-          <div className="flex justify-center">
-       {data.description}
+        </div>
+        <div className="relative bg-white col-span-1 md:col-span-2 md:min-w-[300px] m-2 row-span-4 row-start-3 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+          <div className="sticky top-0 pt-[50px] pb-[50px]">
+            <BookingComponent listing={data} />
           </div>
         </div>
-        <hr className=" col-start-1 md:col-start-3 md:col-span-3 p-6 m-2 "/>
+        <div className="bg-white rounded-sm col-start-1 md:col-start-3 md:col-span-3 p-8 m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+          <div className="">
+            Notable Features
+          </div>
+        </div>
+        <div className="bg-white col-start-1 md:col-start-3 md:col-span-3 p-8 m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+          <div className="">
+            Listing Description
+          </div>
+          <ListingDescription description={data.description} />
+          {data.description && (
+            <div>
+              <ShowMoreModal text={data.description} />
+            </div>
+          )}
+        </div>
+        <div className="bg-white col-start-1 md:col-start-3 md:col-span-3 p-8 m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+          <div className="">
+            Sleeping quarters and beds
+          </div>
+        </div>
+        <div className="bg-white col-start-1 md:col-start-3 md:col-span-3 p-8 m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+          <div className="flex justify-center">
+            Amenities
+            <AmenitiesModal amenityDetails={amenityDetails} />
+          </div>
+        </div>
         <div className="bg-white col-start-1 md:col-start-3 md:col-span-3 m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
           <div className="w-full mx-auto flex justify-center">
             <CalendarDemo />
@@ -106,7 +123,8 @@ export default async function SitePostPage({
         <div className="col-span-1 md:col-span-full m-2">
           <div className="flex justify-center">
             Map
-            {/* <Map /> */}
+            <Map lat={location.latitude} lng={location.longitude}>
+            </Map>
           </div>
         </div>
         <hr className="m-5 col-span-1 md:col-span-full" />
@@ -119,7 +137,6 @@ export default async function SitePostPage({
               <p className=" flex justify-center">Check-in after 3:00 PM<br />
                 Checkout before 11:00 AM<br />
                 No pets
-
               </p>
             </div>
             <div className="m-2">
@@ -128,7 +145,6 @@ export default async function SitePostPage({
               <p className="flex justify-center">Check-in after 3:00 PM<br />
                 Checkout before 11:00 AM<br />
                 No pets
-
               </p>
             </div>
             <div className="m-2">
@@ -137,13 +153,11 @@ export default async function SitePostPage({
               <p className=" flex justify-center">Check-in after 3:00 PM<br />
                 Checkout before 11:00 AM<br />
                 No pets
-
               </p>
             </div>
           </div>
         </div>
       </div >
-
       {/* <MDX source={data.mdxSource} /> */}
       {/* {
         data.adjacentPosts.length > 0 && (

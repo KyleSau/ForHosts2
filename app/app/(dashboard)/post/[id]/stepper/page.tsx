@@ -4,6 +4,7 @@ import EditorWrapper from '@/components/editor/editor-container-wrapper'
 import React, { useState } from 'react';
 import Map from '@/components/users-sites/open-street-map';
 import Location from '@/components/editor/location';
+import ListingDetails from '@/components/editor/listing-details';
 
 function StepperPage({ data }) {
 
@@ -16,14 +17,10 @@ function StepperPage({ data }) {
     return (
         <div className="container mx-auto p-4">
             <EditorWrapper>
-                {/* Display the stepper component */}
                 <Stepper activeStep={activeStep} />
-
-                {/* Content for each step */}
                 {activeStep === 1 && (
                     <div className="">
                         <h2 className="text-xl font-semibold mb-2 mt-5">Which of these best describes your place?</h2>
-                        <p>This is the content for Step 1.</p>
                         <div className="absolute bottom-4 right-4">
                             <button
                                 onClick={() => handleStepChange(activeStep + 1)}
@@ -65,7 +62,6 @@ function StepperPage({ data }) {
                     <div>
                         <h2 className="text-xl font-semibold mb-2 mt-5">Where&apos;s your place located?</h2>
                         <p>Your address is only shared with guests after they’ve made a reservation.</p>
-                        {/* <Location data={data} /> */}
                         <div className="absolute bottom-4 left-4">
                             <button
                                 onClick={() => handleStepChange(activeStep - 1)}
