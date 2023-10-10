@@ -11,21 +11,20 @@ import PlacesAutocomplete, {
 import { Label } from "../ui/label";
 import IncrementDecrementButton from "../increment-decrement-buttons";
 import { updatePost } from "@/lib/actions";
-// import Map from "../users-sites/open-street-map";
-// import { useMap, Circle } from "react-leaflet";
-import MapComponent from "../dash-site-page/dash-page";
+import Map from "../users-sites/open-street-map";
+import { useMap, Circle } from "react-leaflet";
 
-// function MapViewUpdater({ coordinates }) {
-//   const map = useMap();
+function MapViewUpdater({ coordinates }) {
+  const map = useMap();
 
-//   useEffect(() => {
-//     if (coordinates.lat && coordinates.lng) {
-//       map.setView(coordinates, 12);
-//     }
-//   }, [coordinates, map]);
+  useEffect(() => {
+    if (coordinates.lat && coordinates.lng) {
+      map.setView(coordinates, 12);
+    }
+  }, [coordinates, map]);
 
-//   return <Circle center={[coordinates.lat, coordinates.lng]} radius={1000} />;
-// }
+  return <Circle center={[coordinates.lat, coordinates.lng]} radius={1000} />;
+}
 
 export default function Location({ data }) {
   const [submitted, setSubmitted] = useState(false);
@@ -206,7 +205,9 @@ export default function Location({ data }) {
         </div>
       </form>
       Coordinates: {JSON.stringify(coordinates)}
-      <MapComponent />
+      <Map lat={coordinates.lat} lng={coordinates.lng}>
+        <MapViewUpdater coordinates={coordinates} />
+      </Map>
       {/* <Map lat={coordinates.lat} lng={coordinates.lng} /> */}
     </EditorWrapper>
   );
