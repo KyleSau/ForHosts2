@@ -12,6 +12,7 @@ import { updatePostMetadata } from '@/lib/actions';
 import { ExternalLink } from 'lucide-react';
 import clsx from "clsx";
 import EditorWrapper from './editor-container-wrapper';
+import WYSIWYGEditor from './wysiwyg-editor';
 
 export default function ListingDescription({ data }) {
     const id = data['id'];
@@ -165,10 +166,11 @@ export default function ListingDescription({ data }) {
                     <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900">
                         Description of property
                     </label>
+                    <WYSIWYGEditor formik={formik} field={"description"} />
                     <textarea
                         name="description"
                         id="description"
-                        className={`block w-full h-[300px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.description && formik.errors.description ? 'border-red-500' : ''
+                        className={`block w-full h-[300px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 no-scrollbar ${formik.touched.description && formik.errors.description ? 'border-red-500' : ''
                             }`}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
