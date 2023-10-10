@@ -94,6 +94,7 @@ export default function Location({ data }) {
         "You have unsaved changes. Are you sure you want to leave?";
     }
   };
+
   const incrementRadius = () => {
     formik.setFieldValue("radius", formik.values.radius + 1);
   };
@@ -137,11 +138,10 @@ export default function Location({ data }) {
                 <input
                   {...getInputProps({
                     placeholder: "Search for an address...",
-                    className: `pl-1 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
-                      formik.touched.address && formik.errors.address
-                        ? "border-red-500"
-                        : ""
-                    }`,
+                    className: `pl-1 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.address && formik.errors.address
+                      ? "border-red-500"
+                      : ""
+                      }`,
                   })}
                 />
                 <div>

@@ -32,6 +32,7 @@ export default function Map({ lat, lng, children }) {
             {geoData.lat && geoData.lng && (
                 <>
                     {children}
+                    {/* <Circle center={[lat, lng]} radius={1000} /> */}
                 </>
             )}
         </MapContainer>

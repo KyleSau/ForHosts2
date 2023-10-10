@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getPostData } from "@/lib/fetchers";
-
+import prisma from "@/lib/prisma";
+import Location from "@/components/editor/location";
 import DashPage from "@/components/dash-site-page/dash-page";
 // import OpenStreetMap from '../component/OpenStreetMap'
 
@@ -38,6 +39,10 @@ export default async function SitePostPage({
 }) {
   const { domain, slug } = params;
   const idStuff = await getPostData(domain, slug);
+  if (!idStuff) {
+    notFound();
+  }
+
   const data = await prisma.post.findUnique({
     where: {
       id: idStuff.id,
