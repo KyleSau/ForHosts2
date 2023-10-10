@@ -11,30 +11,29 @@ import PlacesAutocomplete, {
 import { Label } from "../ui/label";
 import IncrementDecrementButton from "../increment-decrement-buttons";
 import { updatePost } from "@/lib/actions";
-import Map from "../users-sites/open-street-map";
-import { useMap, Circle } from "react-leaflet";
+// import Map from "../users-sites/open-street-map";
+// import { useMap, Circle } from "react-leaflet";
+import MapComponent from "../dash-site-page/dash-page";
 
-function MapViewUpdater({ coordinates }) {
-  const map = useMap();
+// function MapViewUpdater({ coordinates }) {
+//   const map = useMap();
 
-  useEffect(() => {
-    if (coordinates.lat && coordinates.lng) {
-      map.setView(coordinates, 12);
-    }
-  }, [coordinates, map]);
+//   useEffect(() => {
+//     if (coordinates.lat && coordinates.lng) {
+//       map.setView(coordinates, 12);
+//     }
+//   }, [coordinates, map]);
 
-  return <Circle center={[coordinates.lat, coordinates.lng]} radius={1000} />;
-}
+//   return <Circle center={[coordinates.lat, coordinates.lng]} radius={1000} />;
+// }
 
 export default function Location({ data }) {
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [coordinates, setCoordinates] = useState<{ lat: number, lng: number }>(
-    {
-      lat: parseFloat(data.location.latitude),
-      lng: parseFloat(data.location.longitude)
-    });
-
+  const [coordinates, setCoordinates] = useState<{ lat: number; lng: number }>({
+    lat: parseFloat(data.location.latitude),
+    lng: parseFloat(data.location.longitude),
+  });
 
   const validationSchema = Yup.object().shape({
     address: Yup.string().required("Address is required"),
@@ -66,7 +65,7 @@ export default function Location({ data }) {
           },
         };
 
-        console.log('transformedValues: ', transformedValues);
+        console.log("transformedValues: ", transformedValues);
 
         const result = await updatePost(transformedValues);
         if (result) {
@@ -74,10 +73,10 @@ export default function Location({ data }) {
           console.log("Post updated successfully:", result);
           setCoordinates({
             lat: parseFloat(transformedValues.location.latitude),
-            lng: parseFloat(transformedValues.location.longitude)
+            lng: parseFloat(transformedValues.location.longitude),
           });
 
-          console.log('new coordinates: ', JSON.stringify(coordinates));
+          console.log("new coordinates: ", JSON.stringify(coordinates));
           // map.setView(coordinates, 12);
           setSubmitted(true);
           setIsLoading(false);
@@ -139,10 +138,11 @@ export default function Location({ data }) {
                 <input
                   {...getInputProps({
                     placeholder: "Search for an address...",
-                    className: `pl-1 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.address && formik.errors.address
-                      ? "border-red-500"
-                      : ""
-                      }`,
+                    className: `pl-1 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                      formik.touched.address && formik.errors.address
+                        ? "border-red-500"
+                        : ""
+                    }`,
                   })}
                 />
                 <div>
@@ -178,22 +178,22 @@ export default function Location({ data }) {
           <div className="mb-5 mt-5 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
             <Label
               htmlFor="radius"
-              className="col-span-1 col-start-1 flex items-center text-md text-gray-600 leading-tight tracking-tighter"
+              className="text-md col-span-1 col-start-1 flex items-center leading-tight tracking-tighter text-gray-600"
             >
-              How far out should we approximate the location of your property until someone has booked (in miles)?
+              How far out should we approximate the location of your property
+              until someone has booked (in miles)?
             </Label>
-
 
             <div className="grid grid-cols-2 items-center">
               {/* <div className="col-start flex justify-start">Proximity Range</div> */}
-              <div className="flex col-start-1">
-                Proximity Range
-              </div>
-              <div className="flex col-start-2 justify-end">
-              <IncrementDecrementButton
-  value={formik.values.radius}
-  setValue={(newValue) => formik.setFieldValue('radius', newValue)}
-/>
+              <div className="col-start-1 flex">Proximity Range</div>
+              <div className="col-start-2 flex justify-end">
+                <IncrementDecrementButton
+                  value={formik.values.radius}
+                  setValue={(newValue) =>
+                    formik.setFieldValue("radius", newValue)
+                  }
+                />
               </div>
             </div>
           </div>
@@ -203,14 +203,11 @@ export default function Location({ data }) {
             submitted={submitted}
             isLoading={isLoading}
           />
-        </div >
-      </form >
+        </div>
+      </form>
       Coordinates: {JSON.stringify(coordinates)}
-      <Map lat={coordinates.lat} lng={coordinates.lng}>
-        <MapViewUpdater coordinates={coordinates} />
-      </Map>
-
+      <MapComponent />
       {/* <Map lat={coordinates.lat} lng={coordinates.lng} /> */}
-    </EditorWrapper >
+    </EditorWrapper>
   );
 }

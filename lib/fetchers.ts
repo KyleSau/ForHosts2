@@ -81,6 +81,8 @@ export async function getPostData(domain: string, slug: string) {
         },
         include: {
           images: true,
+          location: true,
+          propertyDetails: true,
           site: {
             include: {
               user: true,
