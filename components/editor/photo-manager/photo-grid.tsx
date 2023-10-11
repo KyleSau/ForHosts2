@@ -97,7 +97,7 @@ export default function PhotoGrid({ images }) {
 
   return (
     <div>
-      <div className="border p-10 ">
+      <div className="flex justify-center border p-10">
         <ReactSortable
           expand={false}
           tag={CustomComponent}
@@ -107,13 +107,10 @@ export default function PhotoGrid({ images }) {
         >
           {state.map((image) => (
             <div
-              className="h-full w-full rounded-lg border border-gray-300 hover:animate-pulse"
+              className="h-full w-[400px] rounded-lg border border-gray-300 hover:animate-pulse"
               key={image.id}
             >
-              <div
-                className="relative"
-                style={{ aspectRatio, overflow: "hidden" }}
-              >
+              <div className="relative" style={{ aspectRatio }}>
                 <div style={{ position: "relative" }}>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -137,20 +134,22 @@ export default function PhotoGrid({ images }) {
                       </DropdownMenuCheckboxItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
-                  <BlurImage
-                    alt={image.url ?? ""}
-                    blurDataURL={placeholderBlurhash}
-                    className="object-fit h-full w-full gap-4 rounded-lg  p-2 "
-                    width={200}
-                    height={200}
-                    placeholder="blur"
-                    src={image.url ?? "/placeholder.png"}
-                  />
+                  <div className="flex justify-center">
+                    <BlurImage
+                      alt={image.url ?? ""}
+                      blurDataURL={placeholderBlurhash}
+                      className="object-fit h-[200px] w-[350px] gap-4 rounded-lg pb-1"
+                      width={200}
+                      height={200}
+                      placeholder="blur"
+                      src={image.url ?? "/placeholder.png"}
+                    />
+                  </div>
                 </div>
-                <div className="bg-tranparent absolute bottom-0 left-0 right-0 cursor-pointer rounded-lg bg-opacity-10 text-white  hover:bg-gray-300 hover:bg-opacity-60 hover:text-opacity-100">
+                <div className="bg-tranparent relative cursor-pointer rounded-lg bg-opacity-10 pt-10 text-white  hover:bg-gray-300 hover:bg-opacity-60 hover:text-opacity-100">
                   <input
                     type="text"
-                    className="absolute bottom-0 w-full rounded-lg bg-transparent text-black focus:bg-gray-100 focus:bg-opacity-90 focus:ring-blue-300"
+                    className="absolute bottom-0 w-full border-none bg-transparent text-black focus:animate-none focus:rounded-lg focus:bg-gray-100 focus:bg-opacity-90 focus:ring-blue-300"
                     placeholder="Add a caption..."
                     value={image.caption}
                     onChange={(e) => {
