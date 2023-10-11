@@ -23,7 +23,7 @@ export default async function ListingImagePage({ params }: { params: { id: strin
 
     return (
         <div>
-            {/* <ListingImages data={data} /> */}
+            <ListingImages data={data} />
             <PhotoGrid images={data?.images} />
         </div>
     )
