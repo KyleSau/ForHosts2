@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBed } from '@fortawesome/free-solid-svg-icons';
+import { faBed, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 const bedrooms = [
     { name: 'Bedroom 1', beds: ['1 king bed'] },
@@ -20,39 +20,78 @@ const bedTypeIcons = {
 };
 
 function SleepingQuarters() {
-    return (
-        <div className="w-full p-8 md:p-12 bg-white rounded-md shadow-lg">
-            <div className="text-3xl font-semibold text-gray-800 mb-4">Where You'll Sleep</div>
-            <hr className="border-t border-gray-300" />
+    const [currentBedroomIndex, setCurrentBedroomIndex] = useState(0);
+    const bedroomsPerPage = 3; // Number of bedrooms to show at once
+    const cardHeight = '225px'; // Fixed height for the bedroom cards
+    const cardWidth = '225px'; // Fixed width for the bedroom cards
 
-            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                {bedrooms.map((bedroom, index) => (
-                    <div key={index} className="p-4">
-                        <div className="bg-gray-100 rounded-lg p-4 shadow-md">
-                            <div className="flex items-center mb-2">
-                                <div className="w-12 h-12 bg-gray-300 rounded-full mr-4 flex items-center justify-center">
-                                    {bedTypeIcons[bedroom.beds[0]] ? (
-                                        <FontAwesomeIcon icon={bedTypeIcons[bedroom.beds[0]]} className="text-2xl text-gray-700" />
-                                    ) : (
-                                        <FontAwesomeIcon icon={faBed} className="text-2xl text-gray-700" /> // Default icon if not found
+    const canShowNext = currentBedroomIndex + bedroomsPerPage < bedrooms.length;
+    const canShowPrevious = currentBedroomIndex > 0;
+
+    const handleNextClick = () => {
+        if (canShowNext) {
+            setCurrentBedroomIndex(currentBedroomIndex + bedroomsPerPage);
+        }
+    };
+
+    const handlePreviousClick = () => {
+        if (canShowPrevious) {
+            setCurrentBedroomIndex(currentBedroomIndex - bedroomsPerPage);
+        }
+    };
+
+    return (
+        <div className="w-full p-8">
+            <div className="text-3xl font-semibold text-gray-800 mb-4">Where You'll Sleep</div>
+            <div className="mt-4">
+                <div className="flex items-center">
+                    {canShowPrevious && (
+                        <button
+                            onClick={handlePreviousClick}
+                            className="bg-white p-2 rounded-md hover-bg-gray-200"
+                        >
+                            <FontAwesomeIcon icon={faArrowLeft} className="text-xl text-gray-600" />
+                        </button>
+                    )}
+                    <div className="flex flex-wrap">
+                        {bedrooms
+                            .slice(currentBedroomIndex, currentBedroomIndex + bedroomsPerPage)
+                            .concat(new Array(3 - bedroomsPerPage).fill(null)) // Fill the gap with null
+                            .map((bedroom, index) => (
+                                <div
+                                    key={index}
+                                    className="w-full md:w-1/3 p-4"
+                                    style={{ height: cardHeight, width: cardWidth }}
+                                >
+                                    {bedroom && ( // Render only if bedroom exists (not null)
+                                        <div className="bg-white rounded-lg p-4 shadow-md" style={{ height: '100%' }}>
+                                            <div className="text-center mb-2">
+                                                <div className="w-12 h-12 bg-gray-200 rounded-full m-auto flex items-center justify-center">
+                                                    {bedTypeIcons[bedroom.beds[0]] ? (
+                                                        <FontAwesomeIcon icon={bedTypeIcons[bedroom.beds[0]]} className="text-2xl text-gray-600" />
+                                                    ) : (
+                                                        <FontAwesomeIcon icon={faBed} className="text-2xl text-gray-600" />
+                                                    )}
+                                                </div>
+                                                <div className="text-lg font-semibold text-gray-800 mb-1">{bedroom.name}</div>
+                                                <div className="text-sm text-gray-500">
+                                                    {bedroom.beds.join(', ')}
+                                                </div>
+                                            </div>
+                                        </div>
                                     )}
                                 </div>
-                                <div className="text-xl font-semibold text-gray-800">{bedroom.name}</div>
-                            </div>
-                            <div className="text-sm text-gray-600">
-                                {bedroom.beds.map((bed, bedIndex) => (
-                                    <div key={bedIndex}>
-                                        {bedTypeIcons[bed] ? (
-                                            <FontAwesomeIcon icon={bedTypeIcons[bed]} className="text-sm text-gray-700" />
-                                        ) : (
-                                            <FontAwesomeIcon icon={faBed} className="text-sm text-gray-700" /> // Default icon if not found
-                                        )} {bed}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
+                            ))}
                     </div>
-                ))}
+                    {canShowNext && (
+                        <button
+                            onClick={handleNextClick}
+                            className="bg-white p-2 rounded-md hover-bg-gray-200"
+                        >
+                            <FontAwesomeIcon icon={faArrowRight} className="text-xl text-gray-600" />
+                        </button>
+                    )}
+                </div>
             </div>
         </div>
     );

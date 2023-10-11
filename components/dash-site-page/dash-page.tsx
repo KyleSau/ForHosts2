@@ -73,10 +73,11 @@ export default function DashPage({ data }) {
           <div className="">Sleeping quarters and beds</div>
           <hr className="mt-10" />
         </div> */}
-        <div className="col-start-1 m-2 rounded-sm p-8 md:col-span-3 md:col-start-3">
+        <div className="col-start-1 m-2 rounded-sm md:col-span-3 md:col-start-3">
           <div className="flex justify-center">
             <SleepingQuarters />
           </div>
+          <hr className="mt-10 h-2 w-full" />
         </div>
         <div className="col-start-1 m-2 rounded-sm p-8 md:col-span-3 md:col-start-3">
           <div className="flex justify-center">
