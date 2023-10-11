@@ -1,10 +1,11 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { Post, Site } from "@prisma/client";
+import { Bedroom, Post, Site } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { withPostAuth, withSiteAuth } from "./auth";
 import { getSession } from "@/lib/auth";
+import approximateLocation from "@/lib/utils/geo"
 import {
   addDomainToVercel,
   // getApexDomain,
@@ -28,10 +29,7 @@ export const getReservationsByPostId = async (postId: string) => {
         post: {
           id: postId,
         },
-        OR: [
-          { status: 'PENDING' },
-          { status: 'CONFIRMED' },
-        ],
+        OR: [{ status: "PENDING" }, { status: "CONFIRMED" }],
       },
       include: {
         post: true,
@@ -171,7 +169,7 @@ export const updateSite = withSiteAuth(
         const file = formData.get(key) as File;
         const filename = `${nanoid()}.${file.type.split("/")[1]}`;
 
-        console.log('filename: ' + filename);
+        console.log("filename: " + filename);
 
         const { url } = await put(filename, file, {
           access: "public",
@@ -266,8 +264,8 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
 
   const response = await prisma.post.create({
     data: {
-      title: '',
-      description: '',
+      title: "",
+      description: "",
       site: {
         connect: {
           id: site.id,
@@ -305,6 +303,13 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
     },
   });
 
+  await prisma.bedroom.create({
+    data: {
+      // Add any other default values if necessary
+      propertyDetailsId: response.propertyDetailsId,
+    },
+  });
+
   await revalidateTag(
     `${site.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}-posts`,
   );
@@ -314,12 +319,15 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
 });
 
 export const updatePost = async (data: Post) => {
+  console.log("data: " + JSON.stringify(data));
   const session = await getSession();
   if (!session?.user.id) {
     return { error: "Not authenticated" };
   }
 
   // Fetch the post and its related sub-tables
+  console.log();
+
   const post = await prisma.post.findUnique({
     where: {
       id: data.id,
@@ -351,58 +359,299 @@ export const updatePost = async (data: Post) => {
       },
     });
 
-    if (post.location) {
+    // LocationUpdateRequest
+    if (data.location) {
+      const { longitude, latitude, radius } = data.location;
+      const randomizedLocation = approximateLocation(parseFloat(latitude), parseFloat(longitude), radius ?? 0);
+
+      console.log('radius: ', radius);
+
+      const lng: string = randomizedLocation.lng + '';
+      const lat: string = randomizedLocation.lat + '';
+
+      data.location.longitude = lng
+      data.location.latitude = lat
+
+      console.log('ideal location: ', JSON.stringify(data.location));
+
       await prisma.location.update({
         where: { id: post.location!.id },
-        data: post.location,
+        data: data.location,
       });
     }
 
-    if (post.pricing) {
+    if (data.pricing) {
       await prisma.pricing.update({
         where: { id: post.pricing!.id },
-        data: post.pricing,
+        data: data.pricing,
       });
     }
 
-    if (post.availability) {
+    if (data.availability) {
       await prisma.availability.update({
         where: { id: post.availability!.id },
-        data: post.availability,
+
+        data: data.availability,
       });
     }
 
-    if (post.propertyRules) {
+    if (data.propertyRules) {
+      console.log(JSON.stringify(data.propertyRules));
       await prisma.propertyRules.update({
-        where: { id: post.propertyRules!.id },
-        data: post.propertyRules,
+        where: { id: post.propertyRulesId! },
+        data: data.propertyRules,
       });
     }
 
-    if (post.propertyDetails) {
+    // Check if the totalBedrooms field is being updated
+    if (data.propertyDetails && typeof data.propertyDetails.totalBedrooms !== "undefined") {
+      const newTotalBedrooms = data.propertyDetails.totalBedrooms;
+      const currentTotalBedrooms = post.propertyDetails.totalBedrooms;
+
+      // If there's an increase in totalBedrooms
+      if (newTotalBedrooms > currentTotalBedrooms) {
+        const difference = newTotalBedrooms - currentTotalBedrooms;
+        for (let i = 0; i < difference; i++) {
+          // Create a new Bedroom entry with default values
+          await prisma.bedroom.create({
+            data: {
+              // Add any other default values if necessary
+              propertyDetailsId: post.propertyDetails.id,
+            },
+          });
+        }
+      }
+
+      // If there's a decrease in totalBedrooms
+      if (newTotalBedrooms < currentTotalBedrooms) {
+        const difference = currentTotalBedrooms - newTotalBedrooms;
+        // Fetch the latest 'difference' number of Bedroom entries
+        // Assuming a createdAt field exists in the Bedroom model
+        const bedroomsToDelete = await prisma.bedroom.findMany({
+          where: { propertyDetailsId: post.propertyDetails.id },
+          orderBy: { createdAt: 'desc' },
+          take: difference
+        });
+
+        for (const bedroom of bedroomsToDelete) {
+          // Delete the Bedroom entry
+          await prisma.bedroom.delete({ where: { id: bedroom.id } });
+        }
+      }
+
+      // Now, update the propertyDetails
       await prisma.propertyDetails.update({
-        where: { id: post.propertyDetails!.id },
-        data: post.propertyDetails,
+        where: { id: post.propertyDetails.id },
+        data: data.propertyDetails,
       });
     }
+    // if (data.propertyDetails) {
+    //   const totalBedrooms = data.propertyDetails.totalBedrooms;
 
-    if (post.afterBookingInfo) {
+    //   await prisma.propertyDetails.update({
+    //     where: { id: post.propertyDetails!.id },
+    //     data: data.propertyDetails,
+    //   });
+    // }
+
+    if (data.afterBookingInfo) {
       await prisma.afterBookingInfo.update({
         where: { id: post.afterBookingInfo!.id },
-        data: post.afterBookingInfo,
+        data: data.afterBookingInfo,
       });
     }
 
     return updatedPost;
-
   } catch (error: any) {
-    console.error('Error updating post and its relations:', error);
+    console.error("Error updating post and its relations:", error);
     return { error: error.message };
   }
 };
 
+export const getBedrooms = async (postId: string) => {
+  const post = await prisma.post.findUnique({
+    where: { id: postId },
+    include: {
+      propertyDetails: {
+        include: {
+          bedrooms: {
+            orderBy: {
+              createdAt: 'asc' // Order by createdAt in descending order (LIFO)
+            }
+          }
+        }
+      }
+    }
+  });
 
-export const getPosts = async (userId: string, siteId: string | undefined, limit = null) => {
+  return post?.propertyDetails?.bedrooms || [];
+};
+
+export const getCalendars = async (postId: string) => {
+  if (!postId)
+    throw new Error('Create Calendar: invalid postId');
+
+  const session = await getSession();
+  if (!session?.user.id) {
+    return {
+      error: "Not authenticated",
+    };
+  }
+
+  const userId = session.user.id;
+
+  // check if this user has postId
+  const hasCrudAccess = await prisma.post.findFirst({
+    where: {
+      id: postId,
+      userId: userId
+    }
+  })
+
+  if (!hasCrudAccess)
+    throw new Error('Create calendar: user does not have access to this post!');
+
+  const calendars = prisma.calendar.findMany({
+    where: {
+      postId: postId
+    }
+  })
+
+  return calendars;
+}
+
+export const createCalendar = async (request: any) => {
+
+  if (!request.postId)
+    throw new Error('Create Calendar: invalid postId');
+
+  const session = await getSession();
+  if (!session?.user.id) {
+    return {
+      error: "Not authenticated",
+    };
+  }
+
+  const userId = session.user.id;
+
+  // check if this user has postId
+  const hasCrudAccess = await prisma.post.findFirst({
+    where: {
+      id: request.postId,
+      userId: userId
+    }
+  })
+
+  if (!hasCrudAccess)
+    throw new Error('Create calendar: user does not have access to this post!');
+
+  // Prevent internal URLs
+  if (request.url.includes('forhosts.com')) {
+    throw new Error('Internal URLs are not allowed');
+  }
+
+  if (!request.url || !request.postId || !request.name) {
+    // throw new Error('Create calendar request missing attribute!');
+    return { error: 'Create calendar request missing attribute!' }
+  }
+
+  // Prevent creating duplicates
+  const existingName = await prisma.calendar.findFirst({
+    where: { name: request.name, postId: request.postId },
+  });
+  if (existingName) {
+    throw new Error('Duplicate calendar name');
+  }
+
+  // Prevent creating duplicates
+  const existingCalendar = await prisma.calendar.findFirst({
+    where: {
+      url: request.url,
+      postId: request.postId
+    },
+  });
+  if (existingCalendar) {
+    throw new Error('Duplicate calendar URL');
+  }
+
+  // Fetch from URL to verify if .ics format
+  try {
+    const response = await fetch(request.url);
+    if (!response.ok) {
+      throw new Error('Failed to fetch the URL');
+    }
+
+    const data = await response.text();
+
+    if (!data.includes('BEGIN:VCALENDAR') || !data.includes('END:VCALENDAR')) {
+      throw new Error('Invalid .ics format');
+    }
+    console.log('parsed fetch url data: ', data);
+  } catch (error) {
+    throw new Error('Failed to fetch or validate .ics format: ' + error.message);
+  }
+
+  // Create calendar
+  const calendar = await prisma.calendar.create({
+    data: {
+      ...request
+    },
+  });
+  return calendar;
+}
+
+export const deleteCalendar = async (calendarId: string, postId: string) => {
+
+  console.log('calendarId: ', calendarId);
+  console.log('postId: ', postId);
+  const session = await getSession();
+  if (!session?.user.id) {
+    return {
+      error: "Not authenticated",
+    };
+  }
+
+  const userId = session.user.id;
+
+  // check if this user has postId
+  const hasCrudAccess = await prisma.post.findFirst({
+    where: {
+      id: postId,
+      userId: userId
+    }
+  })
+
+  if (!hasCrudAccess)
+    throw new Error('Create calendar: user does not have access to this post!');
+
+  try {
+    await prisma.calendar.delete({
+      where: {
+        id: calendarId
+      }
+    });
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting calendar: ", error);
+    return { error };
+  }
+}
+
+export const updateBedroom = async (bedroom: Bedroom) => {
+  const updatedBedroom = await prisma.bedroom.update({
+    where: { id: bedroom.id },
+    data: bedroom
+  });
+  return updatedBedroom;
+};
+
+
+
+export const getPosts = async (
+  userId: string,
+  siteId: string | undefined,
+  limit = null,
+) => {
   const posts = await prisma.post.findMany({
     where: {
       userId: userId as string,
@@ -415,9 +664,9 @@ export const getPosts = async (userId: string, siteId: string | undefined, limit
       site: true,
       images: {
         orderBy: {
-          orderIndex: "asc"
-        }
-      }
+          orderIndex: "asc",
+        },
+      },
       // and other tables
     },
     ...(limit ? { take: limit } : {}),
@@ -441,30 +690,29 @@ export const updatePostMetadata = withPostAuth(
       let response;
       if (key === "image") {
         const files = formData.getAll("image") as File[]; // This will retrieve all the files
-        const urls = await Promise.all(files.map(async (file) => {
-          const filename = `${nanoid()}.${file.type.split("/")[1]}`;
-          console.log('post filename: ' + filename);
+        const urls = await Promise.all(
+          files.map(async (file) => {
+            const filename = `${nanoid()}.${file.type.split("/")[1]}`;
+            console.log("post filename: " + filename);
 
-          const SIZE_LIMIT = 50000;
-          if (file.size > SIZE_LIMIT) {
+            const SIZE_LIMIT = 50000;
+            if (file.size > SIZE_LIMIT) {
+            }
+            const { url } = await put(filename, file, {
+              access: "public",
+            });
 
-          }
-          const { url } = await put(filename, file, {
-            access: "public",
-          });
-
-          const blurhash = await getBlurDataURL(url);
-          return { url, blurhash };
-        }));
+            const blurhash = await getBlurDataURL(url);
+            return { url, blurhash };
+          }),
+        );
 
         response = await prisma.post.update({
           where: {
             id: post.id,
           },
-          data: {
-
-          },
-        })
+          data: {},
+        });
       } else {
         response = await prisma.post.update({
           where: {
@@ -587,7 +835,6 @@ export const editUser = async (
     }
   }
 };
-
 
 export const getReservations = async (limit: number = 10) => {
   const session = await getSession();

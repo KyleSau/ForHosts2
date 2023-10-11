@@ -2,15 +2,16 @@ import BlurImage from "@/components/blur-image";
 import { placeholderBlurhash, } from "@/lib/utils";
 import { Post, Site } from "@prisma/client";
 import Link from "next/link";
+import { getBlurDataURL } from "@/lib/utils";
 
 export default function PostCard({
   data,
+  blurDataURL
 }: {
   data: Post & { site: Site | null } & any;
+  blurDataURL: string | any;
 }) {
   const url = `${data.site?.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${data.slug}`;
-
-
 
   return (
     <div className="relative rounded-lg border border-stone-200 pb-10 shadow-md transition-all hover:shadow-xl dark:border-stone-700 dark:hover:border-white">
@@ -19,15 +20,15 @@ export default function PostCard({
         className="flex flex-col overflow-hidden rounded-lg"
       >
         <div className="relative h-44 overflow-hidden">
-          <BlurImage
+          {/* <BlurImage
             alt={data.title ?? "Card thumbnail"}
             width={500}
             height={400}
             className="h-full object-cover"
             src={(data.images && data.images.length > 0 ? data.images[0].url : undefined) ?? "/placeholder.png"}
-            blurDataURL={(data.images && data.images.length > 0 ? data.images[0].blurHash : undefined) ?? placeholderBlurhash}
+            blurDataURL={blurDataURL}
             placeholder="blur"
-          />
+          /> */}
           {!data.published && (
             <span className="absolute bottom-2 right-2 rounded-md border border-stone-200 bg-white px-3 py-0.5 text-sm font-medium text-stone-600 shadow-md">
               Draft

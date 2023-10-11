@@ -1,128 +1,736 @@
 
 import {
-    faWifi,
-    faUtensils,
-    faTemperatureHigh,
-    faTv,
-    faTshirt,
-    faParking,
-    faSwimmingPool,
-    faDumbbell,
-    faHotTub,
-    faTree,
-    faUtensilSpoon,
-    faElevator,
-    faPaw,
-    faChild,
-    faSmoking,
-    faWheelchair,
-    faKey,
-    faClock,
-    faLaptop,
-    faCoffee,
-    faBicycle,
-    faFire,
-    faShieldAlt,
-    faConciergeBell,
+  faWifi,
+  faUtensils,
+  faTemperatureHigh,
+  faTv,
+  faTshirt,
+  faParking,
+  faSwimmingPool,
+  faDumbbell,
+  faHotTub,
+  faTree,
+  faUtensilSpoon,
+  faElevator,
+  faPaw,
+  faChild,
+  faSmoking,
+  faWheelchair,
+  faKey,
+  faClock,
+  faLaptop,
+  faCoffee,
+  faBicycle,
+  faFire,
+  faShieldAlt,
+  faConciergeBell,
+  faShuttleVan,
+  faBus,
+  faBed,
+  faSoap,
+  faBath,
+  faChair,
+  faBaby,
+  faChess,
+  faBook,
+  faCompactDisc,
+  faLightbulb,
+  faFirstAid,
+  faFireExtinguisher,
+  faExclamationTriangle,
+  faMap,
+  faGift,
+  faRecycle,
+  faBaseballBall,
+  faBell,
+  faBowlingBall,
+  faBroom,
+  faBullseye,
+  faCalendarAlt,
+  faCouch,
+  faCut,
+  faDice,
+  faDoorOpen,
+  faFaucet,
+  faFilm,
+  faFlask,
+  faGamepad,
+  faLock,
+  faLuggageCart,
+  faMountain,
+  faMusic,
+  faShower,
+  faSnowflake,
+  faTemperatureLow,
+  faUserTie,
+  faVideo,
+  faWind,
+  faWindowMaximize,
+  IconDefinition,
 } from "@fortawesome/free-solid-svg-icons";
-  
- export const amenityDetails: { [key: string]: { icon: any; description: string } } = {
-    Wifi: {
-      icon: faWifi,
-      description: "Wifi available throughout the listing.",
+
+
+export type Amenity = {
+  id: string
+  category: string
+  description: string | null
+  icon: IconDefinition | null
+}
+
+export const amenityDetails: Amenity[] =
+  [
+    {
+      "id": "Essentials",
+      "category": "Popular",
+      "description": "Towels, bed sheets, soap, toilet paper, and pillows",
+      "icon": faBed
     },
-    "Kitchen Facilities": {
-      icon: faUtensils,
-      description:
-        "Fully equipped kitchen with stove, oven, refrigerator, and cooking utensils.",
+    {
+      "id": "Air conditioning",
+      "category": "Popular",
+      "description": "Add details",
+      "icon": faSnowflake
     },
-    "Heating and Air Conditioning": {
-      icon: faTemperatureHigh,
-      description: "Climate control with heating and air conditioning.",
+    {
+      "id": "Cleaning products",
+      "category": "Popular",
+      "description": null,
+      "icon": faBroom
     },
-    "TV and Entertainment": {
-      icon: faTv,
-      description:
-        "Television with cable/satellite, streaming services, or DVD player.",
+    {
+      "id": "Cooking basics",
+      "category": "Popular",
+      "description": "Pots and pans, oil, salt and pepper",
+      "icon": faUtensils
     },
-    "Washer and Dryer": {
-      icon: faTshirt,
-      description: "Laundry facilities with washer and dryer.",
+    {
+      "id": "Dedicated workspace",
+      "category": "Popular",
+      "description": "Guests have a desk or table that’s used just for working, along with a comfortable chair",
+      "icon": faLaptop
     },
-    "Free Parking": {
-      icon: faParking,
-      description: "Free parking space available.",
+    {
+      "id": "Dishes and silverware",
+      "category": "Popular",
+      "description": "Bowls, chopsticks, plates, cups, etc.",
+      "icon": faUtensils
     },
-    Pool: {
-      icon: faSwimmingPool,
-      description: "Access to a swimming pool (private or shared).",
+    {
+      "id": "Dryer",
+      "category": "Popular",
+      "description": null,
+      "icon": faTshirt
     },
-    "Gym/Fitness Center": {
-      icon: faDumbbell,
-      description: "On-site gym or fitness center.",
+    {
+      "id": "Hair dryer",
+      "category": "Popular",
+      "description": null,
+      "icon": faCut
     },
-    "Hot Tub/Jacuzzi": {
-      icon: faHotTub,
-      description: "Private or shared hot tub for relaxation.",
+    {
+      "id": "Heating",
+      "category": "Popular",
+      "description": null,
+      "icon": faTemperatureLow
     },
-    "Outdoor Space": {
-      icon: faTree,
-      description: "Outdoor space, such as a patio, balcony, garden, or terrace.",
+    {
+      "id": "Hot tub",
+      "category": "Popular",
+      "description": null,
+      "icon": faHotTub
     },
-    "Barbecue/Grill": {
-      icon: faUtensilSpoon,
-      description: "Barbecue or grill for outdoor cooking.",
+    {
+      "id": "Kitchen",
+      "category": "Popular",
+      "description": "Space where guests can cook their own meals",
+      "icon": faUtensils
     },
-    Elevator: {
-      icon: faElevator,
-      description: "Elevator access (if applicable).",
+    {
+      "id": "Pool",
+      "category": "Popular",
+      "description": null,
+      "icon": faSwimmingPool
     },
-    "Pets Allowed": {
-      icon: faPaw,
-      description: "Pets are allowed in the listing.",
+    {
+      "id": "TV",
+      "category": "Popular",
+      "description": null,
+      "icon": faTv
     },
-    "Family/Kid-Friendly": {
-      icon: faChild,
-      description: "Amenities suitable for families with children.",
+    {
+      "id": "Washer",
+      "category": "Popular",
+      "description": null,
+      "icon": null
     },
-    "Smoking Policy": {
-      icon: faSmoking,
-      description: "Smoking policy for the listing.",
+    {
+      "id": "Wifi",
+      "category": "Popular",
+      "description": "Available throughout the listing",
+      "icon": faWifi
     },
-    "Wheelchair Accessible": {
-      icon: faWheelchair,
-      description: "Facilities for guests with mobility challenges.",
+    {
+      "id": "Bathroom",
+      "category": "Bedroom and laundry",
+      "description": "Bathtub",
+      "icon": faBath
     },
-    "Self Check-in": {
-      icon: faKey,
-      description: "Self check-in with keyless entry or lockbox.",
+    {
+      "id": "Bidet",
+      "category": "Bathroom",
+      "description": null,
+      "icon": faFaucet
     },
-    "24/7 Check-in": {
-      icon: faClock,
-      description: "Flexible check-in times, available 24/7.",
+    {
+      "id": "Body soap",
+      "category": "Bathroom",
+      "description": null,
+      "icon": faSoap
     },
-    Workspace: {
-      icon: faLaptop,
-      description: "Designated workspace with a desk and chair.",
+    {
+      "id": "Cleaning products",
+      "category": "Bathroom",
+      "description": null,
+      "icon": faBroom
     },
-    Breakfast: {
-      icon: faCoffee,
-      description: "Complimentary breakfast items or vouchers provided.",
+    {
+      "id": "Conditioner",
+      "category": "Bathroom",
+      "description": null,
+      "icon": faFlask
     },
-    Bikes: {
-      icon: faBicycle,
-      description: "Bicycles available for guest use.",
+    {
+      "id": "Hair dryer",
+      "category": "Bathroom",
+      "description": null,
+      "icon": faCut
     },
-    Fireplace: {
-      icon: faFire,
-      description: "Working fireplace (gas or wood-burning).",
+    {
+      "id": "Hot water",
+      "category": "Bathroom",
+      "description": null,
+      "icon": faShower
     },
-    "Security Features": {
-      icon: faShieldAlt,
-      description: "Security features like smoke detectors and first aid kits.",
+    {
+      "id": "Outdoor shower",
+      "category": "Bathroom",
+      "description": null,
+      "icon": faShower
     },
-    "Concierge Services": {
-      icon: faConciergeBell,
-      description: "Concierge services for local recommendations and activities.",
+    {
+      "id": "Shampoo",
+      "category": "Bathroom",
+      "description": null,
+      "icon": faFlask
     },
-  };
+    {
+      "id": "Shower gel",
+      "category": "Bathroom",
+      "description": null,
+      "icon": faFlask
+    },
+    {
+      "id": "Bed linens",
+      "category": "Bedroom and laundry",
+      "description": null,
+      "icon": faBed
+    },
+    {
+      "id": "Clothing storage",
+      "category": "Bedroom and laundry",
+      "description": null,
+      "icon": null
+    },
+    {
+      "id": "Dryer",
+      "category": "Bedroom and laundry",
+      "description": null,
+      "icon": faTshirt
+    },
+    {
+      "id": "Drying rack for clothing",
+      "category": "Bedroom and laundry",
+      "description": null,
+      "icon": faTshirt
+    },
+    {
+      "id": "Extra pillows and blankets",
+      "category": "Bedroom and laundry",
+      "description": null,
+      "icon": faBed
+    },
+    {
+      "id": "Hangers",
+      "category": "Bedroom and laundry",
+      "description": null,
+      "icon": null
+    },
+    {
+      "id": "Iron",
+      "category": "Bedroom and laundry",
+      "description": null,
+      "icon": null
+    },
+    {
+      "id": "Mosquito net",
+      "category": "Bedroom and laundry",
+      "description": null,
+      "icon": faBed
+    },
+    {
+      "id": "Room-darkening shades",
+      "category": "Bedroom and laundry",
+      "description": null,
+      "icon": faWindowMaximize
+    },
+    {
+      "id": "Safe",
+      "category": "Bedroom and laundry",
+      "description": null,
+      "icon": faLock
+    },
+    {
+      "id": "Washer",
+      "category": "Bedroom and laundry",
+      "description": null,
+      "icon": null
+    },
+    {
+      "id": "Arcade games",
+      "category": "Entertainment",
+      "description": null,
+      "icon": faGamepad
+    },
+    {
+      "id": "Batting cage",
+      "category": "Entertainment",
+      "description": null,
+      "icon": faBaseballBall
+    },
+    {
+      "id": "Books and reading material",
+      "category": "Entertainment",
+      "description": "NEW",
+      "icon": faBook
+    },
+    {
+      "id": "Bowling alley",
+      "category": "Entertainment",
+      "description": null,
+      "icon": faBowlingBall
+    },
+    {
+      "id": "Climbing wall",
+      "category": "Entertainment",
+      "description": null,
+      "icon": faMountain
+    },
+    {
+      "id": "Darts",
+      "category": "Entertainment",
+      "description": null,
+      "icon": faBullseye
+    },
+    {
+      "id": "Fitness equipment",
+      "category": "Entertainment",
+      "description": "Show all 6 amenities",
+      "icon": faDumbbell
+    },
+    {
+      "id": "Game console",
+      "category": "Entertainment",
+      "description": null,
+      "icon": faGamepad
+    },
+    {
+      "id": "Games",
+      "category": "Entertainment",
+      "description": null,
+      "icon": faDice
+    },
+    {
+      "id": "Hammock",
+      "category": "Entertainment",
+      "description": null,
+      "icon": null
+    },
+    {
+      "id": "Movie theater",
+      "category": "Entertainment",
+      "description": null,
+      "icon": faFilm
+    },
+    {
+      "id": "Music",
+      "category": "Entertainment",
+      "description": null,
+      "icon": faMusic
+    },
+    {
+      "id": "Patio or balcony",
+      "category": "Entertainment",
+      "description": "Private or shared",
+      "icon": faCouch
+    },
+    {
+      "id": "Ping pong table",
+      "category": "Entertainment",
+      "description": null,
+      "icon": null
+    },
+    {
+      "id": "Pool table",
+      "category": "Entertainment",
+      "description": null,
+      "icon": null
+    },
+    {
+      "id": "Record player",
+      "category": "Entertainment",
+      "description": null,
+      "icon": faCompactDisc
+    },
+    {
+      "id": "Sauna",
+      "category": "Entertainment",
+      "description": null,
+      "icon": faHotTub
+    },
+    {
+      "id": "Swimming pool",
+      "category": "Entertainment",
+      "description": null,
+      "icon": faSwimmingPool
+    },
+    {
+      "id": "Table tennis",
+      "category": "Entertainment",
+      "description": null,
+      "icon": null
+    },
+    {
+      "id": "Tennis court",
+      "category": "Entertainment",
+      "description": null,
+      "icon": null
+    },
+    {
+      "id": "Fire extinguisher",
+      "category": "Health and safety",
+      "description": null,
+      "icon": faFireExtinguisher
+    },
+    {
+      "id": "First aid kit",
+      "category": "Health and safety",
+      "description": null,
+      "icon": faFirstAid
+    },
+    {
+      "id": "Smoke alarm",
+      "category": "Health and safety",
+      "description": null,
+      "icon": faFire
+    },
+    {
+      "id": "Carbon monoxide alarm",
+      "category": "Health and safety",
+      "description": null,
+      "icon": faFire
+    },
+    {
+      "id": "Internet",
+      "category": "Logistics",
+      "description": "Wifi details",
+      "icon": faWifi
+    },
+    {
+      "id": "Long-term stays allowed",
+      "category": "Logistics",
+      "description": "Allow stay for 28 days or more",
+      "icon": faCalendarAlt
+    },
+    {
+      "id": "Luggage dropoff allowed",
+      "category": "Logistics",
+      "description": null,
+      "icon": faLuggageCart
+    },
+    {
+      "id": "Paid parking",
+      "category": "Logistics",
+      "description": null,
+      "icon": faParking
+    },
+    {
+      "id": "Free parking on premises",
+      "category": "Logistics",
+      "description": null,
+      "icon": faParking
+    },
+    {
+      "id": "Free street parking",
+      "category": "Logistics",
+      "description": null,
+      "icon": faParking
+    },
+    {
+      "id": "Private entrance",
+      "category": "Logistics",
+      "description": null,
+      "icon": faDoorOpen
+    },
+    {
+      "id": "Private living room",
+      "category": "Logistics",
+      "description": null,
+      "icon": faCouch
+    },
+    {
+      "id": "Private outdoor pool",
+      "category": "Logistics",
+      "description": null,
+      "icon": faSwimmingPool
+    },
+    {
+      "id": "Private pool",
+      "category": "Logistics",
+      "description": null,
+      "icon": faSwimmingPool
+    },
+    {
+      "id": "Shared outdoor pool",
+      "category": "Logistics",
+      "description": null,
+      "icon": faSwimmingPool
+    },
+    {
+      "id": "Shared pool",
+      "category": "Logistics",
+      "description": null,
+      "icon": faSwimmingPool
+    },
+    {
+      "id": "Air purifier",
+      "category": "Safety features",
+      "description": null,
+      "icon": faWind
+    },
+    {
+      "id": "Baby monitor",
+      "category": "Safety features",
+      "description": null,
+      "icon": faBaby
+    },
+    {
+      "id": "Babysitter recommendations",
+      "category": "Safety features",
+      "description": null,
+      "icon": null
+    },
+    {
+      "id": "Buzzer/wireless intercom",
+      "category": "Safety features",
+      "description": null,
+      "icon": faBell
+    },
+    {
+      "id": "CCTV cameras",
+      "category": "Safety features",
+      "description": null,
+      "icon": faVideo
+    },
+    {
+      "id": "Doorman",
+      "category": "Safety features",
+      "description": null,
+      "icon": faUserTie
+    },
+    {
+      "id": "Doorperson",
+      "category": "Safety features",
+      "description": null,
+      "icon": faUserTie
+    },
+    {
+      "id": "Fire extinguisher",
+      "category": "Safety features",
+      "description": null,
+      "icon": faFireExtinguisher
+    },
+    {
+      "id": "Fireplace guards",
+      "category": "Safety features",
+      "description": null,
+      "icon": faFire
+    },
+    {
+      "id": "Firm mattress",
+      "category": "Safety features",
+      "description": null,
+      "icon": faBed
+    },
+    {
+      "id": "First aid kit",
+      "category": "Safety features",
+      "description": null,
+      "icon": faFirstAid
+    },
+    {
+      "id": "Smoke alarm",
+      "category": "Safety features",
+      "description": null,
+      "icon": faFire
+    },
+    {
+      "id": "Carbon monoxide alarm",
+      "category": "Safety features",
+      "description": null,
+      "icon": faFire
+    },
+    {
+      "id": "Internet",
+      "category": "Logistics",
+      "description": "Wifi details",
+      "icon": faWifi
+    },
+    {
+      "id": "Long-term stays allowed",
+      "category": "Logistics",
+      "description": "Allow stay for 28 days or more",
+      "icon": faCalendarAlt
+    },
+    {
+      "id": "Luggage dropoff allowed",
+      "category": "Logistics",
+      "description": null,
+      "icon": faLuggageCart
+    },
+    {
+      "id": "Paid parking",
+      "category": "Logistics",
+      "description": null,
+      "icon": faParking
+    },
+    {
+      "id": "Free parking on premises",
+      "category": "Logistics",
+      "description": null,
+      "icon": faParking
+    },
+    {
+      "id": "Free street parking",
+      "category": "Logistics",
+      "description": null,
+      "icon": faParking
+    },
+    {
+      "id": "Private entrance",
+      "category": "Logistics",
+      "description": null,
+      "icon": faDoorOpen
+    },
+    {
+      "id": "Private living room",
+      "category": "Logistics",
+      "description": null,
+      "icon": faCouch
+    },
+    {
+      "id": "Private outdoor pool",
+      "category": "Logistics",
+      "description": null,
+      "icon": faSwimmingPool
+    },
+    {
+      "id": "Private pool",
+      "category": "Logistics",
+      "description": null,
+      "icon": faSwimmingPool
+    },
+    {
+      "id": "Shared outdoor pool",
+      "category": "Logistics",
+      "description": null,
+      "icon": faSwimmingPool
+    },
+    {
+      "id": "Shared pool",
+      "category": "Logistics",
+      "description": null,
+      "icon": faSwimmingPool
+    },
+    {
+      "id": "Air purifier",
+      "category": "Safety features",
+      "description": null,
+      "icon": faWind
+    },
+    {
+      "id": "Baby monitor",
+      "category": "Safety features",
+      "description": null,
+      "icon": faBaby
+    },
+    {
+      "id": "Buzzer/wireless intercom",
+      "category": "Safety features",
+      "description": null,
+      "icon": faBell
+    },
+    {
+      "id": "CCTV cameras",
+      "category": "Safety features",
+      "description": null,
+      "icon": faVideo
+    },
+    {
+      "id": "Doorman",
+      "category": "Safety features",
+      "description": null,
+      "icon": faUserTie
+    },
+    {
+      "id": "Doorperson",
+      "category": "Safety features",
+      "description": null,
+      "icon": faUserTie
+    },
+    {
+      "id": "Fire extinguisher",
+      "category": "Safety features",
+      "description": null,
+      "icon": faFireExtinguisher
+    },
+    {
+      "id": "Fireplace guards",
+      "category": "Safety features",
+      "description": null,
+      "icon": faFire
+    },
+    {
+      "id": "Firm mattress",
+      "category": "Safety features",
+      "description": null,
+      "icon": faBed
+    },
+    {
+      "id": "First aid kit",
+      "category": "Safety features",
+      "description": null,
+      "icon": faFirstAid
+    },
+    {
+      "id": "Smoke alarm",
+      "category": "Safety features",
+      "description": null,
+      "icon": faFire
+    },
+    {
+      "id": "Carbon monoxide alarm",
+      "category": "Safety features",
+      "description": null,
+      "icon": faFire
+    }
+  ]

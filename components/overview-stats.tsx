@@ -10,7 +10,7 @@ export default function OverviewStats() {
     return [
       ...months.map((month) => ({
         Month: `${month} 23`,
-        "Total Visitors": random(20000, 170418),
+        "Total Visitors": 1000,
       })),
       {
         Month: "Jul 23",

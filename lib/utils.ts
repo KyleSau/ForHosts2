@@ -31,7 +31,7 @@ export const truncate = (str: string, num: number) => {
 
 export const getBlurDataURL = async (url: string | null) => {
   if (!url) {
-    return "data:image/webp;base64,AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+    return placeholderBlurhash;//"data:image/webp;base64,AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
   }
   try {
     const response = await fetch(
@@ -42,7 +42,7 @@ export const getBlurDataURL = async (url: string | null) => {
 
     return `data:image/png;base64,${base64}`;
   } catch (error) {
-    return "data:image/webp;base64,AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+    return placeholderBlurhash;//"data:image/webp;base64,AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
   }
 };
 
@@ -128,9 +128,9 @@ export const createCleanQueryList = (multiQueryString: string) => {
 };
 
 export const humanReadableFileSize = (size: number | undefined) => {
-  const i = Math.floor((size? Math.log(size): 0) / Math.log(1024));
+  const i = Math.floor((size ? Math.log(size) : 0) / Math.log(1024));
   return (
-    ((size? size: 0) / Math.pow(1024, i)).toFixed(2) +
+    ((size ? size : 0) / Math.pow(1024, i)).toFixed(2) +
     " " +
     ["B", "kB", "MB", "GB", "TB"][i]
   );

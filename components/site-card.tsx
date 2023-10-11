@@ -1,8 +1,8 @@
 import BlurImage from "@/components/blur-image";
 import { placeholderBlurhash, random } from "@/lib/utils";
-import { Site } from "@prisma/client";
 import { BarChart, ExternalLink } from "lucide-react";
 import Link from "next/link";
+import { getBlurDataURL } from "@/lib/utils";
 
 export default function SiteCard({ data }: { data: any }) {
   const url = `${data.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`;
@@ -18,7 +18,7 @@ export default function SiteCard({ data }: { data: any }) {
           height={400}
           className="h-44 object-cover"
           src={(data.images && data.images.length > 0 ? data.images[0].url : undefined) ?? "/placeholder.png"}
-          blurDataURL={(data.images && data.images.length > 0 ? data.images[0].blurHash : undefined) ?? placeholderBlurhash}
+          blurDataURL={(data.images && data.images.length > 0 ? getBlurDataURL(data.images[0].url) : undefined) ?? placeholderBlurhash}
           placeholder="blur"
         />
         <div className="border-t border-stone-200 p-4 dark:border-stone-700">
@@ -48,7 +48,7 @@ export default function SiteCard({ data }: { data: any }) {
           className="flex items-center rounded-md bg-green-100 px-2 py-1 text-sm font-medium text-green-600 transition-colors hover:bg-green-200 dark:bg-green-900 dark:bg-opacity-50 dark:text-green-400 dark:hover:bg-green-800 dark:hover:bg-opacity-50"
         >
           <BarChart height={16} />
-          <p>{random(10, 40)}%</p>
+          <p>10%</p>
         </Link>
       </div>
     </div>
