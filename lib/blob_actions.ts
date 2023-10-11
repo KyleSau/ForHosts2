@@ -205,16 +205,13 @@ export async function swapBlobMetadata(postId: string, slotIdx: number, imageId:
  * @returns 
  */
 export async function deleteAndReindex(id: string, slotIdxToDelete: number) {
-  if (id !== undefined) {
-    return prisma.$transaction([
-      prisma.image.delete({
-        where: { id }
-      }),
-      prisma.image.updateMany({
-        where: { orderIndex: { gt: slotIdxToDelete } },
-        data: { orderIndex: { decrement: 1 } }
-      }),
-    ]);
-  }
-  return {}
+  return prisma.$transaction([
+    prisma.image.delete({
+      where: { id }
+    }),
+    prisma.image.updateMany({
+      where: { orderIndex: { gt: slotIdxToDelete } },
+      data: { orderIndex: { decrement: 1 } }
+    }),
+  ]);
 }
