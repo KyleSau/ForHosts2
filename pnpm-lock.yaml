@@ -335,6 +335,9 @@ dependencies:
   styled-components:
     specifier: ^6.0.4
     version: 6.0.4(react-dom@18.2.0)(react@18.2.0)
+  swiper:
+    specifier: ^10.3.1
+    version: 10.3.1
   swr:
     specifier: ^2.0.0
     version: 2.1.5(react@18.2.0)
@@ -11269,6 +11272,11 @@ packages:
   /svelte@3.59.2:
     resolution: {integrity: sha512-vzSyuGr3eEoAtT/A6bmajosJZIUWySzY2CzB3w2pgPvnkUjGqlDnsNnA0PMO+mMAhuyMul6C2uuZzY6ELSkzyA==}
     engines: {node: '>= 8'}
+    dev: false
+
+  /swiper@10.3.1:
+    resolution: {integrity: sha512-24Wk3YUdZHxjc9faID97GTu6xnLNia+adMt6qMTZG/HgdSUt4fS0REsGUXJOgpTED0Amh/j+gRGQxsLayJUlBQ==}
+    engines: {node: '>= 4.7.0'}
     dev: false
 
   /swr@2.1.5(react@18.2.0):

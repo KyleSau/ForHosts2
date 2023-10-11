@@ -15,6 +15,8 @@ import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { Bedroom } from "@prisma/client";
 import AmenitiesPage from "../amenities/amenities-page";
+import WhatToKnow from "../what-to-know";
+import SleepingQuarters from "../users-sites/sleeping-quarters";
 // import MapWrapper from "../editor/map-wrapper";
 const Map = dynamic(() => import("@/components/editor/map-wrapper"), {
   loading: () => <p>loading...</p>,
@@ -26,16 +28,12 @@ export default function DashPage({ data }) {
     lat: parseFloat(data.location.latitude),
     lng: parseFloat(data.location.longitude),
   });
-  // return (
-  //   <div>
-  //     {JSON.stringify(coordinates)}
-  //     < Map coordinates={coordinates} />
-  //   </div >
-  // );
+
   const bedrooms: Bedroom[] = data.propertyDetails.bedrooms;
+
   return (
     <>
-      <div className="grid-rows-10 container mb-5 grid grid-cols-1 rounded-2xl bg-gradient-to-b from-gray-50 via-gray-100 to-gray-50 shadow-[0_3px_10px_rgb(0,0,0,0.2)] md:grid-cols-5">
+      <div className="grid-rows-10 container mb-5 pb-5 pt-5 grid grid-cols-1 rounded-2xl bg-gradient-to-b from-gray-50 via-gray-100 to-gray-50 shadow-[0_3px_10px_rgb(0,0,0,0.2)] md:grid-cols-5">
         <div className="col-span-1 m-2 justify-center md:col-span-full ">
           <ImageGallery
             images={[data.site.image]}
@@ -71,13 +69,17 @@ export default function DashPage({ data }) {
           )}
           <hr className="mt-10 h-2" />
         </div>
-        <div className=" col-start-1 m-2 mb-8 p-8 md:col-span-3 md:col-start-3">
+        {/* <div className=" col-start-1 m-2 mb-8 p-8 md:col-span-3 md:col-start-3">
           <div className="">Sleeping quarters and beds</div>
           <hr className="mt-10" />
-        </div>
-        <div className=" col-start-1 m-2 mb-8 p-8 md:col-span-3 md:col-start-3">
+        </div> */}
+        <div className="col-start-1 m-2 rounded-sm p-8 md:col-span-3 md:col-start-3">
           <div className="flex justify-center">
-            Amenities
+            <SleepingQuarters />
+          </div>
+        </div>
+        <div className="col-start-1 m-2 rounded-sm p-8 md:col-span-3 md:col-start-3">
+          <div className="flex justify-center">
             <AmenitiesModal amenityDetails={amenityDetails} />
           </div>
           <hr className="mt-10" />
@@ -90,59 +92,17 @@ export default function DashPage({ data }) {
         <hr className="col-span-1 m-5 md:col-span-full" />
         <div className="col-span-1 m-2 md:col-span-full">
           <div>
-            Map
+            <p className="text-2xl mb-5">Where You&apos;ll Be</p>
             <Map coordinates={coordinates} />
-            {/* <Map lat={coordinates.lat} lng={coordinates.lng}>
-            <MapWrapper coordinates={coordinates} />
-          </Map> */}
+            <div className="m-5">
+              <p className="text-lg font-bold text-gray-600">Rockbridge, Ohio, United States</p>
+
+            </div>
           </div>
         </div>
         <hr className="col-span-1 m-5 md:col-span-full" />
-        <div className="col-span-1 m-2 rounded-sm bg-white md:col-span-full">
-          <p className="mb-5 flex justify-center text-xl font-bold">
-            What To Know About Where You&apos;re Staying
-          </p>
-          <div className="grid grid-cols-3">
-            <div className="m-2">
-              <p className="flex justify-center text-lg font-bold">
-                House Rules
-              </p>
-              <hr />
-              <p className=" flex justify-center">
-                Check-in after 3:00 PM
-                <br />
-                Checkout before 11:00 AM
-                <br />
-                No pets
-              </p>
-            </div>
-            <div className="m-2">
-              <p className="flex justify-center text-lg font-bold">
-                Cancellation Info
-              </p>
-              <hr />
-              <p className="flex justify-center">
-                Check-in after 3:00 PM
-                <br />
-                Checkout before 11:00 AM
-                <br />
-                No pets
-              </p>
-            </div>
-            <div className="m-2">
-              <p className="flex justify-center text-lg font-bold">Safety</p>
-              <hr />
-              <p className=" flex justify-center">
-                Check-in after 3:00 PM
-                <br />
-                Checkout before 11:00 AM
-                <br />
-                No pets
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+        <WhatToKnow />
+      </div >
     </>
   );
 }
