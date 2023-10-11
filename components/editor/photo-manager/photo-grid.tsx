@@ -107,7 +107,7 @@ export default function PhotoGrid({ images }) {
         >
           {state.map((image) => (
             <div
-              className="h-full w-[400px] rounded-lg border border-gray-300 hover:animate-pulse"
+              className="h-full w-[250px] rounded-lg border border-gray-300 hover:animate-pulse md:w-[400px]"
               key={image.id}
             >
               <div className="relative" style={{ aspectRatio }}>
@@ -138,7 +138,7 @@ export default function PhotoGrid({ images }) {
                     <BlurImage
                       alt={image.url ?? ""}
                       blurDataURL={placeholderBlurhash}
-                      className="object-fit h-[200px] w-[350px] gap-4 rounded-lg pb-1"
+                      className="object-fit h-[200px] w-full gap-4 rounded-lg pb-1"
                       width={200}
                       height={200}
                       placeholder="blur"
