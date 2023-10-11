@@ -13,11 +13,18 @@ module.exports = {
         headers: [
           { key: "Access-Control-Allow-Credentials", value: "true" },
           { key: "Access-Control-Allow-Origin", value: "*" }, // replace this your actual origin
-          { key: "Access-Control-Allow-Methods", value: "GET,DELETE,PATCH,POST,PUT" },
-          { key: "Access-Control-Allow-Headers", value: "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version" },
-        ]
-      }
-    ]
+          {
+            key: "Access-Control-Allow-Methods",
+            value: "GET,DELETE,PATCH,POST,PUT",
+          },
+          {
+            key: "Access-Control-Allow-Headers",
+            value:
+              "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version",
+          },
+        ],
+      },
+    ];
   },
   images: {
     domains: [
@@ -27,13 +34,15 @@ module.exports = {
       "pbs.twimg.com",
       "avatars.githubusercontent.com",
       "www.google.com",
+      "upload.wikimedia.org",
+      "en.wikipedia.org",
       "flag.vercel.app",
       "illustrations.popsy.co",
       "lh3.googleusercontent.com",
       "www.facebook.com",
       "platform-lookaside.fbsbx.com",
       "ccd1kw3boji7y6xm.public.blob.vercel-storage.com",
-      "stripe.com"
+      "stripe.com",
     ],
   },
   reactStrictMode: false,
