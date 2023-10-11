@@ -1,6 +1,7 @@
-import ListingImages from '@/components/editor/listing-images'
 import React from 'react'
 import prisma from '@/lib/prisma';
+import PhotoGrid from '@/components/editor/photo-manager/photo-grid';
+import ListingImages from '@/components/editor/listing-images';
 
 export default async function ListingImagePage({ params }: { params: { id: string } }) {
 
@@ -9,6 +10,7 @@ export default async function ListingImagePage({ params }: { params: { id: strin
             id: params.id,
         },
         include: {
+            images: true,
             site: {
                 select: {
                     id: true,
@@ -18,7 +20,11 @@ export default async function ListingImagePage({ params }: { params: { id: strin
         },
     });
 
+
     return (
-        <ListingImages data={data} />
+        <div>
+            {/* <ListingImages data={data} /> */}
+            <PhotoGrid images={data?.images} />
+        </div>
     )
 }
