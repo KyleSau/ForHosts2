@@ -22,14 +22,14 @@ function AmenitiesModal({ amenityDetails }: AmenitiesModalProps) {
         &times;
       </button>
       <h2 className="text-lg font-semibold mb-4">Amenities</h2>
-      <ul className="list-none p-0 m-0">
+      <div className="grid grid-cols-2 gap-4">
         {amenityDetails.map((amenity, index) => (
-          <li key={index} className="text-2xl text-gray-600 flex items-center mb-4">
+          <div key={index} className="text-2xl text-gray-600 flex items-center mb-4">
             {amenity.icon && <FontAwesomeIcon icon={amenity.icon} className="mr-2" />}
             <span className="text-base font-semibold ml-2">{amenity.id}</span>
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 
