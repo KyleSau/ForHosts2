@@ -107,7 +107,7 @@ export default function PhotoGrid({ images }) {
         >
           {state.map((image) => (
             <div
-              className="h-full w-full border border-gray-300"
+              className="h-full w-full rounded-lg border border-gray-300"
               key={image.id}
             >
               <div
