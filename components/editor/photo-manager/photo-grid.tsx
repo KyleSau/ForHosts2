@@ -97,7 +97,7 @@ export default function PhotoGrid({ images }) {
 
   return (
     <div>
-      <div className="border p-10">
+      <div className="border p-10 ">
         <ReactSortable
           expand={false}
           tag={CustomComponent}
@@ -107,7 +107,7 @@ export default function PhotoGrid({ images }) {
         >
           {state.map((image) => (
             <div
-              className="h-full w-full rounded-lg border border-gray-300"
+              className="h-full w-full rounded-lg border border-gray-300 hover:animate-pulse"
               key={image.id}
             >
               <div
@@ -120,7 +120,7 @@ export default function PhotoGrid({ images }) {
                       <div className="absolute right-2 top-2 z-10  hover:scale-110">
                         <MoreHorizontal
                           size={24}
-                          className="text-gray-400 hover:text-black"
+                          className="text-gray-400  hover:text-black"
                         />
                       </div>
                     </DropdownMenuTrigger>
@@ -140,14 +140,14 @@ export default function PhotoGrid({ images }) {
                   <BlurImage
                     alt={image.url ?? ""}
                     blurDataURL={placeholderBlurhash}
-                    className="object-fit h-full w-full gap-4 rounded-lg  p-2 hover:scale-105"
+                    className="object-fit h-full w-full gap-4 rounded-lg  p-2 "
                     width={200}
                     height={200}
                     placeholder="blur"
                     src={image.url ?? "/placeholder.png"}
                   />
                 </div>
-                <div className="bg-tranparent absolute bottom-0 left-0 right-0 cursor-pointer rounded-lg bg-opacity-10 text-white transition-opacity hover:bg-gray-300 hover:bg-opacity-60 hover:text-opacity-100">
+                <div className="bg-tranparent absolute bottom-0 left-0 right-0 cursor-pointer rounded-lg bg-opacity-10 text-white  hover:bg-gray-300 hover:bg-opacity-60 hover:text-opacity-100">
                   <input
                     type="text"
                     className="absolute bottom-0 w-full rounded-lg bg-transparent text-black focus:bg-gray-100 focus:bg-opacity-90 focus:ring-blue-300"
