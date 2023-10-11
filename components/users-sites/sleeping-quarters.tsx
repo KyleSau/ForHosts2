@@ -8,7 +8,6 @@ const bedrooms = [
     { name: 'Bedroom 3', beds: ['2 single beds', '1 sofa bed'] },
     { name: 'Bedroom 4', beds: ['1 queen bed'] },
     { name: 'Bedroom 5', beds: ['1 king bed', '1 single bed'] },
-    // Add more bedrooms with arrays of bed descriptions as needed
 ];
 
 const bedTypeIcons = {
@@ -16,14 +15,13 @@ const bedTypeIcons = {
     'queen bed': faBed,
     'single bed': faBed,
     'sofa bed': faBed,
-    // Add more bed types and corresponding icons here
 };
 
 function SleepingQuarters() {
     const [currentBedroomIndex, setCurrentBedroomIndex] = useState(0);
-    const bedroomsPerPage = 3; // Number of bedrooms to show at once
-    const cardHeight = '225px'; // Fixed height for the bedroom cards
-    const cardWidth = '225px'; // Fixed width for the bedroom cards
+    const bedroomsPerPage = 3;
+    const cardHeight = '225px';
+    const cardWidth = '225px';
 
     const canShowNext = currentBedroomIndex + bedroomsPerPage < bedrooms.length;
     const canShowPrevious = currentBedroomIndex > 0;
@@ -42,7 +40,7 @@ function SleepingQuarters() {
 
     return (
         <div className="w-full p-8">
-            <div className="text-3xl font-semibold text-gray-800 mb-4">Where You'll Sleep</div>
+            <div className="text-3xl font-semibold text-gray-800 mb-4">Where You&apos;ll Sleep</div>
             <div className="mt-4">
                 <div className="flex items-center">
                     {canShowPrevious && (
@@ -56,14 +54,14 @@ function SleepingQuarters() {
                     <div className="flex flex-wrap">
                         {bedrooms
                             .slice(currentBedroomIndex, currentBedroomIndex + bedroomsPerPage)
-                            .concat(new Array(3 - bedroomsPerPage).fill(null)) // Fill the gap with null
+                            .concat(new Array(3 - bedroomsPerPage).fill(null))
                             .map((bedroom, index) => (
                                 <div
                                     key={index}
                                     className="w-full md:w-1/3 p-4"
                                     style={{ height: cardHeight, width: cardWidth }}
                                 >
-                                    {bedroom && ( // Render only if bedroom exists (not null)
+                                    {bedroom && (
                                         <div className="bg-white rounded-lg p-4 shadow-md" style={{ height: '100%' }}>
                                             <div className="text-center mb-2">
                                                 <div className="w-12 h-12 bg-gray-200 rounded-full m-auto flex items-center justify-center">

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '@/components/Modal';
-import { amenityDetails } from './amenitiesData'; // Adjust the import path accordingly
 
 type Amenity = {
   id: string;
