@@ -50,9 +50,9 @@ const CustomComponent = forwardRef(function CustomComponent(props, ref) {
                 padding: "5px",
                 height: "auto",
             }}
-            // ref={ref}
+            ref={ref}
         >
-            {/* {props.children} */}
+            {props.children}
         </div>
     );
 });
