@@ -9,7 +9,7 @@ export default function ListingImages({ data }) {
     return (
         <EditorWrapper >
             <div>
-                <FileClickDragDrop componentId={'post-image-uploader'} data={data} />
+                {/* <FileClickDragDrop componentId={'post-image-uploader'} data={data} /> */}
             </div>
         </EditorWrapper>
     )

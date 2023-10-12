@@ -1,10 +1,10 @@
 import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
-import { FileClickDragDrop } from "@/components/editor/file-drag-drop";
 // import PhotoManager from "@/components/editor/photo-manager";
 // import { getBlurDataURL } from "@/lib/utils";
 import { getBlobMetadata } from "@/lib/blob_actions";
+import PreviewSite from "@/components/preview-site";
 // import Editor from "@/components/editor";
 
 export default async function PostPage({ params }: { params: { id: string } }) {
@@ -34,27 +34,22 @@ export default async function PostPage({ params }: { params: { id: string } }) {
   //   return { ...image, blurDataURL };
   // }));
 
-  const postId = data.id;
-  const siteId = data.site!.id;
+  // const postId = data.id;
+  // const siteId = data.site!.id;
 
-  const currentBlobMetadataForPost = await getBlobMetadata(siteId, postId);
-  const currentFileDataObjects = currentBlobMetadataForPost.map(
-    (blobMetadata: any & { post: any | null }) => {
-      const fileDataObject: any = {
-        inBlobStore: true,
-        isUploading: false,
-        ...blobMetadata
-      }
-      return fileDataObject;
-    }
-  );
+  // const currentBlobMetadataForPost = await getBlobMetadata(siteId, postId);
+  // const currentFileDataObjects = currentBlobMetadataForPost.map(
+  //   (blobMetadata: any & { post: any | null }) => {
+  //     const fileDataObject: any = {
+  //       inBlobStore: true,
+  //       isUploading: false,
+  //       ...blobMetadata
+  //     }
+  //     return fileDataObject;
+  //   }
+  // );
 
   // data.images = enrichedImages;
 
-  return <div>
-    {/* <PhotoManager postId={data.id} images={enrichedImages} /> */}
-    <FileClickDragDrop currentFileDataObjects={currentFileDataObjects} componentId="listing-photos-drag-drop-area" data={data} />
-  </div>
-
-  return <PreviewSite url={url} />
+  return <PreviewSite url={'https://google.com'} />
 }

@@ -397,6 +397,9 @@ devDependencies:
   '@types/react':
     specifier: ^18.2.14
     version: 18.2.14
+  '@types/react-beautiful-dnd':
+    specifier: ^13.1.5
+    version: 13.1.5
   '@types/react-datepicker':
     specifier: ^4.15.0
     version: 4.15.0(react-dom@18.2.0)(react@18.2.0)
@@ -5295,6 +5298,12 @@ packages:
 
   /@types/prop-types@15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
+
+  /@types/react-beautiful-dnd@13.1.5:
+    resolution: {integrity: sha512-mzohmMtV48b0bXF2dP8188LzUv9HAGHKucOORYsd5Sqq830pJ4gseFyDDAH0TR4TeD1ceG9DxTQ0FOFbtCSy4Q==}
+    dependencies:
+      '@types/react': 18.2.14
+    dev: true
 
   /@types/react-big-calendar@1.6.4:
     resolution: {integrity: sha512-xAbdQ2cQhx71dsnacJ1knSGqTi6cD8odGi28AzCjA+N4bgpJjSyYo/fN1bG4ScfBAEQomSl/UoXYrSgUoJ0MGA==}

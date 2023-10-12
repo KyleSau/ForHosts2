@@ -68,6 +68,8 @@ export const updateBlobMetadata = async (cuid: string, updatedFields: any) => {
 };
 
 export const getBlobMetadata = async (siteId: string, postId: string) => {
+  if (!siteId)
+    throw new Error('no site id found!');
   try {
     const response = await prisma.image.findMany({
       where: {

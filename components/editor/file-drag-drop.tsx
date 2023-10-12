@@ -9,9 +9,9 @@ import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautif
 
 import { put, type BlobResult } from '@vercel/blob'; // test
 import {
-  uploadBlobMetadata, 
-  listAllBlobsInStore, 
-  deleteBlobFromStore, 
+  uploadBlobMetadata,
+  listAllBlobsInStore,
+  deleteBlobFromStore,
   deleteBlobMetadata,
   deleteAndReindex,
   listAllBlobMetadata,
@@ -41,7 +41,7 @@ export function FileClickDragDrop({ componentId, data, currentFileDataObjects }:
   const POST_ID = data["id"];
 
   const PERMITTED_FILE_TYPES = new Set([FILE_CONSTS.JPEG, FILE_CONSTS.PNG]);
-  const [fileDataObjects, setFileDataObjects] = useState<FileDataObject[]>([]);
+  const [fileDataObjects, setFileDataObjects] = useState<FileDataObject[]>(currentFileDataObjects);
 
   //states for confirmation modal for deleting pictures
   const [editorWarningModalOpen, setEditorWarningModalOpen] = useState<boolean>(false);
@@ -53,11 +53,11 @@ export function FileClickDragDrop({ componentId, data, currentFileDataObjects }:
   const [blobsFromStoreTest, setBlobsFromStoreTest] = useState<BlobResult[]>([]);
   const [blobMetadataTest, setBlobMetadataTest] = useState<ImagePrismaSchema[]>([]);
 
-  useEffect(() => {
-    // console.log("useEffect entered. getting existing blobs");
-    // refreshMetadata();
-    setFileDataObjects([...currentFileDataObjects]);
-  }, []);
+  // useEffect(() => {
+  //   // console.log("useEffect entered. getting existing blobs");
+  //   // refreshMetadata();
+  //   setFileDataObjects([...currentFileDataObjects]);
+  // }, []);
 
   const uploadFileDataObjects = async (fileDataObjects: FileDataObject[]) => {
     const fileDataObjectsCopy = [...fileDataObjects];
@@ -118,9 +118,6 @@ export function FileClickDragDrop({ componentId, data, currentFileDataObjects }:
     } else {
       const newFilesAboveSizeLimit: (File | null)[] = [];
       const newFilesBelowSizeLimit: FileDataObject[] = [];
-      const a = hostname;
-      // console.log("HOSTNAME: ", a);
-
       newFiles.forEach((file: File | null, fileIdx: number) => {
         // console.log("new file: ", file);
         if (file) {
@@ -267,7 +264,7 @@ export function FileClickDragDrop({ componentId, data, currentFileDataObjects }:
     updatedFileDataObjects.splice(result.destination.index, 0, movedItem);
     console.log("updatedFDO AFTER: ", updatedFileDataObjects);
 
-    const response = await swapBlobMetadata(POST_ID, result.destination.index, movedItem.id? movedItem.id: "");
+    const response = await swapBlobMetadata(POST_ID, result.destination.index, movedItem.id ? movedItem.id : "");
     console.log("response: ", response);
     setFileDataObjects(updatedFileDataObjects);
   };
@@ -346,21 +343,21 @@ export function FileClickDragDrop({ componentId, data, currentFileDataObjects }:
   };
 
   return (<>
-    { TOP_DRAGGABLE_AREA_TOGGLE &&
-        <div
-          id={componentId}
-          className="relative flex flex-col justify-center items-center text-center py-5 text-gray-400 border border-black rounded"
-        >
-          <input accept="image/png, image/jpeg" type="file" title="" multiple
-            // className="absolute inset-0 z-50 w-full h-full p-0 m-0 outline-none opacity-0 cursor-pointer"
-            className="absolute inset-0 w-full h-full p-0 m-0 outline-none opacity-0 cursor-pointer"
-            onDrop={handleDropNewFilesToLocalState}
-            onDragOver={handleDragOver}
-            onChange={handleAddFilesToLocalStateViaOpenWindow}
-          />
-          <Image id="drag-drop-image-icon" />
-          <p className="m-0">Drag your files here or click in this area.</p>
-        </div>
+    {TOP_DRAGGABLE_AREA_TOGGLE &&
+      <div
+        id={componentId}
+        className="relative flex flex-col justify-center items-center text-center py-5 text-gray-400 border border-black rounded"
+      >
+        <input accept="image/png, image/jpeg" type="file" title="" multiple
+          // className="absolute inset-0 z-50 w-full h-full p-0 m-0 outline-none opacity-0 cursor-pointer"
+          className="absolute inset-0 w-full h-full p-0 m-0 outline-none opacity-0 cursor-pointer"
+          onDrop={handleDropNewFilesToLocalState}
+          onDragOver={handleDragOver}
+          onChange={handleAddFilesToLocalStateViaOpenWindow}
+        />
+        <Image id="drag-drop-image-icon" />
+        <p className="m-0">Drag your files here or click in this area.</p>
+      </div>
     }
 
     <div className="relative flex-row items-center justify-center py-5 text-center text-gray-400 border border-black rounded">
@@ -371,7 +368,7 @@ export function FileClickDragDrop({ componentId, data, currentFileDataObjects }:
           <p>Your Added Pictures Will Appear Here. <br />
             You may upload a maximum of {IMAGE_UPLOAD_QUANTITY_LIMIT} images</p>
       }
-      { DEBUG_TOGGLE &&
+      {DEBUG_TOGGLE &&
         <div>
           <p>
             <button type="submit" className='border border-black' onClick={(event) => uploadFilesToBlobStoreAndMetadataToDB(event)}>Upload Pics to Blob Store</button>
@@ -388,92 +385,92 @@ export function FileClickDragDrop({ componentId, data, currentFileDataObjects }:
         </div>
       }
       <DragDropContext onDragEnd={onDragEnd}>
-          <div
-            className="grid grid-cols-3 gap-4 mt-4 md:grid-cols-3"
-            // onDragOver={handleDragOver}
-            draggable={uploadInProgress ? false : true}
-          >
-            <Droppable droppableId='image-uploader-droppable-area'>
-                {(provided) => {
-                    
-                    console.log("1st provided: ", provided);
+        <div
+          className="grid grid-cols-3 gap-4 mt-4 md:grid-cols-3"
+          // onDragOver={handleDragOver}
+          draggable={uploadInProgress ? false : true}
+        >
+          <Droppable droppableId='image-uploader-droppable-area'>
+            {(provided) => {
 
-                    return (
-                          <div {...provided.droppableProps} ref={provided.innerRef}>
-                              { 
-                                  fileDataObjects.map((fdo: FileDataObject, idx: number) => {
+              console.log("1st provided: ", provided);
 
-                                      const inBlobStore = fdo?.inBlobStore;
-                                      const fileObj = fdo.file;
-                                      const fileObjSize = humanReadableFileSize(inBlobStore ? parseInt(fdo.size ? fdo.size : "0") : fileObj?.size);
-                                      
-                                      return(
-                                          <Draggable key={fdo.id} draggableId={fdo.id? fdo.id: ""+idx} index={idx}>
-                                              {
-                                                  (provided) => {
+              return (
+                <div {...provided.droppableProps} ref={provided.innerRef}>
+                  {
+                    fileDataObjects.map((fdo: FileDataObject, idx: number) => {
 
-                                                      console.log("  2nd provided: ", provided);
+                      const inBlobStore = fdo?.inBlobStore;
+                      const fileObj = fdo.file;
+                      const fileObjSize = humanReadableFileSize(inBlobStore ? parseInt(fdo.size ? fdo.size : "0") : fileObj?.size);
 
-                                                      return (
-                                                          
-                                                          <div
-                                                            ref={provided.innerRef}
-                                                            {...provided.draggableProps}
-                                                            {...provided.dragHandleProps}
-                                                            id={componentId + "-image-container" + idx}
-                                                            key={fdo.id}
-                                                            className={`
+                      return (
+                        <Draggable key={fdo.id} draggableId={fdo.id ? fdo.id : "" + idx} index={idx}>
+                          {
+                            (provided) => {
+
+                              console.log("  2nd provided: ", provided);
+
+                              return (
+
+                                <div
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  id={componentId + "-image-container" + idx}
+                                  key={fdo.id}
+                                  className={`
                                                               ${imageEaseTransition && "transition max-h-[400px] ease-in-out delay-150 hover:scale-105 duration-300"} 
                                                               relative flex flex-col items-center overflow-hidden text-center bg-gray-100 border rounded cursor-move select-none
                                                             `}
-                                                            draggable={uploadInProgress ? false : true}
-                                                            // onDragStart={(e) => handleDragStart(e, idx)}
-                                                            // onDrop={(e) => handleDropForMove(e, idx)}
-                                                            // onDragOver={handleDragOver}
-                                                            onMouseDownCapture={() => setImageEaseTranstion(true)}
-                                                            onMouseUpCapture={() => setImageEaseTranstion(false)}
-                                                            onMouseLeave={() => setImageEaseTranstion(false)}
-                                                          >
-                                                              {
-                                                                renderActionButtonForImage(fdo, idx)
-                                                              }
-                                                              <BlurImage
-                                                                
-                                                                alt={fdo.fileName ?? ""}
-                                                                width={500}
-                                                                height={400}
-                                                                className="h-full object-cover"
-                                                                src={fdo.url ?? ""}
-                                                                blurDataURL={placeholderBlurhash}
-                                                                placeholder="blur"
-                                                              />
-                                                              <div className="absolute bottom-0 left-0 right-0 flex flex-col p-2 text-xs bg-white bg-opacity-50">
-                                                                <span  className="w-full font-bold text-gray-900 truncate">
-                                                                  {inBlobStore ? fdo.fileName + " [UPLOADED]" : fileObj?.name + " [NOT UPLOADED]"}
-                                                                </span>
-                                                                <span className="text-xs text-gray-900" x-text="humanFileSize(files[index].size)">
-                                                                  {fileObjSize}
-                                                                </span>
-                                                              </div>
-                                                          </div>
+                                  draggable={uploadInProgress ? false : true}
+                                  // onDragStart={(e) => handleDragStart(e, idx)}
+                                  // onDrop={(e) => handleDropForMove(e, idx)}
+                                  // onDragOver={handleDragOver}
+                                  onMouseDownCapture={() => setImageEaseTranstion(true)}
+                                  onMouseUpCapture={() => setImageEaseTranstion(false)}
+                                  onMouseLeave={() => setImageEaseTranstion(false)}
+                                >
+                                  {
+                                    renderActionButtonForImage(fdo, idx)
+                                  }
+                                  <BlurImage
 
-                                                      );
-                                                  }
-                                              }
-                                          </Draggable>
-                                          
-                                      );
+                                    alt={fdo.fileName ?? ""}
+                                    width={500}
+                                    height={400}
+                                    className="h-full object-cover"
+                                    src={fdo.url ?? ""}
+                                    blurDataURL={placeholderBlurhash}
+                                    placeholder="blur"
+                                  />
+                                  <div className="absolute bottom-0 left-0 right-0 flex flex-col p-2 text-xs bg-white bg-opacity-50">
+                                    <span className="w-full font-bold text-gray-900 truncate">
+                                      {inBlobStore ? fdo.fileName + " [UPLOADED]" : fileObj?.name + " [NOT UPLOADED]"}
+                                    </span>
+                                    <span className="text-xs text-gray-900" x-text="humanFileSize(files[index].size)">
+                                      {fileObjSize}
+                                    </span>
+                                  </div>
+                                </div>
 
-                                  })
-                                  
-                              }
+                              );
+                            }
+                          }
+                        </Draggable>
 
-                              {provided.placeholder}
-                          </div> 
-                    )
-                }}
-            </Droppable>
-          </div>
+                      );
+
+                    })
+
+                  }
+
+                  {provided.placeholder}
+                </div>
+              )
+            }}
+          </Droppable>
+        </div>
       </DragDropContext>
 
 
