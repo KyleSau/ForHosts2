@@ -7,6 +7,7 @@ import { MoreHorizontal } from "lucide-react";
 import { FILE_CONSTS, IMAGE_UPLOAD_QUANTITY_LIMIT, IMAGE_SIZE_LIMIT_BYTES, IMAGE_SIZE_LIMIT_MB } from '@/lib/constants';
 import { Image as ImagePrismaSchema, Post } from "@prisma/client";
 import { Image, Trash2, Loader2 } from 'lucide-react';
+import EditorWarningModal, { EditorWarningModalDataType, EditorWarningModalDataTemplate } from "@/components/editor/warning-confirmation-modal";
 
 import {
     DropdownMenu,
@@ -14,8 +15,29 @@ import {
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { updateBlobMetadata, uploadBlobMetadata } from "@/lib/blob_actions";
-import { put } from "@vercel/blob";
+import { put, type BlobResult } from '@vercel/blob'; // test
+import {
+  uploadBlobMetadata,
+  listAllBlobsInStore,
+  deleteBlobFromStore,
+  deleteBlobMetadata,
+  deleteAndReindex,
+  listAllBlobMetadata,
+  updateBlobMetadata,
+  swapBlobMetadata
+} from '@/lib/blob_actions';
+
+//DEV MODE
+const DEBUG_TOGGLE = true;
+const TOP_DRAGGABLE_AREA_TOGGLE = false;
+
+//abstract data type used to handle file operations in this editor
+interface FileDataObject extends Partial<ImagePrismaSchema> {
+  file?: File | null, //for handling local-only files
+  localBlobUrl?: string,
+  inBlobStore: boolean,
+  isUploading: boolean
+}
 
 const PERMITTED_FILE_TYPES = new Set([FILE_CONSTS.JPEG, FILE_CONSTS.PNG]);
 
@@ -28,9 +50,9 @@ const CustomComponent = forwardRef(function CustomComponent(props, ref) {
                 padding: "5px",
                 height: "auto",
             }}
-            ref={ref}
+            // ref={ref}
         >
-            {props.children}
+            {/* {props.children} */}
         </div>
     );
 });
@@ -43,67 +65,79 @@ interface FileDataObject extends Partial<ImagePrismaSchema> {
 }
 
 export default function PhotoGrid({ siteId, postId, images, currentFileDataObjects }: any) {
-    const [uploadInProgress, setUploadInProgress] = useState<boolean>(false);
+    //states for confirmation modal for deleting pictures
     const [fileDataObjects, setFileDataObjects] = useState<FileDataObject[]>(currentFileDataObjects);
-    const [state, setState] = useState([
-        {
-            id: 1,
-            name: "1",
-            url: "https://upload.wikimedia.org/wikipedia/en/1/11/SoCal_Lashings_Logo.png",
-            caption: "",
-        },
-        {
-            id: 2,
-            name: "2",
-            url: "https://upload.wikimedia.org/wikipedia/en/e/e8/Callipygia.jpg",
-            caption: "",
-        },
-        {
-            id: 3,
-            name: "3",
-            url: "https://upload.wikimedia.org/wikipedia/en/e/e0/KAUH_logo.png",
-            caption: "",
-        },
-        {
-            id: 4,
-            name: "4",
-            url: "https://upload.wikimedia.org/wikipedia/en/6/6e/Okapi_large.png",
-            caption: "",
-        },
-        {
-            id: 5,
-            name: "5",
-            url: "https://upload.wikimedia.org/wikipedia/en/8/89/Grammy-frontcover.jpg",
-            caption: "",
-        },
-        {
-            id: 6,
-            name: "6",
-            url: "https://upload.wikimedia.org/wikipedia/en/thumb/0/01/Lenna.png/220px-Lenna.png",
-            caption: "",
-        },
-        {
-            id: 7,
-            name: "7",
-            url: "https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Lenna66.png/250px-Lenna66.png",
-            caption: "",
-        },
-        {
-            id: 8,
-            name: "8",
-            url: "https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Wikipedia-logo-v2.svg/1920px-Wikipedia-logo-v2.svg.png",
-            caption: "",
-        },
-        {
-            id: 9,
-            name: "9",
-            url: "https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Lenna66.png/250px-Lenna66.png",
-            caption: "",
-        },
-    ]);
+    const [editorWarningModalOpen, setEditorWarningModalOpen] = useState<boolean>(false);
+    const [editorWarningModalData, setEditorWarningModalData] = useState<EditorWarningModalDataType>(EditorWarningModalDataTemplate);
+    const [uploadInProgress, setUploadInProgress] = useState<boolean>(false);
+    const [imageEaseTransition, setImageEaseTranstion] = useState<boolean>(false);
+    // const [state, setState] = useState([
+    //     {
+    //         id: 1,
+    //         name: "1",
+    //         url: "https://upload.wikimedia.org/wikipedia/en/1/11/SoCal_Lashings_Logo.png",
+    //         caption: "",
+    //     },
+    //     {
+    //         id: 2,
+    //         name: "2",
+    //         url: "https://upload.wikimedia.org/wikipedia/en/e/e8/Callipygia.jpg",
+    //         caption: "",
+    //     },
+    //     {
+    //         id: 3,
+    //         name: "3",
+    //         url: "https://upload.wikimedia.org/wikipedia/en/e/e0/KAUH_logo.png",
+    //         caption: "",
+    //     },
+    //     {
+    //         id: 4,
+    //         name: "4",
+    //         url: "https://upload.wikimedia.org/wikipedia/en/6/6e/Okapi_large.png",
+    //         caption: "",
+    //     },
+    //     {
+    //         id: 5,
+    //         name: "5",
+    //         url: "https://upload.wikimedia.org/wikipedia/en/8/89/Grammy-frontcover.jpg",
+    //         caption: "",
+    //     },
+    //     {
+    //         id: 6,
+    //         name: "6",
+    //         url: "https://upload.wikimedia.org/wikipedia/en/thumb/0/01/Lenna.png/220px-Lenna.png",
+    //         caption: "",
+    //     },
+    //     {
+    //         id: 7,
+    //         name: "7",
+    //         url: "https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Lenna66.png/250px-Lenna66.png",
+    //         caption: "",
+    //     },
+    //     {
+    //         id: 8,
+    //         name: "8",
+    //         url: "https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Wikipedia-logo-v2.svg/1920px-Wikipedia-logo-v2.svg.png",
+    //         caption: "",
+    //     },
+    //     {
+    //         id: 9,
+    //         name: "9",
+    //         url: "https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Lenna66.png/250px-Lenna66.png",
+    //         caption: "",
+    //     },
+    // ]);
+
+
+  //TEST
+    
+    //TEST
+    
+    const [blobsFromStoreTest, setBlobsFromStoreTest] = useState<BlobResult[]>([]);
+    const [blobMetadataTest, setBlobMetadataTest] = useState<ImagePrismaSchema[]>([]);
 
     const handleAddFilesToLocalStateViaOpenWindow = (event: any) => {
-        // console.log("handleAddFilesToLocalStateViaOpenWindow entered");
+        console.log("handleAddFilesToLocalStateViaOpenWindow entered");
         event.preventDefault();
         const newFiles: Array<File> = Array.from(event.target.files as ArrayLike<File>)
             .filter((file: File) => PERMITTED_FILE_TYPES.has(file.type));
@@ -137,12 +171,12 @@ export default function PhotoGrid({ siteId, postId, images, currentFileDataObjec
 
         //first check if adding the new files causes currently uploaded pics to surpass the upload threshold; show modal if so
         if (fileDataObjects.length > IMAGE_UPLOAD_QUANTITY_LIMIT || fileDataObjects.length + newFiles.length > IMAGE_UPLOAD_QUANTITY_LIMIT) {
-            // setEditorWarningModalData({
-            //     ...editorWarningModalData,
-            //     idxToRemove: -1,
-            //     message: `Only ${IMAGE_UPLOAD_QUANTITY_LIMIT} images may be uploaded for this listing`
-            // });
-            // setEditorWarningModalOpen(true);
+            setEditorWarningModalData({
+                ...editorWarningModalData,
+                idxToRemove: -1,
+                message: `Only ${IMAGE_UPLOAD_QUANTITY_LIMIT} images may be uploaded for this listing`
+            });
+            setEditorWarningModalOpen(true);
         } else {
             const newFilesAboveSizeLimit: (File | null)[] = [];
             const newFilesBelowSizeLimit: FileDataObject[] = [];
@@ -242,14 +276,87 @@ export default function PhotoGrid({ siteId, postId, images, currentFileDataObjec
 
     const aspectRatio = "16/9";
 
-    return (
-        <div>
+    //TEST
+    const uploadFilesToBlobStoreAndMetadataToDB = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      // console.log("uploadFilesToBlobStoreAndMetadataToDB entered");
+      // console.log("event: ", event);
+      event.preventDefault();
+      const uploadPromiseResponse = await uploadFileDataObjects(fileDataObjects);
+      // console.log("uploadPromiseResponse: ", uploadPromiseResponse);
+      setFileDataObjects(uploadPromiseResponse as FileDataObject[]);
+    };
+
+    //TEST
+    const printOutData = async () => {
+      console.log("[TEST] printOutData called");
+      console.log("fileDataObjects: ", fileDataObjects);
+    }
+
+    //TEST
+    const handleListBlobMetadata = async () => {
+      console.log("[TEST] handleListBlobMetadata called");
+      const allBlobMetadata = await listAllBlobMetadata();
+      console.log("allBlobMetadata: ", allBlobMetadata);
+      setBlobMetadataTest([...allBlobMetadata]);
+    };
+
+    //TEST
+    const handlePurgeAllBlobMetadata = async () => {
+      console.log("[TEST] handlePurgeAllBlobMetadata entered");
+      blobMetadataTest.forEach((imgObj: ImagePrismaSchema) => {
+        const response = deleteBlobMetadata(imgObj.id);
+        // console.log("response: ", response);
+        response.then((value: ImagePrismaSchema) => {
+          // console.log("value deleted: ", value);
+        });
+      })
+    };
+
+    //TEST
+    const handleListAllblobsInStore = async () => {
+      console.log("[TEST] handleListAllblobsInStore called");
+      const blobsInStore = await listAllBlobsInStore();
+      console.log("listCurrentBlobsInStore: blobsInStore: ", blobsInStore);
+      setBlobsFromStoreTest(blobsInStore);
+    };
+
+    //TEST
+    const handlePurgeAllBlobsInStore = async () => {
+      console.log("[TEST] handlePurgeAllBlobsInStore called");
+      blobsFromStoreTest.forEach((br: BlobResult) => {
+        if (br.url) {
+          const url = br.url;
+          const response = deleteBlobFromStore(url);
+          response.then((responseJson: any) => {
+            console.log("handlePurgeAllBlobsInStore responseJson: ", responseJson);
+          });
+        }
+      });
+    };
+
+    return (<>
+            {DEBUG_TOGGLE &&
+              <div>
+                <p>
+                  <button type="submit" className='border border-black' onClick={(event) => uploadFilesToBlobStoreAndMetadataToDB(event)}>Upload Pics to Blob Store</button>
+                  &nbsp;
+                  <button type="submit" className='border border-black' onClick={printOutData}>Print Local Data to Console</button>
+                </p>
+                <p>
+                  <button type="submit" className='border border-black' onClick={handleListBlobMetadata}>List All Blob Metadata</button>
+                  <button type="submit" className='border border-black' onClick={handlePurgeAllBlobMetadata}>Purge All Blob Metadata</button>
+                  &nbsp;
+                  <button type="submit" className='border border-black' onClick={handleListAllblobsInStore}>List All Blobs In Store</button>
+                  <button type="submit" className='border border-black' onClick={handlePurgeAllBlobsInStore}>Purge All Blobs In Store</button>
+                </p>
+              </div>
+            }
             <div className="flex justify-center border p-10">
                 <ReactSortable
-                    expand={false}
+                    // expand={false}
                     tag={CustomComponent}
-                    list={state}
-                    setList={setState}
+                    // list={fileDataObjects}
+                    // setList={setFileDataObjects}
                     onEnd={onDragEnd}
                 >
                     {fileDataObjects.map((image) => (
@@ -293,7 +400,7 @@ export default function PhotoGrid({ siteId, postId, images, currentFileDataObjec
                                         />
                                     </div>
                                 </div>
-                                <div className="bg-tranparent relative cursor-pointer rounded-lg bg-opacity-10 pt-10 text-white  hover:bg-gray-300 hover:bg-opacity-60 hover:text-opacity-100">
+                                {/* <div className="bg-tranparent relative cursor-pointer rounded-lg bg-opacity-10 pt-10 text-white  hover:bg-gray-300 hover:bg-opacity-60 hover:text-opacity-100">
                                     <input
                                         type="text"
                                         className="absolute bottom-0 w-full border-none bg-transparent text-black focus:animate-none focus:rounded-lg focus:bg-gray-100 focus:bg-opacity-90 focus:ring-blue-300"
@@ -311,7 +418,7 @@ export default function PhotoGrid({ siteId, postId, images, currentFileDataObjec
                                             );
                                         }}
                                     />
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     ))}
@@ -327,6 +434,6 @@ export default function PhotoGrid({ siteId, postId, images, currentFileDataObjec
                     />
                 </div>
             </div>
-        </div>
-    );
+        
+    </>);
 }
