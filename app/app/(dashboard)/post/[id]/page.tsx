@@ -1,8 +1,11 @@
 import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
-import PreviewSite from "@/components/preview-site";
-// import PreviewSite from "@/components/preview-site";
+import { FileClickDragDrop } from "@/components/editor/file-drag-drop";
+// import PhotoManager from "@/components/editor/photo-manager";
+// import { getBlurDataURL } from "@/lib/utils";
+import { getBlobMetadata } from "@/lib/blob_actions";
+// import Editor from "@/components/editor";
 
 export default async function PostPage({ params }: { params: { id: string } }) {
   const session = await getSession();
@@ -14,6 +17,7 @@ export default async function PostPage({ params }: { params: { id: string } }) {
       id: params.id,
     },
     include: {
+      images: true,
       site: {
         select: {
           id: true,
@@ -25,10 +29,32 @@ export default async function PostPage({ params }: { params: { id: string } }) {
   if (!data || data.userId !== session.user.id) {
     notFound();
   }
+  // const enrichedImages = await Promise.all(data.images.map(async (image) => {
+  //   const blurDataURL = await getBlurDataURL(image.url); // Assuming image has a url property
+  //   return { ...image, blurDataURL };
+  // }));
 
+  const postId = data.id;
+  const siteId = data.site!.id;
 
-  const local = `localhost:3000`
-  const url = `http://${data.site?.subdomain}.${local}/${data.slug}`
+  const currentBlobMetadataForPost = await getBlobMetadata(siteId, postId);
+  const currentFileDataObjects = currentBlobMetadataForPost.map(
+    (blobMetadata: any & { post: any | null }) => {
+      const fileDataObject: any = {
+        inBlobStore: true,
+        isUploading: false,
+        ...blobMetadata
+      }
+      return fileDataObject;
+    }
+  );
+
+  // data.images = enrichedImages;
+
+  return <div>
+    {/* <PhotoManager postId={data.id} images={enrichedImages} /> */}
+    <FileClickDragDrop currentFileDataObjects={currentFileDataObjects} componentId="listing-photos-drag-drop-area" data={data} />
+  </div>
 
   return <PreviewSite url={url} />
 }

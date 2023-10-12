@@ -1,9 +1,11 @@
 "use server";
 
 import { getSession } from "@/lib/auth";
-import prisma from "@/lib/prisma";
 import { list, del, BlobResult } from '@vercel/blob';
 import { getBlurDataURL } from "./utils";
+import { PrismaClient } from "@prisma/client";
+import { promiseHooks } from "v8";
+const prisma = new PrismaClient();
 
 export const uploadBlobMetadata = async (blobResult: BlobResult, orderIndex: number, postId: string, siteId: string) => {
   console.log("entered uploadBlobMetadata");
@@ -86,6 +88,22 @@ export const getBlobMetadata = async (siteId: string, postId: string) => {
   }
 };
 
+
+export const listAllBlobMetadata = async () => {
+  try {
+    const response = await prisma.image.findMany({
+      orderBy: {
+        orderIndex: "asc"
+      }
+    });
+    return response;
+  } catch (error) {
+    console.log("error: ", error);
+    throw new Error('Could not update user');
+  }
+};
+
+
 export const deleteBlobMetadata = async (id: string) => {
   const response = await prisma.image.delete({
     where: {
@@ -130,16 +148,69 @@ export const deleteBlobFromStore = async (urlToDelete: string) => {
   return errorJson;
 };
 
-export const listAllBlobMetadata = async () => {
-  try {
-    const response = await prisma.image.findMany({
-      orderBy: {
-        orderIndex: "asc"
-      }
-    });
-    return response;
-  } catch (error) {
-    console.log("error: ", error);
-    throw new Error('Could not update user');
+//slotIdx is the destination idx
+export async function swapBlobMetadata(postId: string, slotIdx: number, imageId: string) {
+  console.log("swapBlobMetadata entered: postId: ", postId, "    slotIdx: ", slotIdx, "   imageId: ", imageId);
+  if (!postId || slotIdx === undefined || !imageId) {
+    console.log('swapping blob meta data was missing server action arguments');
+    return;
   }
-};
+
+  // Retrieve currentImage using its imageId and get its orderIndex
+  const currentImage = await prisma.image.findUnique({
+    where: {
+      id: imageId
+    }
+  });
+
+  if (!currentImage) {
+    throw new Error(`Image with ID ${imageId} not found.`);
+  }
+
+  // Retrieve prevImage using the slotIdx and postId
+  const prevImage = await prisma.image.findFirst({
+    where: {
+      postId: postId,
+      orderIndex: slotIdx,
+    }
+  });
+
+  if (!prevImage) {
+    throw new Error(`Image with postId ${postId} and orderIndex ${slotIdx} not found.`);
+  }
+
+  // Use Prisma's transaction to ensure both updates happen or none of them does
+  await prisma.$transaction([
+    prisma.image.update({
+      where: { id: currentImage.id },
+      data: { orderIndex: slotIdx }
+    }),
+    prisma.image.update({
+      where: { id: prevImage.id },
+      data: { orderIndex: currentImage.orderIndex }
+    }),
+  ]);
+
+  return {
+    swappedImage: currentImage,
+    replacedImage: prevImage
+  };
+}
+
+/**
+ * 
+ * @param id cuid of the image metadata to delete
+ * @param slotIdxToDelete actual index in the array of images
+ * @returns 
+ */
+export async function deleteAndReindex(id: string, slotIdxToDelete: number) {
+  return prisma.$transaction([
+    prisma.image.delete({
+      where: { id }
+    }),
+    prisma.image.updateMany({
+      where: { orderIndex: { gt: slotIdxToDelete } },
+      data: { orderIndex: { decrement: 1 } }
+    }),
+  ]);
+}
