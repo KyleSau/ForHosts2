@@ -25,7 +25,7 @@ export default function PostCard({
             height={400}
             className="h-full object-cover"
             src={(data.images && data.images.length > 0 ? data.images[0].url : undefined) ?? "/placeholder.png"}
-            blurDataURL={(data.images && data.images.length > 0 ? data.images[0].blurHash : undefined) ?? placeholderBlurhash}
+            blurDataURL={placeholderBlurhash}
             placeholder="blur"
           />
           {!data.published && (
