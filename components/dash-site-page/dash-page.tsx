@@ -92,10 +92,9 @@ export default function DashPage({ data }) {
         <div className="col-span-1 m-2 md:col-span-full">
           <div>
             <div className="text-3xl font-semibold text-gray-800 mb-4">Where You&apos;ll Be</div>
-            <Map coordinates={coordinates} />
+            {/* <Map coordinates={coordinates} /> */}
             <div className="m-5">
               <p className="text-lg font-bold text-gray-600">Rockbridge, Ohio, United States</p>
-
             </div>
           </div>
         </div>

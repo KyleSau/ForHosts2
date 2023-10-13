@@ -83,7 +83,7 @@ const BookingComponent: React.FC<BookingProps> = ({ listing, className }: any) =
 
 
     return (
-        <div className="p-5 bg-white text-slate-600 rounded-sm items-center shadow-[0_3px_10px_rgb(0,0,0,0.2)] min-w-[250px] border border-slate-300 max-w-[375px] m-auto">
+        <div className="p-5 bg-white text-slate-600 rounded-sm items-center shadow-[0_3px_10px_rgb(0,0,0,0.2)] min-w-[250px] border border-slate-300 max-w-[375px] m-auto fixed bottom-0 left-0 right-0 md:relative z-30">
             {/* {stripeInstance && (
                 <Elements stripe={stripeInstance}>
                     <CardInput />
