@@ -41,55 +41,54 @@ function SleepingQuarters() {
     return (
         <div className="w-full p-8">
             <div className="text-3xl font-semibold text-gray-800 mb-4">Where You&apos;ll Sleep</div>
-            <div className="mt-4">
-                <div className="flex items-center">
-                    {canShowPrevious && (
-                        <button
-                            onClick={handlePreviousClick}
-                            className="bg-white p-2 rounded-md hover-bg-gray-200"
-                        >
-                            <FontAwesomeIcon icon={faArrowLeft} className="text-xl text-gray-600" />
-                        </button>
-                    )}
-                    <div className="flex flex-wrap">
-                        {bedrooms
-                            .slice(currentBedroomIndex, currentBedroomIndex + bedroomsPerPage)
-                            .concat(new Array(3 - bedroomsPerPage).fill(null))
-                            .map((bedroom, index) => (
-                                <div
-                                    key={index}
-                                    className="w-full md:w-1/3 p-4"
-                                    style={{ height: cardHeight, width: cardWidth }}
-                                >
-                                    {bedroom && (
-                                        <div className="bg-white rounded-lg p-4 shadow-md" style={{ height: '100%' }}>
-                                            <div className="text-center mb-2">
-                                                <div className="w-12 h-12 bg-gray-200 rounded-full m-auto flex items-center justify-center">
-                                                    {bedTypeIcons[bedroom.beds[0]] ? (
-                                                        <FontAwesomeIcon icon={bedTypeIcons[bedroom.beds[0]]} className="text-2xl text-gray-600" />
-                                                    ) : (
-                                                        <FontAwesomeIcon icon={faBed} className="text-2xl text-gray-600" />
-                                                    )}
-                                                </div>
-                                                <div className="text-lg font-semibold text-gray-800 mb-1">{bedroom.name}</div>
-                                                <div className="text-sm text-gray-500">
-                                                    {bedroom.beds.join(', ')}
-                                                </div>
+
+            <div className="flex items-center">
+                {canShowPrevious && (
+                    <button
+                        onClick={handlePreviousClick}
+                        className="bg-white p-2 rounded-md hover-bg-gray-200"
+                    >
+                        <FontAwesomeIcon icon={faArrowLeft} className="text-xl text-gray-600" />
+                    </button>
+                )}
+                <div className="flex flex-wrap">
+                    {bedrooms
+                        .slice(currentBedroomIndex, currentBedroomIndex + bedroomsPerPage)
+                        .concat(new Array(3 - bedroomsPerPage).fill(null))
+                        .map((bedroom, index) => (
+                            <div
+                                key={index}
+                                className="w-full md:w-1/3 p-4"
+                                style={{ height: cardHeight, width: cardWidth }}
+                            >
+                                {bedroom && (
+                                    <div className="bg-white rounded-lg p-4 shadow-md" style={{ height: '100%' }}>
+                                        <div className="text-center mb-2">
+                                            <div className="w-12 h-12 bg-gray-200 rounded-full m-auto flex items-center justify-center">
+                                                {bedTypeIcons[bedroom.beds[0]] ? (
+                                                    <FontAwesomeIcon icon={bedTypeIcons[bedroom.beds[0]]} className="text-2xl text-gray-600" />
+                                                ) : (
+                                                    <FontAwesomeIcon icon={faBed} className="text-2xl text-gray-600" />
+                                                )}
+                                            </div>
+                                            <div className="text-lg font-semibold text-gray-800 mb-1">{bedroom.name}</div>
+                                            <div className="text-sm text-gray-500">
+                                                {bedroom.beds.join(', ')}
                                             </div>
                                         </div>
-                                    )}
-                                </div>
-                            ))}
-                    </div>
-                    {canShowNext && (
-                        <button
-                            onClick={handleNextClick}
-                            className="bg-white p-2 rounded-md hover-bg-gray-200"
-                        >
-                            <FontAwesomeIcon icon={faArrowRight} className="text-xl text-gray-600" />
-                        </button>
-                    )}
+                                    </div>
+                                )}
+                            </div>
+                        ))}
                 </div>
+                {canShowNext && (
+                    <button
+                        onClick={handleNextClick}
+                        className="bg-white p-2 rounded-md hover-bg-gray-200"
+                    >
+                        <FontAwesomeIcon icon={faArrowRight} className="text-xl text-gray-600" />
+                    </button>
+                )}
             </div>
         </div>
     );

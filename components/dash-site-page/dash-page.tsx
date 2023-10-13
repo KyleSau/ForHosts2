@@ -17,6 +17,7 @@ import { Bedroom } from "@prisma/client";
 import AmenitiesPage from "../amenities/amenities-page";
 import WhatToKnow from "../what-to-know";
 import SleepingQuarters from "../users-sites/sleeping-quarters";
+import Featured from "../users-sites/featured";
 // import MapWrapper from "../editor/map-wrapper";
 const Map = dynamic(() => import("@/components/editor/map-wrapper"), {
   loading: () => <p>loading...</p>,
@@ -55,10 +56,11 @@ export default function DashPage({ data }) {
             <BookingComponent listing={data} />
           </div>
         </div>
-        <div className="col-start-1 m-2 rounded-sm p-8 md:col-span-3 md:col-start-3 ">
+        {/* <div className="col-start-1 m-2 rounded-sm p-8 md:col-span-3 md:col-start-3 ">
           <div className="">Notable Features</div>
           <hr className="mt-10" />
-        </div>
+        </div> */}
+        <Featured />
         <div className=" col-start-1 m-2 p-8 md:col-span-3 md:col-start-3 ">
           <div className="">Listing Description</div>
           <ListingDescription description={data.description} />
@@ -89,7 +91,7 @@ export default function DashPage({ data }) {
         <hr className="col-span-1 m-5 md:col-span-full" />
         <div className="col-span-1 m-2 md:col-span-full">
           <div>
-            <p className="text-2xl mb-5">Where You&apos;ll Be</p>
+            <div className="text-3xl font-semibold text-gray-800 mb-4">Where You&apos;ll Be</div>
             <Map coordinates={coordinates} />
             <div className="m-5">
               <p className="text-lg font-bold text-gray-600">Rockbridge, Ohio, United States</p>
