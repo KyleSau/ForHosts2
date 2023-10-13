@@ -40,16 +40,7 @@ export async function getPostsForSite(domain: string) {
           description: true,
           slug: true,
           createdAt: true,
-          images: {
-            select: {
-              url: true,
-              blurHash: true
-              // Specify the fields you want from the Image model. 
-              // For example, if Image has a 'url' field:
-              // url: true,
-              // Add other fields as needed
-            },
-          }
+          images: true
         },
         orderBy: [
           {
