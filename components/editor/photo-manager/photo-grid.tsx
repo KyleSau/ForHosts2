@@ -14,6 +14,7 @@ import {
 import Modal from "@/components/modal";
 import { toast } from "sonner";
 import PhotoDeleteModal from "./photo-delete-modal";
+import TabTitle from "../tab-title";
 
 const CustomComponent = forwardRef(function CustomComponent(props, ref) {
   return (
@@ -144,126 +145,133 @@ export default function PhotoGrid({ images }) {
   };
   return (
     <div>
-      <div className="flex justify-center border p-10">
-        <ReactSortable
-          expand={false}
-          tag={CustomComponent}
-          list={dummyData}
-          setList={setDummyData}
-          onEnd={onDragEnd}
-        >
-          {dummyData.map((image, index) => (
-            <div
-              className="h-full w-[250px] rounded-lg border  hover:animate-pulse md:w-[400px]"
-              key={image.id}
-            >
-              <div className="relative" style={{ aspectRatio: "16/9" }}>
-                <div style={{ position: "relative" }}>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <div className="absolute right-2 top-0 z-10 hover:scale-110">
-                        <MoreHorizontal
-                          size={30}
-                          className="text-gray-400  hover:text-black"
-                        />
+      <div className="border p-10">
+        <h1 className=" text-center text-4xl font-bold">Photo Manager</h1>
+        <h2 className="text-md mb-4 text-center text-gray-500">
+          Manage your listing&apos;s photos
+        </h2>
+        <hr className="pb-6" />
+        <div className="flex justify-center ">
+          <ReactSortable
+            expand={false}
+            tag={CustomComponent}
+            list={dummyData}
+            setList={setDummyData}
+            onEnd={onDragEnd}
+          >
+            {dummyData.map((image, index) => (
+              <div
+                className="h-full w-[250px] rounded-lg border  hover:animate-pulse md:w-[400px]"
+                key={image.id}
+              >
+                <div className="relative" style={{ aspectRatio: "16/9" }}>
+                  <div style={{ position: "relative" }}>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <div className="absolute right-2 top-0 z-10 hover:scale-110">
+                          <MoreHorizontal
+                            size={30}
+                            className="text-gray-400  hover:text-black"
+                          />
+                        </div>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-56">
+                        <DropdownMenuCheckboxItem
+                          onClick={() => makeCoverPhoto(index)}
+                        >
+                          Make Cover Photo
+                        </DropdownMenuCheckboxItem>
+                        <DropdownMenuCheckboxItem
+                          onClick={() => moveForward(index)}
+                        >
+                          Move Forward
+                        </DropdownMenuCheckboxItem>
+                        <DropdownMenuCheckboxItem
+                          onClick={() => moveBackward(index)}
+                        >
+                          Move Backward
+                        </DropdownMenuCheckboxItem>
+                        <DropdownMenuCheckboxItem
+                          onClick={() => toggleModal(image)}
+                        >
+                          Delete
+                        </DropdownMenuCheckboxItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                    {image.isCoverPhoto && coverPhotoID !== null && (
+                      <div className="absolute left-2 top-2 z-10">
+                        <Star size={32} className=" text-yellow-500" />
                       </div>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-56">
-                      <DropdownMenuCheckboxItem
-                        onClick={() => makeCoverPhoto(index)}
-                      >
-                        Make Cover Photo
-                      </DropdownMenuCheckboxItem>
-                      <DropdownMenuCheckboxItem
-                        onClick={() => moveForward(index)}
-                      >
-                        Move Forward
-                      </DropdownMenuCheckboxItem>
-                      <DropdownMenuCheckboxItem
-                        onClick={() => moveBackward(index)}
-                      >
-                        Move Backward
-                      </DropdownMenuCheckboxItem>
-                      <DropdownMenuCheckboxItem
-                        onClick={() => toggleModal(image)}
-                      >
-                        Delete
-                      </DropdownMenuCheckboxItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                  {image.isCoverPhoto && coverPhotoID !== null && (
-                    <div className="absolute left-2 top-2 z-10">
-                      <Star size={32} className=" text-yellow-500" />
+                    )}
+                    <div className="flex justify-center">
+                      <BlurImage
+                        alt={image.url ?? ""}
+                        blurDataURL={placeholderBlurhash}
+                        className="object-fit h-[200px] w-full gap-4 pb-1"
+                        width={200}
+                        height={200}
+                        placeholder="blur"
+                        src={image.url ?? "/placeholder.png"}
+                      />
                     </div>
-                  )}
-                  <div className="flex justify-center">
-                    <BlurImage
-                      alt={image.url ?? ""}
-                      blurDataURL={placeholderBlurhash}
-                      className="object-fit h-[200px] w-full gap-4 pb-1"
-                      width={200}
-                      height={200}
-                      placeholder="blur"
-                      src={image.url ?? "/placeholder.png"}
+                  </div>
+                  <div className="bg-tranparent relative cursor-pointer bg-opacity-10 pt-10 text-white hover:bg-gray-300 hover:bg-opacity-60 hover:text-opacity-100">
+                    <input
+                      type="text"
+                      className="absolute bottom-0 w-full border-none bg-transparent text-black focus:animate-none focus:rounded-lg focus:bg-gray-100 focus:bg-opacity-90 focus:ring-blue-300"
+                      placeholder="Add a caption..."
+                      value={image.caption}
+                      onChange={(e) => {
+                        const newCaption = e.target.value;
+                        setDummyData((prevState) =>
+                          prevState.map((item) =>
+                            item.id === image.id
+                              ? { ...item, caption: newCaption }
+                              : item,
+                          ),
+                        );
+                      }}
                     />
                   </div>
                 </div>
-                <div className="bg-tranparent relative cursor-pointer bg-opacity-10 pt-10 text-white hover:bg-gray-300 hover:bg-opacity-60 hover:text-opacity-100">
-                  <input
-                    type="text"
-                    className="absolute bottom-0 w-full border-none bg-transparent text-black focus:animate-none focus:rounded-lg focus:bg-gray-100 focus:bg-opacity-90 focus:ring-blue-300"
-                    placeholder="Add a caption..."
-                    value={image.caption}
-                    onChange={(e) => {
-                      const newCaption = e.target.value;
-                      setDummyData((prevState) =>
-                        prevState.map((item) =>
-                          item.id === image.id
-                            ? { ...item, caption: newCaption }
-                            : item,
-                        ),
-                      );
-                    }}
-                  />
+              </div>
+            ))}
+            {/* Render the card for uploading files */}
+            <div className="relative items-center justify-center rounded   text-center text-gray-400">
+              <div
+                className="h-[275px] w-[250px] rounded-lg border hover:animate-pulse md:h-full md:w-[400px]"
+                key={uploadCard.id}
+              >
+                <div className="relative" style={{ aspectRatio: "16/9" }}>
+                  <div className="flex h-full flex-col items-center justify-center md:h-full">
+                    <Image id="drag-drop-image-icon" />{" "}
+                    <p className="m-0 mt-4">
+                      {" "}
+                      Drag your files here or click in this area.
+                    </p>
+                    <input
+                      accept="image/png, image/jpeg"
+                      type="file"
+                      title="Drag or click this area to upload files"
+                      multiple
+                      className="absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-none"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-          ))}
-          {/* Render the card for uploading files */}
-          <div className="relative items-center justify-center rounded   text-center text-gray-400">
-            <div
-              className="h-[275px] w-[250px] rounded-lg border hover:animate-pulse md:h-full md:w-[400px]"
-              key={uploadCard.id}
-            >
-              <div className="relative" style={{ aspectRatio: "16/9" }}>
-                <div className="flex h-full flex-col items-center justify-center md:h-full">
-                  <Image id="drag-drop-image-icon" />{" "}
-                  <p className="m-0 mt-4">
-                    {" "}
-                    Drag your files here or click in this area.
-                  </p>
-                  <input
-                    accept="image/png, image/jpeg"
-                    type="file"
-                    title="Drag or click this area to upload files"
-                    multiple
-                    className="absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-none"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </ReactSortable>
+          </ReactSortable>
+        </div>
+        {selectedImage && (
+          <Modal showModal={selectedImage !== null} setShowModal={closeImage}>
+            <PhotoDeleteModal
+              toggleModal={toggleModal}
+              closeImage={closeImage}
+              deleteImage={deleteImage}
+            />
+          </Modal>
+        )}
       </div>
-      {selectedImage && (
-        <Modal showModal={selectedImage !== null} setShowModal={closeImage}>
-          <PhotoDeleteModal
-            toggleModal={toggleModal}
-            closeImage={closeImage}
-            deleteImage={deleteImage}
-          />
-        </Modal>
-      )}
     </div>
   );
 }
