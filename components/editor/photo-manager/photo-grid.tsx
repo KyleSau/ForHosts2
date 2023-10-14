@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Modal from "@/components/modal";
 import { toast } from "sonner";
+import PhotoDeleteModal from "./photo-delete-modal";
 
 const CustomComponent = forwardRef(function CustomComponent(props, ref) {
   return (
@@ -103,7 +104,7 @@ export default function PhotoGrid({ images }) {
     console.log(e.oldIndex + " -> " + e.newIndex);
   };
 
-  const moveForward = (index) => {
+  const moveForward = (index: any) => {
     if (index < state.length - 1) {
       const newState = [...state];
       const temp = newState[index];
@@ -115,7 +116,7 @@ export default function PhotoGrid({ images }) {
     }
   };
 
-  const moveBackward = (index) => {
+  const moveBackward = (index: any) => {
     if (index > 0) {
       const newState = [...state];
       const temp = newState[index];
@@ -127,18 +128,17 @@ export default function PhotoGrid({ images }) {
     }
   };
 
-  const toggleModal = (image) => {
+  const toggleModal = (image: any) => {
     setSelectedImage(image);
   };
 
   const deleteImage = () => {
-    // Handle delete image logic here
     setSelectedImage(null);
   };
   const closeImage = () => {
     setSelectedImage(null);
   };
-  const makeCoverPhoto = (index) => {
+  const makeCoverPhoto = (index: any) => {
     const newState = state.map((item, i) => ({
       ...item,
       isCoverPhoto: i === index,
@@ -239,40 +239,11 @@ export default function PhotoGrid({ images }) {
       </div>
       {selectedImage && (
         <Modal showModal={selectedImage !== null} setShowModal={closeImage}>
-          <div className="max-h-[60vh] overflow-y-auto rounded-lg bg-white p-6 shadow-md md:p-8">
-            <button
-              className="absolute right-4 top-4 text-2xl"
-              onClick={() => toggleModal(null)}
-            >
-              &times;
-            </button>
-            <h2 className="mb-4 text-lg font-semibold">Delete Image</h2>
-            <div className="mb-4">
-              <p className="text-base text-gray-600">
-                Are you sure you want to delete this image?
-              </p>
-            </div>
-            <div className="flex justify-between">
-              <button
-                className="rounded border border-black bg-orange-100 px-4 py-2 text-black hover:bg-black hover:text-white"
-                onClick={() => {
-                  // Handle delete image logic here
-                  closeImage();
-                }}
-              >
-                Cancel
-              </button>
-              <button
-                className="rounded border border-black bg-red-400 px-4 py-2 text-black  hover:bg-black hover:text-white"
-                onClick={() => {
-                  // Handle delete image logic here
-                  deleteImage();
-                }}
-              >
-                Delete
-              </button>
-            </div>
-          </div>
+          <PhotoDeleteModal
+            toggleModal={toggleModal}
+            closeImage={closeImage}
+            deleteImage={deleteImage}
+          />
         </Modal>
       )}
     </div>
