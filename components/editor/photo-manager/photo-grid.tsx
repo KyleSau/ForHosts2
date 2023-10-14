@@ -158,14 +158,14 @@ export default function PhotoGrid({ images }) {
         >
           {state.map((image, index) => (
             <div
-              className="h-full w-[250px] hover:animate-pulse md:w-[400px]"
+              className="h-full w-[250px] rounded-lg border  hover:animate-pulse md:w-[400px]"
               key={image.id}
             >
               <div className="relative" style={{ aspectRatio: "16/9" }}>
                 <div style={{ position: "relative" }}>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <div className="absolute right-2 top-2 z-10 hover:scale-110">
+                      <div className="absolute right-2 top-0 z-10 hover:scale-110">
                         <MoreHorizontal
                           size={30}
                           className="text-gray-400  hover:text-black"
