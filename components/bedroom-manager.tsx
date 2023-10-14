@@ -165,12 +165,12 @@ function BedroomManager({ totalBedrooms, postId, bedrooms }: BedroomListProps) {
                                         <div key={bedType} className="flex justify-between items-center">
                                             {/* <span className="text-gray-800">{bedType}</span> */}
                                             <div className="flex items-center space-x-2 mr-5">
-                                            {/* <IncrementDecrementButton
+                                                {/* <IncrementDecrementButton
   value={bedroomData[index][bedType]}
   setValue={(newValue) => handleBedChange(index, bedType, newValue)}
 /> */}
 
-{/* The rest of your code for Increment/Decrement buttons is now within the IncrementDecrementButton component */}
+                                                {/* The rest of your code for Increment/Decrement buttons is now within the IncrementDecrementButton component */}
                                                 {/* <button
                                                     disabled={!bedroomData[index][bedType]}
                                                     onClick={() => handleBedChange(index, bedType, -1)}

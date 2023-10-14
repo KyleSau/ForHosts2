@@ -10,9 +10,7 @@ import calculateTotalCost from "@/lib/utils/payment-helper"
 import { cn } from "@/lib/utils"
 import { Elements } from '@stripe/react-stripe-js';
 import CardInput from './card-element';
-// import { NextRouter, useRouter } from 'next/router';
 import { useRouter } from 'next/navigation'
-
 
 import {
     Popover,
@@ -30,7 +28,7 @@ export async function fetchPostJSON(url: string, data?: {}) {
             credentials: 'same-origin', // include, *same-origin, omit
             headers: {
                 'Content-Type': 'application/json',
-                // 'Content-Type': 'application/x-www-form-urlencoded',
+                // 'Content-Type': 'application-x-www-form-urlencoded',
             },
             redirect: 'follow', // manual, *follow, error
             referrerPolicy: 'no-referrer', // no-referrer, *client
@@ -49,7 +47,6 @@ type BookingProps = {
     listing: any;
 }
 
-// get listingId from prop
 const BookingComponent: React.FC<BookingProps> = ({ listing, className }: any) => {
 
     const [adults, setAdults] = useState(1);
@@ -83,7 +80,7 @@ const BookingComponent: React.FC<BookingProps> = ({ listing, className }: any) =
 
 
     return (
-        <div className="p-5 bg-white text-slate-600 rounded-sm items-center shadow-[0_3px_10px_rgb(0,0,0,0.2)] min-w-[250px] border border-slate-300 max-w-[375px] m-auto">
+        <div className="p-5 bg-white text-slate-600 rounded-sm items-center shadow-[0_3px_10px_rgb(0,0,0,0.2)] border border-slate-300 m-auto fixed bottom-0 left-0 right-0 md:relative z-30">
             {/* {stripeInstance && (
                 <Elements stripe={stripeInstance}>
                     <CardInput />
@@ -169,20 +166,13 @@ const BookingComponent: React.FC<BookingProps> = ({ listing, className }: any) =
                                 value={pets}
                                 onChange={e => setPets(Number(e.target.value))}
                                 min={0}
-                                max={listing.Pets} // I assume "Pets" here is a number that shows the max allowed pets
+                                max={listing.Pets}
                             />
                         </div>
                     </PopoverContent>
                 </Popover>
             </div>
             <br />
-            {/* <div>
-                Display Date Range Selected: {date?.from && date?.to ? (
-                    `${format(date.from, "LLL dd, y")} - ${format(date.to, "LLL dd, y")}`
-                ) : (
-                    "Pick a date"
-                )}
-            </div> */}
             <div className="w-full grid-cols-2">
                 <Popover>
                     <div className="">
@@ -228,11 +218,12 @@ const BookingComponent: React.FC<BookingProps> = ({ listing, className }: any) =
                 <br />
             </div>
             <button className="p-2 rounded-sm justify-center w-full text-white bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 hover:bg-gradient-to-br focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2" onClick={handleCheckout}>Book</button>
-        </div >
+        </div>
     );
 }
 
 export default BookingComponent;
+
 
 // const handleCheckout = async () => {
 //     const response = await fetchPostJSON('/api/checkout_sessions', {

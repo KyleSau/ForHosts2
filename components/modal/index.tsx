@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Dispatch,
   SetStateAction,
@@ -37,10 +35,20 @@ export default function Modal({
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [onKeyDown]);
 
+  // useEffect(() => {
+  //   // Disable scrolling and hide the scrollbar when the modal is open
+  //   if (showModal) {
+  //     document.body.style.overflow = "hidden";
+  //   } else {
+  //     // Restore the original overflow value (e.g., "auto")
+  //     document.body.style.overflow = "auto";
+  //   }
+  // }, [showModal]);
+
   const { isMobile, isDesktop } = useWindowSize();
 
   return (
-    <AnimatePresence>
+    <div>
       {showModal && (
         <>
           {isMobile && <Leaflet setShow={setShowModal}>{children}</Leaflet>}
@@ -75,6 +83,6 @@ export default function Modal({
           )}
         </>
       )}
-    </AnimatePresence>
+    </div>
   );
 }

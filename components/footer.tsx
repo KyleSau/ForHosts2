@@ -46,9 +46,9 @@ const footerItems: FooterItems = [
 
 function Footer() {
   return (
-    <footer className="pt-2 pb-2 bg-gray-400 text-textSecondary">
+    <footer className="pt-2 pb-2 bg-gray-100 text-textSecondary">
       <Container>
-        <div className="flex flex-col justify-center items-center mt-24 md:flex-col">
+        <div className="flex flex-col justify-center items-center mt-24 md:flex-col z-10">
           <div className="flex space-x-4 justify-center">
             <NextLink href="https://www.twitter.com/my-saas-startup" passHref legacyBehavior>
               <a>

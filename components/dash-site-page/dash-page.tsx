@@ -17,6 +17,7 @@ import { Bedroom } from "@prisma/client";
 import AmenitiesPage from "../amenities/amenities-page";
 import WhatToKnow from "../what-to-know";
 import SleepingQuarters from "../users-sites/sleeping-quarters";
+import Featured from "../users-sites/featured";
 // import MapWrapper from "../editor/map-wrapper";
 const Map = dynamic(() => import("@/components/editor/map-wrapper"), {
   loading: () => <p>loading...</p>,
@@ -50,41 +51,34 @@ export default function DashPage({ data }) {
           />
           <hr />
         </div>
-        <div className="relative col-span-1 row-span-4 row-start-3 m-2 md:col-span-2 md:min-w-[300px] ">
-          <div className="sticky top-0 pb-[150px] pt-[150px]">
+        <div className="relative col-span-1 row-span-5 row-start-3 m-2 md:col-span-2 z-30">
+          <div className="sticky top-0">
             <BookingComponent listing={data} />
           </div>
         </div>
-        <div className="col-start-1 m-2 rounded-sm p-8 md:col-span-3 md:col-start-3 ">
-          <div className="">Notable Features</div>
-          <hr className="mt-10" />
-        </div>
-        <div className=" col-start-1 m-2 p-8 md:col-span-3 md:col-start-3 ">
-          <div className="">Listing Description</div>
+        <Featured />
+        <div className="col-start-1 m-2 pl-8 md:col-span-3 md:col-start-3 ">
           <ListingDescription description={data.description} />
-          {data.description && (
+          {/* {data.description && (
             <div>
               <ShowMoreModal text={data.description} />
             </div>
-          )}
-          <hr className="mt-10 h-2" />
+          )} */}
+          <hr className="my-4" />
         </div>
-        {/* <div className=" col-start-1 m-2 mb-8 p-8 md:col-span-3 md:col-start-3">
-          <div className="">Sleeping quarters and beds</div>
-          <hr className="mt-10" />
-        </div> */}
-        <div className="col-start-1 m-2 rounded-sm p-8 md:col-span-3 md:col-start-3">
+        <div className="col-start-1 rounded-sm md:col-span-3 md:col-start-3">
           <div className="flex justify-center">
             <SleepingQuarters />
           </div>
+          <hr className="h-2 w-full" />
         </div>
-        <div className="col-start-1 m-2 rounded-sm p-8 md:col-span-3 md:col-start-3">
+        <div className="col-start-1 rounded-sm pl-8 md:col-span-3 md:col-start-3">
           <div className="flex justify-center">
             <AmenitiesModal amenityDetails={amenityDetails} />
           </div>
-          <hr className="mt-10" />
+          <hr className="mt-2" />
         </div>
-        <div className=" col-start-1 m-2 mb-8 p-8 md:col-span-3 md:col-start-3">
+        <div className="col-start-1 pl-8 md:col-span-3 md:col-start-3">
           <div className="mx-auto flex w-full justify-center">
             <CalendarDemo />
           </div>
@@ -92,11 +86,10 @@ export default function DashPage({ data }) {
         <hr className="col-span-1 m-5 md:col-span-full" />
         <div className="col-span-1 m-2 md:col-span-full">
           <div>
-            <p className="text-2xl mb-5">Where You&apos;ll Be</p>
-            <Map coordinates={coordinates} />
+            <div className="text-3xl font-semibold text-gray-800 mb-4">Where You&apos;ll Be</div>
+            {/* <Map coordinates={coordinates} /> */}
             <div className="m-5">
               <p className="text-lg font-bold text-gray-600">Rockbridge, Ohio, United States</p>
-
             </div>
           </div>
         </div>
