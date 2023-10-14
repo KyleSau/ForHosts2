@@ -97,6 +97,7 @@ export default function PhotoGrid({ images }) {
     id: "upload-card",
     name: "Upload Card",
   };
+
   const onDragEnd = (e: Sortable.SortableEvent) => {
     console.log(e.oldIndex + " -> " + e.newIndex);
   };
@@ -161,7 +162,7 @@ export default function PhotoGrid({ images }) {
           >
             {dummyData.map((image, index) => (
               <div
-                className="h-full w-[250px] rounded-lg border  hover:animate-pulse md:w-[400px]"
+                className="h-full w-[250px] rounded-lg border hover:scale-105 hover:animate-pulse md:w-[400px]"
                 key={image.id}
               >
                 <div className="relative" style={{ aspectRatio: "16/9" }}>
@@ -203,7 +204,7 @@ export default function PhotoGrid({ images }) {
                         <Star size={32} className=" text-yellow-500" />
                       </div>
                     )}
-                    <div className="flex justify-center">
+                    <div className="flex justify-center ">
                       <BlurImage
                         alt={image.url ?? ""}
                         blurDataURL={placeholderBlurhash}
