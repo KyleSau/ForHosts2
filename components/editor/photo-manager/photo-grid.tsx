@@ -3,7 +3,7 @@ import React, { forwardRef, useState } from "react";
 import { ReactSortable, Sortable } from "react-sortablejs";
 import BlurImage from "@/components/blur-image";
 import { placeholderBlurhash } from "@/lib/utils";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Star } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -31,63 +31,73 @@ const CustomComponent = forwardRef(function CustomComponent(props, ref) {
 });
 
 export default function PhotoGrid({ images }) {
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [coverPhotoID, setCoverPhotoID] = useState(null);
   const [state, setState] = useState([
     {
       id: 1,
       name: "1",
       url: "https://upload.wikimedia.org/wikipedia/en/1/11/SoCal_Lashings_Logo.png",
       caption: "",
+      isCoverPhoto: false,
     },
     {
       id: 2,
       name: "2",
       url: "https://upload.wikimedia.org/wikipedia/en/e/e8/Callipygia.jpg",
       caption: "",
+      isCoverPhoto: false,
     },
     {
       id: 3,
       name: "3",
       url: "https://upload.wikimedia.org/wikipedia/en/e/e0/KAUH_logo.png",
       caption: "",
+      isCoverPhoto: false,
     },
     {
       id: 4,
       name: "4",
       url: "https://upload.wikimedia.org/wikipedia/en/6/6e/Okapi_large.png",
       caption: "",
+      isCoverPhoto: false,
     },
     {
       id: 5,
       name: "5",
       url: "https://upload.wikimedia.org/wikipedia/en/8/89/Grammy-frontcover.jpg",
       caption: "",
+      isCoverPhoto: false,
     },
     {
       id: 6,
       name: "6",
       url: "https://upload.wikimedia.org/wikipedia/en/thumb/0/01/Lenna.png/220px-Lenna.png",
       caption: "",
+      isCoverPhoto: false,
     },
     {
       id: 7,
       name: "7",
       url: "https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Lenna66.png/250px-Lenna66.png",
       caption: "",
+      isCoverPhoto: false,
     },
     {
       id: 8,
       name: "8",
       url: "https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Wikipedia-logo-v2.svg/1920px-Wikipedia-logo-v2.svg.png",
       caption: "",
+      isCoverPhoto: false,
     },
     {
       id: 9,
       name: "9",
       url: "https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Lenna66.png/250px-Lenna66.png",
       caption: "",
+      isCoverPhoto: false,
     },
   ]);
-  const [selectedImage, setSelectedImage] = useState(null);
 
   const onDragEnd = (e: Sortable.SortableEvent) => {
     console.log(e.oldIndex + " -> " + e.newIndex);
@@ -128,7 +138,14 @@ export default function PhotoGrid({ images }) {
   const closeImage = () => {
     setSelectedImage(null);
   };
-
+  const makeCoverPhoto = (index) => {
+    const newState = state.map((item, i) => ({
+      ...item,
+      isCoverPhoto: i === index,
+    }));
+    setState(newState);
+    setCoverPhotoID(state[index].id);
+  };
   return (
     <div>
       <div className="flex justify-center border p-10">
@@ -158,6 +175,11 @@ export default function PhotoGrid({ images }) {
                     <DropdownMenuContent className="w-56">
                       <DropdownMenuCheckboxItem>Edit</DropdownMenuCheckboxItem>
                       <DropdownMenuCheckboxItem
+                        onClick={() => makeCoverPhoto(index)}
+                      >
+                        Make Cover Photo
+                      </DropdownMenuCheckboxItem>
+                      <DropdownMenuCheckboxItem
                         onClick={() => moveForward(index)}
                       >
                         Move Forward
@@ -174,6 +196,11 @@ export default function PhotoGrid({ images }) {
                       </DropdownMenuCheckboxItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
+                  {image.isCoverPhoto && coverPhotoID !== null && (
+                    <div className="absolute left-2 top-2 z-10">
+                      <Star size={32} className=" text-yellow-500" />
+                    </div>
+                  )}
                   <div className="flex justify-center">
                     <BlurImage
                       alt={image.url ?? ""}
