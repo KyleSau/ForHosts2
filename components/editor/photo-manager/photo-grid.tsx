@@ -169,11 +169,8 @@ export default function PhotoGrid({ images }) {
                   <div style={{ position: "relative" }}>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <div className="absolute right-2 top-0 z-10 hover:scale-110">
-                          <MoreHorizontal
-                            size={30}
-                            className="text-gray-400  hover:text-black"
-                          />
+                        <div className="absolute right-2 top-0 z-10 hover:scale-125">
+                          <MoreHorizontal size={30} className="text-black" />
                         </div>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent className="w-56">
