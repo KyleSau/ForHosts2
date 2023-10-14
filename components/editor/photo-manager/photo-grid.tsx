@@ -34,7 +34,7 @@ const CustomComponent = forwardRef(function CustomComponent(props, ref) {
 export default function PhotoGrid({ images }) {
   const [selectedImage, setSelectedImage] = useState(null);
   const [coverPhotoID, setCoverPhotoID] = useState(null);
-  const [state, setState] = useState([
+  const [dummyData, setDummyData] = useState([
     {
       id: 1,
       name: "1",
@@ -105,12 +105,12 @@ export default function PhotoGrid({ images }) {
   };
 
   const moveForward = (index: any) => {
-    if (index < state.length - 1) {
-      const newState = [...state];
+    if (index < dummyData.length - 1) {
+      const newState = [...dummyData];
       const temp = newState[index];
       newState[index] = newState[index + 1];
       newState[index + 1] = temp;
-      setState(newState);
+      setDummyData(newState);
     } else {
       toast.error("You can't move the image forward any further!");
     }
@@ -118,11 +118,11 @@ export default function PhotoGrid({ images }) {
 
   const moveBackward = (index: any) => {
     if (index > 0) {
-      const newState = [...state];
+      const newState = [...dummyData];
       const temp = newState[index];
       newState[index] = newState[index - 1];
       newState[index - 1] = temp;
-      setState(newState);
+      setDummyData(newState);
     } else {
       toast.error("You can't move the image back any further!");
     }
@@ -139,12 +139,12 @@ export default function PhotoGrid({ images }) {
     setSelectedImage(null);
   };
   const makeCoverPhoto = (index: any) => {
-    const newState = state.map((item, i) => ({
+    const newState = dummyData.map((item, i) => ({
       ...item,
       isCoverPhoto: i === index,
     }));
-    setState(newState);
-    setCoverPhotoID(state[index].id);
+    setDummyData(newState);
+    setCoverPhotoID(dummyData[index].id);
   };
   return (
     <div>
@@ -152,11 +152,11 @@ export default function PhotoGrid({ images }) {
         <ReactSortable
           expand={false}
           tag={CustomComponent}
-          list={state}
-          setList={setState}
+          list={dummyData}
+          setList={setDummyData}
           onEnd={onDragEnd}
         >
-          {state.map((image, index) => (
+          {dummyData.map((image, index) => (
             <div
               className="h-full w-[250px] rounded-lg border  hover:animate-pulse md:w-[400px]"
               key={image.id}
@@ -173,7 +173,6 @@ export default function PhotoGrid({ images }) {
                       </div>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56">
-                      <DropdownMenuCheckboxItem>Edit</DropdownMenuCheckboxItem>
                       <DropdownMenuCheckboxItem
                         onClick={() => makeCoverPhoto(index)}
                       >
@@ -221,8 +220,7 @@ export default function PhotoGrid({ images }) {
                     value={image.caption}
                     onChange={(e) => {
                       const newCaption = e.target.value;
-                      // Update the caption in the state
-                      setState((prevState) =>
+                      setDummyData((prevState) =>
                         prevState.map((item) =>
                           item.id === image.id
                             ? { ...item, caption: newCaption }
