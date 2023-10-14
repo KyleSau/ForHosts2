@@ -4,7 +4,7 @@ import { ReactSortable, Sortable } from "react-sortablejs";
 import BlurImage from "@/components/blur-image";
 import { placeholderBlurhash } from "@/lib/utils";
 import { MoreHorizontal, Star } from "lucide-react";
-
+import { Image } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -91,15 +91,11 @@ export default function PhotoGrid({ images }) {
       caption: "",
       isCoverPhoto: false,
     },
-    {
-      id: 9,
-      name: "9",
-      url: "https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Lenna66.png/250px-Lenna66.png",
-      caption: "",
-      isCoverPhoto: false,
-    },
   ]);
-
+  const uploadCard = {
+    id: "upload-card",
+    name: "Upload Card",
+  };
   const onDragEnd = (e: Sortable.SortableEvent) => {
     console.log(e.oldIndex + " -> " + e.newIndex);
   };
@@ -233,6 +229,30 @@ export default function PhotoGrid({ images }) {
               </div>
             </div>
           ))}
+          {/* Render the card for uploading files */}
+          <div className="relative items-center justify-center rounded   text-center text-gray-400">
+            <div
+              className="h-[275px] w-[250px] rounded-lg border hover:animate-pulse md:h-full md:w-[400px]"
+              key={uploadCard.id}
+            >
+              <div className="relative" style={{ aspectRatio: "16/9" }}>
+                <div className="flex h-full flex-col items-center justify-center md:h-full">
+                  <Image id="drag-drop-image-icon" />{" "}
+                  <p className="m-0 mt-4">
+                    {" "}
+                    Drag your files here or click in this area.
+                  </p>
+                  <input
+                    accept="image/png, image/jpeg"
+                    type="file"
+                    title="Drag or click this area to upload files"
+                    multiple
+                    className="absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-none"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </ReactSortable>
       </div>
       {selectedImage && (
