@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function WhatToKnow() {
     return (
-        <div className="col-span-1 m-2 rounded-sm bg-white md:col-span-full">
+        <div className="col-span-1 m-2 rounded-sm  md:col-span-full">
             <p className="mb-5 flex justify-center text-xl font-bold">
                 What To Know About Where You&apos;re Staying
             </p>

@@ -51,39 +51,34 @@ export default function DashPage({ data }) {
           />
           <hr />
         </div>
-        <div className="relative col-span-1 row-span-4 row-start-3 m-2 md:col-span-2 md:min-w-[300px] ">
-          <div className="sticky top-0 pb-[150px] pt-[150px]">
+        <div className="relative col-span-1 row-span-5 row-start-3 m-2 md:col-span-2 z-30">
+          <div className="sticky top-0">
             <BookingComponent listing={data} />
           </div>
         </div>
-        {/* <div className="col-start-1 m-2 rounded-sm p-8 md:col-span-3 md:col-start-3 ">
-          <div className="">Notable Features</div>
-          <hr className="mt-10" />
-        </div> */}
         <Featured />
-        <div className=" col-start-1 m-2 p-8 md:col-span-3 md:col-start-3 ">
-          <div className="">Listing Description</div>
+        <div className="col-start-1 m-2 pl-8 md:col-span-3 md:col-start-3 ">
           <ListingDescription description={data.description} />
-          {data.description && (
+          {/* {data.description && (
             <div>
               <ShowMoreModal text={data.description} />
             </div>
-          )}
-          <hr className="mt-10 h-2" />
+          )} */}
+          <hr className="my-4" />
         </div>
-        <div className="col-start-1 m-2 rounded-sm md:col-span-3 md:col-start-3">
+        <div className="col-start-1 rounded-sm md:col-span-3 md:col-start-3">
           <div className="flex justify-center">
             <SleepingQuarters />
           </div>
-          <hr className="mt-10 h-2 w-full" />
+          <hr className="h-2 w-full" />
         </div>
-        <div className="col-start-1 m-2 rounded-sm p-8 md:col-span-3 md:col-start-3">
+        <div className="col-start-1 rounded-sm pl-8 md:col-span-3 md:col-start-3">
           <div className="flex justify-center">
             <AmenitiesModal amenityDetails={amenityDetails} />
           </div>
-          <hr className="mt-10" />
+          <hr className="mt-2" />
         </div>
-        <div className=" col-start-1 m-2 mb-8 p-8 md:col-span-3 md:col-start-3">
+        <div className="col-start-1 pl-8 md:col-span-3 md:col-start-3">
           <div className="mx-auto flex w-full justify-center">
             <CalendarDemo />
           </div>

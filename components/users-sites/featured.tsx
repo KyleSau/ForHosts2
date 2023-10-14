@@ -24,8 +24,7 @@ export default function Featured() {
     };
 
     return (
-        <div className="col-start-1 m-2 mt-[100px] rounded-sm p-8 md:col-span-3 md:col-start-3">
-            <div className="text-3xl font-semibold text-gray-800 mb-4">Notable Features</div>
+        <div className="col-start-1 rounded-sm pl-8 mt-2 md:col-span-3 md:col-start-3">
             <div style={notableFeatureStyle}>
                 <FontAwesomeIcon icon={faStar} style={iconStyle} />
                 <div style={contentStyle}>
@@ -53,6 +52,7 @@ export default function Featured() {
                     <p className="text-gray-500">90% of recent guests gave the check-in process a 5-star rating.</p>
                 </div>
             </div>
+            <hr className="w-full mb-2" />
         </div>
     );
 }

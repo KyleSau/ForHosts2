@@ -36,7 +36,7 @@ function AmenitiesModal({ amenityDetails }: AmenitiesModalProps) {
   return (
     <div className="w-full">
       <div className="text-3xl font-semibold text-gray-800 mb-6">Amenities</div>
-      <div className="flex justify-left">
+      <div className="flex justify-left pl-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 w-full">
           {amenityDetails.slice(0, 10).map((amenity, index) => (
             <div className="text-lg text-gray-600 flex items-center mb-4" key={index}>

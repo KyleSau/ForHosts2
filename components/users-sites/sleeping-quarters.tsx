@@ -39,9 +39,8 @@ function SleepingQuarters() {
     };
 
     return (
-        <div className="w-full p-8">
-            <div className="text-3xl font-semibold text-gray-800 mb-4">Where You&apos;ll Sleep</div>
-
+        <div className="w-full pl-8">
+            <div className="text-3xl font-semibold text-gray-800">Where You&apos;ll Sleep</div>
             <div className="flex items-center">
                 {canShowPrevious && (
                     <button
