@@ -85,6 +85,11 @@ export const getBlobMetadata = async (siteId: string, postId: string) => {
   }
 };
 
+export const deleteBlob = async (id: string) => {
+  const response = await deleteBlobMetadata(id);
+  await deleteBlobFromStore(response.url)
+}
+
 export const deleteBlobMetadata = async (id: string) => {
   const response = await prisma.image.delete({
     where: {
@@ -92,6 +97,7 @@ export const deleteBlobMetadata = async (id: string) => {
     }
   });
   return response;
+
 };
 
 export const listAllBlobsInStore = async () => {
@@ -142,3 +148,4 @@ export const listAllBlobMetadata = async () => {
     throw new Error('Could not update user');
   }
 };
+

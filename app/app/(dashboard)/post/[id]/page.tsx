@@ -1,7 +1,7 @@
 import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
-import { FileClickDragDrop } from "@/components/editor/file-drag-drop";
+import { PhotoManager } from "@/components/editor/photo-manager/photo-manager";
 // import Editor from "@/components/editor";
 
 export default async function PostPage({ params }: { params: { id: string } }) {
@@ -27,7 +27,7 @@ export default async function PostPage({ params }: { params: { id: string } }) {
   }
 
   return <div>
-    <FileClickDragDrop componentId="listing-photos-drag-drop-area" data={data} />
+    <PhotoManager postData={data} />
   </div>
 
   // return <Editor post={data} />;
