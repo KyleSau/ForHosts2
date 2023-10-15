@@ -14,12 +14,10 @@ import {
 import Modal from "@/components/modal";
 import { toast } from "sonner";
 import PhotoDeleteModal from "./photo-delete-modal";
-import TabTitle from "../tab-title";
-
 const CustomComponent = forwardRef(function CustomComponent(props, ref) {
   return (
     <div
-      className="grid grid-cols-1 gap-2 md:grid-cols-3"
+      className="grid grid-cols-1 gap-2 md:grid-cols-2 2xl:grid-cols-3 grid-rows-[300px] md:grid-rows-[300px] 2xl:grid-rows-[300px]"
       style={{
         boxSizing: "border-box",
         padding: "15px",
@@ -154,7 +152,6 @@ export default function PhotoGrid({ images }) {
         <hr className="pb-6" />
         <div className="flex justify-start gap-8">
           <ReactSortable
-            expand={false}
             tag={CustomComponent}
             list={dummyData}
             setList={setDummyData}
@@ -162,10 +159,10 @@ export default function PhotoGrid({ images }) {
           >
             {dummyData.map((image, index) => (
               <div
-                className=" w-[250px] border md:w-[350px]"
+                className=" w-full border"
                 key={image.id}
               >
-                <div className="relative" style={{ aspectRatio: "16/9" }}>
+                <div className="relative">
                   <div style={{ position: "relative" }}>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
