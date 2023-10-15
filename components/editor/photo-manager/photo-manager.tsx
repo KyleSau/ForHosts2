@@ -30,7 +30,7 @@ interface BlobData extends Partial<ImagePrismaSchema> {
   isUploading?: boolean;
 }
 
-export const PhotoManager = ({ postData }) => {
+export const PhotoManager = ({ postData }: any) => {
   const postId = postData.id;
   const siteId = postData.site.id;
 
