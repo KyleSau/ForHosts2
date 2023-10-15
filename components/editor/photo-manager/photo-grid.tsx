@@ -62,69 +62,12 @@ interface MappedImage {
 export default function PhotoGrid({ images, postId, siteId }: PhotoGridProps) {
   const [fileDataObjects, setFileDataObjects] = useState<FileDataObject[]>([]);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [coverPhotoID, setCoverPhotoID] = useState(null);
+  const [coverPhotoID, setCoverPhotoID] = useState(0);
   const [mappedImages, setMappedImages] = useState<MappedImage[]>([]);
-  const [dummyData, setDummyData] = useState([
-    {
-      id: 1,
-      name: "1",
-      url: "https://upload.wikimedia.org/wikipedia/en/1/11/SoCal_Lashings_Logo.png",
-      caption: "",
-      isCoverPhoto: false,
-    },
-    {
-      id: 2,
-      name: "2",
-      url: "https://upload.wikimedia.org/wikipedia/en/e/e8/Callipygia.jpg",
-      caption: "",
-      isCoverPhoto: false,
-    },
-    {
-      id: 3,
-      name: "3",
-      url: "https://upload.wikimedia.org/wikipedia/en/e/e0/KAUH_logo.png",
-      caption: "",
-      isCoverPhoto: false,
-    },
-    {
-      id: 4,
-      name: "4",
-      url: "https://upload.wikimedia.org/wikipedia/en/6/6e/Okapi_large.png",
-      caption: "",
-      isCoverPhoto: false,
-    },
-    {
-      id: 5,
-      name: "5",
-      url: "https://upload.wikimedia.org/wikipedia/en/8/89/Grammy-frontcover.jpg",
-      caption: "",
-      isCoverPhoto: false,
-    },
-    {
-      id: 6,
-      name: "6",
-      url: "https://upload.wikimedia.org/wikipedia/en/thumb/0/01/Lenna.png/220px-Lenna.png",
-      caption: "",
-      isCoverPhoto: false,
-    },
-    {
-      id: 7,
-      name: "7",
-      url: "https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Lenna66.png/250px-Lenna66.png",
-      caption: "",
-      isCoverPhoto: false,
-    },
-    {
-      id: 8,
-      name: "8",
-      url: "https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Wikipedia-logo-v2.svg/1920px-Wikipedia-logo-v2.svg.png",
-      caption: "",
-      isCoverPhoto: false,
-    },
-  ]);
 
   useEffect(() => {
     const newMappedImages = images.map((image, i) => {
+      console.log('N: ', JSON.stringify(image));
       return {
         id: image.orderIndex,  // Assuming sortIdx is the value you want to use for id
         name: i.toString(),
@@ -145,37 +88,17 @@ export default function PhotoGrid({ images, postId, siteId }: PhotoGridProps) {
 
   const onDragEnd = (e: Sortable.SortableEvent) => {
     console.log(e.oldIndex + " -> " + e.newIndex);
-
-    // Ensure indices are defined before proceeding
-    if (e.oldIndex != null && e.newIndex != null) {
-      // Make a copy of the current mappedImages array
-      const updatedImages = [...mappedImages];
-
-      // Remove the item from the old position and store it
-      const [movedItem] = updatedImages.splice(e.oldIndex, 1);
-
-      // Insert the item at the new position
-      updatedImages.splice(e.newIndex, 0, movedItem);
-
-      // Update the id property of each object to reflect its new position
-      const reIndexedImages = updatedImages.map((item, index) => ({
-        ...item,
-        id: index + 1  // Assuming ids start at 1
-      }));
-
-      // Update the state with the new order and ids
-      setMappedImages(reIndexedImages);
-    }
   };
 
 
   const moveForward = (index: any) => {
-    if (index < dummyData.length - 1) {
-      const newState = [...dummyData];
+    if (index < mappedImages.length - 1) {
+      const newState = [...mappedImages];
       const temp = newState[index];
       newState[index] = newState[index + 1];
       newState[index + 1] = temp;
-      setDummyData(newState);
+      // setDummyData(newState);
+      setMappedImages(newState);
     } else {
       toast.error("You can't move the image forward any further!");
     }
@@ -183,11 +106,12 @@ export default function PhotoGrid({ images, postId, siteId }: PhotoGridProps) {
 
   const moveBackward = (index: any) => {
     if (index > 0) {
-      const newState = [...dummyData];
+      const newState = [...mappedImages];
       const temp = newState[index];
       newState[index] = newState[index - 1];
       newState[index - 1] = temp;
-      setDummyData(newState);
+      // setDummyData(newState);
+      setMappedImages(newState);
     } else {
       toast.error("You can't move the image back any further!");
     }
@@ -206,12 +130,13 @@ export default function PhotoGrid({ images, postId, siteId }: PhotoGridProps) {
   };
 
   const makeCoverPhoto = (index: any) => {
-    const newState = dummyData.map((item, i) => ({
+    const newState = mappedImages.map((item, i) => ({
       ...item,
       isCoverPhoto: i === index,
     }));
-    setDummyData(newState);
-    setCoverPhotoID(dummyData[index].id);
+    setMappedImages(newState);
+    // setDummyData(newState);
+    setCoverPhotoID(mappedImages[index].id);
   };
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -291,7 +216,7 @@ export default function PhotoGrid({ images, postId, siteId }: PhotoGridProps) {
         handleBlobUploadUrl: '/api/upload'
       });
 
-      const updatedMetadata = await uploadBlobMetadata(blobResult, arrayIndex, postId, siteId);
+      const updatedMetadata = await uploadBlobMetadata(blobResult, postId, siteId);
 
       // Update the state for this specific blob data
       setFileDataObjects(prevArray => {
@@ -302,6 +227,10 @@ export default function PhotoGrid({ images, postId, siteId }: PhotoGridProps) {
           url: blobResult.url,
           isUploading: false,
         };
+
+        console.log('id: is it a guid? ', updatedBlobData.id);
+        console.log('orderIdx: ', updatedBlobData.orderIndex);
+        debugger;
         // here: setMappedImages
         const newArray = [...prevArray];
         newArray[arrayIndex] = updatedBlobData;
@@ -353,14 +282,14 @@ export default function PhotoGrid({ images, postId, siteId }: PhotoGridProps) {
         <div className="flex justify-start gap-8">
           <ReactSortable
             tag={CustomComponent}
-            list={dummyData}
-            setList={setDummyData}
+            list={mappedImages}
+            setList={setMappedImages}
             onEnd={onDragEnd}
           >
             {mappedImages.map((image, index) => (
               <div
                 className=" w-full border"
-                key={image.orderIndex}
+                key={image.id}
               >
                 <div className="relative">
                   <div style={{ position: "relative" }}>
