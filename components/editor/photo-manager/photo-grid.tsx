@@ -162,20 +162,19 @@ export default function PhotoGrid({ images }) {
           >
             {dummyData.map((image, index) => (
               <div
-                className=" w-[250px] border  hover:animate-pulse md:w-[350px]"
+                className=" w-[250px] border md:w-[350px]"
                 key={image.id}
               >
                 <div className="relative" style={{ aspectRatio: "16/9" }}>
                   <div style={{ position: "relative" }}>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <div className="absolute right-1 top-1 z-10 hover:scale-105 ">
+                        <div className="absolute right-1 top-1 z-10">
                           <div
-                            className="flex items-center justify-center rounded-full border border-black bg-gray-300"
+                            className="flex items-center justify-center rounded-full border shadow-sm bg-gray-100 opacity-75 p-2 hover:scale-110 transition ease-in-out duration-300 hover:bg-white hover:opacity-100 cursor-pointer"
                             style={{
                               width: "36px",
                               height: "36px",
-                              background: "transparent",
                             }}
                           >
                             <MoreHorizontal size={30} className="text-black" />
