@@ -96,41 +96,41 @@ export const PhotoManager = ({ postData }) => {
 
     // Define an async function to handle the upload of a single file
     const uploadSingleFile = async (blobData: BlobData, arrayIndex: number) => {
-      try {
-        const blobResult = await put(blobData.file!.name, blobData.file!, {
-          access: 'public',
-          handleBlobUploadUrl: '/api/upload'
-        });
+      // try {
+      const blobResult = await put(blobData.file!.name, blobData.file!, {
+        access: 'public',
+        handleBlobUploadUrl: '/api/upload'
+      });
 
-        const updatedMetadata = await uploadBlobMetadata(blobResult, arrayIndex, postId, siteId);
+      const updatedMetadata = await uploadBlobMetadata(blobResult, arrayIndex, postId, siteId);
 
-        // Update the state for this specific blob data
-        setBlobDataArray(prevArray => {
-          const updatedBlobData = {
-            ...blobData,
-            ...updatedMetadata,
-            inBlobStore: true,
-            url: blobResult.url,
-            isUploading: false,
-          };
-          const newArray = [...prevArray];
-          newArray[arrayIndex] = updatedBlobData;
-          return newArray;
-        });
+      // Update the state for this specific blob data
+      setBlobDataArray(prevArray => {
+        const updatedBlobData = {
+          ...blobData,
+          ...updatedMetadata,
+          inBlobStore: true,
+          url: blobResult.url,
+          isUploading: false,
+        };
+        const newArray = [...prevArray];
+        newArray[arrayIndex] = updatedBlobData;
+        return newArray;
+      });
 
-      } catch (error) {
-        console.error('Error uploading file:', error);
+      // } catch (error) {
+      //   console.error('Error uploading file:', error);
 
-        setBlobDataArray(prevArray => {
-          const updatedBlobData = {
-            ...blobData,
-            isUploading: false,
-          };
-          const newArray = [...prevArray];
-          newArray[arrayIndex] = updatedBlobData;
-          return newArray;
-        });
-      }
+      //   setBlobDataArray(prevArray => {
+      //     const updatedBlobData = {
+      //       ...blobData,
+      //       isUploading: false,
+      //     };
+      //     const newArray = [...prevArray];
+      //     newArray[arrayIndex] = updatedBlobData;
+      //     return newArray;
+      //   });
+      // }
     };
 
     initialBlobDataArray.forEach((blobData, index) => {

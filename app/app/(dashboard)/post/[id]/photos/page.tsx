@@ -2,6 +2,7 @@ import React from "react";
 import prisma from "@/lib/prisma";
 import PhotoGrid from "@/components/editor/photo-manager/photo-grid";
 import ListingImages from "@/components/editor/listing-images";
+import { PhotoManager } from "@/components/editor/photo-manager/photo-manager";
 
 export default async function ListingImagePage({
   params,
@@ -26,6 +27,7 @@ export default async function ListingImagePage({
   return (
     <div>
       {/* <ListingImages data={data} /> */}
+      <PhotoManager postData={data} />
       <PhotoGrid images={data?.images} />
     </div>
   );
