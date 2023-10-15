@@ -2,6 +2,7 @@ import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
 import { PhotoManager } from "@/components/editor/photo-manager/photo-manager";
+import PhotoGrid from "@/components/editor/photo-manager/photo-grid";
 // import Editor from "@/components/editor";
 
 export default async function PostPage({ params }: { params: { id: string } }) {
@@ -14,6 +15,7 @@ export default async function PostPage({ params }: { params: { id: string } }) {
       id: params.id,
     },
     include: {
+      images: true,
       site: {
         select: {
           id: true,
@@ -28,6 +30,7 @@ export default async function PostPage({ params }: { params: { id: string } }) {
 
   return <div>
     <PhotoManager postData={data} />
+    <PhotoGrid images={data.images} postId={data.id} siteId={data.siteId!} />
   </div>
 
   // return <Editor post={data} />;
