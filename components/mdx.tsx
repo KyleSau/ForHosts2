@@ -56,7 +56,7 @@ function ExamplesCard({ data }: { data: any }) {
             className="h-64 w-full object-cover"
             src={data.images[0].url ?? "/placeholder.png"}
             placeholder="blur"
-            blurDataURL={data.images[0].blurhash ?? undefined}
+            blurDataURL={undefined}
           />
         </div>
         <div className="h-36 px-5 py-6">
@@ -77,7 +77,7 @@ function ExamplesCard({ data }: { data: any }) {
             className="h-full object-cover"
             src={`/examples/${data.images[0].url}`}
             placeholder="blur"
-            blurDataURL={data.images[0].blurHash ?? undefined}
+            blurDataURL={undefined}
           />
         </div>
         <div className="w-3/5 px-5 py-6">

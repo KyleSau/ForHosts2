@@ -20,15 +20,15 @@ export default function PostCard({
         className="flex flex-col overflow-hidden rounded-lg"
       >
         <div className="relative h-44 overflow-hidden">
-          {/* <BlurImage
+          <BlurImage
             alt={data.title ?? "Card thumbnail"}
             width={500}
             height={400}
             className="h-full object-cover"
             src={(data.images && data.images.length > 0 ? data.images[0].url : undefined) ?? "/placeholder.png"}
-            blurDataURL={blurDataURL}
+            blurDataURL={placeholderBlurhash}
             placeholder="blur"
-          /> */}
+          />
           {!data.published && (
             <span className="absolute bottom-2 right-2 rounded-md border border-stone-200 bg-white px-3 py-0.5 text-sm font-medium text-stone-600 shadow-md">
               Draft
