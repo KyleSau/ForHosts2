@@ -19,10 +19,10 @@ import TabTitle from "../tab-title";
 const CustomComponent = forwardRef(function CustomComponent(props, ref) {
   return (
     <div
-      className="grid grid-cols-1 gap-4 md:grid-cols-3"
+      className="grid grid-cols-1 gap-2 md:grid-cols-3"
       style={{
         boxSizing: "border-box",
-        padding: "5px",
+        padding: "15px",
         height: "auto",
       }}
       ref={ref}
@@ -146,13 +146,13 @@ export default function PhotoGrid({ images }) {
   };
   return (
     <div>
-      <div className="border p-10">
-        <h1 className=" text-center text-4xl font-bold">Photo Manager</h1>
-        <h2 className="text-md mb-4 text-center text-gray-500">
+      <div className="w-auto border p-10">
+        <h1 className=" text-start text-4xl font-bold">Photo Manager</h1>
+        <h2 className="text-md mb-4 text-start text-gray-500">
           Manage your listing&apos;s photos
         </h2>
         <hr className="pb-6" />
-        <div className="flex justify-center ">
+        <div className="flex justify-start gap-8">
           <ReactSortable
             expand={false}
             tag={CustomComponent}
@@ -162,15 +162,24 @@ export default function PhotoGrid({ images }) {
           >
             {dummyData.map((image, index) => (
               <div
-                className="h-full w-[250px] rounded-lg border hover:scale-105 hover:animate-pulse md:w-[400px]"
+                className=" w-[250px] border  hover:animate-pulse md:w-[350px]"
                 key={image.id}
               >
                 <div className="relative" style={{ aspectRatio: "16/9" }}>
                   <div style={{ position: "relative" }}>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <div className="absolute right-2 top-0 z-10 hover:scale-125">
-                          <MoreHorizontal size={30} className="text-black" />
+                        <div className="absolute right-1 top-1 z-10 hover:scale-105 ">
+                          <div
+                            className="flex items-center justify-center rounded-full border border-black bg-gray-300"
+                            style={{
+                              width: "36px",
+                              height: "36px",
+                              background: "transparent",
+                            }}
+                          >
+                            <MoreHorizontal size={30} className="text-black" />
+                          </div>{" "}
                         </div>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent className="w-56">
@@ -205,7 +214,7 @@ export default function PhotoGrid({ images }) {
                       <BlurImage
                         alt={image.url ?? ""}
                         blurDataURL={placeholderBlurhash}
-                        className="object-fit h-[200px] w-full gap-4 pb-1"
+                        className="object-fit h-[300px] w-full pb-1"
                         width={200}
                         height={200}
                         placeholder="blur"
@@ -216,7 +225,7 @@ export default function PhotoGrid({ images }) {
                   <div className="bg-tranparent relative cursor-pointer bg-opacity-10 pt-10 text-white hover:bg-gray-300 hover:bg-opacity-60 hover:text-opacity-100">
                     <input
                       type="text"
-                      className="absolute bottom-0 w-full border-none bg-transparent text-black focus:animate-none focus:rounded-lg focus:bg-gray-100 focus:bg-opacity-90 focus:ring-blue-300"
+                      className="absolute bottom-0 w-full border-none bg-transparent text-black focus:animate-none  focus:bg-gray-100 focus:bg-opacity-90 focus:ring-blue-300"
                       placeholder="Add a caption..."
                       value={image.caption}
                       onChange={(e) => {
@@ -235,14 +244,17 @@ export default function PhotoGrid({ images }) {
               </div>
             ))}
             {/* Render the card for uploading files */}
-            <div className="relative items-center justify-center rounded   text-center text-gray-400">
+            <div className="relative items-center justify-center text-center text-gray-400">
               <div
-                className="h-[275px] w-[250px] rounded-lg border hover:animate-pulse md:h-full md:w-[400px]"
+                className="w-[250px] border  hover:animate-pulse md:h-full  md:w-[350px] "
                 key={uploadCard.id}
               >
                 <div className="relative" style={{ aspectRatio: "16/9" }}>
-                  <div className="flex h-full flex-col items-center justify-center md:h-full">
-                    <Image id="drag-drop-image-icon" />{" "}
+                  <div className=" flex h-[300px] flex-col items-center justify-center  md:h-full">
+                    <Image
+                      className="mt-0 md:mt-[100px]"
+                      id="drag-drop-image-icon"
+                    />{" "}
                     <p className="m-0 mt-4">
                       {" "}
                       Drag your files here or click in this area.
