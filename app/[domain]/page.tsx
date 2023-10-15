@@ -27,7 +27,7 @@ export default async function SiteHomePage({
             <div className="group relative mx-auto h-80 w-full overflow-hidden sm:h-150 lg:rounded-xl">
               <BlurImage
                 alt={posts[0].title ?? ""}
-                blurDataURL={posts[0].images[0].blurHash ?? placeholderBlurhash}
+                blurDataURL={placeholderBlurhash}
                 className="h-full w-full object-cover group-hover:scale-105 group-hover:duration-300"
                 width={1300}
                 height={630}
