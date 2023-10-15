@@ -99,7 +99,7 @@ model StripePayment {
 model Image {
   id         String   @id @default(cuid())
   url        String
-  caption    String
+  caption    String?
   uploadedAt DateTime
   size       String
   fileName   String
