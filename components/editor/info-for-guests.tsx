@@ -41,6 +41,8 @@ export default function InfoForGuests({ data }) {
             checkoutTime: '11:00 AM',
             quietHoursStart: '10:00 PM',
             quietHoursEnd: '08:00 AM',
+            interactionPreferences: "test",
+            checkInMethod:"test",
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {

@@ -11,18 +11,24 @@ import EditorSaveButton from "./editor-save-button";
 import EditorWrapper from "./editor-container-wrapper";
 import { toast } from "sonner";
 
-type DayName = "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday" | "Sunday";
+type DayName =
+  | "Monday"
+  | "Tuesday"
+  | "Wednesday"
+  | "Thursday"
+  | "Friday"
+  | "Saturday"
+  | "Sunday";
 
 const dayMapping: Record<DayName, number> = {
-  "Monday": 0,
-  "Tuesday": 1,
-  "Wednesday": 2,
-  "Thursday": 3,
-  "Friday": 4,
-  "Saturday": 5,
-  "Sunday": 6
+  Monday: 0,
+  Tuesday: 1,
+  Wednesday: 2,
+  Thursday: 3,
+  Friday: 4,
+  Saturday: 5,
+  Sunday: 6,
 };
-
 
 const hourAN = [
   "6:00 AM",
@@ -61,15 +67,13 @@ const availabilityWindowOptions = [
 ];
 
 const validationSchema = Yup.object().shape({
-
   minStay: Yup.number()
     .required("Minimum stay is required")
     .positive("Minimum stay must be a positive number"),
   maxStay: Yup.number()
     .required("Maximum stay is required")
     .positive("Maximum stay must be a positive number"),
-  advanceNotice: Yup.number().min(0)
-    .required("Advance notice is required"),
+  advanceNotice: Yup.number().min(0).required("Advance notice is required"),
   // sameDayAdvanceNotice: Yup.number()
   //   .required("Same-day advance notice is required")
   //   .positive("Same-day advance notice must be a positive number"),
@@ -89,11 +93,11 @@ const validationSchema = Yup.object().shape({
 
 const daysToBooleanArray = (daysArray: number[]) => {
   const week = new Array(7).fill(false);
-  daysArray.forEach(day => {
+  daysArray.forEach((day) => {
     week[day] = true;
   });
   return week;
-}
+};
 
 export default function Availability({ data }) {
   const [submitted, setSubmitted] = useState(false);
@@ -101,7 +105,7 @@ export default function Availability({ data }) {
   // const [restrictedCheckIn, setRestrictedCheckIn] = useState(data.availability.restrictedCheckIn);
   // const [restrictedCheckOut, setRestrictedCheckOut] = useState(data.availability.restrictedCheckOut);
   const availability = data.availability;
-  const handleSubmittedChange = (newSubmitted:boolean) => {
+  const handleSubmittedChange = (newSubmitted: boolean) => {
     setSubmitted(newSubmitted);
   };
 
@@ -127,7 +131,7 @@ export default function Availability({ data }) {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      console.log("values" + JSON.stringify(values))
+      console.log("values" + JSON.stringify(values));
       setSubmitted(false);
       setIsLoading(true);
       const transformedValues = {
@@ -142,26 +146,23 @@ export default function Availability({ data }) {
         },
       };
 
-      const result = await updatePost(transformedValues);
+      const result = await updatePost(transformedValues as any);
       if (result) {
         console.log("Post updated successfully:", result);
         setSubmitted(true);
         setIsLoading(false);
-        toast.success(
-          `Your data has been sucessfully saved! `,
-        );
+        toast.success(`Your data has been sucessfully saved! `);
         setTimeout(() => {
-          setSubmitted(false)
+          setSubmitted(false);
           const resetValues = {
             ...values, // Spread the transformedValues
             id: formik.initialValues.id, // Include the 'id' from initialValues
           };
           formik.resetForm({ values: resetValues });
         }, 2000);
-
       }
-      if (result?.error) {
-        console.error(result.error);
+      if (!result) {
+        console.error("error");
       } else {
         console.log(values);
       }
@@ -205,29 +206,45 @@ export default function Availability({ data }) {
   };
 
   const renderRestrictedCheckInDaysToggle = () => {
-    return (
-      days.map(day => (
-        <Toggle
-          data-state={formik.values.restrictedCheckIn[dayMapping[day]] ? "on" : "off"}
-          // value={formik.values.restrictedCheckIn[dayMapping[day]]}
-          onClick={() => toggleRestrictedCheckinDay(day as DayName)}
-          className="mr-2 mb-2"
-          key={day}
-        >
-          {day}
-        </Toggle>
-      ))
-    );
-  }
+    return days.map((day) => (
+      <Toggle
+        data-state={
+          formik.values.restrictedCheckIn[dayMapping[day]] ? "on" : "off"
+        }
+        // value={formik.values.restrictedCheckIn[dayMapping[day]]}
+        onClick={() => toggleRestrictedCheckinDay(day as DayName)}
+        className="mb-2 mr-2"
+        key={day}
+      >
+        {day}
+      </Toggle>
+    ));
+  };
 
   const renderRestrictedCheckOutDaysToggle = () => {
     /*return (
       days.map(day => <Toggle onClick={() => toggleRestrictedCheckinDay(day as DayName)} className="mr-2 mb-2" key={day}>{day}</Toggle>
       ));*/
-  }
+  };
 
-  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-  const togglesArray = days.map(day => <Toggle onClick={() => toggleRestrictedCheckinDay(day as DayName)} className="mr-2 mb-2" key={day}>{day}</Toggle>);
+  const days = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+  const togglesArray = days.map((day) => (
+    <Toggle
+      onClick={() => toggleRestrictedCheckinDay(day as DayName)}
+      className="mb-2 mr-2"
+      key={day}
+    >
+      {day}
+    </Toggle>
+  ));
   // formik
 
   const handleBeforeUnload = (e) => {
@@ -250,7 +267,7 @@ export default function Availability({ data }) {
     <EditorWrapper>
       {/* {JSON.stringify(avaData)} */}
       <form onSubmit={formik.handleSubmit}>
-        <h1 className="font-bold text-3xl">Availability</h1>
+        <h1 className="text-3xl font-bold">Availability</h1>
         {/* <TabTitle title="Availability" desc="Information regarding availability of your property" /> */}
         <hr className="mt-4" />
         <div>
@@ -263,16 +280,23 @@ export default function Availability({ data }) {
                 className="hidden"
                 checked={formik.values.instantBooking}
                 onChange={() =>
-                  formik.setFieldValue("instantBooking", !formik.values.instantBooking)
+                  formik.setFieldValue(
+                    "instantBooking",
+                    !formik.values.instantBooking,
+                  )
                 }
               />
               <div
-                className={`h-6 w-12 bg-${formik.values.instantBooking ? "blue-500" : "gray-300"
-                  } rounded-full p-1 transition-transform duration-300`}
+                className={`h-6 w-12 bg-${
+                  formik.values.instantBooking ? "blue-500" : "gray-300"
+                } rounded-full p-1 transition-transform duration-300`}
               >
                 <div
-                  className={`h-4 w-4 transform rounded-full bg-white shadow-md ${formik.values.instantBooking ? "translate-x-6" : "translate-x-0"
-                    }`}
+                  className={`h-4 w-4 transform rounded-full bg-white shadow-md ${
+                    formik.values.instantBooking
+                      ? "translate-x-6"
+                      : "translate-x-0"
+                  }`}
                 ></div>
               </div>
             </label>
@@ -302,7 +326,9 @@ export default function Availability({ data }) {
             </div>
           </div>
           {formik.touched.minStay && formik.errors.minStay ? (
-            <div className="text-red-600">{formik.errors.minStay}</div>
+            <div className="text-red-600">
+              {formik.errors.minStay.toString()}
+            </div>
           ) : null}
 
           <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
@@ -328,7 +354,9 @@ export default function Availability({ data }) {
             </div>
           </div>
           {formik.touched.maxStay && formik.errors.maxStay ? (
-            <div className="text-red-600">{formik.errors.maxStay}</div>
+            <div className="text-red-600">
+              {formik.errors.maxStay.toString()}
+            </div>
           ) : null}
           <TabTitle title="Availability" desc="" />
           <hr className="mt-4" />
@@ -361,9 +389,11 @@ export default function Availability({ data }) {
             </div>
           </div>
           {formik.touched.advanceNotice && formik.errors.advanceNotice ? (
-            <div className="text-red-600">{formik.errors.advanceNotice}</div>
+            <div className="text-red-600">
+              {formik.errors.advanceNotice.toString()}
+            </div>
           ) : null}
-          <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
+          {/* <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
             <Label
               htmlFor="sameDayAdvancedNotice"
               className="col-span-1 col-start-1 flex items-center"
@@ -391,12 +421,11 @@ export default function Availability({ data }) {
               </select>
             </div>
           </div>
-          {formik.touched.sameDayAdvanceNotice &&
-            formik.errors.sameDayAdvanceNotice ? (
+          {formik.touched.advanceNotice && formik.errors.advanceNotice ? (
             <div className="text-red-600">
               {formik.errors.sameDayAdvanceNotice}
             </div>
-          ) : null}
+          ) : null} */}
           <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
             <Label
               htmlFor="preparationTime"
@@ -484,10 +513,12 @@ export default function Availability({ data }) {
             </div>
           </div>
           <hr className="mb-5" />
-          <EditorSaveButton dirty={formik.dirty} submitted={submitted} isLoading={isLoading} onSubmittedChange={handleSubmittedChange}/>
-
+          <EditorSaveButton
+            dirty={formik.dirty}
+            submitted={submitted}
+            isLoading={isLoading}
+          />
         </div>
-
       </form>
     </EditorWrapper>
   );

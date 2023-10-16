@@ -59,7 +59,6 @@ export default function PolicySettings({ data }) {
   const [isLoading, setIsLoading] = useState(false);
   const rulesData = data.propertyRules;
   const validationSchema = Yup.object().shape({
-
     petsAllowed: Yup.boolean(),
     eventsAllowed: Yup.boolean(),
     smokingAllowed: Yup.boolean(),
@@ -116,15 +115,15 @@ export default function PolicySettings({ data }) {
           additionalRules: values.additionalRules,
         },
       };
-      console.log('transformed values: ' + JSON.stringify(transformedValues));
-      const result = await updatePost(transformedValues);
+      console.log("transformed values: " + JSON.stringify(transformedValues));
+      const result = await updatePost(transformedValues as any);
       if (result) {
         console.log("Post updated successfully:", result);
         setSubmitted(true);
         setIsLoading(false);
       }
-      if (result?.error) {
-        console.error(result.error);
+      if (!result) {
+        console.error("result.error");
       } else {
         console.log(values);
       }
@@ -169,9 +168,14 @@ export default function PolicySettings({ data }) {
                         <br />
                         <RadioGroup
                           name="standardCancellationPolicy"
-                          defaultValue={formik.values.standardCancellationPolicy}
+                          defaultValue={
+                            formik.values.standardCancellationPolicy
+                          }
                           onChange={(value) =>
-                            formik.setFieldValue("standardCancellationPolicy", value)
+                            formik.setFieldValue(
+                              "standardCancellationPolicy",
+                              value,
+                            )
                           }
                         >
                           <div className="flex items-center space-x-2">
@@ -195,44 +199,43 @@ export default function PolicySettings({ data }) {
                           </div>
                           <br />
 
-
                           <div className="flex items-center space-x-2">
                             <RadioGroupItem value="custom" id="custom" />
                             <Label htmlFor="custom">
-                              <div className="bg-white p-5 rounded-md grid grid-cols-3 gap-5 items-center">
-                                <span className="col-span-1">Custom Refund Policy</span>
+                              <div className="grid grid-cols-3 items-center gap-5 rounded-md bg-white p-5">
+                                <span className="col-span-1">
+                                  Custom Refund Policy
+                                </span>
                                 <div className="col-start-3 flex justify-end">
                                   <Select>
-                                    <SelectTrigger className="mr-4 max-w-[205px] justify-center border p-2 rounded">
+                                    <SelectTrigger className="mr-4 max-w-[205px] justify-center rounded border p-2">
                                       <SelectValue
-                                        placeholder={formik.values.checkinWindowStart}
+                                        placeholder={
+                                          formik.values.checkinWindowStart
+                                        }
                                         onChange={formik.handleChange}
                                       ></SelectValue>
                                     </SelectTrigger>
-                                    <SelectContent className="max-w-[205px] mt-2 border rounded shadow-lg h-[200px]">
+                                    <SelectContent className="mt-2 h-[200px] max-w-[205px] rounded border shadow-lg">
                                       {hours.map((hour) => (
-                                        <SelectItem
-                                          value="custom"
-                                          key={hour}
-                                        >
+                                        <SelectItem value="custom" key={hour}>
                                           {hour}
                                         </SelectItem>
                                       ))}
                                     </SelectContent>
                                   </Select>
                                   <Select>
-                                    <SelectTrigger className="max-w-[205px] justify-center border p-2 rounded">
+                                    <SelectTrigger className="max-w-[205px] justify-center rounded border p-2">
                                       <SelectValue
-                                        placeholder={formik.values.checkinWindowEnd}
+                                        placeholder={
+                                          formik.values.checkinWindowEnd
+                                        }
                                         onChange={formik.handleChange}
                                       ></SelectValue>
                                     </SelectTrigger>
-                                    <SelectContent className="max-w-[205px] mt-2 border rounded shadow-lg h-[200px]">
+                                    <SelectContent className="mt-2 h-[200px] max-w-[205px] rounded border shadow-lg">
                                       {hours.map((hour) => (
-                                        <SelectItem
-                                          value="custom"
-                                          key={hour}
-                                        >
+                                        <SelectItem value="custom" key={hour}>
                                           {hour}
                                         </SelectItem>
                                       ))}
@@ -242,9 +245,6 @@ export default function PolicySettings({ data }) {
                               </div>
                             </Label>
                           </div>
-
-
-
 
                           <div className="flex items-center space-x-2">
                             <RadioGroupItem value="Moderate" id="Moderate" />
@@ -325,9 +325,14 @@ export default function PolicySettings({ data }) {
                         <br />
                         <RadioGroup
                           name="longTermCancellationPolicy"
-                          defaultValue={formik.values.longTermCancellationPolicy}
+                          defaultValue={
+                            formik.values.longTermCancellationPolicy
+                          }
                           onChange={(value) =>
-                            formik.setFieldValue("longTermCancellationPolicy", value)
+                            formik.setFieldValue(
+                              "longTermCancellationPolicy",
+                              value,
+                            )
                           }
                         >
                           <div className="flex items-center space-x-2">
@@ -373,14 +378,16 @@ export default function PolicySettings({ data }) {
                 }
               />
               <div
-                className={`h-6 w-12 bg-${formik.values.petsAllowed ? "black" : "gray-300"
-                  } rounded-full p-1 transition-transform duration-300`}
+                className={`h-6 w-12 bg-${
+                  formik.values.petsAllowed ? "black" : "gray-300"
+                } rounded-full p-1 transition-transform duration-300`}
               >
                 <div
-                  className={`h-4 w-4 transform rounded-full bg-white shadow-md ${formik.values.petsAllowed
-                    ? "translate-x-6"
-                    : "translate-x-0"
-                    }`}
+                  className={`h-4 w-4 transform rounded-full bg-white shadow-md ${
+                    formik.values.petsAllowed
+                      ? "translate-x-6"
+                      : "translate-x-0"
+                  }`}
                 ></div>
               </div>
             </label>
@@ -401,14 +408,16 @@ export default function PolicySettings({ data }) {
                 }
               />
               <div
-                className={`h-6 w-12 bg-${formik.values.eventsAllowed ? "black" : "gray-300"
-                  } rounded-full p-1 transition-transform duration-300`}
+                className={`h-6 w-12 bg-${
+                  formik.values.eventsAllowed ? "black" : "gray-300"
+                } rounded-full p-1 transition-transform duration-300`}
               >
                 <div
-                  className={`h-4 w-4 transform rounded-full bg-white shadow-md ${formik.values.eventsAllowed
-                    ? "translate-x-6"
-                    : "translate-x-0"
-                    }`}
+                  className={`h-4 w-4 transform rounded-full bg-white shadow-md ${
+                    formik.values.eventsAllowed
+                      ? "translate-x-6"
+                      : "translate-x-0"
+                  }`}
                 ></div>
               </div>
             </label>
@@ -429,14 +438,16 @@ export default function PolicySettings({ data }) {
                 }
               />
               <div
-                className={`h-6 w-12 bg-${formik.values.smokingAllowed ? "black" : "gray-300"
-                  } rounded-full p-1 transition-transform duration-300`}
+                className={`h-6 w-12 bg-${
+                  formik.values.smokingAllowed ? "black" : "gray-300"
+                } rounded-full p-1 transition-transform duration-300`}
               >
                 <div
-                  className={`h-4 w-4 transform rounded-full bg-white shadow-md ${formik.values.smokingAllowed
-                    ? "translate-x-6"
-                    : "translate-x-0"
-                    }`}
+                  className={`h-4 w-4 transform rounded-full bg-white shadow-md ${
+                    formik.values.smokingAllowed
+                      ? "translate-x-6"
+                      : "translate-x-0"
+                  }`}
                 ></div>
               </div>
             </label>
@@ -457,14 +468,16 @@ export default function PolicySettings({ data }) {
                 }
               />
               <div
-                className={`h-6 w-12 bg-${formik.values.photographyAllowed ? "black" : "gray-300"
-                  } rounded-full p-1 transition-transform duration-300`}
+                className={`h-6 w-12 bg-${
+                  formik.values.photographyAllowed ? "black" : "gray-300"
+                } rounded-full p-1 transition-transform duration-300`}
               >
                 <div
-                  className={`h-4 w-4 transform rounded-full bg-white shadow-md ${formik.values.photographyAllowed
-                    ? "translate-x-6"
-                    : "translate-x-0"
-                    }`}
+                  className={`h-4 w-4 transform rounded-full bg-white shadow-md ${
+                    formik.values.photographyAllowed
+                      ? "translate-x-6"
+                      : "translate-x-0"
+                  }`}
                 ></div>
               </div>
             </label>
@@ -512,18 +525,26 @@ export default function PolicySettings({ data }) {
 
           {/* Display form errors */}
           {formik.errors.quietHoursStart && formik.touched.quietHoursStart && (
-            <div className="text-red-500">{formik.errors.quietHoursStart}</div>
+            <div className="text-red-500">
+              {JSON.stringify(formik.errors.quietHoursStart)}
+            </div>
           )}
           {formik.errors.quietHoursEnd && formik.touched.quietHoursEnd && (
-            <div className="text-red-500">{formik.errors.quietHoursEnd}</div>
+            <div className="text-red-500">
+              {JSON.stringify(formik.errors.quietHoursEnd)}
+            </div>
           )}
 
           {/* Display form errors */}
           {formik.errors.quietHoursStart && formik.touched.quietHoursStart && (
-            <div className="text-red-500">{formik.errors.quietHoursStart}</div>
+            <div className="text-red-500">
+              {JSON.stringify(formik.errors.quietHoursStart)}
+            </div>
           )}
           {formik.errors.quietHoursEnd && formik.touched.quietHoursEnd && (
-            <div className="text-red-500">{formik.errors.quietHoursEnd}</div>
+            <div className="text-red-500">
+              {JSON.stringify(formik.errors.quietHoursEnd)}
+            </div>
           )}
           <hr />
 
@@ -534,13 +555,15 @@ export default function PolicySettings({ data }) {
             >
               Additional Rules
             </Label>
-            <div className="col-span-3 md:col-span-4 sm:col-span-5 col-start-1 md:col-start-1 sm:col-start-1 flex items-center">
+            <div className="col-span-3 col-start-1 flex items-center sm:col-span-5 sm:col-start-1 md:col-span-4 md:col-start-1">
               <WYSIWYGEditor formik={formik} field={"additionalRules"} />
             </div>
           </div>
           {/* Display form errors */}
           {formik.errors.additionalRules && formik.touched.additionalRules && (
-            <div className="text-red-500">{formik.errors.additionalRules}</div>
+            <div className="text-red-500">
+              {JSON.stringify(formik.errors.additionalRules)}
+            </div>
           )}
           <hr />
           <EditorSaveButton

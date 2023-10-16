@@ -66,7 +66,7 @@ export default function Location({ data }) {
 
         console.log("transformedValues: ", transformedValues);
 
-        const result = await updatePost(transformedValues);
+        const result = await updatePost(transformedValues as any);
         if (result) {
           // force a rerender
           console.log("Post updated successfully:", result);
@@ -138,24 +138,23 @@ export default function Location({ data }) {
                 <input
                   {...getInputProps({
                     placeholder: "Search for an address...",
-                    className: `pl-1 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.address && formik.errors.address
-                      ? "border-red-500"
-                      : ""
-                      }`,
+                    className: `pl-1 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                      formik.touched.address && formik.errors.address
+                        ? "border-red-500"
+                        : ""
+                    }`,
                   })}
                 />
                 <div>
                   {loading && <div>Loading...</div>}
-                  {suggestions.map((suggestion) => {
-                    // const className = suggestion.active
-                    //   ? "suggestion-item--active"
-                    //   : "suggestion-item";
+                  {suggestions.map((suggestion, index) => {
                     const className = suggestion.active
                       ? "suggestion-item--active cursor-pointer bg-gray-200"
                       : "suggestion-item cursor-pointer";
 
                     return (
                       <div
+                        key={index}
                         {...getSuggestionItemProps(suggestion, {
                           className,
                         })}
@@ -170,9 +169,10 @@ export default function Location({ data }) {
           </PlacesAutocomplete>
           {formik.touched.address && formik.errors.address && (
             <div className="mt-2 text-sm text-red-600">
-              {formik.errors.address}
+              {formik.errors.address.toString()}
             </div>
           )}
+
           <hr />
           <div className="mb-5 mt-5 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
             <Label

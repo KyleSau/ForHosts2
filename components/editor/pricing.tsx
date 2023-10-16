@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { updatePost, updatePropertyPriceInfo } from "@/lib/actions";
+import { updatePost } from "@/lib/actions";
 import TabTitle from "./tab-title";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
@@ -103,14 +103,14 @@ export default function Pricing({ data }: any) {
         },
       };
       console.log(transformedValues);
-      const result = await updatePost(transformedValues);
+      const result = await updatePost(transformedValues as any);
       if (result) {
         console.log("Post updated successfully:", result);
         setSubmitted(true);
         setIsLoading(false);
       }
-      if (result?.error) {
-        console.error(result.error);
+      if (!result) {
+        console.error("errpr");
       } else {
         console.log(values);
       }
@@ -162,7 +162,9 @@ export default function Pricing({ data }: any) {
             </div>
           </div>
           {formik.touched.price && formik.errors.price ? (
-            <div className="text-red-600">{formik.errors.price}</div>
+            <div className="text-red-600">
+              {JSON.stringify(formik.errors.price)}
+            </div>
           ) : null}
           <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
             <Label
@@ -187,7 +189,9 @@ export default function Pricing({ data }: any) {
             </div>
           </div>
           {formik.touched.weekendPrice && formik.errors.weekendPrice ? (
-            <div className="text-red-600">{formik.errors.weekendPrice}</div>
+            <div className="text-red-600">
+              {JSON.stringify(formik.errors.weekendPrice)}
+            </div>
           ) : null}
 
           <TabTitle title="Discounts" desc="" />
@@ -263,7 +267,9 @@ export default function Pricing({ data }: any) {
             </div>
           </div>
           {formik.touched.cleaningFee && formik.errors.cleaningFee ? (
-            <div className="text-red-600">{formik.errors.cleaningFee}</div>
+            <div className="text-red-600">
+              {JSON.stringify(formik.errors.cleaningFee)}
+            </div>
           ) : null}
 
           <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
@@ -289,7 +295,9 @@ export default function Pricing({ data }: any) {
             </div>
           </div>
           {formik.touched.petFee && formik.errors.petFee ? (
-            <div className="text-red-600">{formik.errors.petFee}</div>
+            <div className="text-red-600">
+              {JSON.stringify(formik.errors.petFee)}
+            </div>
           ) : null}
           <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
             <Label
@@ -314,7 +322,9 @@ export default function Pricing({ data }: any) {
             </div>
           </div>
           {formik.touched.securityDeposit && formik.errors.securityDeposit ? (
-            <div className="text-red-600">{formik.errors.securityDeposit}</div>
+            <div className="text-red-600">
+              {JSON.stringify(formik.errors.securityDeposit)}
+            </div>
           ) : null}
 
           {/* <AmenityEditor /> */}
