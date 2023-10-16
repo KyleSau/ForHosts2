@@ -28,10 +28,13 @@ export default async function PostPage({ params }: { params: { id: string } }) {
     notFound();
   }
 
-  return <div>
-    <PhotoManager postData={data} />
-    <PhotoGrid images={data.images} postId={data.id} siteId={data.siteId!} />
-  </div>
+  return (
+    <div>
+      commented
+      {/* <PhotoManager postData={data} />
+    <PhotoGrid images={data.images} postId={data.id} siteId={data.siteId!} /> */}
+    </div>
+  );
 
   // return <Editor post={data} />;
 }
