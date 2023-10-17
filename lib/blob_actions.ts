@@ -2,30 +2,23 @@
 
 import { getSession } from "@/lib/auth";
 import { list, del, BlobResult } from '@vercel/blob';
-import { getBlurDataURL } from "./utils";
 import { PrismaClient } from "@prisma/client";
-import { promiseHooks } from "v8";
 const prisma = new PrismaClient();
 
 export const uploadBlobMetadata = async (blobResult: BlobResult, postId: string, siteId: string) => {
-  console.log("entered uploadBlobMetadata");
   try {
-    console.log("uploadBlobMetadata: postId: ", postId);
-    console.log("uploadBlobMetadata: siteId: ", siteId);
-    console.log("blobSize: ", blobResult.size);
-    console.log("size type: ", typeof blobResult.size);
 
     const session = await getSession();
 
+    if (!session?.user.id) {
+      throw new Error('user not authenticated');
+    }
     // transaction:
     const images = await prisma.image.findMany({
       where: {
         postId: postId
       }
     });
-
-    const idx = images.length;
-    console.log('idx: ', idx);
 
     // Run any logic after the file upload completed
     // const { userId } = JSON.parse(metadata);
@@ -160,53 +153,120 @@ export const deleteBlobFromStore = async (urlToDelete: string) => {
 };
 
 //slotIdx is the destination idx
-export async function swapBlobMetadata(postId: string, slotIdx: number, imageId: string) {
-  console.log("swapBlobMetadata entered: postId: ", postId, "    slotIdx: ", slotIdx, "   imageId: ", imageId);
-  if (!postId || slotIdx === undefined || !imageId) {
-    console.log('swapping blob meta data was missing server action arguments');
-    return;
+// export async function swapBlobMetadata(postId: string, oldIndex: number, newIndex: number) {
+// // console.log("swapBlobMetadata entered: postId: ", postId, "    slotIdx: ", oldIndex, "   imageId: ", imageId);
+
+// if (!postId || oldIndex === undefined || newIndex === undefined) {
+//   console.log('swapping blob meta data was missing server action arguments');
+//   return;
+// }
+
+// if (!currentImage) {
+//   throw new Error(`Image at orderIdx ${oldIndex} not found.`);
+// }
+
+// const currentImage = prisma.image.findFirst({
+//   where: { postId: postId, orderIndex: oldIndex }
+// });
+
+// // Retrieve prevImage using the oldIndex and postId
+// const prevImage = await prisma.image.findFirst({
+//   where: {
+//     postId: postId,
+//     orderIndex: oldIndex,
+//   }
+// });
+
+// if (!prevImage) {
+//   throw new Error(`Image with postId ${postId} and orderIndex ${slotIdx} not found.`);
+// }
+
+// // Use Prisma's transaction to ensure both updates happen or none of them does
+// await prisma.$transaction([
+//   prisma.image.update({
+//     where: { id: currentImage.id },
+//     data: { orderIndex: slotIdx }
+//   }),
+//   prisma.image.update({
+//     where: { id: prevImage.id },
+//     data: { orderIndex: currentImage.orderIndex }
+//   }),
+// ]);
+
+// return {
+//   swappedImage: currentImage,
+//   replacedImage: prevImage
+// };
+// }
+
+// i need to finish this
+export async function shiftBlobMetadata(postId: string, oldIndex: number, newIndex: number) {
+  const images = prisma.image.findMany({ where: { postId: postId }, orderBy: { orderIndex: 'asc' } });
+  let tmp = [];
+  if (oldIndex < newIndex)
+    tmp = (await images).slice(oldIndex, newIndex);
+  else
+    tmp = (await images).slice(newIndex, oldIndex);
+
+  // ignore the first
+  for (const t of tmp) {
+    prisma.image.update
   }
 
-  // Retrieve currentImage using its imageId and get its orderIndex
-  const currentImage = await prisma.image.findUnique({
-    where: {
-      id: imageId
-    }
-  });
 
-  if (!currentImage) {
-    throw new Error(`Image with ID ${imageId} not found.`);
-  }
+  // // Define the operations within an array
+  // const operations = [];
 
-  // Retrieve prevImage using the slotIdx and postId
-  const prevImage = await prisma.image.findFirst({
-    where: {
-      postId: postId,
-      orderIndex: slotIdx,
-    }
-  });
+  // // Get all images for the given postId
+  // const images = await prisma.image.findMany({
+  //   where: { postId: postId },
+  //   orderBy: { orderIndex: 'asc' },
+  // });
 
-  if (!prevImage) {
-    throw new Error(`Image with postId ${postId} and orderIndex ${slotIdx} not found.`);
-  }
+  // console.log('length: ', images.length);
+  // console.log('oldIdx: ', oldIndex);
+  // console.log('newIdx: ', newIndex);
 
-  // Use Prisma's transaction to ensure both updates happen or none of them does
-  await prisma.$transaction([
-    prisma.image.update({
-      where: { id: currentImage.id },
-      data: { orderIndex: slotIdx }
-    }),
-    prisma.image.update({
-      where: { id: prevImage.id },
-      data: { orderIndex: currentImage.orderIndex }
-    }),
-  ]);
+  // images.forEach((img) => (console.log('orderIdx: ', img.orderIndex)))
 
-  return {
-    swappedImage: currentImage,
-    replacedImage: prevImage
-  };
+  // // Find the image to be moved
+  // const image = images.find(img => img.orderIndex === oldIndex);
+
+  // if (!image) {
+  //   throw new Error('Image not found');
+  // }
+
+  // // Update the orderIndex of the image to be moved
+  // operations.push(
+  //   prisma.image.update({
+  //     where: { id: image.id },
+  //     data: { orderIndex: newIndex },
+  //   })
+  // );
+
+  // // Update the orderIndex of the other images
+  // images.forEach(img => {
+  //   if (img.orderIndex > oldIndex && img.orderIndex <= newIndex) {
+  //     operations.push(
+  //       prisma.image.update({
+  //         where: { id: img.id },
+  //         data: { orderIndex: img.orderIndex - 1 },
+  //       })
+  //     );
+  //   } else if (img.orderIndex >= newIndex && img.orderIndex < oldIndex) {
+  //     operations.push(
+  //       prisma.image.update({
+  //         where: { id: img.id },
+  //         data: { orderIndex: img.orderIndex + 1 },
+  //       })
+  //     );
+  //   }
+  // });
+
+  // // Execute the operations within a transaction
+  // await prisma.$transaction(operations);
 }
+
 
 /**
  * 

@@ -1,9 +1,8 @@
 import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
-import { PhotoManager } from "@/components/editor/photo-manager/photo-manager";
-import PhotoGrid from "@/components/editor/photo-manager/photo-grid";
-// import Editor from "@/components/editor";
+import asdfasdfa from "@/components/editor/photo-manager/asdfadfa";
+import PhotoManager from "@/components/editor/photo-manager/photo-manager";
 
 export default async function PostPage({ params }: { params: { id: string } }) {
   const session = await getSession();
@@ -29,8 +28,8 @@ export default async function PostPage({ params }: { params: { id: string } }) {
   }
 
   return <div>
-    <PhotoManager postData={data} />
-    <PhotoGrid images={data.images} postId={data.id} siteId={data.siteId!} />
+    <PhotoManager images={data.images} postId={data.id} siteId={data.siteId!} />
+    {/* <asdfasdfa images={data.images} postId={data.id} siteId={data.siteId!} /> */}
   </div>
 
   // return <Editor post={data} />;

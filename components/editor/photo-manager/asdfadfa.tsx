@@ -19,7 +19,7 @@ import PhotoDeleteModal from "./photo-delete-modal";
 import { FILE_CONSTS } from "@/lib/constants";
 import { uploadBlobMetadata } from "@/lib/blob_actions";
 import { put } from "@vercel/blob";
-import BlobUploader from "./blob-uploader";
+import PhotoUploader from "./photo-uploader";
 const CustomComponent = forwardRef(function CustomComponent(props, ref) {
   return (
     <div
@@ -59,27 +59,27 @@ interface MappedImage {
   isUploading: boolean;
 }
 
-export default function PhotoGrid({ images, postId, siteId }: PhotoGridProps) {
+export default function asdfasdfa({ images, postId, siteId }: PhotoGridProps) {
   const [fileDataObjects, setFileDataObjects] = useState<FileDataObject[]>([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [coverPhotoID, setCoverPhotoID] = useState(0);
   const [mappedImages, setMappedImages] = useState<MappedImage[]>([]);
 
-  useEffect(() => {
-    const newMappedImages = images.map((image, i) => {
-      console.log('N: ', JSON.stringify(image));
-      return {
-        id: image.orderIndex,  // Assuming sortIdx is the value you want to use for id
-        name: i.toString(),
-        url: image.url,
-        caption: image.caption,
-        isCoverPhoto: i == 0,
-        inBlobStore: true,
-        isUploading: false,
-      };
-    });
-    setMappedImages(newMappedImages);
-  }, [images]);
+  // useEffect(() => {
+  //   const newMappedImages = images.map((image, i) => {
+  //     console.log('N: ', JSON.stringify(image));
+  //     return {
+  //       id: image.orderIndex,  // Assuming sortIdx is the value you want to use for id
+  //       name: i.toString(),
+  //       url: image.url,
+  //       caption: image.caption,
+  //       isCoverPhoto: i == 0,
+  //       inBlobStore: true,
+  //       isUploading: false,
+  //     };
+  //   });
+  //   setMappedImages(newMappedImages);
+  // }, [images]);
 
   const uploadCard = {
     id: "upload-card",
@@ -97,7 +97,7 @@ export default function PhotoGrid({ images, postId, siteId }: PhotoGridProps) {
       const temp = newState[index];
       newState[index] = newState[index + 1];
       newState[index + 1] = temp;
-      // setDummyData(newState);
+
       setMappedImages(newState);
     } else {
       toast.error("You can't move the image forward any further!");
@@ -145,32 +145,6 @@ export default function PhotoGrid({ images, postId, siteId }: PhotoGridProps) {
     const newFiles = Array.from(event.target.files ?? [])
       .filter(file => PERMITTED_TYPES.includes(file.type));
 
-    /*const initialBlobDataArray = newFiles.map((file, index) => {
-      const localBlobUrl = URL.createObjectURL(file);
-      return {
-        // file,
-        localBlobUrl,
-        inBlobStore: false,
-        orderIndex: fileDataObjects.length + index,
-        isUploading: true,
-      };
-    });
-
-    // Immediately update the state to display all selected images with spinners
-    // setFileDataObjects(prevArray => [...prevArray, ...initialBlobDataArray]);
-    const initialMappedImagesArray = newFiles.map((file, index) => ({
-      id: fileDataObjects.length + index,
-      name: (fileDataObjects.length + index).toString(),
-      url: URL.createObjectURL(file),
-      caption: '',
-      isCoverPhoto: false,
-      inBlobStore: false,
-      isUploading: true,
-    }));
-
-    // Update the state to display all selected images with spinners
-    setFileDataObjects(prevArray => [...prevArray, ...initialBlobDataArray]);
-    setMappedImages(prevArray => [...prevArray, ...initialMappedImagesArray]);*/
     const initialBlobDataArray = newFiles.map((file, index) => {
       const localBlobUrl = URL.createObjectURL(file);
       return {
@@ -216,7 +190,7 @@ export default function PhotoGrid({ images, postId, siteId }: PhotoGridProps) {
         handleBlobUploadUrl: '/api/upload'
       });
 
-      const updatedMetadata = await uploadBlobMetadata(blobResult, postId, siteId);
+      const updatedMetadata = await uploadBlobMetadata(blobResult, arrayIndex, postId, siteId);
 
       // Update the state for this specific blob data
       setFileDataObjects(prevArray => {
@@ -272,7 +246,7 @@ export default function PhotoGrid({ images, postId, siteId }: PhotoGridProps) {
 
   return (
     <div>
-      <BlobUploader onFileUpload={handleFileUpload} />
+      {/* <BlobUploader onFileUpload={handleFileUpload} /> */}
       <div className="w-auto border p-10">
         <h1 className=" text-start text-4xl font-bold">Photo Manager</h1>
         <h2 className="text-md mb-4 text-start text-gray-500">
@@ -390,13 +364,14 @@ export default function PhotoGrid({ images, postId, siteId }: PhotoGridProps) {
                       {" "}
                       Drag your files here or click in this area.
                     </p>
-                    <input
+                    <PhotoUploader onFileUpload={handleFileUpload} />
+                    {/* <input
                       accept="image/png, image/jpeg"
                       type="file"
                       title="Drag or click this area to upload files"
                       multiple
                       className="absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-none"
-                    />
+                    /> */}
                   </div>
                 </div>
               </div>

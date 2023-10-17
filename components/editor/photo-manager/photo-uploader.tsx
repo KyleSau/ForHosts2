@@ -5,9 +5,9 @@ interface UploaderProps {
     onFileUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const BlobUploader: FC<UploaderProps> = ({ onFileUpload }) => {
+const PhotoUploader: FC<UploaderProps> = ({ onFileUpload }) => {
     return (
-        <div className="uploader">
+        <div className="uploader" key="photo-uploader">
             <input
                 type="file"
                 multiple
@@ -22,4 +22,4 @@ const BlobUploader: FC<UploaderProps> = ({ onFileUpload }) => {
     );
 };
 
-export default BlobUploader;
+export default PhotoUploader;
