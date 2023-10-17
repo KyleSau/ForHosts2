@@ -40,7 +40,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ imageBlurhash: imageBlurhas
               className="h-full w-full object-cover"
               placeholder="blur"
               blurDataURL={imageBlurhashes[0] ?? placeholderBlurhash}
-              src={images[0] ?? placeholderImage}
+              src={images[0].url ?? placeholderImage}
             />
           </div>
           <div className="relative ml-4 grid h-full w-2/3 grid-cols-2 gap-2">
@@ -58,7 +58,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ imageBlurhash: imageBlurhas
                   className="h-full w-full object-cover"
                   placeholder="blur"
                   blurDataURL={imageBlurhashes[index] ?? placeholderBlurhash}
-                  src={imgSrc}
+                  src={imgSrc.url}
                 />
               </div>
             ))}
