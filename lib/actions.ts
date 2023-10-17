@@ -82,6 +82,7 @@ export const createSite = async (formData: FormData) => {
     }
   }
 };
+
 export const getBedrooms = async (postId: string) => {
   const post = await prisma.post.findUnique({
     where: { id: postId },
@@ -97,7 +98,6 @@ export const getBedrooms = async (postId: string) => {
       },
     },
   });
-
   return post?.propertyDetails?.bedrooms || [];
 };
 
@@ -330,6 +330,7 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
   return response;
 });
 
+// we need to break this update function up
 export const updatePost = async (data: Post) => {
   console.log("data: " + JSON.stringify(data));
   const session = await getSession();
@@ -370,6 +371,9 @@ export const updatePost = async (data: Post) => {
         description: data.description,
       },
     });
+
+    // const locationId = data.locationId!;
+    // const location = prisma.location.findUnique({ where: { id: locationId } });
 
     // LocationUpdateRequest
     if (data.location) {
@@ -486,6 +490,7 @@ export const updatePost = async (data: Post) => {
     return { error: error.message };
   }
 };
+
 export const getPosts = async (
   userId: string,
   siteId: string | undefined,
@@ -603,7 +608,7 @@ export const updatePostMetadata = withPostAuth(
       // if the site has a custom domain, we need to revalidate those tags too
       post.site?.customDomain &&
         (await revalidateTag(`${post.site?.customDomain}-posts`),
-        await revalidateTag(`${post.site?.customDomain}-${post.slug}`));
+          await revalidateTag(`${post.site?.customDomain}-${post.slug}`));
 
       return response;
     } catch (error: any) {
