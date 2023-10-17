@@ -18,6 +18,7 @@ import AmenitiesPage from "../amenities/amenities-page";
 import WhatToKnow from "../what-to-know";
 import SleepingQuarters from "../users-sites/sleeping-quarters";
 import Featured from "../users-sites/featured";
+import { placeholderBlurhash } from "@/lib/utils";
 // import MapWrapper from "../editor/map-wrapper";
 const Map = dynamic(() => import("@/components/editor/map-wrapper"), {
   loading: () => <p>loading...</p>,
@@ -37,8 +38,8 @@ export default function DashPage({ data }) {
       <div className="grid-rows-10 container mb-5 pb-5 pt-5 grid grid-cols-1 rounded-2xl bg-gradient-to-b from-gray-50 via-gray-100 to-gray-50 shadow-[0_3px_10px_rgb(0,0,0,0.2)] md:grid-cols-5">
         <div className="col-span-1 m-2 justify-center md:col-span-full ">
           <ImageGallery
-            images={[data.site.image]}
-            imageBlurhash={[data.site.imageBlurhash]}
+            images={data.images}
+            imageBlurhash={[placeholderBlurhash]}
           />
         </div>
 
