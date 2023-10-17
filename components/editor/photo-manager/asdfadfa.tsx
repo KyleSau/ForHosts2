@@ -17,9 +17,22 @@ import Modal from "@/components/modal";
 import { toast } from "sonner";
 import PhotoDeleteModal from "./photo-delete-modal";
 import { FILE_CONSTS } from "@/lib/constants";
-import { uploadBlobMetadata } from "@/lib/blob_actions";
-import { put } from "@vercel/blob";
-import PhotoUploader from "./photo-uploader";
+import {
+  uploadBlobMetadata, 
+  listAllBlobsInStore, 
+  deleteBlobFromStore, 
+  deleteBlobMetadata,
+  deleteAndReindex,
+  listAllBlobMetadata,
+  updateBlobMetadata,
+  // swapBlobMetadata
+} from '@/lib/blob_actions';
+import { put, type BlobResult } from '@vercel/blob'; // test
+// import BlobUploader from "./blob-uploader";
+
+//DEV MODE
+const DEBUG_TOGGLE = true;
+
 const CustomComponent = forwardRef(function CustomComponent(props, ref) {
   return (
     <div
@@ -49,37 +62,44 @@ interface FileDataObject extends Partial<ImagePrismaSchema> {
   isUploading?: boolean;
 }
 
-interface MappedImage {
-  id: number;
-  name: string;
-  url: string;
-  caption: string | null;
-  isCoverPhoto: boolean;
-  inBlobStore: boolean;
-  isUploading: boolean;
-}
+// interface MappedImage {
+//   id: number;
+//   name: string;
+//   url: string;
+//   caption: string | null;
+//   isCoverPhoto: boolean;
+//   inBlobStore: boolean;
+//   isUploading: boolean;
+// }
 
-export default function asdfasdfa({ images, postId, siteId }: PhotoGridProps) {
+export default function PhotoGrid({ images, postId, siteId }: PhotoGridProps) {
+
+  console.log("images (top of PhotoGrid): ", images);
+
+  const PERMITTED_FILE_TYPES = new Set([FILE_CONSTS.BMP, FILE_CONSTS.JPEG, FILE_CONSTS.PNG]);
   const [fileDataObjects, setFileDataObjects] = useState<FileDataObject[]>([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [coverPhotoID, setCoverPhotoID] = useState(0);
-  const [mappedImages, setMappedImages] = useState<MappedImage[]>([]);
+  // const [mappedImages, setMappedImages] = useState<MappedImage[]>([]);
 
-  // useEffect(() => {
-  //   const newMappedImages = images.map((image, i) => {
-  //     console.log('N: ', JSON.stringify(image));
-  //     return {
-  //       id: image.orderIndex,  // Assuming sortIdx is the value you want to use for id
-  //       name: i.toString(),
-  //       url: image.url,
-  //       caption: image.caption,
-  //       isCoverPhoto: i == 0,
-  //       inBlobStore: true,
-  //       isUploading: false,
-  //     };
-  //   });
-  //   setMappedImages(newMappedImages);
-  // }, [images]);
+  //TEST
+  const [blobsFromStoreTest, setBlobsFromStoreTest] = useState<BlobResult[]>([]);
+  const [blobMetadataTest, setBlobMetadataTest] = useState<ImagePrismaSchema[]>([]);
+
+  useEffect(() => {
+    const currentFileDataObjects = images.map(
+      (blobMetadata: any & { post: any | null }) => {
+        const fileDataObject: FileDataObject = {
+          inBlobStore: true,
+          isUploading: false,
+          ...blobMetadata
+        }
+        return fileDataObject;
+      }
+    );
+    
+    setFileDataObjects(currentFileDataObjects);
+  }, [images]);
 
   const uploadCard = {
     id: "upload-card",
@@ -90,15 +110,14 @@ export default function asdfasdfa({ images, postId, siteId }: PhotoGridProps) {
     console.log(e.oldIndex + " -> " + e.newIndex);
   };
 
-
   const moveForward = (index: any) => {
-    if (index < mappedImages.length - 1) {
-      const newState = [...mappedImages];
+    if (index < fileDataObjects.length - 1) {
+      const newState = [...fileDataObjects];
       const temp = newState[index];
       newState[index] = newState[index + 1];
       newState[index + 1] = temp;
-
-      setMappedImages(newState);
+      // setDummyData(newState);
+      setFileDataObjects(newState);
     } else {
       toast.error("You can't move the image forward any further!");
     }
@@ -106,12 +125,12 @@ export default function asdfasdfa({ images, postId, siteId }: PhotoGridProps) {
 
   const moveBackward = (index: any) => {
     if (index > 0) {
-      const newState = [...mappedImages];
+      const newState = [...fileDataObjects];
       const temp = newState[index];
       newState[index] = newState[index - 1];
       newState[index - 1] = temp;
       // setDummyData(newState);
-      setMappedImages(newState);
+      setFileDataObjects(newState);
     } else {
       toast.error("You can't move the image back any further!");
     }
@@ -130,22 +149,22 @@ export default function asdfasdfa({ images, postId, siteId }: PhotoGridProps) {
   };
 
   const makeCoverPhoto = (index: any) => {
-    const newState = mappedImages.map((item, i) => ({
+    const newState = fileDataObjects.map((item, i) => ({
       ...item,
       isCoverPhoto: i === index,
     }));
-    setMappedImages(newState);
+    setFileDataObjects(newState);
     // setDummyData(newState);
-    setCoverPhotoID(mappedImages[index].id);
+    setCoverPhotoID(index);
   };
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const PERMITTED_TYPES = [FILE_CONSTS.FILE, FILE_CONSTS.JPEG, FILE_CONSTS.PNG];
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("handleFileUpload called");
 
     const newFiles = Array.from(event.target.files ?? [])
-      .filter(file => PERMITTED_TYPES.includes(file.type));
+      .filter(file => PERMITTED_FILE_TYPES.has(file.type));
 
-    const initialBlobDataArray = newFiles.map((file, index) => {
+    const newFileDataObjects: FileDataObject[] = newFiles.map((file, index) => {
       const localBlobUrl = URL.createObjectURL(file);
       return {
         file,
@@ -156,95 +175,152 @@ export default function asdfasdfa({ images, postId, siteId }: PhotoGridProps) {
       };
     });
 
-    const updatedFileDataObjects = [...fileDataObjects, ...initialBlobDataArray];
-
-    const initialMappedImagesArray = newFiles.map((file, index) => ({
-      id: updatedFileDataObjects.length + index,
-      name: (updatedFileDataObjects.length + index).toString(),
-      url: URL.createObjectURL(file),
-      caption: '',
-      isCoverPhoto: false,
-      inBlobStore: false,
-      isUploading: true,
-    }));
-
+    const updatedFileDataObjects = [...fileDataObjects, ...newFileDataObjects];
     setFileDataObjects(updatedFileDataObjects);
-    setMappedImages(prevArray => [...prevArray, ...initialMappedImagesArray]);
 
-    // Define an async function to handle the upload of a single file
-    const uploadSingleFile = async (fdo: FileDataObject, arrayIndex: number) => {
+    for (let fdoIdx: number = 0; fdoIdx < newFileDataObjects.length; fdoIdx++) {
+      const fdoToUpload: FileDataObject = newFileDataObjects[fdoIdx];
+      const fileToUpload = fdoToUpload?.file;
+      const fileOrderIndex = fdoToUpload?.orderIndex;
+      
+      if (fileToUpload && fileOrderIndex !== undefined) {
+        // console.log("file.name: ", file.name);
+        // Using this: https://vercel.com/docs/storage/vercel-blob/quickstart#browser-uploads 
+        const blobResult = await put(fileToUpload.name, fileToUpload, {
+          access: 'public',
+          handleBlobUploadUrl: '/api/upload'
+        });
 
-      // try {
-      const file = fdo.file;
-
-      if (!file)
-        return;
-
-      const pathname = file.name;
-
-      console.log('pathname: ', pathname);
-      console.log('file: ', file);
-
-      const blobResult = await put(pathname, file, {
-        access: 'public',
-        handleBlobUploadUrl: '/api/upload'
-      });
-
-      const updatedMetadata = await uploadBlobMetadata(blobResult, arrayIndex, postId, siteId);
-
-      // Update the state for this specific blob data
-      setFileDataObjects(prevArray => {
-        const updatedBlobData = {
-          ...fdo,
-          ...updatedMetadata,
-          inBlobStore: true,
-          url: blobResult.url,
-          isUploading: false,
-        };
-
-        console.log('id: is it a guid? ', updatedBlobData.id);
-        console.log('orderIdx: ', updatedBlobData.orderIndex);
-        debugger;
-        // here: setMappedImages
-        const newArray = [...prevArray];
-        newArray[arrayIndex] = updatedBlobData;
-
-        const updatedMappedImages = [...mappedImages, {
-          id: updatedBlobData.orderIndex,
-          name: newArray.length.toString(),
-          url: updatedBlobData.url,
-          caption: updatedBlobData.caption,
-          isCoverPhoto: newArray.length === 1,  // Assuming the first image is the cover photo
+        const uploadBlobMetadataResponse = await uploadBlobMetadata(blobResult, fileOrderIndex, postId, siteId);
+        // console.log("uploadBlobMetadataResponse: fdoIdx: ", fdoIdx, "    responseValue: ", uploadBlobMetadataResponse);
+        const newUploadedFdo: FileDataObject = {
           inBlobStore: true,
           isUploading: false,
-        }];
+          ...uploadBlobMetadataResponse
+        }
+        
+        updatedFileDataObjects[fileOrderIndex] = newUploadedFdo;
+        setFileDataObjects(updatedFileDataObjects); // this enables async spinner for each image 
+      }
+    }
+  };
 
-        setMappedImages(updatedMappedImages);
-        return newArray;
-      });
+  // // Define an async function to handle the upload of a single file
+  // const uploadSingleFile = async (fdo: FileDataObject, arrayIndex: number) => {
 
-      // } catch (error) {
-      //   console.error('Error uploading file:', error);
+  //   // try {
+  //   const file = fdo.file;
+  //   console.log('file: ', file);
 
-      //   setBlobDataArray(prevArray => {
-      //     const updatedBlobData = {
-      //       ...blobData,
-      //       isUploading: false,
-      //     };
-      //     const newArray = [...prevArray];
-      //     newArray[arrayIndex] = updatedBlobData;
-      //     return newArray;
-      //   });
-      // }
-    };
+  //   if (!file)
+  //     return;
 
-    initialBlobDataArray.forEach((fdo, index) => {
-      const arrayIndex = fileDataObjects.length + index;
-      uploadSingleFile(fdo, arrayIndex);
+  //   const pathname = file.name;
+  //   console.log('pathname: ', pathname);
+
+  //   const blobResult = await put(pathname, file, {
+  //     access: 'public',
+  //     handleBlobUploadUrl: '/api/upload'
+  //   });
+
+  //   const uploadedMetadata = await uploadBlobMetadata(blobResult, postId, siteId);
+
+  //   // Update the state for this specific blob data
+  //   setFileDataObjects(prevFdos => {
+  //     const updatedBlobData = {
+  //       ...fdo,
+  //       ...uploadedMetadata,
+  //       inBlobStore: true,
+  //       url: blobResult.url,
+  //       isUploading: false,
+  //     };
+
+  //     console.log('id: is it a guid? ', updatedBlobData.id);
+  //     console.log('orderIdx: ', updatedBlobData.orderIndex);
+
+  //     const newFdos = [...prevFdos];
+  //     newFdos[arrayIndex] = updatedBlobData;
+  //     return newFdos;
+  //   });
+  // };
+
+
+  //TEST
+  const handleListAllblobsInStore = async () => {
+    console.log("[TEST] handleListAllblobsInStore called");
+    const blobsInStore = await listAllBlobsInStore();
+    console.log("listCurrentBlobsInStore: blobsInStore: ", blobsInStore);
+    setBlobsFromStoreTest(blobsInStore);
+  };
+
+  //TEST
+  const handlePurgeAllBlobsInStore = async () => {
+    console.log("[TEST] handlePurgeAllBlobsInStore called");
+    blobsFromStoreTest.forEach((br: BlobResult) => {
+      if (br.url) {
+        const url = br.url;
+        const response = deleteBlobFromStore(url);
+        response.then((responseJson: any) => {
+          console.log("handlePurgeAllBlobsInStore responseJson: ", responseJson);
+        });
+      }
     });
   };
 
-  return (
+  //TEST
+  const printOutData = async () => {
+    console.log("[TEST] printOutData called");
+    console.log("fileDataObjects: ", fileDataObjects);
+  }
+
+  //TEST
+  const handleListBlobMetadata = async () => {
+    console.log("[TEST] handleListBlobMetadata called");
+    const allBlobMetadata = await listAllBlobMetadata();
+    console.log("allBlobMetadata: ", allBlobMetadata);
+    setBlobMetadataTest([...allBlobMetadata]);
+  };
+
+  //TEST
+  const handlePurgeAllBlobMetadata = async () => {
+    console.log("[TEST] handlePurgeAllBlobMetadata entered");
+    blobMetadataTest.forEach((imgObj: ImagePrismaSchema) => {
+      const response = deleteBlobMetadata(imgObj.id);
+      // console.log("response: ", response);
+      response.then((value: ImagePrismaSchema) => {
+        // console.log("value deleted: ", value);
+      });
+    })
+  };
+
+  //TEST
+  // const uploadFilesToBlobStoreAndMetadataToDB = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  //   // console.log("uploadFilesToBlobStoreAndMetadataToDB entered");
+  //   // console.log("event: ", event);
+  //   event.preventDefault();
+  //   const uploadPromiseResponse = await uploadFileDataObjects(fileDataObjects);
+  //   // console.log("uploadPromiseResponse: ", uploadPromiseResponse);
+  //   setFileDataObjects(uploadPromiseResponse as FileDataObject[]);
+  // };
+
+  return (<>
+    { DEBUG_TOGGLE &&
+      <div>
+        <p>
+          {/* <button type="submit" className='border border-black' onClick={(event) => uploadFilesToBlobStoreAndMetadataToDB(event)}>Upload Pics to Blob Store</button> */}
+          &nbsp;
+          <button type="submit" className='border border-black' onClick={printOutData}>Print Local Data to Console</button>
+        </p>
+        <p>
+          <button type="submit" className='border border-black' onClick={handleListBlobMetadata}>List All Blob Metadata</button>
+          <button type="submit" className='border border-black' onClick={handlePurgeAllBlobMetadata}>Purge All Blob Metadata</button>
+          &nbsp;
+          <button type="submit" className='border border-black' onClick={handleListAllblobsInStore}>List All Blobs In Store</button>
+          <button type="submit" className='border border-black' onClick={handlePurgeAllBlobsInStore}>Purge All Blobs In Store</button>
+        </p>
+      </div>
+    }
+
     <div>
       {/* <BlobUploader onFileUpload={handleFileUpload} /> */}
       <div className="w-auto border p-10">
@@ -256,18 +332,18 @@ export default function asdfasdfa({ images, postId, siteId }: PhotoGridProps) {
         <div className="flex justify-start gap-8">
           <ReactSortable
             tag={CustomComponent}
-            list={mappedImages}
-            setList={setMappedImages}
+            list={fileDataObjects}
+            setList={setFileDataObjects}
             onEnd={onDragEnd}
           >
-            {mappedImages.map((image, index) => (
+            {fileDataObjects.map((fdo, index) => (
               <div
                 className=" w-full border"
-                key={image.id}
+                key={fdo.id}
               >
                 <div className="relative">
                   <div style={{ position: "relative" }}>
-                    {image.isUploading && !image.inBlobStore ? (
+                    {fdo.isUploading && !fdo.inBlobStore ? (
                       <button type="button" className="z-10">
                         <Loader2 className="animate-spin" />
                       </button>
@@ -303,27 +379,27 @@ export default function asdfasdfa({ images, postId, siteId }: PhotoGridProps) {
                             Move Backward
                           </DropdownMenuCheckboxItem>
                           <DropdownMenuCheckboxItem
-                            onClick={() => toggleModal(image)}
+                            onClick={() => toggleModal(fdo)}
                           >
                             Delete
                           </DropdownMenuCheckboxItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     )}
-                    {image.isCoverPhoto && coverPhotoID !== null && (
+                    {/* {fdo.isCoverPhoto && coverPhotoID !== null && (
                       <div className="absolute left-2 top-2 z-10">
                         <Star size={32} className=" text-yellow-500" />
                       </div>
-                    )}
+                    )} */}
                     <div className="flex justify-center ">
                       <BlurImage
-                        alt={image.url ?? ""}
+                        alt={fdo.url ?? ""}
                         blurDataURL={placeholderBlurhash}
                         className="object-fit h-[300px] w-full pb-1"
                         width={200}
                         height={200}
                         placeholder="blur"
-                        src={image.url ?? "/placeholder.png"}
+                        src={fdo.url ?? "/placeholder.png"}
                       />
                     </div>
                   </div>
@@ -389,5 +465,5 @@ export default function asdfasdfa({ images, postId, siteId }: PhotoGridProps) {
         )}
       </div>
     </div>
-  );
+    </>);
 }

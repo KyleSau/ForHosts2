@@ -23,13 +23,18 @@ export default async function PostPage({ params }: { params: { id: string } }) {
       },
     },
   });
+
   if (!data || data.userId !== session.user.id) {
     notFound();
   }
 
+  console.log("data: ", data);
+
   return <div>
     <PhotoManager images={data.images} postId={data.id} siteId={data.siteId!} />
     {/* <asdfasdfa images={data.images} postId={data.id} siteId={data.siteId!} /> */}
+    {/* <PhotoManager postData={data} /> */}
+    <PhotoGrid images={data.images} postId={data.id} siteId={data.siteId!} />
   </div>
 
   // return <Editor post={data} />;

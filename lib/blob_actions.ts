@@ -5,6 +5,8 @@ import { list, del, BlobResult } from '@vercel/blob';
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
+export const uploadBlobMetadata = async (blobResult: BlobResult, orderIndex: number, postId: string, siteId: string) => {
+  console.log("entered uploadBlobMetadata");
 export const uploadBlobMetadata = async (blobResult: BlobResult, postId: string, siteId: string) => {
   try {
 
@@ -29,7 +31,7 @@ export const uploadBlobMetadata = async (blobResult: BlobResult, postId: string,
         uploadedAt: blobResult.uploadedAt,
         size: blobResult.size.toString(),
         fileName: blobResult.pathname,
-        orderIndex: images.length,
+        orderIndex,
         site: {
           connect: {
             id: siteId
@@ -45,9 +47,8 @@ export const uploadBlobMetadata = async (blobResult: BlobResult, postId: string,
     return response;
   } catch (error) {
     console.log("error: ", error);
-    throw new Error('Could not upload meta data');
+    throw new Error('Could not update user');
   }
-
 };
 
 export const updateBlobMetadata = async (cuid: string, updatedFields: any) => {
@@ -121,7 +122,7 @@ export const listAllBlobsInStore = async () => {
   console.log("listAllBlobsInStoreAction called");
   const { blobs } = await list();
   // console.log("type of blobs: ", typeof(blobs));
-  // console.log("blobs: ", blobs);
+  console.log("blobs: ", blobs);
   // return NextResponse.json(blobs);
   return blobs;
 };
