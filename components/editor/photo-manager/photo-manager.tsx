@@ -103,11 +103,10 @@ export default function PhotoManager({ images, postId, siteId }: PhotoMangerProp
                     <PhotoCard key={photo.id} index={index} photo={photo} />
                 ))}
                 {localPhotos.map((photo: LocalPhoto) => (
-                    <LocalPhotoCard key="non-draggable" photo={photo} className="non-draggable" />
+                    <LocalPhotoCard key="non-draggable" photo={photo} className="relative non-draggable" />
                 ))}
                 <PhotoUploader onFileUpload={onPhotoUpload} />
             </ReactSortable>
-
         </div>
     )
 }

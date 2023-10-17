@@ -34,7 +34,7 @@ export default async function PostPage({ params }: { params: { id: string } }) {
     <PhotoManager images={data.images} postId={data.id} siteId={data.siteId!} />
     {/* <asdfasdfa images={data.images} postId={data.id} siteId={data.siteId!} /> */}
     {/* <PhotoManager postData={data} /> */}
-    <PhotoGrid images={data.images} postId={data.id} siteId={data.siteId!} />
+    {/* <PhotoGrid images={data.images} postId={data.id} siteId={data.siteId!} /> */}
   </div>
 
   // return <Editor post={data} />;
