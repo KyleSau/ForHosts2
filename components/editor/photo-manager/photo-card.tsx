@@ -8,7 +8,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { placeholderBlurhash } from "@/lib/utils";
-import { MoreHorizontal, Star } from "lucide-react";
+import { MoreHorizontal, MoveLeft, MoveRight, Pencil, Star, Trash2 } from "lucide-react";
 import BlurImage from '@/components/blur-image';
 import { Image } from '@prisma/client';
 
@@ -36,6 +36,10 @@ export default function PhotoCard({ photo, index }: PhotoCardProps) {
 
     }
 
+    const editCaption = (index: number) => {
+
+    }
+
     return (
         <div className="relative">
             <DropdownMenu>
@@ -52,32 +56,47 @@ export default function PhotoCard({ photo, index }: PhotoCardProps) {
                         </div>{" "}
                     </div>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56">
+                <DropdownMenuContent className="w-auto">
                     <DropdownMenuCheckboxItem
+                        className="pl-0 px-2 cursor-pointer"
+                        onClick={() => editCaption(index)}
+                    >
+                        <Pencil size={15} className="text-green-600 mr-2" />Edit Caption
+                    </DropdownMenuCheckboxItem>
+                    <hr />
+                    <DropdownMenuCheckboxItem
+                        className="pl-0 px-2 cursor-pointer"
                         onClick={() => makeCoverPhoto(index)}
                     >
-                        Make Cover Photo
+                        <Star size={15} className=" text-yellow-300 mr-2" /> Make Cover Photo
                     </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem
+                    <hr />
+                    {<DropdownMenuCheckboxItem
+                        className="pl-0 px-2 cursor-pointer"
                         onClick={() => moveForward(index)}
                     >
-                        Move Forward
+                        <MoveRight size={15} className=" text-blue-500 mr-2" /> Move Forward
                     </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem
+                    }
+                    <hr />
+                    {index !== 0 && <DropdownMenuCheckboxItem
+                        className="pl-0 px-2 cursor-pointer"
                         onClick={() => moveBackward(index)}
                     >
-                        Move Backward
-                    </DropdownMenuCheckboxItem>
+                        <MoveLeft size={15} className=" text-blue-500 mr-2" />Move Backward
+                    </DropdownMenuCheckboxItem>}
+                    <hr />
                     <DropdownMenuCheckboxItem
+                        className="pl-0 px-2 cursor-pointer"
                         onClick={() => toggleModal(index)}
                     >
-                        Delete
+                        <Trash2 size={15} className=" text-red-500 mr-2" />Delete
                     </DropdownMenuCheckboxItem>
                 </DropdownMenuContent>
             </DropdownMenu>
             {index === 0 && (
                 <div className="absolute left-2 top-2 z-10">
-                    <Star size={32} className=" text-yellow-500" />
+                    <Star size={32} className=" text-yellow-300" />
                 </div>
             )}
             <div>
