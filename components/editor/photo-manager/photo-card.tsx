@@ -20,6 +20,36 @@ interface PhotoCardProps {
 
 export default function PhotoCard({ photo, index }: PhotoCardProps) {
 
+    const menuItems = [
+        {
+            label: "Edit Caption",
+            icon: <Pencil size={15} className="text-green-600 mr-2" />,
+            action: (index: number) => editCaption(index),
+        },
+        {
+            label: "Make Cover Photo",
+            icon: <Star size={15} className="text-yellow-300 mr-2" />,
+            condition: (index: number) => index !== 0,
+            action: (index: number) => makeCoverPhoto(index),
+        },
+        {
+            label: "Move Forward",
+            icon: <MoveRight size={15} className="text-blue-500 mr-2" />,
+            action: (index: number) => moveForward(index),
+        },
+        {
+            label: "Move Backward",
+            icon: <MoveLeft size={15} className="text-blue-500 mr-2" />,
+            condition: (index: number) => index !== 0,
+            action: (index: number) => moveBackward(index),
+        },
+        {
+            label: "Delete",
+            icon: <Trash2 size={15} className="text-red-500 mr-2" />,
+            action: (index: number) => toggleModal(index),
+        },
+    ];
+
     const makeCoverPhoto = (index: number) => {
 
     }
@@ -57,41 +87,20 @@ export default function PhotoCard({ photo, index }: PhotoCardProps) {
                     </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-auto">
-                    <DropdownMenuCheckboxItem
-                        className="pl-0 px-2 cursor-pointer"
-                        onClick={() => editCaption(index)}
-                    >
-                        <Pencil size={15} className="text-green-600 mr-2" />Edit Caption
-                    </DropdownMenuCheckboxItem>
-                    <hr />
-                    <DropdownMenuCheckboxItem
-                        className="pl-0 px-2 cursor-pointer"
-                        onClick={() => makeCoverPhoto(index)}
-                    >
-                        <Star size={15} className=" text-yellow-300 mr-2" /> Make Cover Photo
-                    </DropdownMenuCheckboxItem>
-                    <hr />
-                    {<DropdownMenuCheckboxItem
-                        className="pl-0 px-2 cursor-pointer"
-                        onClick={() => moveForward(index)}
-                    >
-                        <MoveRight size={15} className=" text-blue-500 mr-2" /> Move Forward
-                    </DropdownMenuCheckboxItem>
-                    }
-                    <hr />
-                    {index !== 0 && <DropdownMenuCheckboxItem
-                        className="pl-0 px-2 cursor-pointer"
-                        onClick={() => moveBackward(index)}
-                    >
-                        <MoveLeft size={15} className=" text-blue-500 mr-2" />Move Backward
-                    </DropdownMenuCheckboxItem>}
-                    <hr />
-                    <DropdownMenuCheckboxItem
-                        className="pl-0 px-2 cursor-pointer"
-                        onClick={() => toggleModal(index)}
-                    >
-                        <Trash2 size={15} className=" text-red-500 mr-2" />Delete
-                    </DropdownMenuCheckboxItem>
+                    {menuItems.map((item, index) => (
+                        <>
+                            {(!item.condition || (item.condition && item.condition(index))) && (
+                                <DropdownMenuCheckboxItem
+                                    className="pl-0 px-2 cursor-pointer"
+                                    onClick={() => item.action(index)}
+                                >
+                                    {item.icon}
+                                    {item.label}
+                                </DropdownMenuCheckboxItem>
+                            )}
+                            <hr />
+                        </>
+                    ))}
                 </DropdownMenuContent>
             </DropdownMenu>
             {index === 0 && (
