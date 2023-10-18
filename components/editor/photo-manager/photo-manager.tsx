@@ -9,6 +9,7 @@ import PhotoCard from './photo-card';
 import { put } from '@vercel/blob';
 import { shiftBlobMetadata, uploadBlobMetadata } from '@/lib/blob_actions';
 import LocalPhotoCard from './local-photo-card';
+import { LocalPhoto } from './local-photo';
 const PERMITTED_TYPES = [FILE_CONSTS.FILE, FILE_CONSTS.JPEG, FILE_CONSTS.PNG];
 
 const IMAGE_SIZE_LIMIT_MB = 30;

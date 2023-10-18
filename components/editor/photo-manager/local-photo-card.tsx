@@ -2,6 +2,7 @@ import BlurImage from '@/components/blur-image'
 import { placeholderBlurhash } from '@/lib/utils'
 import { Loader2 } from 'lucide-react'
 import React from 'react'
+import { LocalPhoto } from './local-photo';
 
 interface LocalPhotoCardProps {
     photo: LocalPhoto;
