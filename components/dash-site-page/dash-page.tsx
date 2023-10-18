@@ -16,7 +16,7 @@ import dynamic from "next/dynamic";
 import { Bedroom } from "@prisma/client";
 import AmenitiesPage from "../amenities/amenities-page";
 import WhatToKnow from "../what-to-know";
-import SleepingQuarters from "../users-sites/sleeping-quarters";
+import BedroomCarousel from "../users-sites/bedroom-carousel";
 import Featured from "../users-sites/featured";
 import { placeholderBlurhash } from "@/lib/utils";
 // import MapWrapper from "../editor/map-wrapper";
@@ -69,7 +69,7 @@ export default function DashPage({ data }) {
         </div>
         <div className="col-start-1 rounded-sm md:col-span-3 md:col-start-3">
           <div className="flex justify-center">
-            <SleepingQuarters />
+            <BedroomCarousel />
           </div>
           <hr className="h-2 w-full" />
         </div>

@@ -32,7 +32,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ imageBlurhash: imageBlurhas
     <div className="flex h-150 items-start justify-center">
       {!isModalOpen && (
         <>
-          <div className="relative w-full h-full max-w-screen-lg overflow-hidden md:h-full md:w-5/6 md:rounded-xl lg:w-2/3">
+          <div className="relative w-full h-full max-w-screen-lg overflow-hidden md:h-full md:w-5/6 md:rounded-s-xl lg:w-2/3">
             <BlurImage
               alt="Property Image"
               width={800}
@@ -45,11 +45,14 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ imageBlurhash: imageBlurhas
           </div>
           <div className="relative ml-4 grid h-full w-2/3 grid-cols-2 gap-2">
             {/* Render the grid of smaller images */}
-            {images.map((imgSrc: any, index: any) => (
+
+
+            {/* do bounds checks here */}
+            {images.splice(1, 4).map((imgSrc: any, index: any) => (
               <div
                 key={index}
                 onClick={() => openModal(index)} // Open modal on image click
-                className="relative h-full w-full overflow-hidden rounded-xl border-gray-600 hover:border-2 hover:opacity-90 hover:shadow-lg"
+                className="relative h-full w-full overflow-hidden border-gray-600 hover:border-2 hover:opacity-90 hover:shadow-lg"
               >
                 <BlurImage
                   alt={`Additional Property Image ${index + 1}`}

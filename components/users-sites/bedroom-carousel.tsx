@@ -17,7 +17,7 @@ const bedTypeIcons = {
     'sofa bed': faBed,
 };
 
-function SleepingQuarters() {
+function BedroomCarousel() {
     const [currentBedroomIndex, setCurrentBedroomIndex] = useState(0);
     const bedroomsPerPage = 3;
     const cardHeight = '225px';
@@ -39,29 +39,29 @@ function SleepingQuarters() {
     };
 
     return (
-        <div className="w-full pl-8">
+        <div className="w-full pl-8 relative">
             <div className="text-3xl font-semibold text-gray-800">Where You&apos;ll Sleep</div>
             <div className="flex items-center">
                 {canShowPrevious && (
                     <button
                         onClick={handlePreviousClick}
-                        className="bg-white p-2 rounded-md hover-bg-gray-200"
+                        className="bg-white p-2 rounded-md hover:bg-gray-200"
                     >
                         <FontAwesomeIcon icon={faArrowLeft} className="text-xl text-gray-600" />
                     </button>
                 )}
-                <div className="flex flex-wrap">
+                <div className={`absolute transition-transform duration-300 ease-in-out ${canShowPrevious ? 'left-0' : 'left-1/3'}`}>
                     {bedrooms
                         .slice(currentBedroomIndex, currentBedroomIndex + bedroomsPerPage)
                         .concat(new Array(3 - bedroomsPerPage).fill(null))
                         .map((bedroom, index) => (
                             <div
                                 key={index}
-                                className="w-full md:w-1/3 p-4"
+                                className="w-full md:w-1/3 p-4 float-left"
                                 style={{ height: cardHeight, width: cardWidth }}
                             >
                                 {bedroom && (
-                                    <div className="bg-white rounded-lg p-4 shadow-md" style={{ height: '100%' }}>
+                                    <div className="bg-white rounded-lg p-4 border" style={{ height: '100%' }}>
                                         <div className="text-center mb-2">
                                             <div className="w-12 h-12 bg-gray-200 rounded-full m-auto flex items-center justify-center">
                                                 {bedTypeIcons[bedroom.beds[0]] ? (
@@ -78,12 +78,13 @@ function SleepingQuarters() {
                                     </div>
                                 )}
                             </div>
-                        ))}
+                        ))
+                    }
                 </div>
                 {canShowNext && (
                     <button
                         onClick={handleNextClick}
-                        className="bg-white p-2 rounded-md hover-bg-gray-200"
+                        className="bg-white p-2 rounded-md hover:bg-gray-200"
                     >
                         <FontAwesomeIcon icon={faArrowRight} className="text-xl text-gray-600" />
                     </button>
@@ -93,4 +94,4 @@ function SleepingQuarters() {
     );
 }
 
-export default SleepingQuarters;
+export default BedroomCarousel;
