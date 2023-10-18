@@ -55,7 +55,6 @@ export default function PhotoManager({ images, postId, siteId }: PhotoMangerProp
 
         for (const file of localFiles) {
             if (file.size > IMAGE_SIZE_LIMIT_BYTES) {
-                alert(`The file ${file.name} was not uploaded because it exceeds the file size limit of ${IMAGE_SIZE_LIMIT_MB} MB.`);
                 oversizedFileNames.push(file.name);
                 continue;
             }
@@ -83,6 +82,7 @@ export default function PhotoManager({ images, postId, siteId }: PhotoMangerProp
 
         // Remove all oversized files from localPhotos at once
         if (oversizedFileNames.length > 0) {
+            alert(`${JSON.stringify(oversizedFileNames)} ${oversizedFileNames.length > 1 ? 'were' : 'was'} not uploaded because it exceeds the file size limit of ${IMAGE_SIZE_LIMIT_MB} MB.`);
             setLocalPhotos(prevLocalPhotos =>
                 prevLocalPhotos.filter(localPhoto => !oversizedFileNames.includes(localPhoto.name))
             );
