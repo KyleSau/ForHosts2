@@ -45,9 +45,8 @@ export const uploadBlobMetadata = async (blobResult: BlobResult, postId: string,
     return response;
   } catch (error) {
     console.log("error: ", error);
-    throw new Error('Could not upload meta data');
+    throw new Error('Could not update user');
   }
-
 };
 
 export const updateBlobMetadata = async (cuid: string, updatedFields: any) => {
@@ -121,7 +120,7 @@ export const listAllBlobsInStore = async () => {
   console.log("listAllBlobsInStoreAction called");
   const { blobs } = await list();
   // console.log("type of blobs: ", typeof(blobs));
-  // console.log("blobs: ", blobs);
+  console.log("blobs: ", blobs);
   // return NextResponse.json(blobs);
   return blobs;
 };
@@ -152,53 +151,6 @@ export const deleteBlobFromStore = async (urlToDelete: string) => {
   return errorJson;
 };
 
-//slotIdx is the destination idx
-// export async function swapBlobMetadata(postId: string, oldIndex: number, newIndex: number) {
-// // console.log("swapBlobMetadata entered: postId: ", postId, "    slotIdx: ", oldIndex, "   imageId: ", imageId);
-
-// if (!postId || oldIndex === undefined || newIndex === undefined) {
-//   console.log('swapping blob meta data was missing server action arguments');
-//   return;
-// }
-
-// if (!currentImage) {
-//   throw new Error(`Image at orderIdx ${oldIndex} not found.`);
-// }
-
-// const currentImage = prisma.image.findFirst({
-//   where: { postId: postId, orderIndex: oldIndex }
-// });
-
-// // Retrieve prevImage using the oldIndex and postId
-// const prevImage = await prisma.image.findFirst({
-//   where: {
-//     postId: postId,
-//     orderIndex: oldIndex,
-//   }
-// });
-
-// if (!prevImage) {
-//   throw new Error(`Image with postId ${postId} and orderIndex ${slotIdx} not found.`);
-// }
-
-// // Use Prisma's transaction to ensure both updates happen or none of them does
-// await prisma.$transaction([
-//   prisma.image.update({
-//     where: { id: currentImage.id },
-//     data: { orderIndex: slotIdx }
-//   }),
-//   prisma.image.update({
-//     where: { id: prevImage.id },
-//     data: { orderIndex: currentImage.orderIndex }
-//   }),
-// ]);
-
-// return {
-//   swappedImage: currentImage,
-//   replacedImage: prevImage
-// };
-// }
-
 // i need to finish this
 export async function shiftBlobMetadata(postId: string, oldIndex: number, newIndex: number) {
   const images = prisma.image.findMany({ where: { postId: postId }, orderBy: { orderIndex: 'asc' } });
@@ -212,59 +164,6 @@ export async function shiftBlobMetadata(postId: string, oldIndex: number, newInd
   for (const t of tmp) {
     prisma.image.update
   }
-
-
-  // // Define the operations within an array
-  // const operations = [];
-
-  // // Get all images for the given postId
-  // const images = await prisma.image.findMany({
-  //   where: { postId: postId },
-  //   orderBy: { orderIndex: 'asc' },
-  // });
-
-  // console.log('length: ', images.length);
-  // console.log('oldIdx: ', oldIndex);
-  // console.log('newIdx: ', newIndex);
-
-  // images.forEach((img) => (console.log('orderIdx: ', img.orderIndex)))
-
-  // // Find the image to be moved
-  // const image = images.find(img => img.orderIndex === oldIndex);
-
-  // if (!image) {
-  //   throw new Error('Image not found');
-  // }
-
-  // // Update the orderIndex of the image to be moved
-  // operations.push(
-  //   prisma.image.update({
-  //     where: { id: image.id },
-  //     data: { orderIndex: newIndex },
-  //   })
-  // );
-
-  // // Update the orderIndex of the other images
-  // images.forEach(img => {
-  //   if (img.orderIndex > oldIndex && img.orderIndex <= newIndex) {
-  //     operations.push(
-  //       prisma.image.update({
-  //         where: { id: img.id },
-  //         data: { orderIndex: img.orderIndex - 1 },
-  //       })
-  //     );
-  //   } else if (img.orderIndex >= newIndex && img.orderIndex < oldIndex) {
-  //     operations.push(
-  //       prisma.image.update({
-  //         where: { id: img.id },
-  //         data: { orderIndex: img.orderIndex + 1 },
-  //       })
-  //     );
-  //   }
-  // });
-
-  // // Execute the operations within a transaction
-  // await prisma.$transaction(operations);
 }
 
 
