@@ -95,7 +95,7 @@ export default function PhotoCard({ photo, index, postId, totalImages, movePhoto
                 <DropdownMenuTrigger asChild>
                     <div className="absolute right-1 top-1 z-10">
                         <div
-                            className="flex items-center justify-center rounded-full border shadow-sm bg-gray-100 opacity-75 p-2 hover:scale-110 transition ease-in-out duration-300 hover:bg-white hover:opacity-100 cursor-pointer"
+                            className="flex items-center justify-center rounded-full border shadow-sm bg-gray-100 opacity-75 p-2 hover:scale-110 focus:scale-110 transition ease-in-out duration-300 hover:bg-white focus:bg-white hover:opacity-100 focus:opacity-100 cursor-pointer"
                             style={{
                                 width: "36px",
                                 height: "36px",
