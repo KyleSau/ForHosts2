@@ -107,7 +107,7 @@ export default function PhotoCard({
   const editCaption = (index: number) => {};
 
   return (
-    <div className="relative w-[375px]">
+    <div className="relative mx-auto w-[325px] md:w-[375px]">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <div className="absolute right-1 top-1 z-10">
