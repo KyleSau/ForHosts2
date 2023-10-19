@@ -13,7 +13,7 @@ export default function LocalPhotoCard
     ({ photo, className }: LocalPhotoCardProps) {
     return (
         <div className={className} key={"non-draggable"}>
-            <button type="button" className="z-10">
+            <button type="button" className="z-10 flex justify-items-center justify-center">
                 <Loader2 className="animate-spin" />
             </button>
             <BlurImage

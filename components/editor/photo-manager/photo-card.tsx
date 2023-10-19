@@ -12,15 +12,20 @@ import { MoreHorizontal, MoveLeft, MoveRight, Pencil, Star, Trash2 } from "lucid
 import BlurImage from '@/components/blur-image';
 import { Image } from '@prisma/client';
 import { shiftBlobMetadata } from '@/lib/blob_actions';
+import DeletePhotoModal from './delete-photo-modal';
+import { useModal } from '@/components/modal/provider';
 
 interface PhotoCardProps {
     // this should at some point be a Photo obj without guid and internal data
     photo: Image;
     index: number;
     postId: string;
+    totalImages: number;
+    movePhoto: (oldIndex: number, newIndex: number, moveType: string) => void;
+    handleDelete: (index: number) => void;
 }
 
-export default function PhotoCard({ photo, index, postId }: PhotoCardProps) {
+export default function PhotoCard({ photo, index, postId, totalImages, movePhoto, handleDelete }: PhotoCardProps) {
 
     const menuItems = [
         {
@@ -53,22 +58,30 @@ export default function PhotoCard({ photo, index, postId }: PhotoCardProps) {
     ];
 
     const makeCoverPhoto = (index: number) => {
+        movePhoto(index, 0, 'makeCoverPhoto');
         shiftBlobMetadata(postId, index, 0);
-        // visually move it in the photo manager's photos state
     }
 
     const moveForward = (index: number) => {
-        shiftBlobMetadata(postId, index, index + 1); // do bounds checks here
-        // visually show this
+        if (index < totalImages - 1) {
+            const newIndex = index + 1;
+            movePhoto(index, newIndex, 'moveForward');
+            shiftBlobMetadata(postId, index, newIndex);
+        }
     }
 
     const moveBackward = (index: number) => {
-        shiftBlobMetadata(postId, index, index - 1); // do bounds checks here
-        // visually show this
+        if (index > 0) {
+            const newIndex = index - 1;
+            movePhoto(index, newIndex, 'moveBackward');
+            shiftBlobMetadata(postId, index, newIndex);
+        }
     }
 
-    const toggleModal = (index: number) => {
+    const modal = useModal();
 
+    const toggleModal = (index: number) => {
+        modal?.show(<DeletePhotoModal index={index} imageId={photo.id} onDelete={handleDelete} />);
     }
 
     const editCaption = (index: number) => {

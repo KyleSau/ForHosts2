@@ -26,11 +26,24 @@ export default function PhotoManager({ images, postId, siteId }: PhotoMangerProp
     const [photos, setPhotos] = useState<Image[]>(images);
     const [localPhotos, setLocalPhotos] = useState<LocalPhoto[]>([]);
 
+    const handleDelete = (index: number) => {
+        setPhotos(prevPhotos => prevPhotos.filter((_, i) => i !== index));
+    };
+
     const onPhotoDragEnd = async (event: Sortable.SortableEvent) => {
         const { oldIndex, newIndex } = event;
         if (oldIndex === undefined || newIndex === undefined)
             return;
         shiftBlobMetadata(postId, oldIndex, newIndex);
+    }
+
+    const movePhoto = (oldIndex: number, newIndex: number) => {
+        setPhotos(prevPhotos => {
+            const updatedPhotos = [...prevPhotos];
+            const [movedPhoto] = updatedPhotos.splice(oldIndex, 1);
+            updatedPhotos.splice(newIndex, 0, movedPhoto);
+            return updatedPhotos;
+        });
     }
 
     const onPhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,7 +114,7 @@ export default function PhotoManager({ images, postId, siteId }: PhotoMangerProp
                 preventOnFilter={false}
             >
                 {photos.map((photo: Image, index: number) => (
-                    <PhotoCard postId={postId} key={photo.orderIndex} index={index} photo={photo} />
+                    <PhotoCard handleDelete={handleDelete} movePhoto={movePhoto} postId={postId} key={photo.orderIndex} index={index} photo={photo} totalImages={photos.length} />
                 ))}
                 {localPhotos.map((photo: LocalPhoto) => (
                     <LocalPhotoCard key="non-draggable" photo={photo} className="relative non-draggable" />
