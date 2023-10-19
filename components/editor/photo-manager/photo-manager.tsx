@@ -134,7 +134,7 @@ export default function PhotoManager({
         <TabTitle title="Photo Manager" desc="Manage your listing's photos" />
       </div>
       <ReactSortable
-        className="ml-2 grid gap-2 transition-all duration-500 ease-in sm:grid-cols-1 lg:grid-cols-2 lg:gap-6 2xl:grid-cols-3"
+        className=" grid gap-2 transition-all duration-500 ease-in sm:grid-cols-1 lg:grid-cols-2 lg:gap-6 2xl:grid-cols-3"
         list={photos}
         setList={setPhotos}
         onEnd={onPhotoDragEnd}
