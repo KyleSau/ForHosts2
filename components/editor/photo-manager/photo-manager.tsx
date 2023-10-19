@@ -29,11 +29,12 @@ export default function PhotoManager({
   const [photos, setPhotos] = useState<Image[]>(images);
   const [localPhotos, setLocalPhotos] = useState<LocalPhoto[]>([]);
 
-  const onPhotoDragEnd = async (event: Sortable.SortableEvent) => {
-    const { oldIndex, newIndex } = event;
-    if (oldIndex === undefined || newIndex === undefined) return;
-    await shiftBlobMetadata(postId, oldIndex, newIndex);
-  };
+    const onPhotoDragEnd = async (event: Sortable.SortableEvent) => {
+        const { oldIndex, newIndex } = event;
+        if (oldIndex === undefined || newIndex === undefined)
+            return;
+        shiftBlobMetadata(postId, oldIndex, newIndex);
+    }
 
   const onPhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = event.target;
@@ -104,28 +105,24 @@ export default function PhotoManager({
     };
 
 
-  return (
-    <div>
-      <ReactSortable
-        className="grid grid-cols-1 grid-rows-[300px] gap-2 md:grid-cols-2 md:grid-rows-[300px] 2xl:grid-cols-3 2xl:grid-rows-[300px]"
-        list={photos}
-        setList={setPhotos}
-        onEnd={onPhotoDragEnd}
-        filter=".non-draggable"
-        preventOnFilter={false}
-      >
-        {photos.map((photo: Image, index: number) => (
-          <PhotoCard key={photo.id} index={index} photo={photo} />
-        ))}
-        {localPhotos.map((photo: LocalPhoto) => (
-          <LocalPhotoCard
-            key="non-draggable"
-            photo={photo}
-            className="non-draggable relative"
-          />
-        ))}
-        <PhotoUploader onFileUpload={onPhotoUpload} />
-      </ReactSortable>
-    </div>
-  );
+    return (
+        <div>
+            <ReactSortable
+                className="grid grid-cols-1 gap-2 md:grid-cols-2 2xl:grid-cols-3 grid-rows-[300px] md:grid-rows-[300px] 2xl:grid-rows-[300px]"
+                list={photos}
+                setList={setPhotos}
+                onEnd={onPhotoDragEnd}
+                filter=".non-draggable"
+                preventOnFilter={false}
+            >
+                {photos.map((photo: Image, index: number) => (
+                    <PhotoCard postId={postId} key={photo.orderIndex} index={index} photo={photo} />
+                ))}
+                {localPhotos.map((photo: LocalPhoto) => (
+                    <LocalPhotoCard key="non-draggable" photo={photo} className="relative non-draggable" />
+                ))}
+                <PhotoUploader onFileUpload={onPhotoUpload} />
+            </ReactSortable>
+        </div>
+    )
 }

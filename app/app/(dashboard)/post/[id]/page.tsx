@@ -1,6 +1,8 @@
 import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
+import PhotoManager from "@/components/editor/photo-manager/photo-manager";
+import { resequenceOrderIndices } from "@/lib/blob_actions";
 
 export default async function PostPage({ params }: { params: { id: string } }) {
   const session = await getSession();
@@ -26,18 +28,9 @@ export default async function PostPage({ params }: { params: { id: string } }) {
     notFound();
   }
 
-<<<<<<< HEAD
-  return <div></div>;
-=======
-  console.log("data: ", data);
+  const sortedImages = [...data.images].sort((a, b) => a.orderIndex - b.orderIndex);
 
   return <div>
-    <PhotoManager images={data.images} postId={data.id} siteId={data.siteId!} />
-    {/* <asdfasdfa images={data.images} postId={data.id} siteId={data.siteId!} /> */}
-    {/* <PhotoManager postData={data} /> */}
-    {/* <PhotoGrid images={data.images} postId={data.id} siteId={data.siteId!} /> */}
+    <PhotoManager images={sortedImages} postId={data.id} siteId={data.siteId!} />
   </div>
-
-  // return <Editor post={data} />;
->>>>>>> 749a427a6424dde29818a25ab8c93de12aab7c61
 }
