@@ -42,6 +42,7 @@ export default function PhotoCard({ photo, index, postId, totalImages, movePhoto
         {
             label: "Move Forward",
             icon: <MoveRight size={15} className="text-blue-500 mr-2" />,
+            condition: (index: number) => index !== totalImages - 1,
             action: (index: number) => moveForward(index),
         },
         {
