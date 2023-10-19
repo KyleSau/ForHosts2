@@ -7,9 +7,10 @@ import { Image } from '@prisma/client';
 import { FILE_CONSTS, IMAGE_UPLOAD_QUANTITY_LIMIT } from "@/lib/constants";
 import PhotoCard from './photo-card';
 import { put } from '@vercel/blob';
-import { shiftBlobMetadata, uploadBlobMetadata } from '@/lib/blob_actions';
+import { shiftBlobMetadata, createImageMetadata } from '@/lib/blob_actions';
 import LocalPhotoCard from './local-photo-card';
 import { LocalPhoto } from './local-photo';
+import { SplineIcon } from 'lucide-react';
 const PERMITTED_TYPES = [FILE_CONSTS.FILE, FILE_CONSTS.JPEG, FILE_CONSTS.PNG];
 
 const IMAGE_SIZE_LIMIT_MB = 30;
@@ -66,7 +67,9 @@ export default function PhotoManager({ images, postId, siteId }: PhotoMangerProp
     const uploadPhotos = async (localFiles: File[]) => {
         let oversizedFileNames: string[] = [];
 
-        for (const file of localFiles) {
+        for (let i = 0; i < localFiles.length; i++) {  // Use a traditional for loop to process files one by one
+            const file = localFiles[i];
+
             if (file.size > IMAGE_SIZE_LIMIT_BYTES) {
                 oversizedFileNames.push(file.name);
                 continue;
@@ -78,7 +81,7 @@ export default function PhotoManager({ images, postId, siteId }: PhotoMangerProp
                     handleBlobUploadUrl: '/api/upload'
                 });
 
-                const image = await uploadBlobMetadata(blobResult, postId, siteId);
+                const image = await createImageMetadata(blobResult, postId, siteId);
 
                 if (image) {
                     setPhotos(prevPhotos => [...prevPhotos, image]);
@@ -102,7 +105,6 @@ export default function PhotoManager({ images, postId, siteId }: PhotoMangerProp
         }
     };
 
-
     return (
         <div>
             <ReactSortable
@@ -117,7 +119,7 @@ export default function PhotoManager({ images, postId, siteId }: PhotoMangerProp
                     <PhotoCard handleDelete={handleDelete} movePhoto={movePhoto} postId={postId} key={photo.orderIndex} index={index} photo={photo} totalImages={photos.length} />
                 ))}
                 {localPhotos.map((photo: LocalPhoto) => (
-                    <LocalPhotoCard key="non-draggable" photo={photo} className="relative non-draggable" />
+                    <LocalPhotoCard key={photo.name} photo={photo} className="relative non-draggable" />
                 ))}
                 <PhotoUploader onFileUpload={onPhotoUpload} />
             </ReactSortable>

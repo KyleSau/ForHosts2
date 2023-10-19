@@ -5,7 +5,7 @@ import { list, del, BlobResult } from '@vercel/blob';
 import prisma from "@/lib/prisma";
 // import { Image } from "@prisma/client";
 
-export const uploadBlobMetadata = async (blobResult: BlobResult, postId: string, siteId: string) => {
+export const createImageMetadata = async (blobResult: BlobResult, postId: string, siteId: string) => {
   try {
 
     const session = await getSession();
@@ -45,7 +45,7 @@ export const uploadBlobMetadata = async (blobResult: BlobResult, postId: string,
     return response;
   } catch (error) {
     console.log("error: ", error);
-    throw new Error('Could not update user');
+    throw new Error('Could not create blob metadata');
   }
 };
 
@@ -64,7 +64,7 @@ export const updateBlobMetadata = async (cuid: string, updatedFields: any) => {
     return response;
   } catch (error) {
     console.log("error: ", error);
-    throw new Error('Could not update user');
+    throw new Error('Could not update blob metadata');
   }
 };
 

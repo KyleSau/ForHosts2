@@ -1,8 +1,7 @@
 import { useModal } from "@/components/modal/provider";
-import { useState } from "react";
-import { Loader2 } from "lucide-react";
 import { deleteAndReindex } from "@/lib/blob_actions";
-import { checkIsOnDemandRevalidate } from "next/dist/server/api-utils";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
 
 interface DeleteImageModalProps {
     imageId: string;
@@ -33,7 +32,8 @@ export default function DeletePhotoModal({ imageId, index, onDelete }: DeleteIma
                 <h2 className="font-cal text-2xl dark:text-white">Delete Image</h2>
                 <p>Are you sure you want to delete this image? This action cannot be undone.</p>
             </div>
-            <div className="flex items-center justify-end rounded-b-lg border-t border-stone-200 bg-stone-50 p-3 dark:border-stone-700 dark:bg-stone-800 md:px-10">
+            <div className="flex items-center justify-between rounded-b-lg border-t border-stone-200 bg-stone-50 p-3 dark:border-stone-700 dark:bg-stone-800 md:px-10">
+                <button onClick={modal?.hide} className="text-blue-500 underline">Cancel</button>
                 <DeleteImageButton onClick={handleDelete} pending={pending} />
             </div>
         </div>
@@ -49,7 +49,7 @@ function DeleteImageButton({ onClick, pending }: DeleteImageButtonProps) {
     return (
         <button
             onClick={onClick}
-            className=""
+            className={`py-2 px-4 rounded ${pending ? 'bg-gray-500 cursor-not-allowed' : 'bg-gray-800 hover:bg-black'} text-white`}
             disabled={pending}
         >
             {pending ? <Loader2 className="animate-spin" /> : <p>Delete</p>}

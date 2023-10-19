@@ -135,8 +135,6 @@ export default function PhotoCard({ photo, index, postId, totalImages, movePhoto
                     height={200}
                     src={photo.url ?? "/placeholder.png"}
                 />
-                {photo.orderIndex}
-                {photo.caption}
             </div>
         </div>
     )
