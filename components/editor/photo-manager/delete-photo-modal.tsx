@@ -33,7 +33,7 @@ export default function DeletePhotoModal({ imageId, index, onDelete }: DeleteIma
                 <p>Are you sure you want to delete this image? This action cannot be undone.</p>
             </div>
             <div className="flex items-center justify-between rounded-b-lg border-t border-stone-200 bg-stone-50 p-3 dark:border-stone-700 dark:bg-stone-800 md:px-10">
-                <button onClick={modal?.hide} className="text-blue-500 underline">Cancel</button>
+                <button onClick={modal?.hide} className="text-blue-500 underline hover:bg-gray-200 rounded p-2">Cancel</button>
                 <DeleteImageButton onClick={handleDelete} pending={pending} />
             </div>
         </div>
