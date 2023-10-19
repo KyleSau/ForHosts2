@@ -151,7 +151,7 @@ export default function PhotoManager({
           <LocalPhotoCard
             key={photo.name}
             photo={photo}
-            className="non-draggable relative w-[375px]"
+            className="non-draggable relative mx-auto w-[325px] md:w-[365px]"
           />
         ))}
 
