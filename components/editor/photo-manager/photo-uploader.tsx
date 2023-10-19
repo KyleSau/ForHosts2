@@ -25,7 +25,7 @@ const PhotoUploader: FC<UploaderProps> = ({ onFileUpload }) => {
   return (
     <div
       id={""}
-      className="md:w-[375px]flex-col relative mx-auto flex h-[300px] w-[325px] items-center justify-center border-2 border-dashed border-black py-5 text-center text-gray-400 hover:border-solid"
+      className="relative mx-auto flex h-[300px] w-[325px] flex-col items-center justify-center border-2 border-dashed border-black py-5 text-center text-gray-400 hover:border-solid md:w-[375px]"
     >
       <input
         accept="image/png, image/jpeg"
