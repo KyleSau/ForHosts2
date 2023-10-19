@@ -130,9 +130,8 @@ export default function PhotoManager({
 
   return (
     <EditorWrapper>
-      <div className="">
-        <TabTitle title="Photo Manager" desc="Manage your listing's photos" />
-      </div>
+      <TabTitle title="Photo Manager" desc="Manage your listing's photos" />
+
       <ReactSortable
         className=" grid gap-2 transition-all duration-500 ease-in sm:grid-cols-1 lg:grid-cols-2 lg:gap-6 2xl:grid-cols-3"
         list={photos}
