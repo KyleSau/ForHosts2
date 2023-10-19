@@ -11,6 +11,8 @@ import { shiftBlobMetadata, createImageMetadata } from "@/lib/blob_actions";
 import LocalPhotoCard from "./local-photo-card";
 import { LocalPhoto } from "./local-photo";
 import { SplineIcon } from "lucide-react";
+import EditorWrapper from "../editor-wrapper";
+import TabTitle from "../editor-components-title";
 const PERMITTED_TYPES = [FILE_CONSTS.FILE, FILE_CONSTS.JPEG, FILE_CONSTS.PNG];
 
 const IMAGE_SIZE_LIMIT_MB = 30;
@@ -127,9 +129,12 @@ export default function PhotoManager({
   };
 
   return (
-    <div>
+    <EditorWrapper>
+      <div className="">
+        <TabTitle title="Photo Manager" desc="Manage your listing's photos" />
+      </div>
       <ReactSortable
-        className="grid gap-2 transition-all duration-500 ease-in sm:grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3"
+        className="ml-2 grid gap-2 transition-all duration-500 ease-in sm:grid-cols-1 lg:grid-cols-2 lg:gap-6 2xl:grid-cols-3"
         list={photos}
         setList={setPhotos}
         onEnd={onPhotoDragEnd}
@@ -147,6 +152,7 @@ export default function PhotoManager({
             totalImages={photos.length}
           />
         ))}
+
         {localPhotos.map((photo: LocalPhoto) => (
           <LocalPhotoCard
             key={photo.name}
@@ -157,6 +163,6 @@ export default function PhotoManager({
 
         <PhotoUploader onFileUpload={onPhotoUpload} />
       </ReactSortable>
-    </div>
+    </EditorWrapper>
   );
 }
