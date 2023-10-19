@@ -10,10 +10,9 @@ import { put } from '@vercel/blob';
 import { shiftBlobMetadata, uploadBlobMetadata } from '@/lib/blob_actions';
 import LocalPhotoCard from './local-photo-card';
 import { LocalPhoto } from './local-photo';
-const PERMITTED_TYPES = [FILE_CONSTS.FILE, FILE_CONSTS.JPEG, FILE_CONSTS.PNG];
+import { IMAGE_SIZE_LIMIT_MB, IMAGE_SIZE_LIMIT_BYTES } from "@/lib/constants";
 
-const IMAGE_SIZE_LIMIT_MB = 30;
-const IMAGE_SIZE_LIMIT_BYTES = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
+const PERMITTED_TYPES = new Set([FILE_CONSTS.FILE, FILE_CONSTS.JPEG, FILE_CONSTS.PNG]);
 
 interface PhotoMangerProps {
   images: Image[];
@@ -29,17 +28,17 @@ export default function PhotoManager({
   const [photos, setPhotos] = useState<Image[]>(images);
   const [localPhotos, setLocalPhotos] = useState<LocalPhoto[]>([]);
 
-    const onPhotoDragEnd = async (event: Sortable.SortableEvent) => {
-        const { oldIndex, newIndex } = event;
-        if (oldIndex === undefined || newIndex === undefined)
-            return;
-        shiftBlobMetadata(postId, oldIndex, newIndex);
-    }
+  const onPhotoDragEnd = async (event: Sortable.SortableEvent) => {
+      const { oldIndex, newIndex } = event;
+      if (oldIndex === undefined || newIndex === undefined)
+          return;
+      shiftBlobMetadata(postId, oldIndex, newIndex);
+  }
 
   const onPhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = event.target;
     const localFiles = Array.from(files ?? []).filter((file) =>
-      PERMITTED_TYPES.includes(file.type),
+      PERMITTED_TYPES.has(file.type),
     );
 
     if (
@@ -66,11 +65,11 @@ export default function PhotoManager({
   const uploadPhotos = async (localFiles: File[]) => {
     let oversizedFileNames: string[] = [];
 
-        for (const file of localFiles) {
-            if (file.size > IMAGE_SIZE_LIMIT_BYTES) {
-                oversizedFileNames.push(file.name);
-                continue;
-            }
+    for (const file of localFiles) {
+      if (file.size > IMAGE_SIZE_LIMIT_BYTES) {
+        oversizedFileNames.push(file.name);
+        continue;
+      }
 
       try {
         const blobResult = await put(file.name, file, {
@@ -95,34 +94,33 @@ export default function PhotoManager({
       }
     }
 
-        // Remove all oversized files from localPhotos at once
-        if (oversizedFileNames.length > 0) {
-            alert(`${JSON.stringify(oversizedFileNames)} ${oversizedFileNames.length > 1 ? 'were' : 'was'} not uploaded because it exceeds the file size limit of ${IMAGE_SIZE_LIMIT_MB} MB.`);
-            setLocalPhotos(prevLocalPhotos =>
-                prevLocalPhotos.filter(localPhoto => !oversizedFileNames.includes(localPhoto.name))
-            );
-        }
-    };
+    // Remove all oversized files from localPhotos at once
+    if (oversizedFileNames.length > 0) {
+      alert(`${JSON.stringify(oversizedFileNames)} ${oversizedFileNames.length > 1 ? 'were' : 'was'} not uploaded because it exceeds the file size limit of ${IMAGE_SIZE_LIMIT_MB} MB.`);
+      setLocalPhotos(prevLocalPhotos =>
+          prevLocalPhotos.filter(localPhoto => !oversizedFileNames.includes(localPhoto.name))
+      );
+    }
+  };
 
-
-    return (
-        <div>
-            <ReactSortable
-                className="grid grid-cols-1 gap-2 md:grid-cols-2 2xl:grid-cols-3 grid-rows-[300px] md:grid-rows-[300px] 2xl:grid-rows-[300px]"
-                list={photos}
-                setList={setPhotos}
-                onEnd={onPhotoDragEnd}
-                filter=".non-draggable"
-                preventOnFilter={false}
-            >
-                {photos.map((photo: Image, index: number) => (
-                    <PhotoCard postId={postId} key={photo.orderIndex} index={index} photo={photo} />
-                ))}
-                {localPhotos.map((photo: LocalPhoto) => (
-                    <LocalPhotoCard key="non-draggable" photo={photo} className="relative non-draggable" />
-                ))}
-                <PhotoUploader onFileUpload={onPhotoUpload} />
-            </ReactSortable>
-        </div>
-    )
+  return (
+    <div>
+        <ReactSortable
+            className="grid grid-cols-1 gap-2 md:grid-cols-2 2xl:grid-cols-3 grid-rows-[300px] md:grid-rows-[300px] 2xl:grid-rows-[300px]"
+            list={photos}
+            setList={setPhotos}
+            onEnd={onPhotoDragEnd}
+            filter=".non-draggable"
+            preventOnFilter={false}
+        >
+            {photos.map((photo: Image, index: number) => (
+                <PhotoCard postId={postId} key={photo.orderIndex} index={index} photo={photo} />
+            ))}
+            {localPhotos.map((photo: LocalPhoto) => (
+                <LocalPhotoCard key="non-draggable" photo={photo} className="relative non-draggable" />
+            ))}
+            <PhotoUploader onFileUpload={onPhotoUpload} />
+        </ReactSortable>
+    </div>
+  );
 }
