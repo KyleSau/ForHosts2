@@ -107,7 +107,7 @@ export default function PhotoCard({
   const editCaption = (index: number) => {};
 
   return (
-    <div className="relative">
+    <div className="relative w-[375px]">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <div className="absolute right-1 top-1 z-10">
@@ -149,7 +149,7 @@ export default function PhotoCard({
         <BlurImage
           alt={photo.url ?? ""}
           blurDataURL={placeholderBlurhash}
-          className="object-fit h-[300px]"
+          className="object-fit h-[300px] w-full"
           width={200}
           height={200}
           src={photo.url ?? "/placeholder.png"}
