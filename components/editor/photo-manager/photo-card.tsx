@@ -130,7 +130,7 @@ export default function PhotoCard({ photo, index, postId, totalImages, movePhoto
                 <BlurImage
                     alt={photo.url ?? ""}
                     blurDataURL={placeholderBlurhash}
-                    className="object-fit h-[300px] w-full pb-3"
+                    className="object-fit h-[300px] w-full"
                     width={200}
                     height={200}
                     src={photo.url ?? "/placeholder.png"}
