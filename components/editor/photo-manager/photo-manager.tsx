@@ -5,10 +5,11 @@ import PhotoUploader from "./photo-uploader";
 import { Image } from "@prisma/client";
 
 import { FILE_CONSTS, IMAGE_UPLOAD_QUANTITY_LIMIT } from "@/lib/constants";
-import PhotoCard from "./photo-card";
-import { put } from "@vercel/blob";
-import { shiftBlobMetadata, uploadBlobMetadata } from "@/lib/blob_actions";
-import LocalPhotoCard from "./local-photo-card";
+import PhotoCard from './photo-card';
+import { put } from '@vercel/blob';
+import { shiftBlobMetadata, uploadBlobMetadata } from '@/lib/blob_actions';
+import LocalPhotoCard from './local-photo-card';
+import { LocalPhoto } from './local-photo';
 const PERMITTED_TYPES = [FILE_CONSTS.FILE, FILE_CONSTS.JPEG, FILE_CONSTS.PNG];
 
 const IMAGE_SIZE_LIMIT_MB = 30;
@@ -64,14 +65,11 @@ export default function PhotoManager({
   const uploadPhotos = async (localFiles: File[]) => {
     let oversizedFileNames: string[] = [];
 
-    for (const file of localFiles) {
-      if (file.size > IMAGE_SIZE_LIMIT_BYTES) {
-        alert(
-          `The file ${file.name} was not uploaded because it exceeds the file size limit of ${IMAGE_SIZE_LIMIT_MB} MB.`,
-        );
-        oversizedFileNames.push(file.name);
-        continue;
-      }
+        for (const file of localFiles) {
+            if (file.size > IMAGE_SIZE_LIMIT_BYTES) {
+                oversizedFileNames.push(file.name);
+                continue;
+            }
 
       try {
         const blobResult = await put(file.name, file, {
@@ -96,15 +94,15 @@ export default function PhotoManager({
       }
     }
 
-    // Remove all oversized files from localPhotos at once
-    if (oversizedFileNames.length > 0) {
-      setLocalPhotos((prevLocalPhotos) =>
-        prevLocalPhotos.filter(
-          (localPhoto) => !oversizedFileNames.includes(localPhoto.name),
-        ),
-      );
-    }
-  };
+        // Remove all oversized files from localPhotos at once
+        if (oversizedFileNames.length > 0) {
+            alert(`${JSON.stringify(oversizedFileNames)} ${oversizedFileNames.length > 1 ? 'were' : 'was'} not uploaded because it exceeds the file size limit of ${IMAGE_SIZE_LIMIT_MB} MB.`);
+            setLocalPhotos(prevLocalPhotos =>
+                prevLocalPhotos.filter(localPhoto => !oversizedFileNames.includes(localPhoto.name))
+            );
+        }
+    };
+
 
   return (
     <div>
