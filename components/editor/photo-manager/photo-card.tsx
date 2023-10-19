@@ -11,14 +11,16 @@ import { placeholderBlurhash } from "@/lib/utils";
 import { MoreHorizontal, MoveLeft, MoveRight, Pencil, Star, Trash2 } from "lucide-react";
 import BlurImage from '@/components/blur-image';
 import { Image } from '@prisma/client';
+import { shiftBlobMetadata } from '@/lib/blob_actions';
 
 interface PhotoCardProps {
     // this should at some point be a Photo obj without guid and internal data
     photo: Image;
     index: number;
+    postId: string;
 }
 
-export default function PhotoCard({ photo, index }: PhotoCardProps) {
+export default function PhotoCard({ photo, index, postId }: PhotoCardProps) {
 
     const menuItems = [
         {
@@ -51,15 +53,18 @@ export default function PhotoCard({ photo, index }: PhotoCardProps) {
     ];
 
     const makeCoverPhoto = (index: number) => {
-
+        shiftBlobMetadata(postId, index, 0);
+        // visually move it in the photo manager's photos state
     }
 
     const moveForward = (index: number) => {
-
+        shiftBlobMetadata(postId, index, index + 1); // do bounds checks here
+        // visually show this
     }
 
     const moveBackward = (index: number) => {
-
+        shiftBlobMetadata(postId, index, index - 1); // do bounds checks here
+        // visually show this
     }
 
     const toggleModal = (index: number) => {
@@ -87,7 +92,7 @@ export default function PhotoCard({ photo, index }: PhotoCardProps) {
                     </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-auto">
-                    {menuItems.map((item, index) => (
+                    {menuItems.map((item) => (
                         <>
                             {(!item.condition || (item.condition && item.condition(index))) && (
                                 <DropdownMenuCheckboxItem
@@ -112,11 +117,13 @@ export default function PhotoCard({ photo, index }: PhotoCardProps) {
                 <BlurImage
                     alt={photo.url ?? ""}
                     blurDataURL={placeholderBlurhash}
-                    className="object-fit h-[300px] w-full pb-1"
+                    className="object-fit h-[300px] w-full pb-3"
                     width={200}
                     height={200}
                     src={photo.url ?? "/placeholder.png"}
                 />
+                {photo.orderIndex}
+                {photo.caption}
             </div>
         </div>
     )

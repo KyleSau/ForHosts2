@@ -30,7 +30,7 @@ export default function PhotoManager({ images, postId, siteId }: PhotoMangerProp
         const { oldIndex, newIndex } = event;
         if (oldIndex === undefined || newIndex === undefined)
             return;
-        await shiftBlobMetadata(postId, oldIndex, newIndex);
+        shiftBlobMetadata(postId, oldIndex, newIndex);
     }
 
     const onPhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,7 +101,7 @@ export default function PhotoManager({ images, postId, siteId }: PhotoMangerProp
                 preventOnFilter={false}
             >
                 {photos.map((photo: Image, index: number) => (
-                    <PhotoCard key={photo.id} index={index} photo={photo} />
+                    <PhotoCard postId={postId} key={photo.orderIndex} index={index} photo={photo} />
                 ))}
                 {localPhotos.map((photo: LocalPhoto) => (
                     <LocalPhotoCard key="non-draggable" photo={photo} className="relative non-draggable" />

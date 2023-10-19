@@ -2,8 +2,8 @@
 
 import { getSession } from "@/lib/auth";
 import { list, del, BlobResult } from '@vercel/blob';
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import prisma from "@/lib/prisma";
+// import { Image } from "@prisma/client";
 
 export const uploadBlobMetadata = async (blobResult: BlobResult, postId: string, siteId: string) => {
   try {
@@ -151,19 +151,72 @@ export const deleteBlobFromStore = async (urlToDelete: string) => {
   return errorJson;
 };
 
-// i need to finish this
-export async function shiftBlobMetadata(postId: string, oldIndex: number, newIndex: number) {
-  const images = prisma.image.findMany({ where: { postId: postId }, orderBy: { orderIndex: 'asc' } });
-  let tmp = [];
-  if (oldIndex < newIndex)
-    tmp = (await images).slice(oldIndex, newIndex);
-  else
-    tmp = (await images).slice(newIndex, oldIndex);
+export async function resequenceOrderIndices(postId: string) {
+  // Fetch all images for the given post, ordered by orderIndex
+  const images = await prisma.image.findMany({
+    where: { postId: postId },
+    orderBy: { orderIndex: 'asc' }
+  });
 
-  // ignore the first
-  for (const t of tmp) {
-    prisma.image.update
+  // Generate a list of update operations to resequence the orderIndex values
+  const updateOperations = images.map((image, index) => {
+    return prisma.image.update({
+      where: { id: image.id },
+      data: { orderIndex: index }  // Assuming orderIndex starts at 1
+    });
+  });
+
+  // Execute the update operations in a transaction
+  await prisma.$transaction(updateOperations);
+}
+
+export async function shiftBlobMetadata(postId: string, oldIndex: number, newIndex: number) {
+  console.log('postId: ' + postId + ' oldIndex: ' + oldIndex + ' newIndex: ' + newIndex);
+  // Step 1: Fetch the relevant records
+  const affectedImages = await prisma.image.findMany({
+    where: {
+      postId: postId,
+      orderIndex: oldIndex < newIndex
+        ? { gte: oldIndex, lte: newIndex } // Moving to the right
+        : { gte: newIndex, lte: oldIndex } // Moving to the left
+    },
+    orderBy: { orderIndex: 'asc' }
+  });
+
+  // Step 2: Update the order indices
+  const updatedImages = affectedImages.map((image, index, array) => {
+    if (image.orderIndex === oldIndex) {
+      return {
+        ...image,
+        orderIndex: newIndex
+      };
+    } else if (oldIndex < newIndex) { // Moving to the right
+      return {
+        ...image,
+        orderIndex: image.orderIndex - 1
+      };
+    } else { // Moving to the left
+      return {
+        ...image,
+        orderIndex: image.orderIndex + 1
+      };
+    }
+  });
+
+  const updateOperations = updatedImages.map(image =>
+    prisma.image.update({
+      where: { id: image.id },
+      data: { orderIndex: image.orderIndex }
+    })
+  );
+
+  try {
+    await prisma.$transaction(updateOperations);
+  } catch (error) {
+    console.error("Transaction failed:", error);
+    // Handle error as needed
   }
+
 }
 
 
