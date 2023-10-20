@@ -31,6 +31,27 @@ model User {
   stripeAccount StripeAccount? // add relation?
 }
 
+model Admin {
+  id            String    @id @default(cuid())
+  name          String?
+  gh_username   String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Blog {
+  id          String   @id @default(cuid())
+  title       String   @db.Text
+  description String?  @db.Text
+  content     String?  @db.Text
+  slug        String   @default(cuid())
+  image       String
+  keywords    String[]
+}
+
 model StripeAccount {
   id                        Int     @id @default(autoincrement())
   accountId                 String

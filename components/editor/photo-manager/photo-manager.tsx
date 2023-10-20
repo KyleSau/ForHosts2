@@ -89,10 +89,10 @@ export default function PhotoManager({
                     handleBlobUploadUrl: "/api/upload",
                 });
 
-                const image = await createImageMetadata(blobResult, postId, siteId);
+                const photo = await createImageMetadata(blobResult, postId, siteId);
 
-                if (image) {
-                    setPhotos((prevPhotos) => [...prevPhotos, image]);
+                if (photo) {
+                    setPhotos((prevPhotos) => [...prevPhotos, photo]);
 
                     // Remove the corresponding localPhoto
                     setLocalPhotos((prevLocalPhotos) =>
@@ -103,6 +103,11 @@ export default function PhotoManager({
                 }
             } catch (error) {
                 console.error("Error uploading file:", error);
+                setLocalPhotos((prevLocalPhotos) =>
+                    prevLocalPhotos.filter(
+                        (localPhoto) => localPhoto.name !== file.name,
+                    ),
+                );
             }
         }
 
@@ -153,8 +158,7 @@ export default function PhotoManager({
 
                 <PhotoUploader onFileUpload={onPhotoUpload} />
             </ReactSortable>
-        </EditorWrapper>
+        </EditorWrapper >
     );
-
 }
 
