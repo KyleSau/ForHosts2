@@ -5,7 +5,7 @@ type TabTitleProps = {
   desc: string;
 };
 
-export default function TabTitle({ title, desc }: TabTitleProps) {
+export default function EditorTitle({ title, desc }: TabTitleProps) {
   return (
     <div className=" text-center">
       <h4 className="mt-6 text-xl font-bold text-gray-800">{title}</h4>

@@ -30,7 +30,7 @@ export default async function PostPage({ params }: { params: { id: string } }) {
 
   const sortedImages = [...data.images].sort((a, b) => a.orderIndex - b.orderIndex);
 
-  return <div>
+  return (
     <PhotoManager images={sortedImages} postId={data.id} siteId={data.siteId!} />
-  </div>
+  );
 }
