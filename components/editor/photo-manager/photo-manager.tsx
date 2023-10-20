@@ -5,18 +5,24 @@ import PhotoUploader from "./photo-uploader";
 import { Image } from "@prisma/client";
 
 import {
-    FILE_CONSTS, IMAGE_UPLOAD_QUANTITY_LIMIT,
-    IMAGE_SIZE_LIMIT_MB, IMAGE_SIZE_LIMIT_BYTES
+    FILE_CONSTS,
+    IMAGE_UPLOAD_QUANTITY_LIMIT,
+    IMAGE_SIZE_LIMIT_MB,
+    IMAGE_SIZE_LIMIT_BYTES,
 } from "@/lib/constants";
-import PhotoCard from './photo-card';
-import { put } from '@vercel/blob';
-import { shiftBlobMetadata, createImageMetadata } from '@/lib/blob_actions';
-import LocalPhotoCard from './local-photo-card';
-import { LocalPhoto } from './local-photo';
+import PhotoCard from "./photo-card";
+import { put } from "@vercel/blob";
+import { shiftBlobMetadata, createImageMetadata } from "@/lib/blob_actions";
+import LocalPhotoCard from "./local-photo-card";
+import { LocalPhoto } from "./local-photo";
 import EditorWrapper from "../editor-wrapper";
 import EditorTitle from "../editor-components-title";
 
-const PERMITTED_TYPES = new Set([FILE_CONSTS.FILE, FILE_CONSTS.JPEG, FILE_CONSTS.PNG]);
+const PERMITTED_TYPES = new Set([
+    FILE_CONSTS.FILE,
+    FILE_CONSTS.JPEG,
+    FILE_CONSTS.PNG,
+]);
 
 interface PhotoMangerProps {
     images: Image[];
@@ -53,10 +59,17 @@ export default function PhotoManager({
 
     const onPhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { files } = event.target;
-        const localFiles = Array.from(files ?? []).filter(file => PERMITTED_TYPES.has(file.type));
+        const localFiles = Array.from(files ?? []).filter((file) =>
+            PERMITTED_TYPES.has(file.type)
+        );
 
-        if (photos.length > IMAGE_UPLOAD_QUANTITY_LIMIT || photos.length + localFiles.length > IMAGE_UPLOAD_QUANTITY_LIMIT) {
-            alert(`Only ${IMAGE_UPLOAD_QUANTITY_LIMIT} images may be uploaded for this listing`);
+        if (
+            photos.length > IMAGE_UPLOAD_QUANTITY_LIMIT ||
+            photos.length + localFiles.length > IMAGE_UPLOAD_QUANTITY_LIMIT
+        ) {
+            alert(
+                `Only ${IMAGE_UPLOAD_QUANTITY_LIMIT} images may be uploaded for this listing`,
+            );
             return;
         }
 
@@ -104,9 +117,7 @@ export default function PhotoManager({
             } catch (error) {
                 console.error("Error uploading file:", error);
                 setLocalPhotos((prevLocalPhotos) =>
-                    prevLocalPhotos.filter(
-                        (localPhoto) => localPhoto.name !== file.name,
-                    ),
+                    prevLocalPhotos.filter((localPhoto) => localPhoto.name !== file.name),
                 );
             }
         }
@@ -127,9 +138,17 @@ export default function PhotoManager({
 
     return (
         <EditorWrapper>
-            <EditorTitle title="Photo Manager" desc={(photos.length) == 0 ? "Manage your listing's photos" : `You may add ${IMAGE_UPLOAD_QUANTITY_LIMIT - photos.length} more photos`} />
+            <EditorTitle
+                title="Photo Manager"
+                desc={
+                    photos.length == 0
+                        ? "Manage your listing's photos"
+                        : `You may add ${IMAGE_UPLOAD_QUANTITY_LIMIT - photos.length
+                        } more photos`
+                }
+            />
             <ReactSortable
-                className=" grid gap-2 transition-all duration-500 ease-in sm:grid-cols-1 lg:grid-cols-2 lg:gap-6 2xl:grid-cols-3"
+                className=" lg:gap-6 grid grid-cols-1 gap-2 transition-all duration-500  ease-in editorlg:grid-cols-2 2xl:grid-cols-3"
                 list={photos}
                 setList={setPhotos}
                 onEnd={onPhotoDragEnd}
@@ -158,7 +177,6 @@ export default function PhotoManager({
 
                 <PhotoUploader onFileUpload={onPhotoUpload} />
             </ReactSortable>
-        </EditorWrapper >
+        </EditorWrapper>
     );
 }
-
