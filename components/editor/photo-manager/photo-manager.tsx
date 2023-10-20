@@ -12,7 +12,7 @@ import { shiftBlobMetadata, createImageMetadata } from '@/lib/blob_actions';
 import LocalPhotoCard from './local-photo-card';
 import { LocalPhoto } from './local-photo';
 import EditorWrapper from "../editor-wrapper";
-import TabTitle from "../editor-components-title";
+import EditorTitle from "../editor-components-title";
 
 const PERMITTED_TYPES = new Set([FILE_CONSTS.FILE, FILE_CONSTS.JPEG, FILE_CONSTS.PNG]);
 
@@ -134,9 +134,19 @@ export default function PhotoManager({
     }
   };
 
+  const renderEditorTitleAndDescription = () => {
+    return (<>
+      { (photos.length) == 0? 
+          <EditorTitle title="Photo Manager" desc="Manage your listing's photos" /> 
+          :
+          <EditorTitle title="Photo Manager" desc={`You may add ${IMAGE_UPLOAD_QUANTITY_LIMIT - photos.length} more photos`} />
+      }
+    </>);
+  };
+
   return (
     <EditorWrapper>
-      <TabTitle title="Photo Manager" desc="Manage your listing's photos" />
+      {renderEditorTitleAndDescription()}
 
       <ReactSortable
         className=" grid gap-2 transition-all duration-500 ease-in sm:grid-cols-1 lg:grid-cols-2 lg:gap-6 2xl:grid-cols-3"
