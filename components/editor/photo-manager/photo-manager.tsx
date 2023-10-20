@@ -4,14 +4,15 @@ import { ReactSortable, Sortable } from "react-sortablejs";
 import PhotoUploader from "./photo-uploader";
 import { Image } from "@prisma/client";
 
-import { FILE_CONSTS, IMAGE_UPLOAD_QUANTITY_LIMIT, IMAGE_SIZE_LIMIT_MB, IMAGE_SIZE_LIMIT_BYTES } from "@/lib/constants";
+import { FILE_CONSTS, IMAGE_UPLOAD_QUANTITY_LIMIT, 
+  IMAGE_SIZE_LIMIT_MB, IMAGE_SIZE_LIMIT_BYTES } from "@/lib/constants";
 import PhotoCard from './photo-card';
 import { put } from '@vercel/blob';
 import { shiftBlobMetadata, createImageMetadata } from '@/lib/blob_actions';
 import LocalPhotoCard from './local-photo-card';
 import { LocalPhoto } from './local-photo';
-import { SplineIcon } from 'lucide-react';
-const PERMITTED_TYPES = [FILE_CONSTS.FILE, FILE_CONSTS.JPEG, FILE_CONSTS.PNG];
+import EditorWrapper from "../editor-wrapper";
+import TabTitle from "../editor-components-title";
 
 const PERMITTED_TYPES = new Set([FILE_CONSTS.FILE, FILE_CONSTS.JPEG, FILE_CONSTS.PNG]);
 
@@ -51,7 +52,7 @@ export default function PhotoManager({
   const onPhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = event.target;
     const localFiles = Array.from(files ?? []).filter((file) =>
-      PERMITTED_TYPES.includes(file.type),
+      PERMITTED_TYPES.has(file.type),
     );
 
     if (
@@ -102,13 +103,6 @@ export default function PhotoManager({
         });
 
         const image = await createImageMetadata(blobResult, postId, siteId);
-            try {
-                const blobResult = await put(file.name, file, {
-                    access: 'public',
-                    handleBlobUploadUrl: '/api/upload'
-                });
-                
-                const image = await createImageMetadata(blobResult, postId, siteId);
 
         if (image) {
           setPhotos((prevPhotos) => [...prevPhotos, image]);
@@ -176,4 +170,5 @@ export default function PhotoManager({
       </ReactSortable>
     </EditorWrapper>
   );
-}
+
+}}
