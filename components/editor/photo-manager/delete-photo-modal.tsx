@@ -38,7 +38,7 @@ export default function DeletePhotoModal({ photo, index, onDelete }: DeleteImage
                 </h2>
 
 
-                <p>{photo.fileName}</p>
+                <p className="text-gray-500">{photo.fileName}</p>
                 <BlurImage
                     alt={photo.url ?? ""}
                     blurDataURL={placeholderBlurhash}
