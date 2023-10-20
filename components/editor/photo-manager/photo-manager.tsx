@@ -11,10 +11,9 @@ import { shiftBlobMetadata, createImageMetadata } from '@/lib/blob_actions';
 import LocalPhotoCard from './local-photo-card';
 import { LocalPhoto } from './local-photo';
 import { SplineIcon } from 'lucide-react';
-const PERMITTED_TYPES = [FILE_CONSTS.FILE, FILE_CONSTS.JPEG, FILE_CONSTS.PNG];
+import { IMAGE_SIZE_LIMIT_MB, IMAGE_SIZE_LIMIT_BYTES } from "@/lib/constants";
 
-const IMAGE_SIZE_LIMIT_MB = 30;
-const IMAGE_SIZE_LIMIT_BYTES = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
+const PERMITTED_TYPES = new Set([FILE_CONSTS.FILE, FILE_CONSTS.JPEG, FILE_CONSTS.PNG]);
 
 interface PhotoMangerProps {
     images: Image[];
@@ -49,7 +48,7 @@ export default function PhotoManager({ images, postId, siteId }: PhotoMangerProp
 
     const onPhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { files } = event.target;
-        const localFiles = Array.from(files ?? []).filter(file => PERMITTED_TYPES.includes(file.type));
+        const localFiles = Array.from(files ?? []).filter(file => PERMITTED_TYPES.has(file.type));
 
         if (photos.length > IMAGE_UPLOAD_QUANTITY_LIMIT || photos.length + localFiles.length > IMAGE_UPLOAD_QUANTITY_LIMIT) {
             alert(`Only ${IMAGE_UPLOAD_QUANTITY_LIMIT} images may be uploaded for this listing`);
@@ -76,11 +75,12 @@ export default function PhotoManager({ images, postId, siteId }: PhotoMangerProp
             }
 
             try {
+                console.log("before put: file: ", file);
                 const blobResult = await put(file.name, file, {
                     access: 'public',
                     handleBlobUploadUrl: '/api/upload'
                 });
-
+                console.log("blobResult: ", blobResult);
                 const image = await createImageMetadata(blobResult, postId, siteId);
 
                 if (image) {
