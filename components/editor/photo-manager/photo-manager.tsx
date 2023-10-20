@@ -149,36 +149,38 @@ export default function PhotoManager({
               } more photos`
         }
       />
-      <ReactSortable
-        className="  grid grid-cols-1 gap-2 transition-all duration-500  ease-in editorlg:grid-cols-2 2xl:grid-cols-3"
-        list={photos}
-        setList={setPhotos}
-        onEnd={onPhotoDragEnd}
-        filter=".non-draggable"
-        preventOnFilter={false}
-      >
-        {photos.map((photo: Image, index: number) => (
-          <PhotoCard
-            handleDelete={handleDelete}
-            movePhoto={movePhoto}
-            postId={postId}
-            key={photo.id}
-            index={index}
-            photo={photo}
-            totalImages={photos.length}
-          />
-        ))}
+      <div className="flex justify-center">
+        <ReactSortable
+          className="grid grid-cols-1 gap-2 transition-all  duration-500 ease-in editorlg:grid-cols-2 2xl:grid-cols-3"
+          list={photos}
+          setList={setPhotos}
+          onEnd={onPhotoDragEnd}
+          filter=".non-draggable"
+          preventOnFilter={false}
+        >
+          {photos.map((photo: Image, index: number) => (
+            <PhotoCard
+              handleDelete={handleDelete}
+              movePhoto={movePhoto}
+              postId={postId}
+              key={photo.id}
+              index={index}
+              photo={photo}
+              totalImages={photos.length}
+            />
+          ))}
 
-        {localPhotos.map((photo: LocalPhoto) => (
-          <LocalPhotoCard
-            key={photo.name}
-            photo={photo}
-            className="non-draggable relative mx-auto w-[325px] md:w-[365px]"
-          />
-        ))}
+          {localPhotos.map((photo: LocalPhoto) => (
+            <LocalPhotoCard
+              key={photo.name}
+              photo={photo}
+              className="non-draggable relative mx-auto w-[325px] md:w-[365px]"
+            />
+          ))}
 
-        <PhotoUploader onFileUpload={onPhotoUpload} />
-      </ReactSortable>
+          <PhotoUploader onFileUpload={onPhotoUpload} />
+        </ReactSortable>
+      </div>
     </EditorWrapper>
   );
 }
