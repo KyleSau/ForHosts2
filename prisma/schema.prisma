@@ -40,6 +40,7 @@ model Admin {
   image         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  blogs         Blog[]
 }
 
 model Blog {
@@ -50,10 +51,12 @@ model Blog {
   slug        String   @default(cuid())
   image       String
   keywords    String[]
+  Admin       Admin?   @relation(fields: [adminId], references: [id])
+  adminId     String?
 }
 
 model StripeAccount {
-  id                        Int     @id @default(autoincrement())
+  id                        String  @id @default(cuid())
   accountId                 String
   accountEmail              String?
   oauthAccessToken          String
@@ -359,8 +362,7 @@ model Site {
 }
 
 model Reservation {
-  id String @id @default(cuid())
-
+  id         String   @id @default(cuid())
   postId     String
   startDate  DateTime
   endDate    DateTime
