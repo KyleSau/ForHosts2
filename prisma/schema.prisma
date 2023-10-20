@@ -186,11 +186,11 @@ model Post {
 }
 
 model Location {
-  id        String  @id @default(cuid())
-  address   String?
-  longitude String?
-  latitude  String?
-  radius    Int?    @default(0) // Miles
+  id          String  @id @default(cuid())
+  address     String?
+  longitude   String?
+  latitude    String?
+  approximate Boolean @default(false)
 
   post Post?
 
