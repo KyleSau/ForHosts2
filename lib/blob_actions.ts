@@ -2,22 +2,23 @@
 
 import { getSession } from "@/lib/auth";
 import { list, del, BlobResult } from '@vercel/blob';
-import { getBlurDataURL } from "./utils";
-import { PrismaClient } from "@prisma/client";
-import { promiseHooks } from "v8";
-const prisma = new PrismaClient();
+import prisma from "@/lib/prisma";
+// import { Image } from "@prisma/client";
 
-export const uploadBlobMetadata = async (blobResult: BlobResult, orderIndex: number, postId: string, siteId: string) => {
-  console.log("entered uploadBlobMetadata");
+export const createImageMetadata = async (blobResult: BlobResult, postId: string, siteId: string) => {
   try {
-    console.log("uploadBlobMetadata: postId: ", postId);
-    console.log("uploadBlobMetadata: siteId: ", siteId);
-    console.log("blobSize: ", blobResult.size);
-    console.log("size type: ", typeof blobResult.size);
-
-    const tempOrderIndex = 0;
 
     const session = await getSession();
+
+    if (!session?.user.id) {
+      throw new Error('user not authenticated');
+    }
+    // transaction:
+    const images = await prisma.image.findMany({
+      where: {
+        postId: postId
+      }
+    });
 
     // Run any logic after the file upload completed
     // const { userId } = JSON.parse(metadata);
@@ -28,7 +29,7 @@ export const uploadBlobMetadata = async (blobResult: BlobResult, orderIndex: num
         uploadedAt: blobResult.uploadedAt,
         size: blobResult.size.toString(),
         fileName: blobResult.pathname,
-        orderIndex,
+        orderIndex: images.length,
         site: {
           connect: {
             id: siteId
@@ -44,7 +45,7 @@ export const uploadBlobMetadata = async (blobResult: BlobResult, orderIndex: num
     return response;
   } catch (error) {
     console.log("error: ", error);
-    throw new Error('Could not update user');
+    throw new Error('Could not create blob metadata');
   }
 };
 
@@ -63,11 +64,13 @@ export const updateBlobMetadata = async (cuid: string, updatedFields: any) => {
     return response;
   } catch (error) {
     console.log("error: ", error);
-    throw new Error('Could not update user');
+    throw new Error('Could not update blob metadata');
   }
 };
 
 export const getBlobMetadata = async (siteId: string, postId: string) => {
+  if (!siteId)
+    throw new Error('no site id found!');
   try {
     const response = await prisma.image.findMany({
       where: {
@@ -113,12 +116,11 @@ export const deleteBlobMetadata = async (id: string) => {
   return response;
 };
 
-
 export const listAllBlobsInStore = async () => {
   console.log("listAllBlobsInStoreAction called");
   const { blobs } = await list();
   // console.log("type of blobs: ", typeof(blobs));
-  // console.log("blobs: ", blobs);
+  console.log("blobs: ", blobs);
   // return NextResponse.json(blobs);
   return blobs;
 };
@@ -149,54 +151,74 @@ export const deleteBlobFromStore = async (urlToDelete: string) => {
   return errorJson;
 };
 
-//slotIdx is the destination idx
-export async function swapBlobMetadata(postId: string, slotIdx: number, imageId: string) {
-  console.log("swapBlobMetadata entered: postId: ", postId, "    slotIdx: ", slotIdx, "   imageId: ", imageId);
-  if (!postId || slotIdx === undefined || !imageId) {
-    console.log('swapping blob meta data was missing server action arguments');
-    return;
-  }
-
-  // Retrieve currentImage using its imageId and get its orderIndex
-  const currentImage = await prisma.image.findUnique({
-    where: {
-      id: imageId
-    }
+export async function resequenceOrderIndices(postId: string) {
+  // Fetch all images for the given post, ordered by orderIndex
+  const images = await prisma.image.findMany({
+    where: { postId: postId },
+    orderBy: { orderIndex: 'asc' }
   });
 
-  if (!currentImage) {
-    throw new Error(`Image with ID ${imageId} not found.`);
-  }
+  // Generate a list of update operations to resequence the orderIndex values
+  const updateOperations = images.map((image, index) => {
+    return prisma.image.update({
+      where: { id: image.id },
+      data: { orderIndex: index }  // Assuming orderIndex starts at 1
+    });
+  });
 
-  // Retrieve prevImage using the slotIdx and postId
-  const prevImage = await prisma.image.findFirst({
+  // Execute the update operations in a transaction
+  await prisma.$transaction(updateOperations);
+}
+
+export async function shiftBlobMetadata(postId: string, oldIndex: number, newIndex: number) {
+  console.log('postId: ' + postId + ' oldIndex: ' + oldIndex + ' newIndex: ' + newIndex);
+  // Step 1: Fetch the relevant records
+  const affectedImages = await prisma.image.findMany({
     where: {
       postId: postId,
-      orderIndex: slotIdx,
+      orderIndex: oldIndex < newIndex
+        ? { gte: oldIndex, lte: newIndex } // Moving to the right
+        : { gte: newIndex, lte: oldIndex } // Moving to the left
+    },
+    orderBy: { orderIndex: 'asc' }
+  });
+
+  // Step 2: Update the order indices
+  const updatedImages = affectedImages.map((image, index, array) => {
+    if (image.orderIndex === oldIndex) {
+      return {
+        ...image,
+        orderIndex: newIndex
+      };
+    } else if (oldIndex < newIndex) { // Moving to the right
+      return {
+        ...image,
+        orderIndex: image.orderIndex - 1
+      };
+    } else { // Moving to the left
+      return {
+        ...image,
+        orderIndex: image.orderIndex + 1
+      };
     }
   });
 
-  if (!prevImage) {
-    throw new Error(`Image with postId ${postId} and orderIndex ${slotIdx} not found.`);
+  const updateOperations = updatedImages.map(image =>
+    prisma.image.update({
+      where: { id: image.id },
+      data: { orderIndex: image.orderIndex }
+    })
+  );
+
+  try {
+    await prisma.$transaction(updateOperations);
+  } catch (error) {
+    console.error("Transaction failed:", error);
+    // Handle error as needed
   }
 
-  // Use Prisma's transaction to ensure both updates happen or none of them does
-  await prisma.$transaction([
-    prisma.image.update({
-      where: { id: currentImage.id },
-      data: { orderIndex: slotIdx }
-    }),
-    prisma.image.update({
-      where: { id: prevImage.id },
-      data: { orderIndex: currentImage.orderIndex }
-    }),
-  ]);
-
-  return {
-    swappedImage: currentImage,
-    replacedImage: prevImage
-  };
 }
+
 
 /**
  * 

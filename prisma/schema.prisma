@@ -31,8 +31,32 @@ model User {
   stripeAccount StripeAccount? // add relation?
 }
 
+model Admin {
+  id            String    @id @default(cuid())
+  name          String?
+  gh_username   String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  blogs         Blog[]
+}
+
+model Blog {
+  id          String   @id @default(cuid())
+  title       String   @db.Text
+  description String?  @db.Text
+  content     String?  @db.Text
+  slug        String   @default(cuid())
+  image       String
+  keywords    String[]
+  Admin       Admin?   @relation(fields: [adminId], references: [id])
+  adminId     String?
+}
+
 model StripeAccount {
-  id                        Int     @id @default(autoincrement())
+  id                        String  @id @default(cuid())
   accountId                 String
   accountEmail              String?
   oauthAccessToken          String
@@ -99,7 +123,7 @@ model StripePayment {
 model Image {
   id         String   @id @default(cuid())
   url        String
-  // blurHash   String
+  caption    String?
   uploadedAt DateTime
   size       String
   fileName   String
@@ -191,20 +215,20 @@ model Pricing {
 }
 
 model Availability {
-  id                   String   @id @default(cuid())
-  instantBooking       Boolean? @default(true)
-  minStay              Int?     @default(1) // days (1)
-  maxStay              Int?     @default(28) // days (365)
-  advanceNotice        Int?     @default(0) // days (0 - 7)
-  sameDayAdvanceNotice String?  @default("15:00") // hours (6AM - Midnight) or none
-  preparationTime      Int?     @default(0) // days (0 - 2 days)
-  availabilityWindow   Int?     @default(12) // months (3 - 24 months)
-  restrictedCheckIn    Int[]    @default([]) // days of the week restricted [0...6]
-  restrictedCheckOut   Int[]    @default([]) // days of the week restricted [0...6]
-  checkInWindowStart   String?  @default("15:00") // "HH:mm" // <-- should this be removed? (in place of checkInTime)
-  checkInWindowEnd     String?  @default("21:00") // "HH:mm"
-  checkInTime          String?  @default("15:00") // "HH:mm"
-  checkOutTime         String?  @default("10:00") // "HH:mm"
+  id                   String    @id @default(cuid())
+  instantBooking       Boolean?  @default(true)
+  minStay              Int?      @default(1) // days (1)
+  maxStay              Int?      @default(28) // days (365)
+  advanceNotice        Int?      @default(0) // days (0 - 7)
+  sameDayAdvanceNotice String?   @default("15:00") // hours (6AM - Midnight) or none
+  preparationTime      Int?      @default(0) // days (0 - 2 days)
+  availabilityWindow   Int?      @default(12) // months (3 - 24 months)
+  restrictedCheckIn    Boolean[] @default([false, false, false, false, false, false, false]) // days of the week restricted
+  restrictedCheckOut   Boolean[] @default([false, false, false, false, false, false, false]) // days of the week restricted
+  checkInWindowStart   String?   @default("15:00") // "HH:mm" // <-- should this be removed? (in place of checkInTime)
+  checkInWindowEnd     String?   @default("21:00") // "HH:mm"
+  checkInTime          String?   @default("15:00") // "HH:mm"
+  checkOutTime         String?   @default("10:00") // "HH:mm"
 
   post Post?
 
@@ -259,9 +283,9 @@ model PropertyRules {
 
 model PropertyDetails {
   id            String    @id @default(cuid())
-  propertyType  String?   @default("Home")
   placeType     String?   @default("House") // Types: Entire Home, Room
-  listingType   String?   @default("Entire Place") // 'Entire Place', 'Room', 'Share Room'
+  listingType   String?   @default("Entire Place") // 'Entire Place', 'Room', 'Shared Room'
+  propertyType  String?   @default("Home")
   maxGuests     Int?      @default(2)
   maxPets       Int?      @default(0) // disable this if !petsAllowed
   totalBedrooms Int?      @default(1)
@@ -338,8 +362,7 @@ model Site {
 }
 
 model Reservation {
-  id String @id @default(cuid())
-
+  id         String   @id @default(cuid())
   postId     String
   startDate  DateTime
   endDate    DateTime
