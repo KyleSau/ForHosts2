@@ -173,112 +173,50 @@ export async function resequenceOrderIndices(postId: string) {
 export async function shiftBlobMetadata(postId: string, oldIndex: number, newIndex: number) {
   console.log('postId: ' + postId + ' oldIndex: ' + oldIndex + ' newIndex: ' + newIndex);
 
-  return prisma.$transaction(async (prisma) => {
-
-    if (oldIndex < newIndex) {
-      // Moving to the right:
-      await prisma.image.updateMany({
-        where: {
-          postId: postId,
-          orderIndex: {
-            gte: oldIndex + 1,
-            lte: newIndex
-          }
-        },
-        data: {
-          orderIndex: {
-            decrement: 1
-          }
-        }
-      });
-
-    } else if (oldIndex > newIndex) {
-      // Moving to the left:
-      await prisma.image.updateMany({
-        where: {
-          postId: postId,
-          orderIndex: {
-            gte: newIndex,
-            lte: oldIndex - 1
-          }
-        },
-        data: {
-          orderIndex: {
-            increment: 1
-          }
-        }
-      });
-    }
-
-    // Finally, update the image that moved from oldIndex to newIndex.
-    const imageToMove = await prisma.image.findFirst({
+  return await prisma.$transaction(async (prisma) => {
+    // Step 1: Fetch the relevant records
+    const affectedImages = await prisma.image.findMany({
       where: {
         postId: postId,
-        orderIndex: oldIndex
+        orderIndex: oldIndex < newIndex
+          ? { gte: oldIndex, lte: newIndex } // Moving to the right
+          : { gte: newIndex, lte: oldIndex } // Moving to the left
+      },
+      orderBy: { orderIndex: 'asc' }
+    });
+
+    // Step 2: Update the order indices
+    const updatedImages = affectedImages.map((image, index, array) => {
+      if (image.orderIndex === oldIndex) {
+        return {
+          ...image,
+          orderIndex: newIndex
+        };
+      } else if (oldIndex < newIndex) { // Moving to the right
+        return {
+          ...image,
+          orderIndex: image.orderIndex - 1
+        };
+      } else { // Moving to the left
+        return {
+          ...image,
+          orderIndex: image.orderIndex + 1
+        };
       }
     });
 
-    if (imageToMove) {
-      await prisma.image.update({
-        where: { id: imageToMove.id },
-        data: { orderIndex: newIndex }
+    // Step 3: Update the images in the database
+    const updateOperations = updatedImages.map(image => {
+      return prisma.image.update({
+        where: { id: image.id },
+        data: { orderIndex: image.orderIndex }
       });
-    }
+    });
 
+    // No need for the inner transaction, just execute the update operations directly
+    await Promise.all(updateOperations);
   });
 }
-
-
-/*export async function shiftBlobMetadata(postId: string, oldIndex: number, newIndex: number) {
-  console.log('postId: ' + postId + ' oldIndex: ' + oldIndex + ' newIndex: ' + newIndex);
-
-  // Step 1: Fetch the relevant records
-  const affectedImages = await prisma.image.findMany({
-    where: {
-      postId: postId,
-      orderIndex: oldIndex < newIndex
-        ? { gte: oldIndex, lte: newIndex } // Moving to the right
-        : { gte: newIndex, lte: oldIndex } // Moving to the left
-    },
-    orderBy: { orderIndex: 'asc' }
-  });
-
-  // Step 2: Update the order indices
-  const updatedImages = affectedImages.map((image, index, array) => {
-    if (image.orderIndex === oldIndex) {
-      return {
-        ...image,
-        orderIndex: newIndex
-      };
-    } else if (oldIndex < newIndex) { // Moving to the right
-      return {
-        ...image,
-        orderIndex: image.orderIndex - 1
-      };
-    } else { // Moving to the left
-      return {
-        ...image,
-        orderIndex: image.orderIndex + 1
-      };
-    }
-  });
-
-  const updateOperations = updatedImages.map(image =>
-    prisma.image.update({
-      where: { id: image.id },
-      data: { orderIndex: image.orderIndex }
-    })
-  );
-
-  try {
-    await prisma.$transaction(updateOperations);
-  } catch (error) {
-    console.error("Transaction failed:", error);
-    // Handle error as needed
-  }
-
-}*/
-
 
 /**
  * 
