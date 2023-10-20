@@ -136,7 +136,7 @@ export default function PhotoManager({
                         handleDelete={handleDelete}
                         movePhoto={movePhoto}
                         postId={postId}
-                        key={photo.orderIndex}
+                        key={photo.id}
                         index={index}
                         photo={photo}
                         totalImages={photos.length}
