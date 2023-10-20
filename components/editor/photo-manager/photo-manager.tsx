@@ -19,7 +19,7 @@ import EditorWrapper from "../editor-wrapper";
 import EditorTitle from "../editor-components-title";
 
 const PERMITTED_TYPES = new Set([
-    FILE_CONSTS.FILE,
+    FILE_CONSTS.BMP,
     FILE_CONSTS.JPEG,
     FILE_CONSTS.PNG,
 ]);
