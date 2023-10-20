@@ -150,7 +150,7 @@ export default function PhotoManager({
         }
       />
       <ReactSortable
-        className=" 2xl:grid-cols-3 grid grid-cols-1 gap-2 transition-all duration-500  ease-in lg:grid-cols-2 lg:gap-6"
+        className=" lg:gap-6 grid grid-cols-1 gap-2 transition-all duration-500  ease-in editorlg:grid-cols-2 2xl:grid-cols-3"
         list={photos}
         setList={setPhotos}
         onEnd={onPhotoDragEnd}
