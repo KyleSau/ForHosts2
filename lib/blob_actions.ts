@@ -172,6 +172,66 @@ export async function resequenceOrderIndices(postId: string) {
 
 export async function shiftBlobMetadata(postId: string, oldIndex: number, newIndex: number) {
   console.log('postId: ' + postId + ' oldIndex: ' + oldIndex + ' newIndex: ' + newIndex);
+
+  return prisma.$transaction(async (prisma) => {
+
+    if (oldIndex < newIndex) {
+      // Moving to the right:
+      await prisma.image.updateMany({
+        where: {
+          postId: postId,
+          orderIndex: {
+            gte: oldIndex + 1,
+            lte: newIndex
+          }
+        },
+        data: {
+          orderIndex: {
+            decrement: 1
+          }
+        }
+      });
+
+    } else if (oldIndex > newIndex) {
+      // Moving to the left:
+      await prisma.image.updateMany({
+        where: {
+          postId: postId,
+          orderIndex: {
+            gte: newIndex,
+            lte: oldIndex - 1
+          }
+        },
+        data: {
+          orderIndex: {
+            increment: 1
+          }
+        }
+      });
+    }
+
+    // Finally, update the image that moved from oldIndex to newIndex.
+    const imageToMove = await prisma.image.findFirst({
+      where: {
+        postId: postId,
+        orderIndex: oldIndex
+      }
+    });
+
+    if (imageToMove) {
+      await prisma.image.update({
+        where: { id: imageToMove.id },
+        data: { orderIndex: newIndex }
+      });
+    }
+
+  });
+}
+
+
+/*export async function shiftBlobMetadata(postId: string, oldIndex: number, newIndex: number) {
+  console.log('postId: ' + postId + ' oldIndex: ' + oldIndex + ' newIndex: ' + newIndex);
+
   // Step 1: Fetch the relevant records
   const affectedImages = await prisma.image.findMany({
     where: {
@@ -217,7 +277,7 @@ export async function shiftBlobMetadata(postId: string, oldIndex: number, newInd
     // Handle error as needed
   }
 
-}
+}*/
 
 
 /**
