@@ -75,12 +75,11 @@ export default function PhotoManager({ images, postId, siteId }: PhotoMangerProp
             }
 
             try {
-                console.log("before put: file: ", file);
                 const blobResult = await put(file.name, file, {
                     access: 'public',
                     handleBlobUploadUrl: '/api/upload'
                 });
-                console.log("blobResult: ", blobResult);
+                
                 const image = await createImageMetadata(blobResult, postId, siteId);
 
                 if (image) {
