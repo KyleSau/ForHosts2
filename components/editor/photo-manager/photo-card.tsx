@@ -1,5 +1,5 @@
-"use client"
-import React from 'react'
+"use client";
+import React from "react";
 
 import {
     DropdownMenu,
@@ -8,12 +8,19 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { placeholderBlurhash } from "@/lib/utils";
-import { MoreHorizontal, MoveLeft, MoveRight, Pencil, Star, Trash2 } from "lucide-react";
-import BlurImage from '@/components/blur-image';
-import { Image } from '@prisma/client';
-import { shiftBlobMetadata } from '@/lib/blob_actions';
-import DeletePhotoModal from './delete-photo-modal';
-import { useModal } from '@/components/modal/provider';
+import {
+    MoreHorizontal,
+    MoveLeft,
+    MoveRight,
+    Pencil,
+    Star,
+    Trash2,
+} from "lucide-react";
+import BlurImage from "@/components/blur-image";
+import { Image } from "@prisma/client";
+import { shiftBlobMetadata } from "@/lib/blob_actions";
+import DeletePhotoModal from "./delete-photo-modal";
+import { useModal } from "@/components/modal/provider";
 
 interface PhotoCardProps {
     // this should at some point be a Photo obj without guid and internal data
@@ -25,77 +32,87 @@ interface PhotoCardProps {
     handleDelete: (index: number) => void;
 }
 
-export default function PhotoCard({ photo, index, postId, totalImages, movePhoto, handleDelete }: PhotoCardProps) {
-
+export default function PhotoCard({
+    photo,
+    index,
+    postId,
+    totalImages,
+    movePhoto,
+    handleDelete,
+}: PhotoCardProps) {
     const menuItems = [
         {
             label: "Edit Caption",
-            icon: <Pencil size={15} className="text-green-600 mr-2" />,
+            icon: <Pencil size={15} className="mr-2 text-green-600" />,
             action: (index: number) => editCaption(index),
         },
         {
             label: "Make Cover Photo",
-            icon: <Star size={15} className="text-yellow-300 mr-2" />,
+            icon: <Star size={15} className="mr-2 text-yellow-300" />,
             condition: (index: number) => index !== 0,
             action: (index: number) => makeCoverPhoto(index),
         },
         {
             label: "Move Forward",
-            icon: <MoveRight size={15} className="text-blue-500 mr-2" />,
+            icon: <MoveRight size={15} className="mr-2 text-blue-500" />,
             condition: (index: number) => index !== totalImages - 1,
             action: (index: number) => moveForward(index),
         },
         {
             label: "Move Backward",
-            icon: <MoveLeft size={15} className="text-blue-500 mr-2" />,
+            icon: <MoveLeft size={15} className="mr-2 text-blue-500" />,
             condition: (index: number) => index !== 0,
             action: (index: number) => moveBackward(index),
         },
         {
             label: "Delete",
-            icon: <Trash2 size={15} className="text-red-500 mr-2" />,
+            icon: <Trash2 size={15} className="mr-2 text-red-500" />,
             action: (index: number) => toggleModal(index),
         },
     ];
 
     const makeCoverPhoto = (index: number) => {
-        movePhoto(index, 0, 'makeCoverPhoto');
+        movePhoto(index, 0, "makeCoverPhoto");
         shiftBlobMetadata(postId, index, 0);
-    }
+    };
 
     const moveForward = (index: number) => {
         if (index < totalImages - 1) {
             const newIndex = index + 1;
-            movePhoto(index, newIndex, 'moveForward');
+            movePhoto(index, newIndex, "moveForward");
             shiftBlobMetadata(postId, index, newIndex);
         }
-    }
+    };
 
     const moveBackward = (index: number) => {
         if (index > 0) {
             const newIndex = index - 1;
-            movePhoto(index, newIndex, 'moveBackward');
+            movePhoto(index, newIndex, "moveBackward");
             shiftBlobMetadata(postId, index, newIndex);
         }
-    }
+    };
 
     const modal = useModal();
 
     const toggleModal = (index: number) => {
-        modal?.show(<DeletePhotoModal index={index} imageId={photo.id} onDelete={handleDelete} />);
-    }
+        modal?.show(
+            <DeletePhotoModal
+                photo={photo}
+                index={index}
+                onDelete={handleDelete}
+            />,
+        );
+    };
 
-    const editCaption = (index: number) => {
-
-    }
+    const editCaption = (index: number) => { };
 
     return (
-        <div className="relative">
+        <div className="relative mx-auto w-[325px] md:w-[365px]">
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <div className="absolute right-1 top-1 z-10">
                         <div
-                            className="flex items-center justify-center rounded-full border shadow-sm bg-gray-100 opacity-75 p-2 hover:scale-110 focus:scale-110 transition ease-in-out duration-300 hover:bg-white focus:bg-white hover:opacity-100 focus:opacity-100 cursor-pointer"
+                            className="flex cursor-pointer items-center justify-center rounded-full border bg-gray-100 p-2 opacity-75 shadow-sm transition duration-300 ease-in-out hover:scale-110 hover:bg-white hover:opacity-100 focus:scale-110 focus:bg-white focus:opacity-100"
                             style={{
                                 width: "36px",
                                 height: "36px",
@@ -108,15 +125,16 @@ export default function PhotoCard({ photo, index, postId, totalImages, movePhoto
                 <DropdownMenuContent className="w-auto">
                     {menuItems.map((item) => (
                         <>
-                            {(!item.condition || (item.condition && item.condition(index))) && (
-                                <DropdownMenuCheckboxItem
-                                    className="pl-0 px-2 cursor-pointer"
-                                    onClick={() => item.action(index)}
-                                >
-                                    {item.icon}
-                                    {item.label}
-                                </DropdownMenuCheckboxItem>
-                            )}
+                            {(!item.condition ||
+                                (item.condition && item.condition(index))) && (
+                                    <DropdownMenuCheckboxItem
+                                        className="cursor-pointer px-2 pl-0"
+                                        onClick={() => item.action(index)}
+                                    >
+                                        {item.icon}
+                                        {item.label}
+                                    </DropdownMenuCheckboxItem>
+                                )}
                             <hr />
                         </>
                     ))}
@@ -138,5 +156,5 @@ export default function PhotoCard({ photo, index, postId, totalImages, movePhoto
                 />
             </div>
         </div>
-    )
+    );
 }

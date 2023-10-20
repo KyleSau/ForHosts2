@@ -1,13 +1,12 @@
-"use client"
+"use client";
 import { FC } from "react";
-import { Image } from 'lucide-react'
+import { Image } from "lucide-react";
 
 interface UploaderProps {
     onFileUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const PhotoUploader: FC<UploaderProps> = ({ onFileUpload }) => {
-
     const handleDragOver = (e: React.DragEvent<HTMLInputElement>) => {
         e.preventDefault();
     };
@@ -17,8 +16,8 @@ const PhotoUploader: FC<UploaderProps> = ({ onFileUpload }) => {
         if (e.dataTransfer.files) {
             onFileUpload({
                 target: {
-                    files: e.dataTransfer.files
-                }
+                    files: e.dataTransfer.files,
+                },
             } as React.ChangeEvent<HTMLInputElement>);
         }
     };
@@ -26,10 +25,15 @@ const PhotoUploader: FC<UploaderProps> = ({ onFileUpload }) => {
     return (
         <div
             id={""}
-            className="relative flex flex-col justify-center items-center text-center py-5 text-gray-400 border-dashed border-2 hover:border-solid border-black"
+            className="relative mx-auto flex h-[300px] w-[325px] flex-col items-center justify-center border-2 border-dashed border-black py-5 text-center text-gray-400 hover:border-solid md:w-[365px]"
         >
-            <input accept="image/png, image/jpeg" type="file" title="" multiple
-                className="absolute inset-0 w-full h-full p-0 m-0 outline-none opacity-0 cursor-pointer"
+            <input
+                accept="image/png, image/jpeg"
+                type="file"
+                title=""
+                multiple
+                // className="absolute inset-0 z-50 w-full h-full p-0 m-0 outline-none opacity-0 cursor-pointer"
+                className="absolute inset-0 m-0 h-auto w-auto cursor-pointer p-0 opacity-0 outline-none"
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
                 onChange={onFileUpload}
