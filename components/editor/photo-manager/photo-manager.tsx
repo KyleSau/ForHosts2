@@ -99,7 +99,7 @@ export default function PhotoManager({
       try {
         const blobResult = await put(file.name, file, {
           access: "public",
-          handleBlobUploadUrl: "/api/upload",
+          handleBlobUploadUrl: "/api/upload_blob",
         });
 
         const photo = await createImageMetadata(blobResult, postId, siteId);
@@ -122,19 +122,20 @@ export default function PhotoManager({
       }
     }
 
-    // Remove all oversized files from localPhotos at once
-    if (oversizedFileNames.length > 0) {
-      alert(
-        `${JSON.stringify(oversizedFileNames)} ${
-          oversizedFileNames.length > 1 ? "were" : "was"
-        } not uploaded because it exceeds the file size limit of ${IMAGE_SIZE_LIMIT_MB} MB.`,
-      );
-      setLocalPhotos((prevLocalPhotos) =>
-        prevLocalPhotos.filter(
-          (localPhoto) => !oversizedFileNames.includes(localPhoto.name),
-        ),
-      );
-    }
+      // Remove all oversized files from localPhotos at once
+      if (oversizedFileNames.length > 0) {
+        const formattedNames = oversizedFileNames.join("\n");
+        alert(
+          `The following ${oversizedFileNames.length > 1 ? "files were" : "file was"
+          } not uploaded because it exceeds the file size limit of ${IMAGE_SIZE_LIMIT_MB
+          } MB.\n\n${formattedNames}`,
+        );
+        setLocalPhotos((prevLocalPhotos) =>
+            prevLocalPhotos.filter(
+                (localPhoto) => !oversizedFileNames.includes(localPhoto.name),
+            ),
+        );
+      }
   };
 
   return (
