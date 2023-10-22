@@ -2,6 +2,9 @@ import Searchable from './search';
 import UsersTable from './table';
 import { Card, Metric, Text, Title, BarList, Flex, Grid } from '@tremor/react';
 import Chart from './chart';
+import { getSession } from 'next-auth/react';
+import { redirect } from 'next/navigation';
+import { RollerCoaster } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,6 +13,12 @@ export default async function IndexPage({
 }: {
     searchParams: { q: string };
 }) {
+
+    const session = await getSession();
+    if (!session?.user.role === Role.ADMIN) {
+        redirect("/login");
+    }
+
     const search = searchParams.q ?? '';
     const sites = await prisma?.site.findMany();
     const listings = await prisma?.site.findMany();
