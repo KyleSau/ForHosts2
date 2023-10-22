@@ -119,11 +119,12 @@ export default function PhotoCard({
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-auto">
-          {menuItems.map((item) => (
+          {menuItems.map((item, itemIdx) => (
             <>
               {(!item.condition ||
                 (item.condition && item.condition(index))) && (
                 <DropdownMenuCheckboxItem
+                  key={itemIdx}
                   className="cursor-pointer px-2 pl-0"
                   onClick={() => item.action(index)}
                 >

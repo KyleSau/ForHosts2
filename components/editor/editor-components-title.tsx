@@ -8,7 +8,7 @@ type TabTitleProps = {
 export default function EditorTitle({ title, desc }: TabTitleProps) {
   return (
     <div className=" text-center">
-      <h4 className="mt-6 text-xl font-bold text-gray-800">{title}</h4>
+      <h4 className="text-xl font-bold text-gray-800">{title}</h4>
       <h3 className="text-md mt-2 text-gray-500">{desc}</h3>
       <hr className="my-6 w-full" />
     </div>
