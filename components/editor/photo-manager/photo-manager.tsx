@@ -99,7 +99,7 @@ export default function PhotoManager({
       try {
         const blobResult = await put(file.name, file, {
           access: "public",
-          handleBlobUploadUrl: "/api/upload_blob",
+          handleBlobUploadUrl: "/api/upload",
         });
 
         const photo = await createImageMetadata(blobResult, postId, siteId);
@@ -171,9 +171,9 @@ export default function PhotoManager({
             />
           ))}
 
-          {localPhotos.map((photo: LocalPhoto) => (
+          {localPhotos.map((photo: LocalPhoto, photoIdx: number) => (
             <LocalPhotoCard
-              key={photo.name}
+              key={photoIdx}
               photo={photo}
               className="non-draggable relative mx-auto w-[325px] md:w-[365px]"
             />
