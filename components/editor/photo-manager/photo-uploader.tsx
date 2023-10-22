@@ -1,6 +1,7 @@
 "use client";
 import { FC } from "react";
 import { Image } from "lucide-react";
+import { FILE_CONSTS } from "@/lib/constants";
 
 interface UploaderProps {
     onFileUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -25,10 +26,10 @@ const PhotoUploader: FC<UploaderProps> = ({ onFileUpload }) => {
     return (
         <div
             id={""}
-            className="relative mx-auto flex h-[300px] w-[325px] flex-col items-center justify-center border-2 border-dashed border-black py-5 text-center text-gray-400 hover:border-solid md:w-[365px]"
+            className="relative mx-auto flex h-[300px] w-[325px] md:w-[365px] flex-col items-center justify-center border-2 border-dashed border-black py-5 text-center text-gray-400 hover:border-solid"
         >
             <input
-                accept="image/png, image/jpeg"
+                accept={[FILE_CONSTS.JPEG, FILE_CONSTS.PNG, FILE_CONSTS.BMP].join(",")}
                 type="file"
                 title=""
                 multiple

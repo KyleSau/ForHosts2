@@ -17,6 +17,7 @@ import LocalPhotoCard from "./local-photo-card";
 import { LocalPhoto } from "./local-photo";
 import EditorWrapper from "../editor-wrapper";
 import EditorTitle from "../editor-components-title";
+import { humanReadableFileSize } from "@/lib/utils";
 
 const PERMITTED_TYPES = new Set([
   FILE_CONSTS.BMP,
@@ -28,6 +29,11 @@ interface PhotoMangerProps {
   images: Image[];
   postId: string;
   siteId: string;
+}
+
+interface OversizedFileData {
+  fileName: string, 
+  fileSize: number
 }
 
 export default function PhotoManager({
@@ -59,10 +65,8 @@ export default function PhotoManager({
 
   const onPhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = event.target;
-    const localFiles = Array.from(files ?? []).filter((file) =>
-      PERMITTED_TYPES.has(file.type),
-    );
-
+    const localFiles = Array.from(files ?? []).filter((file) => PERMITTED_TYPES.has(file.type));
+    
     if (
       photos.length > IMAGE_UPLOAD_QUANTITY_LIMIT ||
       photos.length + localFiles.length > IMAGE_UPLOAD_QUANTITY_LIMIT
@@ -85,33 +89,31 @@ export default function PhotoManager({
   };
 
   const uploadPhotos = async (localFiles: File[]) => {
-    let oversizedFileNames: string[] = [];
+    let oversizedFileNames: Array<OversizedFileData> = [];
 
     for (let i = 0; i < localFiles.length; i++) {
       // Use a traditional for loop to process files one by one
       const file = localFiles[i];
 
       if (file.size > IMAGE_SIZE_LIMIT_BYTES) {
-        oversizedFileNames.push(file.name);
+        oversizedFileNames.push({fileName: file.name, fileSize: file.size});
         continue;
       }
 
       try {
         const blobResult = await put(file.name, file, {
           access: "public",
-          handleBlobUploadUrl: "/api/upload",
+          handleBlobUploadUrl: "/api/upload_blob",
         });
-
+        
         const photo = await createImageMetadata(blobResult, postId, siteId);
-
+        
         if (photo) {
           setPhotos((prevPhotos) => [...prevPhotos, photo]);
 
           // Remove the corresponding localPhoto
           setLocalPhotos((prevLocalPhotos) =>
-            prevLocalPhotos.filter(
-              (localPhoto) => localPhoto.name !== file.name,
-            ),
+            prevLocalPhotos.filter((localPhoto) => localPhoto.name !== file.name),
           );
         }
       } catch (error) {
@@ -122,20 +124,30 @@ export default function PhotoManager({
       }
     }
 
-      // Remove all oversized files from localPhotos at once
-      if (oversizedFileNames.length > 0) {
-        const formattedNames = oversizedFileNames.join("\n");
-        alert(
-          `The following ${oversizedFileNames.length > 1 ? "files were" : "file was"
-          } not uploaded because it exceeds the file size limit of ${IMAGE_SIZE_LIMIT_MB
-          } MB.\n\n${formattedNames}`,
-        );
-        setLocalPhotos((prevLocalPhotos) =>
-            prevLocalPhotos.filter(
-                (localPhoto) => !oversizedFileNames.includes(localPhoto.name),
-            ),
-        );
-      }
+    // Remove all oversized files from localPhotos at once
+    if (oversizedFileNames.length > 0) {
+      const overSizedFileNameSet = new Set();
+
+      let formattedNames: string = oversizedFileNames
+        .map((oversizedFileData: OversizedFileData) => {
+          overSizedFileNameSet.add(oversizedFileData.fileName);
+          return oversizedFileData.fileName + `  (${humanReadableFileSize(oversizedFileData.fileSize)})`;
+        })
+        .join("\n");
+
+      alert(
+        `The following ${oversizedFileNames.length > 1 ? "files were" : "file was"
+        } not uploaded because ${oversizedFileNames.length > 1 ? "they exceed" : "it exceeds"
+        } the file size limit of ${IMAGE_SIZE_LIMIT_MB
+        } MB.\n\n${formattedNames}`,
+      );
+      
+      setLocalPhotos((prevLocalPhotos) =>
+          prevLocalPhotos.filter(
+              (localPhoto) => !overSizedFileNameSet.has(localPhoto.name),
+          ),
+      );
+    }
   };
 
   return (
