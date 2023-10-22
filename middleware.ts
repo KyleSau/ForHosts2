@@ -45,6 +45,25 @@ export default async function middleware(req: NextRequest) {
     );
   }
 
+  // rewrites for app pages
+  if (hostname == `admin.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
+    const session = await getToken({ req });
+    if (!session && path !== "/login") {
+      return NextResponse.redirect(new URL("/login", req.url));
+    } else if (session && path == "/login") {
+
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+    // return NextResponse.rewrite(
+
+    //   new URL(`/app${path === "/" ? "" : path}`, req.url),
+    // );
+    return NextResponse.rewrite(
+      new URL(`/app/admin${path === "/" ? "" : path}${url.search}`, req.url),
+    );
+  }
+
+
   // rewrite root application to `/home` folder
   if (
     hostname === "localhost:3000" ||
