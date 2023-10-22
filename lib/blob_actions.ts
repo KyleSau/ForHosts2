@@ -173,50 +173,38 @@ export async function resequenceOrderIndices(postId: string) {
 export async function shiftBlobMetadata(postId: string, oldIndex: number, newIndex: number) {
   console.log('postId: ' + postId + ' oldIndex: ' + oldIndex + ' newIndex: ' + newIndex);
 
-  return await prisma.$transaction(async (prisma) => {
-    // Step 1: Fetch the relevant records
-    const affectedImages = await prisma.image.findMany({
-      where: {
-        postId: postId,
-        orderIndex: oldIndex < newIndex
-          ? { gte: oldIndex, lte: newIndex } // Moving to the right
-          : { gte: newIndex, lte: oldIndex } // Moving to the left
-      },
-      orderBy: { orderIndex: 'asc' }
-    });
-
-    // Step 2: Update the order indices
-    const updatedImages = affectedImages.map((image, index, array) => {
-      if (image.orderIndex === oldIndex) {
-        return {
-          ...image,
-          orderIndex: newIndex
-        };
-      } else if (oldIndex < newIndex) { // Moving to the right
-        return {
-          ...image,
-          orderIndex: image.orderIndex - 1
-        };
-      } else { // Moving to the left
-        return {
-          ...image,
-          orderIndex: image.orderIndex + 1
-        };
-      }
-    });
-
-    // Step 3: Update the images in the database
-    const updateOperations = updatedImages.map(image => {
-      return prisma.image.update({
-        where: { id: image.id },
-        data: { orderIndex: image.orderIndex }
-      });
-    });
-
-    // No need for the inner transaction, just execute the update operations directly
-    await Promise.all(updateOperations);
+  // Step 1: Fetch the relevant records
+  const affectedImages = await prisma.image.findMany({
+    where: {
+      postId: postId,
+      orderIndex: oldIndex < newIndex
+        ? { gte: oldIndex, lte: newIndex } // Moving to the right
+        : { gte: newIndex, lte: oldIndex } // Moving to the left
+    },
+    orderBy: { orderIndex: 'asc' }
   });
+
+  // Step 2: Prepare the updates
+  const updateOperations = affectedImages.map((image) => {
+    let newOrderIndex;
+    if (image.orderIndex === oldIndex) {
+      newOrderIndex = newIndex;
+    } else if (oldIndex < newIndex) { // Moving to the right
+      newOrderIndex = image.orderIndex - 1;
+    } else { // Moving to the left
+      newOrderIndex = image.orderIndex + 1;
+    }
+
+    return prisma.image.update({
+      where: { id: image.id },
+      data: { orderIndex: newOrderIndex }
+    });
+  });
+
+  // Step 3: Execute the updates in a transaction
+  await prisma.$transaction(updateOperations);
 }
+
 
 /**
  * 
