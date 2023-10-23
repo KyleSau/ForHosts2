@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
-import { Role } from "@prisma/client";
 
 export const config = {
   matcher: [
@@ -27,6 +26,7 @@ export default async function middleware(req: NextRequest) {
 
   // Get the pathname of the request (e.g. /, /about, /blog/first-post)
   const path = url.pathname;
+  console.log("path " + path);
 
   // rewrites for app pages
   if (hostname == `dashboard.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
@@ -46,17 +46,22 @@ export default async function middleware(req: NextRequest) {
     );
   }
 
-  // rewrites for app pages
   if (hostname == `admin.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
+    console.log('path: ' + path);
     const session = await getToken({ req });
-    if (!session && path !== "/admin") {
-      return NextResponse.redirect(new URL("/admin", req.url));
-    } else if (session && path == "/admin") {
+    if (!session && path !== "/login") {
+      return NextResponse.redirect(new URL("/login", req.url));
+    } else if (session && path == "/login") {
+
       return NextResponse.redirect(new URL("/", req.url));
     }
-    
+    // return NextResponse.rewrite(
+
+    //   new URL(`/app${path === "/" ? "" : path}`, req.url),
+    // );
+    console.log("made it here!");
     return NextResponse.rewrite(
-      new URL(`/app${path === "/" ? "" : path}${url.search}`, req.url),
+      new URL(`/app/admin${path === "/" ? "" : path}${url.search}`, req.url),
     );
   }
 

@@ -1,13 +1,9 @@
 "use client";
 
-import LoadingDots from "@/components/icons/loading-dots";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import GoogleIcon from '@mui/icons-material/Google';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import AppleIcon from '@mui/icons-material/Apple';
 
 export default function LoginButton() {
     const [githubLoading, setGithubLoading] = useState(false);
@@ -39,21 +35,6 @@ export default function LoginButton() {
                     src="https://demos.creative-tim.com/notus-js/assets/img/github.svg"
                 />
                 Github
-            </button>
-            <button
-                className="active:bg-blueGray-50 text-blueGray-700 mb-1 mr-1 inline-flex items-center rounded bg-white px-4 py-2 text-xs font-bold font-normal uppercase shadow outline-none transition-all duration-150 ease-linear hover:shadow-md focus:outline-none"
-                type="button"
-                onClick={() => {
-                    setGoogleLoading(true);
-                    signIn("google");
-                }}
-            >
-                <img
-                    alt="..."
-                    className="mr-1 w-5"
-                    src="https://demos.creative-tim.com/notus-js/assets/img/google.svg"
-                />
-                Google{" "}
             </button>
         </div>
         // <div>

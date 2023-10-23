@@ -29,23 +29,12 @@ model User {
   image         String?
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
+  stripeAccount StripeAccount? // add relation?
   accounts      Account[]
   sessions      Session[]
   sites         Site[]
   posts         Post[]
   role          Role           @default(USER)
-  stripeAccount StripeAccount? // add relation?
-}
-
-model Admin {
-  id            String    @id @default(cuid())
-  name          String?
-  gh_username   String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
   blogs         Blog[]
 }
 
@@ -57,8 +46,9 @@ model Blog {
   slug        String   @default(cuid())
   image       String
   keywords    String[]
-  Admin       Admin?   @relation(fields: [adminId], references: [id])
-  adminId     String?
+
+  user   User?  @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String
 }
 
 model StripeAccount {
