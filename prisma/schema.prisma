@@ -12,6 +12,11 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 // This should be a Host
 model User {
   id            String         @id @default(cuid())
@@ -28,6 +33,7 @@ model User {
   sessions      Session[]
   sites         Site[]
   posts         Post[]
+  role          Role           @default(USER)
   stripeAccount StripeAccount? // add relation?
 }
 

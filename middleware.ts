@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
+import { Role } from "@prisma/client";
 
 export const config = {
   matcher: [
@@ -17,7 +18,7 @@ export const config = {
 export default async function middleware(req: NextRequest) {
   const url = req.nextUrl;
 
-  //console.log("Original URL:", req.nextUrl);
+  console.log("Original URL:", req.nextUrl);
 
   // Get hostname of request (e.g. demo.vercel.pub, demo.localhost:3000)
   const hostname = req.headers
@@ -44,6 +45,21 @@ export default async function middleware(req: NextRequest) {
       new URL(`/app${path === "/" ? "" : path}${url.search}`, req.url),
     );
   }
+
+  // rewrites for app pages
+  if (hostname == `admin.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
+    const session = await getToken({ req });
+    if (!session && path !== "/admin") {
+      return NextResponse.redirect(new URL("/admin", req.url));
+    } else if (session && path == "/admin") {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+    
+    return NextResponse.rewrite(
+      new URL(`/app${path === "/" ? "" : path}${url.search}`, req.url),
+    );
+  }
+
 
   // rewrite root application to `/home` folder
   if (

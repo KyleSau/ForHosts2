@@ -57,12 +57,16 @@ export const authOptions: NextAuthOptions = {
         // @ts-expect-error
         id: token.sub,
         // @ts-expect-error
-        username: token?.user?.username || token?.user?.gh_username,
+        username: token?.user?.username || token?.user?.name,
       };
+      console.log("github stuff " + JSON.stringify(token));
       return session;
     },
   },
 };
+
+
+
 
 export function getSession() {
   return getServerSession(authOptions) as Promise<{
