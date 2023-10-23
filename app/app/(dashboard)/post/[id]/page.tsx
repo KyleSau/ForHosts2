@@ -31,5 +31,6 @@ export default async function PostPage({ params }: { params: { id: string } }) {
 
   return (
     <PhotoManager images={sortedImages} postId={data.id} siteId={data.siteId!} />
+    // kekker
   );
 }
