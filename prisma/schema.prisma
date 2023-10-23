@@ -183,6 +183,7 @@ model Post {
 
 model Location {
   id          String  @id @default(cuid())
+  userId      String
   address     String?
   longitude   String?
   latitude    String?
@@ -196,6 +197,7 @@ model Location {
 
 model Pricing {
   id              String @id @default(cuid())
+  userId          String
   price           Int?
   weekendPrice    Int?
   cleaningFee     Int    @default(0)
@@ -212,6 +214,7 @@ model Pricing {
 
 model Availability {
   id                   String    @id @default(cuid())
+  userId               String
   instantBooking       Boolean?  @default(true)
   minStay              Int?      @default(1) // days (1)
   maxStay              Int?      @default(28) // days (365)
@@ -236,6 +239,7 @@ model Availability {
 
 model Bedroom {
   id                String           @id @default(cuid())
+  userId            String
   double            Int?             @default(0)
   queen             Int?             @default(0)
   single            Int?             @default(0)
@@ -259,6 +263,7 @@ model Bedroom {
 
 model PropertyRules {
   id                         String  @id @default(cuid())
+  userId                     String
   petsAllowed                Boolean @default(false)
   eventsAllowed              Boolean @default(false)
   smokingAllowed             Boolean @default(false)
@@ -279,6 +284,7 @@ model PropertyRules {
 
 model PropertyDetails {
   id            String    @id @default(cuid())
+  userId        String
   placeType     String?   @default("House") // Types: Entire Home, Room
   listingType   String?   @default("Entire Place") // 'Entire Place', 'Room', 'Shared Room'
   propertyType  String?   @default("Home")
@@ -297,6 +303,7 @@ model PropertyDetails {
 
 model AfterBookingInfo {
   id                     String  @id @default(cuid())
+  userId                 String
   wifiName               String?
   wifiPassword           String?
   houseManual            String?
@@ -310,9 +317,10 @@ model AfterBookingInfo {
 }
 
 model Calendar {
-  id   String @id @default(cuid())
-  name String
-  url  String
+  id     String @id @default(cuid())
+  userId String
+  name   String
+  url    String
 
   postId String
   Post   Post   @relation(fields: [postId], references: [id])
@@ -325,6 +333,7 @@ model Calendar {
 
 model Review {
   id      String  @id @default(cuid())
+  userId  String
   postId  String
   rating  Float
   comment String?
