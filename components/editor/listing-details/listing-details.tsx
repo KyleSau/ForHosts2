@@ -16,7 +16,6 @@ import BedroomManager from "./bedroom-manager";
 import { UpdatePropertyDetailsRequest } from "@/actions/post/editor/property-details/update-property-details-request";
 import { updatePropertyDetails } from "@/actions/post/editor/property-details/property-details-actions";
 import PropertyDetailsValidationSchema from "@/actions/post/editor/property-details/property-details-valdiation-schema";
-// Define the custom UpdateRequest type.
 
 export default function ListingDetails({
   data,
