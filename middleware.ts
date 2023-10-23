@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
+import { Role } from "@prisma/client";
 
 export const config = {
   matcher: [
@@ -17,15 +18,18 @@ export const config = {
 export default async function middleware(req: NextRequest) {
   const url = req.nextUrl;
 
-  //console.log("Original URL:", req.nextUrl);
+  console.log("Original URL:", req.nextUrl);
 
   // Get hostname of request (e.g. demo.vercel.pub, demo.localhost:3000)
   const hostname = req.headers
     .get("host")!
     .replace(".localhost:3000", `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`);
 
+  console.log("middleware: hostname: ", hostname);
+
   // Get the pathname of the request (e.g. /, /about, /blog/first-post)
   const path = url.pathname;
+  console.log("path: ", path);
 
   // rewrites for app pages
   if (hostname == `dashboard.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
@@ -48,9 +52,9 @@ export default async function middleware(req: NextRequest) {
   // rewrites for app pages
   if (hostname == `admin.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
     const session = await getToken({ req });
-    if (!session && path !== "/login") {
-      return NextResponse.redirect(new URL("/login", req.url));
-    } else if (session && path == "/login") {
+    if (!session && path !== "/admin") {
+      return NextResponse.redirect(new URL("/admin", req.url));
+    } else if (session && path == "/admin") {
 
       return NextResponse.redirect(new URL("/", req.url));
     }
@@ -59,7 +63,7 @@ export default async function middleware(req: NextRequest) {
     //   new URL(`/app${path === "/" ? "" : path}`, req.url),
     // );
     return NextResponse.rewrite(
-      new URL(`/app/admin${path === "/" ? "" : path}${url.search}`, req.url),
+      new URL(`/app${path === "/" ? "" : path}${url.search}`, req.url),
     );
   }
 

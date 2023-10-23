@@ -33,13 +33,13 @@ export default function UsersTable({ users }: { users: User[] }) {
           <TableRow key={user.id}>
             <TableCell>{user.name}</TableCell>
             <TableCell>
+              <Text>{user.id}</Text>
+            </TableCell>
+            <TableCell>
               <Text>{user.sites?.length}</Text>
             </TableCell>
             <TableCell>
               <Text>{user.posts?.length}</Text>
-            </TableCell>
-            <TableCell>
-              <Text>{user.}</Text>
             </TableCell>
           </TableRow>
         ))}

@@ -5,6 +5,7 @@ import Chart from './chart';
 import { getSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 import { RollerCoaster } from 'lucide-react';
+import { Role } from "@prisma/client";
 
 export const dynamic = 'force-dynamic';
 
@@ -14,10 +15,10 @@ export default async function IndexPage({
     searchParams: { q: string };
 }) {
 
-    const session = await getSession();
-    if (!session?.user.role === Role.ADMIN) {
-        redirect("/login");
-    }
+    // const session = await getSession();
+    // if (!session?.user.role === Role.ADMIN) {
+    //     redirect("/login");
+    // }
 
     const search = searchParams.q ?? '';
     const sites = await prisma?.site.findMany();
