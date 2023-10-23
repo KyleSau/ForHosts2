@@ -40,7 +40,7 @@ export default function ListingDetails({
       totalBedrooms: data.propertyDetails.totalBedrooms,
       bathrooms: data.propertyDetails.bathrooms,
     },
-    // validationSchema: PropertyDetailsValidationSchema,
+    validationSchema: PropertyDetailsValidationSchema,
     onSubmit: async (values) => {
       console.log(JSON.stringify(values));
       setSubmitted(false);
