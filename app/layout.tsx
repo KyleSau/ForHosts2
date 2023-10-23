@@ -6,9 +6,6 @@ import { Metadata } from "next";
 import clsx from "clsx";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 
-
-
-
 export default function RootLayout({
   children,
 }: {
@@ -18,6 +15,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={clsx(cal.variable, inter.variable)}>
         <Providers>
+          <script src={process.env.GOOGLE_MAP_API_KEY} async />
           {children}
           <Analytics />
         </Providers>
