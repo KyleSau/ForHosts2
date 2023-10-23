@@ -17,7 +17,7 @@ import { User } from '@prisma/client';
 //   email: string;
 // }
 
-export default function UsersTable({ users }: { users: User[] }) {
+export default function UsersTable({ users }: { users: User[] | undefined }) {
   return (
     <Table>
       <TableHead>
@@ -29,18 +29,18 @@ export default function UsersTable({ users }: { users: User[] }) {
         </TableRow>
       </TableHead>
       <TableBody>
-        {users.map((user) => (
+        {users?.map((user) => (
           <TableRow key={user.id}>
             <TableCell>{user.name}</TableCell>
             <TableCell>
               <Text>{user.id}</Text>
             </TableCell>
-            <TableCell>
+            {/* <TableCell>
               <Text>{user.sites?.length}</Text>
             </TableCell>
             <TableCell>
               <Text>{user.posts?.length}</Text>
-            </TableCell>
+            </TableCell> */}
           </TableRow>
         ))}
       </TableBody>

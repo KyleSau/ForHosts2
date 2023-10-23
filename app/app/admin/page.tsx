@@ -5,7 +5,7 @@ import Chart from './chart';
 import { getSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 import { RollerCoaster } from 'lucide-react';
-import { Role } from "@prisma/client";
+import { User, Role } from "@prisma/client";
 
 export const dynamic = 'force-dynamic';
 
@@ -24,7 +24,7 @@ export default async function IndexPage({
     const sites = await prisma?.site.findMany();
     const listings = await prisma?.site.findMany();
     const reservations = await prisma?.reservation.findMany();
-    const users = await prisma?.user.findMany({
+    const users: User[] | undefined = await prisma?.user.findMany({
         where: {
             name: {
                 contains: search,

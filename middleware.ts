@@ -25,11 +25,8 @@ export default async function middleware(req: NextRequest) {
     .get("host")!
     .replace(".localhost:3000", `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`);
 
-  console.log("middleware: hostname: ", hostname);
-
   // Get the pathname of the request (e.g. /, /about, /blog/first-post)
   const path = url.pathname;
-  console.log("path: ", path);
 
   // rewrites for app pages
   if (hostname == `dashboard.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
@@ -55,13 +52,9 @@ export default async function middleware(req: NextRequest) {
     if (!session && path !== "/admin") {
       return NextResponse.redirect(new URL("/admin", req.url));
     } else if (session && path == "/admin") {
-
       return NextResponse.redirect(new URL("/", req.url));
     }
-    // return NextResponse.rewrite(
-
-    //   new URL(`/app${path === "/" ? "" : path}`, req.url),
-    // );
+    
     return NextResponse.rewrite(
       new URL(`/app${path === "/" ? "" : path}${url.search}`, req.url),
     );
