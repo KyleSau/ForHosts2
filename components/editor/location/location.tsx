@@ -174,7 +174,6 @@ export default function Location({ data }: { data: LocationData }) {
 
                     return (
                       <div
-                        key={index}
                         {...getSuggestionItemProps(suggestion, {
                           className,
                         })}
@@ -187,6 +186,7 @@ export default function Location({ data }: { data: LocationData }) {
               </div>
             )}
           </PlacesAutocomplete>
+
           {formik.touched.address && formik.errors.address && (
             <div className="mt-2 text-sm text-red-600">
               {formik.errors.address.toString()}
