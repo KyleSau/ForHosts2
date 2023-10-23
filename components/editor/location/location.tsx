@@ -143,7 +143,7 @@ export default function Location({ data }: { data: LocationData }) {
           >
             Address
           </label>
-          <PlacesAutocomplete
+          {/* <PlacesAutocomplete
             value={formik.values.address}
             onChange={(address) => formik.setFieldValue("address", address)}
             onSelect={(address) => formik.setFieldValue("address", address)}
@@ -185,7 +185,7 @@ export default function Location({ data }: { data: LocationData }) {
                 </div>
               </div>
             )}
-          </PlacesAutocomplete>
+          </PlacesAutocomplete> */}
 
           {formik.touched.address && formik.errors.address && (
             <div className="mt-2 text-sm text-red-600">
@@ -225,9 +225,9 @@ export default function Location({ data }: { data: LocationData }) {
         </div>
       </form>
       Coordinates: {JSON.stringify(coordinates)}
-      <OpenStreetMap lat={coordinates.lat} lng={coordinates.lng}>
+      {/* <OpenStreetMap lat={coordinates.lat} lng={coordinates.lng}>
         <MapViewUpdater coordinates={coordinates} />
-      </OpenStreetMap>
+      </OpenStreetMap> */}
       {/* <Map lat={coordinates.lat} lng={coordinates.lng} /> */}
     </EditorWrapper>
   );
