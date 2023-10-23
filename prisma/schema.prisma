@@ -12,6 +12,11 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 // This should be a Host
 model User {
   id            String         @id @default(cuid())
@@ -24,15 +29,30 @@ model User {
   image         String?
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
+  stripeAccount StripeAccount? // add relation?
   accounts      Account[]
   sessions      Session[]
   sites         Site[]
   posts         Post[]
-  stripeAccount StripeAccount? // add relation?
+  role          Role           @default(USER)
+  blogs         Blog[]
+}
+
+model Blog {
+  id          String   @id @default(cuid())
+  title       String   @db.Text
+  description String?  @db.Text
+  content     String?  @db.Text
+  slug        String   @default(cuid())
+  image       String
+  keywords    String[]
+
+  user   User?  @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String
 }
 
 model StripeAccount {
-  id                        Int     @id @default(autoincrement())
+  id                        String  @id @default(cuid())
   accountId                 String
   accountEmail              String?
   oauthAccessToken          String
@@ -338,8 +358,7 @@ model Site {
 }
 
 model Reservation {
-  id String @id @default(cuid())
-
+  id         String   @id @default(cuid())
   postId     String
   startDate  DateTime
   endDate    DateTime

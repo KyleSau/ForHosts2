@@ -82,6 +82,7 @@ export const createSite = async (formData: FormData) => {
     }
   }
 };
+
 export const getBedrooms = async (postId: string) => {
   const post = await prisma.post.findUnique({
     where: { id: postId },
@@ -97,7 +98,6 @@ export const getBedrooms = async (postId: string) => {
       },
     },
   });
-
   return post?.propertyDetails?.bedrooms || [];
 };
 
@@ -330,7 +330,8 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
   return response;
 });
 
-export const updatePost = async (data: Post) => {
+// we need to break this update function up
+/*export const updatePost = async (data: Post) => {
   console.log("data: " + JSON.stringify(data));
   const session = await getSession();
   if (!session?.user.id) {
@@ -370,6 +371,9 @@ export const updatePost = async (data: Post) => {
         description: data.description,
       },
     });
+
+    // const locationId = data.locationId!;
+    // const location = prisma.location.findUnique({ where: { id: locationId } });
 
     // LocationUpdateRequest
     if (data.location) {
@@ -485,7 +489,96 @@ export const updatePost = async (data: Post) => {
     console.error("Error updating post and its relations:", error);
     return { error: error.message };
   }
+};*/
+
+export const updatePost = async (data: Post) => {
+  const session = await getSession();
+  if (!session?.user.id) {
+    return { error: "Not authenticated" };
+  }
+
+  // Fetch the post and its related sub-tables
+  const post = await prisma.post.findUnique({
+    where: {
+      id: data.id,
+    },
+    include: {
+      images: true,
+      site: true,
+      pricing: true,
+      location: true,
+      availability: true,
+      propertyRules: true,
+      propertyDetails: true,
+      afterBookingInfo: true,
+    },
+  });
+
+  if (!post || post.userId !== session.user.id) {
+    return { error: "Post not found" };
+  }
+
+  try {
+    const updatedPost = await prisma.post.update({
+      where: {
+        id: data.id,
+      },
+      data: {
+        title: data.title,
+        description: data.description,
+      },
+    });
+
+    if (post.location) {
+      await prisma.location.update({
+        where: { id: post.location!.id },
+        data: post.location,
+      });
+    }
+
+    if (post.pricing) {
+      await prisma.pricing.update({
+        where: { id: post.pricing!.id },
+        data: post.pricing,
+      });
+    }
+
+    if (post.availability) {
+      await prisma.availability.update({
+        where: { id: post.availability!.id },
+        data: post.availability,
+      });
+    }
+
+    if (post.propertyRules) {
+      await prisma.propertyRules.update({
+        where: { id: post.propertyRules!.id },
+        data: post.propertyRules,
+      });
+    }
+
+    if (post.propertyDetails) {
+      await prisma.propertyDetails.update({
+        where: { id: post.propertyDetails!.id },
+        data: post.propertyDetails,
+      });
+    }
+
+    if (post.afterBookingInfo) {
+      await prisma.afterBookingInfo.update({
+        where: { id: post.afterBookingInfo!.id },
+        data: post.afterBookingInfo,
+      });
+    }
+
+    return updatedPost;
+
+  } catch (error: any) {
+    console.error('Error updating post and its relations:', error);
+    return { error: error.message };
+  }
 };
+
 export const getPosts = async (
   userId: string,
   siteId: string | undefined,
@@ -603,7 +696,7 @@ export const updatePostMetadata = withPostAuth(
       // if the site has a custom domain, we need to revalidate those tags too
       post.site?.customDomain &&
         (await revalidateTag(`${post.site?.customDomain}-posts`),
-        await revalidateTag(`${post.site?.customDomain}-${post.slug}`));
+          await revalidateTag(`${post.site?.customDomain}-${post.slug}`));
 
       return response;
     } catch (error: any) {
