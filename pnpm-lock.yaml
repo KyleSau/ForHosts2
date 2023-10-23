@@ -119,6 +119,9 @@ dependencies:
   '@types/moment':
     specifier: ^2.13.0
     version: 2.13.0
+  '@types/react-autocomplete':
+    specifier: ^1.8.8
+    version: 1.8.8
   '@types/react-big-calendar':
     specifier: ^1.6.4
     version: 1.6.4
@@ -242,6 +245,9 @@ dependencies:
   react-map-gl:
     specifier: ^7.1.5
     version: 7.1.5(react-dom@18.2.0)(react@18.2.0)
+  react-places-autocomplete:
+    specifier: ^7.3.0
+    version: 7.3.0(react@18.2.0)
   react-share:
     specifier: ^4.4.1
     version: 4.4.1(react@18.2.0)
@@ -343,6 +349,9 @@ devDependencies:
   '@types/react-leaflet':
     specifier: ^3.0.0
     version: 3.0.0(leaflet@1.9.4)(react-dom@18.2.0)(react@18.2.0)
+  '@types/react-places-autocomplete':
+    specifier: ^7.2.12
+    version: 7.2.12
   autoprefixer:
     specifier: ^10.4.13
     version: 10.4.14(postcss@8.4.24)
@@ -4784,6 +4793,10 @@ packages:
   /@types/geojson@7946.0.10:
     resolution: {integrity: sha512-Nmh0K3iWQJzniTuPRcJn5hxXkfB1T1pgB89SBig5PlJQU5yocazeu4jATJlaA0GYFKWMqDdvYemoSnF2pXgLVA==}
 
+  /@types/google.maps@3.54.4:
+    resolution: {integrity: sha512-cUX4SOo5eN1Fotpcm6cH3//F8/UgXrs6/3OUkLYDkAizGo0AaecjBGCJMmY/n5XcMKogRFrqN/69JNKwCjBskg==}
+    dev: true
+
   /@types/hast@2.3.4:
     resolution: {integrity: sha512-wLEm0QvaoawEDoTRwzTXp4b4jpwiJDvR5KMnFnVodm3scufTlBOWRD6N1OBf9TZMhjlNsSfcO5V+7AF4+Vy+9g==}
     dependencies:
@@ -4929,6 +4942,12 @@ packages:
   /@types/prop-types@15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
 
+  /@types/react-autocomplete@1.8.8:
+    resolution: {integrity: sha512-SO0c1bgujZDWS9/UhM2K8IO7D04Sz6uGmKvZrEHZZ6o1+CBYXMD9dwfntxZs3GkBFnJp85I607hTlXlKAZ7nYA==}
+    dependencies:
+      '@types/react': 18.2.14
+    dev: false
+
   /@types/react-big-calendar@1.6.4:
     resolution: {integrity: sha512-xAbdQ2cQhx71dsnacJ1knSGqTi6cD8odGi28AzCjA+N4bgpJjSyYo/fN1bG4ScfBAEQomSl/UoXYrSgUoJ0MGA==}
     dependencies:
@@ -4969,6 +4988,13 @@ packages:
       - leaflet
       - react
       - react-dom
+    dev: true
+
+  /@types/react-places-autocomplete@7.2.12:
+    resolution: {integrity: sha512-PPoGjpIEqsAes0YzDPl3SJBzBEwAeQrNEB+vBX3/LiP+2nk+4Jc+/04MPV4QJ7esr2/bkFDN1X1sN1ErJzbcXQ==}
+    dependencies:
+      '@types/google.maps': 3.54.4
+      '@types/react': 18.2.14
     dev: true
 
   /@types/react-transition-group@4.4.6:
@@ -9817,6 +9843,16 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
       uncontrollable: 7.2.1(react@18.2.0)
       warning: 4.0.3
+    dev: false
+
+  /react-places-autocomplete@7.3.0(react@18.2.0):
+    resolution: {integrity: sha512-86wcHC69JATvWBnIS/yCsBHLtwzOGcnx3Ye94u74yTrz1jLRC/txkVDkf6rvC+Jq3zNe/tAg/W53x0EaH1ZPPw==}
+    peerDependencies:
+      react: '>=0.14.7'
+    dependencies:
+      lodash.debounce: 4.0.8
+      prop-types: 15.8.1
+      react: 18.2.0
     dev: false
 
   /react-popper@2.3.0(@popperjs/core@2.11.8)(react-dom@18.2.0)(react@18.2.0):
