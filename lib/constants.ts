@@ -17,7 +17,8 @@ export const TIME_FACTORS = {
 export const FILE_CONSTS = {
   FILE: "file",
   JPEG: "image/jpeg",
-  PNG: "image/png"
+  PNG: "image/png",
+  BMP: "image/bmp"
 }
 
 export const IMAGE_UPLOAD_QUANTITY_LIMIT = 20;
