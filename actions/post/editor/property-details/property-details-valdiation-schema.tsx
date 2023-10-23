@@ -17,7 +17,7 @@ const PropertyDetailsValidationSchema = Yup.object().shape({
         .required('Max Pets is required')
         .positive('Max Pets must be a positive number')
         .integer('Max Pets must be an integer')
-        .max(20, 'Maximum number of guests is 20'),
+        .max(5, 'Maximum number of pets is 5'),
     totalBedrooms: Yup.number()
         .required('Total Bedrooms is required')
         .positive('Total Bedrooms must be a positive number')
@@ -26,7 +26,8 @@ const PropertyDetailsValidationSchema = Yup.object().shape({
     bathrooms: Yup.number()
         .required('Bathrooms is required')
         .positive('Bathrooms must be a positive number')
-        .integer('Bathrooms must be an integer'),
+        .integer('Bathrooms must be an integer')
+        .max(20, 'Maximum number of bathrooms is 20'),
 });
 
 export default PropertyDetailsValidationSchema;
