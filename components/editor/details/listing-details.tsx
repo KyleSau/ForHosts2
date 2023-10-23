@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import TabTitle from "@/components/tab-title";
 import EditorSaveButton from "../editor-save-button";
-import { getBedrooms, updatePost } from "@/lib/actions";
+import { getBedrooms } from "@/lib/actions";
 import EditorWrapper from "../editor-container-wrapper";
 import IncrementDecrementButton from "../increment-decrement-button";
 import {
@@ -13,6 +13,11 @@ import {
   PropertyTypesArray,
 } from "./place-utils";
 import BedroomManager from "./bedroom-manager";
+import { UpdatePropertyDetailsRequest } from "@/actions/post/editor/property-details/update-property-details-request";
+import { updatePropertyDetails } from "@/actions/post/editor/property-details/property-details-actions";
+
+
+// Define the custom UpdateRequest type.
 
 export default function ListingDetails({
   data,
@@ -39,49 +44,37 @@ export default function ListingDetails({
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
+      console.log(JSON.stringify(values));
       setSubmitted(false);
       setIsLoading(true);
 
-      // Define the custom UpdateRequest type.
-      type UpdateRequest = {
-        id: any;
-        propertyDetails: {
-          maxGuests: any;
-          maxPets: any;
-          totalBedrooms: any;
-          bathrooms: any;
-          listingType: any;
-          placeType: any;
-          propertyType: any;
-        };
-      };
-
       // Create the updateRequest object with the custom type.
-      const updateRequest: UpdateRequest = {
-        id: data.id,
-        propertyDetails: {
-          maxGuests: values.maxGuests,
-          maxPets: values.maxPets,
-          totalBedrooms: values.totalBedrooms,
-          bathrooms: values.bathrooms,
-          listingType: values.listingType,
-          placeType: values.placeType,
-          propertyType: values.propertyType,
-        },
+      const updateRequest: UpdatePropertyDetailsRequest = {
+        id: data.propertyDetailsId,
+        maxGuests: values.maxGuests,
+        maxPets: values.maxPets,
+        totalBedrooms: values.totalBedrooms,
+        bathrooms: values.bathrooms,
+        listingType: values.listingType,
+        placeType: values.placeType,
+        propertyType: values.propertyType,
       };
 
-      const result = await updatePost(updateRequest as any);
-      if (!result) {
-        console.error("error");
-        setSubmitted(false);
-      } else {
-        console.log("Post updated successfully:", result);
-        const bdrmData = await getBedrooms(data.id);
-        setBedroomData(bdrmData);
+      const result = await updatePropertyDetails(updateRequest);
+      if (result) {
         setSubmitted(true);
         setIsLoading(false);
-        // setUpdateBedrooms(true);
       }
+      // if (!result) {
+      //   console.error("error");
+      //   setSubmitted(false);
+      // } else {
+      //   console.log("Post updated successfully:", result);
+      //   const bdrmData = await getBedrooms(data.id);
+      //   setBedroomData(bdrmData);
+      //   setIsLoading(false);
+      //   setSubmitted(true);
+      // }
     },
   });
 
@@ -291,3 +284,4 @@ export default function ListingDetails({
     </EditorWrapper>
   );
 }
+
