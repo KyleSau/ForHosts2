@@ -1,8 +1,9 @@
-"use server"
+"use server";
 import { getSession } from '@/lib/auth';
 import prisma from '@/lib/prisma';
-import { PropertyDetailsRequestSchema } from './property-details-valdiation-schema'
+import PropertyDetailsValidationSchema from './property-details-valdiation-schema';
 import { UpdatePropertyDetailsRequest } from './update-property-details-request';
+import * as yup from 'yup';
 
 export const updatePropertyDetails = async (request: UpdatePropertyDetailsRequest) => {
     const session = await getSession();
@@ -11,17 +12,20 @@ export const updatePropertyDetails = async (request: UpdatePropertyDetailsReques
         return { error: "Not authenticated" };
     }
 
-    // Validate the input data with Zod
-    const validationResult = PropertyDetailsRequestSchema.safeParse(request);
-
-    if (!validationResult.success) {
-        return { error: "Invalid input", details: validationResult.error.issues };
+    // Validate the input data with Yup
+    let validatedData: UpdatePropertyDetailsRequest;
+    try {
+        validatedData = await PropertyDetailsValidationSchema.validate(request);
+    } catch (error) {
+        if (error instanceof yup.ValidationError) {
+            return { error: "Invalid input", details: error.errors };
+        } else {
+            // Handle other errors if necessary
+            throw error;
+        }
     }
 
     console.log('property details id: ', request.id);
-
-    // If validation passed, cast the data to PropertyDetailsRequest type
-    const validatedData: UpdatePropertyDetailsRequest = validationResult.data;
 
     const userId = session?.user.id;
 
@@ -41,5 +45,4 @@ export const updatePropertyDetails = async (request: UpdatePropertyDetailsReques
 
         return response;
     }
-
 }

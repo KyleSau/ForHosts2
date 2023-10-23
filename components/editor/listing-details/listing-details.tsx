@@ -15,8 +15,7 @@ import {
 import BedroomManager from "./bedroom-manager";
 import { UpdatePropertyDetailsRequest } from "@/actions/post/editor/property-details/update-property-details-request";
 import { updatePropertyDetails } from "@/actions/post/editor/property-details/property-details-actions";
-
-
+import PropertyDetailsValidationSchema from "@/actions/post/editor/property-details/property-details-valdiation-schema";
 // Define the custom UpdateRequest type.
 
 export default function ListingDetails({
@@ -30,10 +29,9 @@ export default function ListingDetails({
   const [isLoading, setIsLoading] = useState(false);
   const [bedroomData, setBedroomData] = useState(bedrooms);
 
-  const validationSchema = Yup.object().shape({});
-
   const formik = useFormik({
     initialValues: {
+      id: data.propertyDetails.id,
       listingType: data.propertyDetails.listingType,
       placeType: data.propertyDetails.placeType,
       propertyType: data.propertyDetails.propertyType,
@@ -42,7 +40,7 @@ export default function ListingDetails({
       totalBedrooms: data.propertyDetails.totalBedrooms,
       bathrooms: data.propertyDetails.bathrooms,
     },
-    validationSchema: validationSchema,
+    // validationSchema: PropertyDetailsValidationSchema,
     onSubmit: async (values) => {
       console.log(JSON.stringify(values));
       setSubmitted(false);

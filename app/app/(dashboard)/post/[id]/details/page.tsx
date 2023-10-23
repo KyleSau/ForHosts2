@@ -1,7 +1,7 @@
 import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
-import ListingDetails from "@/components/editor/details/listing-details";
+import ListingDetails from "@/components/editor/listing-details/listing-details";
 
 import { getBedrooms } from "@/lib/actions";
 export default async function listingDetailsPage({
