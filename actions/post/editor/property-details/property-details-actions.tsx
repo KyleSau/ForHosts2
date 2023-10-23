@@ -18,10 +18,6 @@ export const updatePropertyDetails = async (request: UpdatePropertyDetailsReques
         return { error: "Invalid input", details: validationResult.error.issues };
     }
 
-    // if (!property || request.userId !== session.user.id) {
-    //     return { error: "No access" };
-    //   }
-
     console.log('property details id: ', request.id);
 
     // If validation passed, cast the data to PropertyDetailsRequest type
