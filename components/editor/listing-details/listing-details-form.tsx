@@ -12,8 +12,8 @@ import {
 import { UpdatePropertyDetailsRequest } from "@/actions/post/editor/property-details/update-property-details-request";
 import { updatePropertyDetails } from "@/actions/post/editor/property-details/property-details-actions";
 import PropertyDetailsValidationSchema from "@/actions/post/editor/property-details/property-details-valdiation-schema";
-import ListingDetailsSelect from "../editor-select";
-import ListingDetailsIncrement from "../editor-increment";
+import EditorSelect from "../editor-select";
+import EditorIncrementDecrement from "../editor-increment-decrement";
 
 interface ListingDetailsProps {
   propertyDetails: {
@@ -79,13 +79,13 @@ export default function ListingDetailsForm({ propertyDetails }: ListingDetailsPr
           <TabTitle title="Facilities" desc="Choose the amount for various facilities in your property" />
           <hr />
           <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
-            <ListingDetailsSelect formik={formik} label="Listing Type" name="listingType" options={ListingTypesArray} />
-            <ListingDetailsSelect formik={formik} label="Property Type" name="propertyType" options={PropertyTypesArray} />
-            <ListingDetailsSelect formik={formik} label="Place Type" name="placeType" options={PlaceTypesArray} />
-            <ListingDetailsIncrement formik={formik} label="Max Guests" name="maxGuests" />
-            <ListingDetailsIncrement formik={formik} label="Max Pets" name="maxPets" />
-            <ListingDetailsIncrement formik={formik} label="Number of Bedrooms" name="totalBedrooms" />
-            <ListingDetailsIncrement formik={formik} label="Number of Bathrooms" name="bathrooms" />
+            <EditorSelect formik={formik} label="Listing Type" name="listingType" options={ListingTypesArray} />
+            <EditorSelect formik={formik} label="Property Type" name="propertyType" options={PropertyTypesArray} />
+            <EditorSelect formik={formik} label="Place Type" name="placeType" options={PlaceTypesArray} />
+            <EditorIncrementDecrement formik={formik} label="Max Guests" name="maxGuests" />
+            <EditorIncrementDecrement formik={formik} label="Max Pets" name="maxPets" />
+            <EditorIncrementDecrement formik={formik} label="Number of Bedrooms" name="totalBedrooms" />
+            <EditorIncrementDecrement formik={formik} label="Number of Bathrooms" name="bathrooms" />
           </div>
           <EditorSaveButton dirty={formik.dirty} submitted={submitted} isLoading={isLoading} />
         </div>
