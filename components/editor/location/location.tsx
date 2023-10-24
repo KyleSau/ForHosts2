@@ -46,7 +46,7 @@ function MapViewUpdater({ coordinates }: MapViewUpdaterProps) {
   return <Circle center={[coordinates.lat, coordinates.lng]} radius={1000} />;
 }
 
-export default function Location({ data }: { data: LocationData }) {
+export default function Location({ data }: { data: any }) {
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [coordinates, setCoordinates] = useState<{ lat: number; lng: number }>({
@@ -122,8 +122,6 @@ export default function Location({ data }: { data: LocationData }) {
   const decrementRadius = () => {
     formik.setFieldValue("radius", Math.max(0, formik.values.radius - 1));
   };
-
-  // }, coordinates);
 
   useEffect(() => {
     window.addEventListener("beforeunload", handleBeforeUnload);
