@@ -1,9 +1,8 @@
 import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
-import ListingDetails from "@/components/editor/listing-details/listing-details";
+import ListingDetails from "@/components/editor/listing-details/listing-details-form";
 
-import { getBedrooms } from "@/lib/actions";
 export default async function listingDetailsPage({
   params,
 }: {
@@ -26,13 +25,24 @@ export default async function listingDetailsPage({
       },
     },
   });
-  if (!post || post.userId !== session.user.id) {
+  if (!post || post.userId !== session.user.id || !post.propertyDetails) {
     notFound();
   }
-  const bedrooms = await getBedrooms(post.id);
+
+  const propertyDetails = {
+    id: post.propertyDetails.id,
+    listingType: post.propertyDetails.listingType,
+    placeType: post.propertyDetails.placeType,
+    propertyType: post.propertyDetails.propertyType,
+    maxGuests: post.propertyDetails.maxGuests,
+    maxPets: post.propertyDetails.maxPets,
+    totalBedrooms: post.propertyDetails.totalBedrooms,
+    bathrooms: post.propertyDetails.bathrooms
+  };
+
   return (
     <div>
-      <ListingDetails data={post} bedrooms={bedrooms} />
+      <ListingDetails propertyDetails={propertyDetails} />
     </div>
   );
 }
