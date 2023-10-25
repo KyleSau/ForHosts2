@@ -59,7 +59,7 @@ export const authOptions: NextAuthOptions = {
         // @ts-expect-error
         username: token?.user?.username || token?.user?.name,
       };
-      console.log("github stuff " + JSON.stringify(token));
+      //console.log("github stuff " + JSON.stringify(token));
       return session;
     },
   },

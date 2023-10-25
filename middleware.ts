@@ -17,33 +17,34 @@ export const config = {
 export default async function middleware(req: NextRequest) {
   const url = req.nextUrl;
 
-  console.log("Original URL:", req.nextUrl);
+  // console.log("Original URL:", req.nextUrl);
 
   // Get hostname of request (e.g. demo.vercel.pub, demo.localhost:3000)
   const hostname = req.headers
     .get("host")!
     .replace(".localhost:3000", `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`);
-
+  console.log("hostname: ", hostname);
   // Get the pathname of the request (e.g. /, /about, /blog/first-post)
   const path = url.pathname;
-  console.log("path " + path);
-
+  console.log("path: ", path);
   // rewrites for app pages
   if (hostname == `dashboard.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
     const session = await getToken({ req });
     if (!session && path !== "/login") {
+      console.log("AAA");
       return NextResponse.redirect(new URL("/login", req.url));
     } else if (session && path == "/login") {
-
+      console.log("BBB");
       return NextResponse.redirect(new URL("/", req.url));
     }
     // return NextResponse.rewrite(
 
     //   new URL(`/app${path === "/" ? "" : path}`, req.url),
     // );
-    return NextResponse.rewrite(
-      new URL(`/app${path === "/" ? "" : path}${url.search}`, req.url),
-    );
+    console.log('CCC');
+    const temp = new URL(`/app${path === "/" ? "" : path}${url.search}`, req.url);
+    console.log("temp: ", temp.href);
+    return NextResponse.rewrite(temp);
   }
 
   if (hostname == `admin.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
