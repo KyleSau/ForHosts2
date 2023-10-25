@@ -84,7 +84,7 @@ const validationSchema = Yup.object().shape({
   petFee: Yup.number().positive("Pet Fee must be a positive number"),
 });
 
-const Pricing: React.FC<PricingProps> = ({ data }) => {
+export default function Pricing({ data }: { data: any }) {
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const pricingData = data.pricing;
@@ -350,6 +350,4 @@ const Pricing: React.FC<PricingProps> = ({ data }) => {
       </form>
     </EditorWrapper>
   );
-};
-
-export default Pricing;
+}

@@ -11,7 +11,7 @@ export default async function listingDetailsPage({
   if (!session) {
     redirect("/login");
   }
-  const locationData = await prisma.post.findUnique({
+  const pricingData = await prisma.post.findUnique({
     where: {
       id: params.id,
     },
@@ -24,13 +24,13 @@ export default async function listingDetailsPage({
       },
     },
   });
-  if (!locationData || locationData.userId !== session.user.id) {
+  if (!pricingData || pricingData.userId !== session.user.id) {
     notFound();
   }
 
   return (
     <div>
-      <Pricing data={locationData} />
+      <Pricing data={pricingData} />
     </div>
   );
 }
