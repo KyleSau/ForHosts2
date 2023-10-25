@@ -16,7 +16,7 @@ export const updatePropertyDetails = async (request: UpdatePropertyDetailsReques
     let validatedData: UpdatePropertyDetailsRequest;
     try {
         validatedData = await PropertyDetailsValidationSchema.validate(request);
-    } catch (error) {
+    } catch (error: any) {
         if (error instanceof yup.ValidationError) {
             return { error: "Invalid input", details: error.errors };
         } else {
