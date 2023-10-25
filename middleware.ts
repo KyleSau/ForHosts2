@@ -15,9 +15,10 @@ export const config = {
 };
 
 export default async function middleware(req: NextRequest) {
+  console.log("----- entered middleware -----");
   const url = req.nextUrl;
-
-  // console.log("Original URL:", req.nextUrl);
+  // console.log("Original URL:", url);
+  console.log("NEXT_PUBLIC_ROOT_DOMAIN: ", process.env.NEXT_PUBLIC_ROOT_DOMAIN);
 
   // Get hostname of request (e.g. demo.vercel.pub, demo.localhost:3000)
   const hostname = req.headers
@@ -27,43 +28,43 @@ export default async function middleware(req: NextRequest) {
   // Get the pathname of the request (e.g. /, /about, /blog/first-post)
   const path = url.pathname;
   console.log("path: ", path);
+
   // rewrites for app pages
   if (hostname == `dashboard.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
     const session = await getToken({ req });
     if (!session && path !== "/login") {
-      console.log("AAA");
-      return NextResponse.redirect(new URL("/login", req.url));
+      const redirect1 = NextResponse.redirect(new URL("/login", req.url));
+      console.log("AAA redirect: ", redirect1);
+      return redirect1;
     } else if (session && path == "/login") {
-      console.log("BBB");
-      return NextResponse.redirect(new URL("/", req.url));
+      const redirect2 = NextResponse.redirect(new URL("/", req.url));
+      console.log("BBB redirect2: ", redirect2);
+      return redirect2;
     }
-    // return NextResponse.rewrite(
 
-    //   new URL(`/app${path === "/" ? "" : path}`, req.url),
-    // );
     console.log('CCC');
     const temp = new URL(`/app${path === "/" ? "" : path}${url.search}`, req.url);
-    console.log("temp: ", temp.href);
+    console.log("new URL to rewrite (Dashboard): ", temp.href);
     return NextResponse.rewrite(temp);
   }
 
   if (hostname == `admin.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
-    console.log('path: ' + path);
+    console.log('path (Admin): ', path);
     const session = await getToken({ req });
     if (!session && path !== "/login") {
-      return NextResponse.redirect(new URL("/login", req.url));
+      const redirect3 = NextResponse.redirect(new URL("/app", req.url));
+      console.log("DDD redirect3: ", redirect3);
+      return redirect3;
     } else if (session && path == "/login") {
-
-      return NextResponse.redirect(new URL("/", req.url));
+      const redirect4 = NextResponse.redirect(new URL("/", req.url));
+      console.log("EEE redirect4: ", redirect4);
+      return redirect4;
     }
-    // return NextResponse.rewrite(
 
-    //   new URL(`/app${path === "/" ? "" : path}`, req.url),
-    // );
-    console.log("made it here!");
-    return NextResponse.rewrite(
-      new URL(`/app/admin${path === "/" ? "" : path}${url.search}`, req.url),
-    );
+    console.log("FFF");
+    const temp = new URL(`/app/admin${path === "/" ? "" : path}${url.search}`, req.url);
+    console.log("new URL to rewrite (Admin): ", temp.href);
+    return NextResponse.rewrite(temp);
   }
 
 
