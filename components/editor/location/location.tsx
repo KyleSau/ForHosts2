@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import EditorSaveButton from "../editor-save-button";
@@ -10,9 +10,10 @@ import PlacesAutocomplete, {
 } from "react-places-autocomplete";
 import { Label } from "../../ui/label";
 import IncrementDecrementButton from "../increment-decrement-button";
-import { updatePost } from "@/lib/actions";
+// import { updatePost } from "@/lib/actions";
 import OpenStreetMap from "../../users-sites/open-street-map";
 import { useMap, Circle } from "react-leaflet";
+import { updateLocation } from "@/actions/post/editor/location/location-actions";
 
 interface Coordinates {
   lat: number;
@@ -60,9 +61,8 @@ export default function Location({ data }: { data: any }) {
   const locData = data.location;
   const formik = useFormik({
     initialValues: {
-      id: data.id,
+      id: data.location.id,
       locationId: locData.id,
-      radius: locData.radius,
       address: locData.address,
     },
     validationSchema: validationSchema,
@@ -76,23 +76,20 @@ export default function Location({ data }: { data: any }) {
         // this will follow UpdateLocationRequest type
         const transformedValues = {
           id: values.id,
-          location: {
-            address: values.address ?? locData.address,
-            radius: values.radius ?? locData.radius,
-            longitude: coordinates.lng.toString(),
-            latitude: coordinates.lat.toString(),
-          },
+          address: values.address ?? locData.address,
+          longitude: coordinates.lng.toString(),
+          latitude: coordinates.lat.toString(),
         };
 
         console.log("transformedValues: ", transformedValues);
 
-        const result = await updatePost(transformedValues as any);
+        const result = await updateLocation(transformedValues as any);
         if (result) {
           // force a rerender
           console.log("Post updated successfully:", result);
           setCoordinates({
-            lat: parseFloat(transformedValues.location.latitude),
-            lng: parseFloat(transformedValues.location.longitude),
+            lat: parseFloat(transformedValues.latitude),
+            lng: parseFloat(transformedValues.longitude),
           });
 
           console.log("new coordinates: ", JSON.stringify(coordinates));
@@ -107,21 +104,13 @@ export default function Location({ data }: { data: any }) {
       }
     },
   });
-  const handleBeforeUnload = (e: any) => {
+
+  const handleBeforeUnload = useCallback((e: any) => {
     if (formik.dirty) {
       e.preventDefault();
-      e.returnValue =
-        "You have unsaved changes. Are you sure you want to leave?";
+      e.returnValue = "You have unsaved changes. Are you sure you want to leave?";
     }
-  };
-
-  const incrementRadius = () => {
-    formik.setFieldValue("radius", formik.values.radius + 1);
-  };
-
-  const decrementRadius = () => {
-    formik.setFieldValue("radius", Math.max(0, formik.values.radius - 1));
-  };
+  }, [formik.dirty]);
 
   useEffect(() => {
     window.addEventListener("beforeunload", handleBeforeUnload);
@@ -141,7 +130,7 @@ export default function Location({ data }: { data: any }) {
           >
             Address
           </label>
-          {/* <PlacesAutocomplete
+          <PlacesAutocomplete
             value={formik.values.address}
             onChange={(address) => formik.setFieldValue("address", address)}
             onSelect={(address) => formik.setFieldValue("address", address)}
@@ -156,11 +145,10 @@ export default function Location({ data }: { data: any }) {
                 <input
                   {...getInputProps({
                     placeholder: "Search for an address...",
-                    className: `pl-1 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
-                      formik.touched.address && formik.errors.address
-                        ? "border-red-500"
-                        : ""
-                    }`,
+                    className: `pl-1 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${formik.touched.address && formik.errors.address
+                      ? "border-red-500"
+                      : ""
+                      }`,
                   })}
                 />
                 <div>
@@ -175,6 +163,7 @@ export default function Location({ data }: { data: any }) {
                         {...getSuggestionItemProps(suggestion, {
                           className,
                         })}
+                        key={suggestion.id}
                       >
                         {suggestion.description}
                       </div>
@@ -183,7 +172,7 @@ export default function Location({ data }: { data: any }) {
                 </div>
               </div>
             )}
-          </PlacesAutocomplete> */}
+          </PlacesAutocomplete>
 
           {formik.touched.address && formik.errors.address && (
             <div className="mt-2 text-sm text-red-600">
@@ -197,20 +186,12 @@ export default function Location({ data }: { data: any }) {
               htmlFor="radius"
               className="text-md col-span-1 col-start-1 flex items-center leading-tight tracking-tighter text-gray-600"
             >
-              How far out should we approximate the location of your property
-              until someone has booked (in miles)?
             </Label>
 
             <div className="grid grid-cols-2 items-center">
-              {/* <div className="col-start flex justify-start">Proximity Range</div> */}
-              <div className="col-start-1 flex">Proximity Range</div>
+              <div className="col-start-1 flex">Approximate Location</div>
               <div className="col-start-2 flex justify-end">
-                <IncrementDecrementButton
-                  value={formik.values.radius}
-                  setValue={(newValue) =>
-                    formik.setFieldValue("radius", newValue)
-                  }
-                />
+
               </div>
             </div>
           </div>
@@ -223,10 +204,10 @@ export default function Location({ data }: { data: any }) {
         </div>
       </form>
       Coordinates: {JSON.stringify(coordinates)}
-      {/* <OpenStreetMap lat={coordinates.lat} lng={coordinates.lng}>
+      {JSON.stringify(data)}
+      <OpenStreetMap lat={coordinates.lat} lng={coordinates.lng}>
         <MapViewUpdater coordinates={coordinates} />
-      </OpenStreetMap> */}
-      {/* <Map lat={coordinates.lat} lng={coordinates.lng} /> */}
+      </OpenStreetMap>
     </EditorWrapper>
   );
 }

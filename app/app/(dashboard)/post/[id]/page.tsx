@@ -1,7 +1,6 @@
 import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
-import PhotoManager from "@/components/editor/photo-manager/photo-manager";
 
 export default async function PostPage({ params }: { params: { id: string } }) {
   const session = await getSession();
@@ -27,10 +26,10 @@ export default async function PostPage({ params }: { params: { id: string } }) {
     notFound();
   }
 
-  const sortedImages = [...data.images].sort((a, b) => a.orderIndex - b.orderIndex);
 
   return (
-    <PhotoManager images={sortedImages} postId={data.id} siteId={data.siteId!} />
-    // kekker
+    <div>
+
+    </div>
   );
 }
