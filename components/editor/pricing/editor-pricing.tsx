@@ -152,7 +152,7 @@ export default function Pricing({ data }: { data: any }) {
       <form onSubmit={formik.handleSubmit}>
         <div>
           <EditorTitle title="Pricing" desc="" />
-          <hr />
+
           <div className="mb-5 mt-5 grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 sm:grid-cols-5 md:grid-cols-4">
             <Label
               htmlFor="price"
