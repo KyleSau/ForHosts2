@@ -1,11 +1,11 @@
 import React from "react";
 
-type TabTitleProps = {
+type EditorTitleProps = {
   title: string;
   desc: string;
 };
 
-export default function EditorTitle({ title, desc }: TabTitleProps) {
+export default function EditorTitle({ title, desc }: EditorTitleProps) {
   return (
     <div className=" text-center">
       <h4 className="text-xl font-bold text-gray-800">{title}</h4>
