@@ -4,7 +4,7 @@ import { notFound, redirect } from "next/navigation";
 
 import { getBedrooms } from "@/lib/actions";
 import Location from "@/components/editor/location/location";
-export default async function listingDetailsPage({
+export default async function LocationPage({
   params,
 }: {
   params: { id: string };

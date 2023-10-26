@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
 import ListingDetails from "@/components/editor/listing-details/listing-details-form";
 
-export default async function listingDetailsPage({
+export default async function DetailsPage({
   params,
 }: {
   params: { id: string };
@@ -37,7 +37,7 @@ export default async function listingDetailsPage({
     maxGuests: post.propertyDetails.maxGuests,
     maxPets: post.propertyDetails.maxPets,
     totalBedrooms: post.propertyDetails.totalBedrooms,
-    bathrooms: post.propertyDetails.bathrooms
+    bathrooms: post.propertyDetails.bathrooms,
   };
 
   return (
