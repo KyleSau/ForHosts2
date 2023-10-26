@@ -5,7 +5,7 @@ const LocationValidationSchema = Yup.object().shape({
     address: Yup.string().required('Address is required'),
     longitude: Yup.string().required('location longitude required'),
     latitude: Yup.string().required('location longitude required'),
-    // approximate: Yup.boolean().required('approximation value required')
+    approximate: Yup.boolean().required('approximation value required')
 });
 
 export default LocationValidationSchema;

@@ -24,6 +24,7 @@ interface MapProps {
     lat: number;
     lng: number;
     children?: React.ReactNode;
+    marker?: boolean;
 }
 
 export default function Map({ lat, lng, children }: MapProps) {
@@ -37,7 +38,7 @@ export default function Map({ lat, lng, children }: MapProps) {
             />
             {lat && lng && (
                 <>
-                    {/* <Marker icon={newicon} position={[geoData.lat, geoData.lng]} /> */}
+                    {/* <Marker icon={newicon} position={[lat, lng]} /> */}
                     <Circle center={[lat, lng]} radius={1000} /> {/* Added radius */}
                     {children}
                 </>

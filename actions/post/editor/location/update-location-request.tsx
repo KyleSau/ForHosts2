@@ -3,5 +3,5 @@ export interface UpdateLocationRequest {
     address: string;
     longitude: string;
     latitude: string;
-    // approximate: boolean;
+    approximate: boolean;
 }
