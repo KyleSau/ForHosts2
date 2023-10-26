@@ -19,6 +19,7 @@ import {
   MessagesSquare,
   BookOpen,
   CalendarDays,
+  ShieldEllipsis
 } from "lucide-react";
 import {
   useParams,
@@ -45,6 +46,11 @@ const externalLinks = [
     href: "https://forhosts.com/blogs",
     icon: <BookOpen width={18} />,
   },
+  {
+    name: "Admin Dashboard",
+    href: "/admin-dashboard/login",
+    icon: <ShieldEllipsis width={18} />
+  }
 ];
 
 export default function Nav({ children }: { children: ReactNode }) {
