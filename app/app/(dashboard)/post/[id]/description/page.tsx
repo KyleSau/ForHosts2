@@ -1,9 +1,7 @@
+import Description from "@/components/editor/description/description";
 import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
-
-import { getBedrooms } from "@/lib/actions";
-import Location from "@/components/editor/location/location";
 export default async function listingDetailsPage({
   params,
 }: {
@@ -13,12 +11,11 @@ export default async function listingDetailsPage({
   if (!session) {
     redirect("/login");
   }
-  const locationData = await prisma.post.findUnique({
+  const descriptionData = await prisma.post.findUnique({
     where: {
       id: params.id,
     },
     include: {
-      location: true,
       site: {
         select: {
           subdomain: true,
@@ -26,13 +23,13 @@ export default async function listingDetailsPage({
       },
     },
   });
-  if (!locationData || locationData.userId !== session.user.id) {
+  if (!descriptionData || descriptionData.userId !== session.user.id) {
     notFound();
   }
 
   return (
     <div>
-      <Location data={locationData} />
+      <Description data={descriptionData} />
     </div>
   );
 }
