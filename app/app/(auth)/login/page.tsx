@@ -26,7 +26,7 @@ export default function LoginPage() {
                 Sign in with
               </h6>
             </div>
-<LoginButton />
+            <LoginButton />
             <hr className="border-b-1 border-blueGray-300 mt-6" />
           </div>
           <div className="flex-auto px-4 py-10 pt-0 lg:px-10">

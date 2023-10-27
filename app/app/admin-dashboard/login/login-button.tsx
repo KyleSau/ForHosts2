@@ -4,14 +4,15 @@ import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import Image from "next/image";
 
+//This is the ADMIN Login Button
 export default function LoginButton() {
     const [githubLoading, setGithubLoading] = useState(false);
-    const [googleLoading, setGoogleLoading] = useState(false);
-    const [facebookLoading, setFacebookLoading] = useState(false);
 
     // Get error message added by next/auth in URL.
     const searchParams = useSearchParams();
+    console.log("searchParams:  ", searchParams);
     const error = searchParams?.get("error");
 
     useEffect(() => {
@@ -29,10 +30,12 @@ export default function LoginButton() {
                     signIn("github");
                 }}
             >
-                <img
+                <Image
                     alt="..."
                     className="mr-1 w-5"
                     src="https://demos.creative-tim.com/notus-js/assets/img/github.svg"
+                    width={400}
+                    height={800}
                 />
                 Github
             </button>

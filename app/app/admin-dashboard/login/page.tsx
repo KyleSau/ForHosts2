@@ -10,7 +10,7 @@ export default function LoginPage() {
                         <div className="mb-0 rounded-t px-6 py-6">
                             <div className="mb-3 text-center">
                                 <h6 className="text-black text-sm font-bold">
-                                    Sign in with
+                                    Sign in with (ADMIN)
                                 </h6>
                             </div>
                             <LoginButton />

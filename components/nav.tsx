@@ -5,10 +5,8 @@ import {
   ArrowLeft,
   BarChart3,
   Edit3,
-  Globe,
   Layout,
   LayoutDashboard,
-  Megaphone,
   Menu,
   Newspaper,
   Settings,
@@ -47,7 +45,7 @@ const externalLinks = [
     icon: <BookOpen width={18} />,
   },
   {
-    name: "Admin Dashboard",
+    name: "Admin Dashboard", // TODO: 
     href: "/admin-dashboard/login",
     icon: <ShieldEllipsis width={18} />
   }
