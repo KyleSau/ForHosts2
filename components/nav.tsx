@@ -46,7 +46,7 @@ const externalLinks = [
   },
   {
     name: "Admin Dashboard", // TODO: 
-    href: "/admin-dashboard/login",
+    href: "/admin-dashboard",
     icon: <ShieldEllipsis width={18} />
   }
 ];

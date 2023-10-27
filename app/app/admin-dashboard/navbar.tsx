@@ -9,9 +9,9 @@ import { MenuIcon, X } from 'lucide-react';
 import Logo from '@/components/Logo';
 
 const navigation = [
-  { name: 'Dashboard', href: '/admin' },
-  { name: 'Blogs', href: '/admin/blogs' },
-  { name: 'Blob Storage', href: '/admin/blogs' }
+  { name: 'Dashboard', href: '/admin-dashboard' },
+  { name: 'Blogs', href: '/admin-dashboard/blogs' },
+  { name: 'Blob Storage', href: '/admin-dashboard/blogs' }
 ];
 
 function classNames(...classes: string[]) {
