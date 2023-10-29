@@ -1,29 +1,68 @@
 import Searchable from './search';
-import UsersTable from './table';
+import UsersTable from './host-table';
 import { Card, Metric, Text, Title, BarList, Flex, Grid } from '@tremor/react';
-import Chart from './chart';
+import PerformanceChart from './chart';
 import { getSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 import { RollerCoaster } from 'lucide-react';
 import { User, Role } from "@prisma/client";
+import HostTable from './host-table';
+import ReservationTable from './reservation-table';
+import { DataTable } from './host-table-shadcn';
+import { ColumnDef } from '@tanstack/react-table';
 
 export const dynamic = 'force-dynamic';
+
+//Shadcn example columns
+type Payment = {
+    id: string
+    amount: number
+    status: "pending" | "processing" | "success" | "failed"
+    email: string
+}
+
+export const columns: ColumnDef<Payment>[] = [
+    {
+        accessorKey: "status",
+        header: "Status",
+    },
+    {
+        accessorKey: "email",
+        header: "Email",
+    },
+    {
+        accessorKey: "amount",
+        header: "Amount",
+    },
+]
+
+//For Test (https://ui.shadcn.com/docs/components/data-table#filtering)
+async function getData(): Promise<Payment[]> {
+    // Fetch data from your API here.
+    return [
+      {
+        id: "728ed52f",
+        amount: 100,
+        status: "pending",
+        email: "m@example.com",
+      }
+    ]
+  }
+
 
 export default async function IndexPage({
     searchParams
 }: {
     searchParams: { q: string };
 }) {
-
-    // const session = await getSession();
-    // if (!session?.user.role === Role.ADMIN) {
-    //     redirect("/login");
-    // }
-
     const search = searchParams.q ?? '';
+    console.log("search: ", search);
     const sites = await prisma?.site.findMany();
-    const listings = await prisma?.site.findMany();
+    console.log("sites: ", sites);
+    const listings = await prisma?.post.findMany();
+    console.log("listings: ", listings);
     const reservations = await prisma?.reservation.findMany();
+    console.log("reservations: ", reservations);
     const users: User[] | undefined = await prisma?.user.findMany({
         where: {
             name: {
@@ -39,6 +78,7 @@ export default async function IndexPage({
             posts: true
         }
     });
+    console.log("users: ", users);
 
     const data = [
         {
@@ -54,6 +94,8 @@ export default async function IndexPage({
             stat: reservations?.length,
         }
     ];
+
+    const tableTestData = await getData();
 
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
@@ -72,12 +114,22 @@ export default async function IndexPage({
                     </Card>
                 ))}
             </Grid>
-            <Title>Hosts</Title>
+
+            <DataTable columns={columns} data={tableTestData} />
+            
+            {/* <Title>Recent Reservations</Title>
             <Searchable />
             <Card className="mt-2">
-                <UsersTable users={users} />
-            </Card>
-            <Chart />
+                <ReservationTable reservations={reservations} />
+            </Card> */}
+
+            {/* <Title>Host Information</Title> */}
+            {/* <Searchable /> */}
+            {/* <Card className="mt-2">
+                <HostTable users={users} />
+            </Card> */}
+
+            {/* <Title></Title> */}
         </main>
     );
 }

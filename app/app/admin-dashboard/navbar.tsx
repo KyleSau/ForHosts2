@@ -11,7 +11,8 @@ import Logo from '@/components/Logo';
 const navigation = [
   { name: 'Dashboard', href: '/admin-dashboard' },
   { name: 'Blogs', href: '/admin-dashboard/blogs' },
-  { name: 'Blob Storage', href: '/admin-dashboard/blogs' }
+  { name: 'Blob Storage', href: '/admin-dashboard/blogs' },
+  { name: 'Financials', href: '/admin-dashboard/financials' }
 ];
 
 function classNames(...classes: string[]) {
