@@ -1,212 +1,224 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import TabTitle from "../../tab-title";
-import EditorSaveButton from "../editor-save-button";
-import { updatePost } from "@/lib/actions";
-import LoadingDots from "../../icons/loading-dots";
-import { toast } from "sonner";
-import { useTransition } from "react";
-import { updatePostMetadata } from "@/lib/actions";
-import { ExternalLink } from "lucide-react";
-import clsx from "clsx";
-import EditorWrapper from "../editor-container-wrapper";
-import WYSIWYGEditor from "../wysiwyg-editor";
 
-export default function Description({ data }: { data: any }) {
-  const id = data["id"];
-  const [submitted, setSubmitted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+import { useEffect, useRef, useState } from "react";
+import { useEditor, EditorContent, FloatingMenu } from "@tiptap/react";
+import { TiptapEditorProps } from "../props";
+import { TiptapExtensions } from "../extensions";
+import { useDebounce } from "use-debounce";
+import { useCompletion } from "ai/react";
+import { toast } from "sonner";
+import va from "@vercel/analytics";
+import { useTransition } from "react";
+import { EditorBubbleMenu } from "../bubble-menu";
+import { Post } from "@prisma/client";
+import { updatePost, updatePostMetadata } from "@/lib/actions";
+import clsx from "clsx";
+import LoadingDots from "@/components/icons/loading-dots";
+import { ExternalLink } from "lucide-react";
+import { Label } from "@/components/ui/label";
+
+type PostWithSite = Post & { site: { subdomain: string | null } | null };
+
+export default function TitleDescriptionEditor({
+  post,
+}: {
+  post: PostWithSite;
+}) {
   let [isPendingSaving, startTransitionSaving] = useTransition();
   let [isPendingPublishing, startTransitionPublishing] = useTransition();
+
+  const [data, setData] = useState<PostWithSite>(post);
+  const [hydrated, setHydrated] = useState(false);
+
   const url = process.env.NEXT_PUBLIC_VERCEL_ENV
     ? `https://${data.site?.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${data.slug}`
     : `http://${data.site?.subdomain}.localhost:3000/${data.slug}`;
-  const validationSchema = Yup.object().shape({
-    title: Yup.string().required("Title is required"),
-    description: Yup.string().required("Description is required"),
-    // bedrooms: Yup.number().required('Number of bedrooms is required').min(1, 'Must be at least 1'),
-    // bathrooms: Yup.number().required('Number of bathrooms is required').min(1, 'Must be at least 1'),
-    // location: Yup.string().required('Street Address is required'),
-    // streetAddress: Yup.string().required('Street address is required'),
-    // city: Yup.string().required('City is required'),
-    // region: Yup.string().required('State / Province is required'),
-    // postalCode: Yup.string().required('ZIP / Postal code is required'),
-  });
 
-  const formik = useFormik({
-    initialValues: {
-      id: id,
-      site: data.site,
-      siteId: data.siteId,
-      title: data.title,
-      description: data.description,
-      // bedrooms: data.bedrooms,
-      // bathrooms: data.bathrooms,
-      // location: data.location,
-      // country: '',
-      // streetAddress: '',
-      // city: '',
-      // region: '',
-      // postalCode: '',
-    },
-    validationSchema: validationSchema,
-    onSubmit: async (values) => {
-      setSubmitted(false);
-      setIsLoading(true);
-      const formData = new FormData();
-      formData.append("published", String(!data.published));
+  const [debouncedData] = useDebounce(data, 1000);
 
-      console.log(data.published, typeof data.published);
-      console.log(formData);
-      // Your form submission logic
-      console.log("data: ", JSON.stringify(data));
-      console.log("values: ", JSON.stringify(values));
-      const result = await updatePost(values as any);
-
-      if (!result) {
-        // Handle the error, e.g., display an error message
-        console.error("error");
-        setSubmitted(false);
-      } else {
-        // Handle success, e.g., navigate to a success page or show a success message
-        console.log("Post updated successfully:", result);
-        setSubmitted(true);
-        setIsLoading(false);
-      }
-      // You can add your logic to send this data to the server or handle it as needed
-    },
-  });
-  const handleBeforeUnload = (e: any) => {
-    if (formik.dirty) {
-      e.preventDefault();
-      e.returnValue =
-        "You have unsaved changes. Are you sure you want to leave?";
-    }
-  };
   useEffect(() => {
-    window.addEventListener("beforeunload", handleBeforeUnload);
+    if (debouncedData !== post) {
+      startTransitionSaving(async () => {
+        await updatePost(debouncedData);
+      });
+    }
+  }, [debouncedData, post]);
 
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
+  const editor = useEditor({
+    extensions: TiptapExtensions,
+    editorProps: TiptapEditorProps,
+    onUpdate: (e) => {
+      const selection = e.editor.state.selection;
+      const lastTwo = e.editor.state.doc.textBetween(
+        selection.from - 2,
+        selection.from,
+        "\n",
+      );
+      if (lastTwo === "++" && !isLoading) {
+        e.editor.commands.deleteRange({
+          from: selection.from - 2,
+          to: selection.from,
+        });
+        // we're using this for now until we can figure out a way to stream markdown text with proper formatting: https://github.com/steven-tey/novel/discussions/7
+        complete(e.editor.getText());
+        // complete(e.editor.storage.markdown.getMarkdown());
+        va.track("Autocomplete Shortcut Used");
+      } else {
+        setData((prev) => ({
+          ...prev,
+          description: e.editor.storage.markdown.getMarkdown(), // previously 'content:'
+        }));
+      }
+    },
+    autofocus: "end",
+  });
+
+  const { complete, completion, isLoading, stop } = useCompletion({
+    id: "novel",
+    api: "/api/generate",
+    onResponse: (response) => {
+      if (response.status === 429) {
+        toast.error("You have reached your request limit for the day.");
+        va.track("Rate Limit Reached");
+        return;
+      }
+    },
+    onFinish: (_prompt, completion) => {
+      editor?.commands.setTextSelection({
+        from: editor.state.selection.from - completion.length,
+        to: editor.state.selection.from,
+      });
+    },
+    onError: () => {
+      toast.error("Something went wrong.");
+    },
+  });
+
+  const prev = useRef("");
+
+  // Insert chunks of the generated text
+  useEffect(() => {
+    const diff = completion.slice(prev.current.length);
+    prev.current = completion;
+    editor?.commands.insertContent(diff);
+  }, [isLoading, editor, completion]);
+
+  useEffect(() => {
+    // if user presses escape or cmd + z and it's loading,
+    // stop the request, delete the completion, and insert back the "++"
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" || (e.metaKey && e.key === "z")) {
+        stop();
+        if (e.key === "Escape") {
+          editor?.commands.deleteRange({
+            from: editor.state.selection.from - completion.length,
+            to: editor.state.selection.from,
+          });
+        }
+        editor?.commands.insertContent("++");
+      }
     };
-  }, [formik.dirty]);
+    const mousedownHandler = (e: MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      stop();
+      if (window.confirm("AI writing paused. Continue?")) {
+        complete(editor?.getText() || "");
+      }
+    };
+    if (isLoading) {
+      document.addEventListener("keydown", onKeyDown);
+      window.addEventListener("mousedown", mousedownHandler);
+    } else {
+      document.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("mousedown", mousedownHandler);
+    }
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("mousedown", mousedownHandler);
+    };
+  }, [stop, isLoading, editor, complete, completion.length]);
+
+  // Hydrate the editor with the content
+  useEffect(() => {
+    if (editor && post?.description && !hydrated) {
+      editor.commands.setContent(post.description);
+      setHydrated(true);
+    }
+  }, [editor, post, hydrated]);
+
   return (
-    <EditorWrapper>
-      <form onSubmit={formik.handleSubmit}>
-        <div className="absolute right-5 top-5 mb-5 flex items-center space-x-3">
-          {data.published && (
-            <a
-              href={url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center space-x-1 text-sm text-stone-400 hover:text-stone-500"
-            >
-              <ExternalLink className="h-4 w-4" />
-            </a>
-          )}
-
-          <button
-            onClick={() => {
-              setSubmitted(false);
-              const formData = new FormData();
-              console.log(data.published, typeof data.published);
-              formData.append("published", String(!data.published));
-              startTransitionPublishing(async () => {
-                await updatePostMetadata(formData, data.id, "published").then(
-                  () => {
-                    toast.success(
-                      `Successfully ${
-                        data.published ? "unpublished" : "published"
-                      } your post.`,
-                    );
-                  },
-                );
-              });
-            }}
-            className={clsx(
-              "flex h-7 w-24 items-center justify-center space-x-2 rounded-lg border text-sm transition-all focus:outline-none",
-              isPendingPublishing
-                ? "cursor-not-allowed border-stone-200 bg-stone-100 text-stone-400 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-300"
-                : "hover:bg-sitecolor border border-green-600 bg-green-600 text-white hover:bg-green-500 active:bg-stone-100 dark:border-stone-700 dark:hover:border-stone-200",
-            )}
-            disabled={isPendingPublishing}
+    <div className="relative min-h-[500px] w-full max-w-screen-lg border-stone-200 p-12 px-8 sm:mb-[calc(20vh)] sm:rounded-lg sm:border sm:px-12 sm:shadow-lg">
+      <div className="absolute right-5 top-5 mb-5 flex items-center space-x-3">
+        {data.published && (
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center space-x-1 text-sm text-stone-400 hover:text-stone-500"
           >
-            {isPendingPublishing ? (
-              <LoadingDots />
-            ) : (
-              <p>{data.published ? "Unpublish" : "Publish"}</p>
-            )}
-          </button>
+            <ExternalLink className="h-4 w-4" />
+          </a>
+        )}
+        <div className="rounded-lg bg-stone-100 px-2 py-1 text-sm text-stone-400">
+          {isPendingSaving ? "Saving..." : "Saved"}
         </div>
-        <TabTitle
-          title="Basic Details"
-          desc="Basic Listing Details About Your Property"
+        <button
+          onClick={() => {
+            const formData = new FormData();
+            console.log(data.published, typeof data.published);
+            formData.append("published", String(!data.published));
+            startTransitionPublishing(async () => {
+              await updatePostMetadata(formData, post.id, "published").then(
+                () => {
+                  toast.success(
+                    `Successfully ${
+                      data.published ? "unpublished" : "published"
+                    } your post.`,
+                  );
+                  setData((prev) => ({ ...prev, published: !prev.published }));
+                },
+              );
+            });
+          }}
+          className={clsx(
+            "flex h-7 w-24 items-center justify-center space-x-2 rounded-lg border text-sm transition-all focus:outline-none",
+            isPendingPublishing
+              ? "cursor-not-allowed border-stone-200 bg-stone-100 text-stone-400"
+              : "border border-black bg-black text-white hover:bg-white hover:text-black active:bg-stone-100",
+          )}
+          disabled={isPendingPublishing}
+        >
+          {isPendingPublishing ? (
+            <LoadingDots />
+          ) : (
+            <p>{data.published ? "Unpublish" : "Publish"}</p>
+          )}
+        </button>
+      </div>
+      <Label>Title</Label>
+      <div className="mb-5 flex flex-col space-y-3 border-b border-stone-200 pb-5">
+        <input
+          type="text"
+          placeholder="Title"
+          defaultValue={post?.title || ""}
+          onChange={(e) => setData({ ...data, title: e.target.value })}
+          className="font-cal border-none px-0 text-3xl placeholder:text-stone-400 focus:outline-none focus:ring-0"
         />
-        <div className="mt-8">
-          <label
-            htmlFor="title"
-            className="block text-sm font-medium leading-6  text-gray-900"
-          >
-            Listing Title
-          </label>
-          <input
-            type="text"
-            name="title"
-            id="title"
-            className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
-              formik.touched.title && formik.errors.title
-                ? "border-red-500"
-                : ""
-            }`}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.title}
-          />
-          {formik.touched.title && formik.errors.title && (
-            <div className="mt-2 text-sm text-red-600">
-              {formik.errors.title.toString()}
-            </div>
-          )}
-        </div>
-
-        <div className="mt-10">
-          <label
-            htmlFor="description"
-            className="block text-sm font-medium leading-6 text-gray-900"
-          >
-            Description of property
-          </label>
-          <WYSIWYGEditor formik={formik} field={"description"} />
-          <textarea
-            name="description"
-            id="description"
-            className={`no-scrollbar block h-[300px] w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
-              formik.touched.description && formik.errors.description
-                ? "border-red-500"
-                : ""
-            }`}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.description}
-          />
-          {formik.touched.description && formik.errors.description && (
-            <div className="mt-2 text-sm text-red-600">
-              {formik.errors.description.toString()}
-            </div>
-          )}
-        </div>
-        <hr className="mt-8" />
-
-        <div className="mt-4">
-          <EditorSaveButton
-            dirty={formik.dirty}
-            submitted={submitted}
-            isLoading={isLoading}
-          />
-        </div>
-      </form>
-    </EditorWrapper>
+        {/* <TextareaAutosize
+                    placeholder="Description"
+                    defaultValue={post?.description || ""}
+                    onChange={(e) => setData({ ...data, description: e.target.value })}
+                    className="w-full resize-none border-none focus:outline-none focus:ring-0 px-0 placeholder:text-stone-400"
+                /> */}
+      </div>
+      <Label>Description</Label>
+      {editor && <EditorBubbleMenu editor={editor} />}
+      <EditorContent
+        placeholder="Enter text here..."
+        className="overflow-x-hidden rounded-md border border-gray-200 px-1 py-1"
+        editor={editor}
+      />
+    </div>
   );
 }

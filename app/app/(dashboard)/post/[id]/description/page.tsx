@@ -1,4 +1,4 @@
-import Description from "@/components/editor/description/description";
+import TitleDescriptionEditor from "@/components/editor/description/description";
 import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
@@ -29,7 +29,7 @@ export default async function DescriptionPage({
 
   return (
     <div>
-      <Description data={descriptionData} />
+      <TitleDescriptionEditor post={descriptionData} />
     </div>
   );
 }
