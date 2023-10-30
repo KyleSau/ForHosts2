@@ -8,9 +8,6 @@ import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import calculateTotalCost from "@/lib/utils/payment-helper"
 import { cn } from "@/lib/utils"
-import { Elements } from '@stripe/react-stripe-js';
-import CardInput from './card-element';
-// import { NextRouter, useRouter } from 'next/router';
 import { useRouter } from 'next/navigation'
 
 

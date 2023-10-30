@@ -242,9 +242,6 @@ dependencies:
   react-show-more-button:
     specifier: ^1.0.0
     version: 1.0.0(react@18.2.0)
-  react-sortable:
-    specifier: ^2.0.0
-    version: 2.0.0
   react-sortablejs:
     specifier: ^6.1.4
     version: 6.1.4(@types/sortablejs@1.15.3)(react-dom@18.2.0)(react@18.2.0)(sortablejs@1.15.0)
@@ -9662,18 +9659,6 @@ packages:
       react: 18.2.0
     dev: false
 
-  /react-dom@16.14.0(react@16.14.0):
-    resolution: {integrity: sha512-1gCeQXDLoIqMgqD3IO2Ah9bnf0w9kzhwN5q4FGnHZ67hBm9yePzB5JJAIQCc8x3pFnNlwFq4RidZggNAAkzWWw==}
-    peerDependencies:
-      react: ^16.14.0
-    dependencies:
-      loose-envify: 1.4.0
-      object-assign: 4.1.1
-      prop-types: 15.8.1
-      react: 16.14.0
-      scheduler: 0.19.1
-    dev: false
-
   /react-dom@18.2.0(react@18.2.0):
     resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
     peerDependencies:
@@ -9867,13 +9852,6 @@ packages:
       react-transition-group: 2.9.0(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
-  /react-sortable@2.0.0:
-    resolution: {integrity: sha512-LggJWPS9YwO4S9yDBV6xjrzrZ7ucynb+67Y1Xd/qa1bOzHrSKcqgbLU8rP8kkqkB+AtaaXLSkKaDLFLNQieK2w==}
-    dependencies:
-      react: 16.14.0
-      react-dom: 16.14.0(react@16.14.0)
-    dev: false
-
   /react-sortablejs@6.1.4(@types/sortablejs@1.15.3)(react-dom@18.2.0)(react@18.2.0)(sortablejs@1.15.0):
     resolution: {integrity: sha512-fc7cBosfhnbh53Mbm6a45W+F735jwZ1UFIYSrIqcO/gRIFoDyZeMtgKlpV4DdyQfbCzdh5LoALLTDRxhMpTyXQ==}
     peerDependencies:
@@ -9961,15 +9939,6 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       swr: 2.2.0(react@18.2.0)
-    dev: false
-
-  /react@16.14.0:
-    resolution: {integrity: sha512-0X2CImDkJGApiAlcf0ODKIneSwBPhqJawOa5wCtKbu7ZECrmS26NvtSILynQ66cgkT/RJ4LidJOc3bUESwmU8g==}
-    engines: {node: '>=0.10.0'}
-    dependencies:
-      loose-envify: 1.4.0
-      object-assign: 4.1.1
-      prop-types: 15.8.1
     dev: false
 
   /react@18.2.0:
@@ -10264,13 +10233,6 @@ packages:
     dependencies:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-    dev: false
-
-  /scheduler@0.19.1:
-    resolution: {integrity: sha512-n/zwRWRYSUj0/3g/otKDRPMh6qv2SYMWNq85IEa8iZyAv8od9zDYpGSnpBEjNgcMNq6Scbu5KfIPxNF72R/2EA==}
-    dependencies:
-      loose-envify: 1.4.0
-      object-assign: 4.1.1
     dev: false
 
   /scheduler@0.23.0:
