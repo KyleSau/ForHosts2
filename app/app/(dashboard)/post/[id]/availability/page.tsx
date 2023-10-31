@@ -11,7 +11,8 @@ export default async function AvailabilityPage({
   if (!session) {
     redirect("/login");
   }
-  const availabilityData = await prisma.post.findUnique({
+
+  const data = await prisma.post.findUnique({
     where: {
       id: params.id,
     },
@@ -24,13 +25,31 @@ export default async function AvailabilityPage({
       },
     },
   });
-  if (!availabilityData || availabilityData.userId !== session.user.id) {
+
+  if (!data || data.userId !== session.user.id || !data.availability) {
     notFound();
   }
 
+  const availability = {
+    id: data.availability.id,
+    instantBooking: data.availability.instantBooking,
+    minStay: data.availability.minStay,
+    maxStay: data.availability.maxStay,
+    advanceNotice: data.availability.advanceNotice,
+    sameDayAdvanceNotice: data.availability.sameDayAdvanceNotice,
+    preparationTime: data.availability.preparationTime,
+    availabilityWindow: data.availability.availabilityWindow,
+    restrictedCheckIn: data.availability.restrictedCheckIn,
+    restrictedCheckOut: data.availability.restrictedCheckOut,
+    checkInWindowStart: data.availability.checkInWindowStart,
+    checkInWindowEnd: data.availability.checkInWindowEnd,
+    checkInTime: data.availability.checkInTime,
+    checkOutTime: data.availability.checkOutTime,
+  };
+
   return (
     <div>
-      <Availability data={availabilityData} />
+      <Availability availability={availability} />
     </div>
   );
 }

@@ -9,9 +9,9 @@ import {
   PlaceTypesArray,
   PropertyTypesArray,
 } from "./place-utils";
-import { UpdatePropertyDetailsRequest } from "@/actions/post/editor/property-details/update-property-details-request";
-import { updatePropertyDetails } from "@/actions/post/editor/property-details/property-details-actions";
-import PropertyDetailsValidationSchema from "@/actions/post/editor/property-details/property-details-valdiation-schema";
+import { UpdatePropertyDetailsRequest } from "@/actions/listing/editor/property-details/update-property-details-request";
+import { updatePropertyDetails } from "@/actions/listing/editor/property-details/property-details-actions";
+import PropertyDetailsValidationSchema from "@/actions/listing/editor/property-details/property-details-valdiation-schema";
 import EditorSelect from "../editor-select";
 import EditorIncrementDecrement from "../editor-increment-decrement";
 

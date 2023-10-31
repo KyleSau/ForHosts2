@@ -1,15 +1,15 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useFormik } from "formik";
-import * as Yup from "yup";
-import { updatePost } from "@/lib/actions";
 import TabTitle from "@/components/tab-title";
 import { Label } from "../../ui/label";
 import { Input } from "../../ui/input";
 import { Toggle } from "@/components/ui/toggle";
 import EditorSaveButton from "../editor-save-button";
 import EditorWrapper from "../editor-container-wrapper";
-import { toast } from "sonner";
+import AvailabilityValidationSchema from "@/actions/listing/editor/availability/availability-validation-schema";
+import { UpdateAvailabilityRequest } from "@/actions/listing/editor/availability/update-availability-request";
+import { updateAvailability } from "@/actions/listing/editor/availability/availability-actions";
 
 type DayName =
   | "Monday"
@@ -30,28 +30,6 @@ const dayMapping: Record<DayName, number> = {
   Sunday: 6,
 };
 
-const hourAN = [
-  "6:00 AM",
-  "7:00 AM",
-  "8:00 AM",
-  "9:00 AM",
-  "10:00 AM",
-  "11:00 AM",
-  "12:00 PM",
-  "1:00 PM",
-  "2:00 PM",
-  "3:00 PM",
-  "4:00 PM",
-  "5:00 PM",
-  "6:00 PM",
-  "7:00 PM",
-  "8:00 PM",
-  "9:00 PM",
-  "10:00 PM",
-  "11:00 PM",
-  "12:00 AM",
-];
-
 const preparationTimeOptions = [
   "None",
   "1 night before and after each reservation",
@@ -66,91 +44,58 @@ const availabilityWindowOptions = [
   "3 months in advance",
 ];
 
-const validationSchema = Yup.object().shape({
-  minStay: Yup.number()
-    .required("Minimum stay is required")
-    .positive("Minimum stay must be a positive number"),
-  maxStay: Yup.number()
-    .required("Maximum stay is required")
-    .positive("Maximum stay must be a positive number"),
-  advanceNotice: Yup.number().min(0).required("Advance notice is required"),
-});
+interface AvailabilityProps {
+  availability: {
+    id: string;
+    instantBooking: boolean | null;
+    minStay: number | null;
+    maxStay: number | null;
+    advanceNotice: number | null;
+    sameDayAdvanceNotice: string | null;
+    preparationTime: number | null;
+    availabilityWindow: number | null;
+    restrictedCheckIn: boolean[] | null;
+    restrictedCheckOut: boolean[] | null;
+    checkInWindowStart: string | null;
+    checkInWindowEnd: string | null;
+    checkInTime: string | null;
+    checkOutTime: string | null;
+  };
+}
 
-const daysToBooleanArray = (daysArray: number[]) => {
-  const week = new Array(7).fill(false);
-  daysArray.forEach((day) => {
-    week[day] = true;
-  });
-  return week;
-};
-
-export default function Availability({ data }: { data: any }) {
+export default function Availability({ availability }: AvailabilityProps) {
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  // const [restrictedCheckIn, setRestrictedCheckIn] = useState(data.availability.restrictedCheckIn);
-  // const [restrictedCheckOut, setRestrictedCheckOut] = useState(data.availability.restrictedCheckOut);
-  const availability = data.availability;
-  const handleSubmittedChange = (newSubmitted: boolean) => {
-    setSubmitted(newSubmitted);
-  };
 
   const formik = useFormik({
     initialValues: {
-      id: data.id,
-      availabilityId: availability.id,
-      instantBooking: availability.instantBooking,
-      minStay: availability.minStay,
-      maxStay: availability.maxStay,
-      advanceNotice: availability.advanceNotice,
-      restrictedCheckIn: availability.restrictedCheckIn, // Initialize with an empty array if it's undefined
-      restrictedCheckOut: availability.restrictedCheckOut,
-      // sameDayAdvanceNotice: data.sameDayAdvanceNotice,
-      // preparationTime: data.preparationTime,
-      // availabilityWindow: data.availabilityWindow,
-      // restrictedCheckIn: data.restrictedCheckIn,
-      // restrictedCheckOut: data.restrictedCheckOut,
-      // checkInWindowStart: data.checkInWindowStart,
-      // checkInWindowEnd: data.checkInWindowEnd,
-      // checkInTime: data.checkInTime,
-      // checkOutTime: data.checkOutTime,
+      ...availability
     },
-    validationSchema: validationSchema,
-    onSubmit: async (values) => {
-      console.log("values" + JSON.stringify(values));
+    // validationSchema: AvailabilityValidationSchema,
+    onSubmit: async () => {
       setSubmitted(false);
       setIsLoading(true);
-      const transformedValues = {
-        id: values.id,
-        availability: {
-          instantBooking: values.instantBooking,
-          minStay: values.minStay,
-          maxStay: values.maxStay,
-          advanceNotice: parseInt(values.advanceNotice),
-          restrictedCheckIn: values.restrictedCheckIn,
-          restrictedCheckOut: values.restrictedCheckOut,
-        },
+
+      const updateRequest: UpdateAvailabilityRequest = {
+        id: availability.id,
+        instantBooking: availability.instantBooking!,
+        minStay: availability.minStay!,
+        maxStay: availability.maxStay!,
+        advanceNotice: availability.advanceNotice!,
+        sameDayAdvanceNotice: availability.sameDayAdvanceNotice!,
+        preparationTime: availability.preparationTime!,
+        availabilityWindow: availability.availabilityWindow!,
+        restrictedCheckIn: availability.restrictedCheckIn!,
+        restrictedCheckOut: availability.restrictedCheckOut!,
+        checkInWindowStart: availability.checkInWindowStart!,
+        checkInWindowEnd: availability.checkInWindowEnd!,
+        checkInTime: availability.checkInTime!,
+        checkOutTime: availability.checkOutTime!,
       };
 
-      const result = await updatePost(transformedValues as any);
-      if (result) {
-        console.log("Post updated successfully:", result);
-        setSubmitted(true);
-        setIsLoading(false);
-        toast.success(`Your data has been sucessfully saved! `);
-        setTimeout(() => {
-          setSubmitted(false);
-          const resetValues = {
-            ...values, // Spread the transformedValues
-            id: formik.initialValues.id, // Include the 'id' from initialValues
-          };
-          formik.resetForm({ values: resetValues });
-        }, 2000);
-      }
-      if (!result) {
-        console.error("error");
-      } else {
-        console.log(values);
-      }
+      const result = await updateAvailability(updateRequest);
+      setIsLoading(false);
+      setSubmitted(result ? true : false);
     },
   });
 
@@ -158,7 +103,7 @@ export default function Availability({ data }: { data: any }) {
     const idx = dayMapping[dayName];
 
     // Copy the current array to a new one so we're not mutating Formik's values directly
-    const updatedCheckInDays = [...formik.values.restrictedCheckIn];
+    const updatedCheckInDays = [...formik.values.restrictedCheckIn!];
 
     // Toggle the value for the specified day
     updatedCheckInDays[idx] = !updatedCheckInDays[idx];
@@ -171,7 +116,7 @@ export default function Availability({ data }: { data: any }) {
     return days.map((day) => (
       <Toggle
         data-state={
-          formik.values.restrictedCheckIn[dayMapping[day as DayName]]
+          formik.values.restrictedCheckIn && formik.values.restrictedCheckIn[dayMapping[day as DayName]]
             ? "on"
             : "off"
         }
@@ -183,6 +128,7 @@ export default function Availability({ data }: { data: any }) {
       </Toggle>
     ));
   };
+
 
   const renderRestrictedCheckOutDaysToggle = () => {
     /*return (
@@ -210,21 +156,19 @@ export default function Availability({ data }: { data: any }) {
   ));
   // formik
 
-  const handleBeforeUnload = (e: any) => {
+  const handleBeforeUnload = useCallback((e: any) => {
     if (formik.dirty) {
       e.preventDefault();
-      e.returnValue =
-        "You have unsaved changes. Are you sure you want to leave?";
+      e.returnValue = "";
     }
-  };
+  }, [formik.dirty]);
 
   useEffect(() => {
     window.addEventListener("beforeunload", handleBeforeUnload);
-    setSubmitted(false);
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [formik.dirty]);
+  }, [handleBeforeUnload]);
 
   return (
     <EditorWrapper>
@@ -239,7 +183,7 @@ export default function Availability({ data }: { data: any }) {
                 type="checkbox"
                 disabled={isLoading}
                 className="hidden"
-                checked={formik.values.instantBooking}
+                checked={formik.values.instantBooking!}
                 onChange={() =>
                   formik.setFieldValue(
                     "instantBooking",
@@ -248,16 +192,14 @@ export default function Availability({ data }: { data: any }) {
                 }
               />
               <div
-                className={`h-6 w-12 bg-${
-                  formik.values.instantBooking ? "blue-500" : "gray-300"
-                } rounded-full p-1 transition-transform duration-300`}
+                className={`h-6 w-12 bg-${formik.values.instantBooking ? "blue-500" : "gray-300"
+                  } rounded-full p-1 transition-transform duration-300`}
               >
                 <div
-                  className={`h-4 w-4 transform rounded-full bg-white shadow-md ${
-                    formik.values.instantBooking
-                      ? "translate-x-6"
-                      : "translate-x-0"
-                  }`}
+                  className={`h-4 w-4 transform rounded-full bg-white shadow-md ${formik.values.instantBooking
+                    ? "translate-x-6"
+                    : "translate-x-0"
+                    }`}
                 ></div>
               </div>
             </label>
@@ -278,7 +220,7 @@ export default function Availability({ data }: { data: any }) {
                 disabled={isLoading}
                 id="minStay"
                 name="minStay"
-                value={formik.values.minStay}
+                value={formik.values.minStay!}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 min="0"
@@ -306,7 +248,7 @@ export default function Availability({ data }: { data: any }) {
                 disabled={isLoading}
                 id="maxStay"
                 name="maxStay"
-                value={formik.values.maxStay}
+                value={formik.values.maxStay!}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 min="0"
@@ -333,7 +275,7 @@ export default function Availability({ data }: { data: any }) {
                 id="advanceNotice"
                 disabled={isLoading}
                 name="advanceNotice"
-                value={formik.values.advanceNotice}
+                value={formik.values.advanceNotice!}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 className="w-full rounded-md border p-2"
