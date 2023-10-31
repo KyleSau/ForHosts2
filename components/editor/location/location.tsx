@@ -12,10 +12,11 @@ import {
 import EditorSaveButton from "../editor-save-button";
 import EditorWrapper from "../editor-container-wrapper";
 import OpenStreetMap from "../../users-sites/open-street-map";
-import { updateLocation } from "@/actions/post/editor/location/location-actions";
+import { updateLocation } from "@/actions/listing/editor/location/location-actions";
 import EditorToggle from "../editor-toggle";
 import EditorAddressAutocomplete from "../editor-address-autocomplete";
 import MapViewUpdater from "./map-view-updater";
+import { json } from "micro";
 
 interface Coordinates {
   lat: number;
@@ -118,9 +119,9 @@ export default function Location({ data }: { data: any }) {
           />
         </div>
       </form>
-      <OpenStreetMap lat={coordinates.lat} lng={coordinates.lng}>
+      {(coordinates.lat && coordinates.lng) ? (<OpenStreetMap lat={coordinates.lat} lng={coordinates.lng}>
         <MapViewUpdater lat={coordinates.lat} lng={coordinates.lng} />
-      </OpenStreetMap>
+      </OpenStreetMap>) : null}
     </EditorWrapper>
   );
 }
