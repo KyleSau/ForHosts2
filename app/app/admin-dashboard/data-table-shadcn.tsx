@@ -5,6 +5,7 @@ import {
     ColumnDef,
     ColumnFiltersState,
     SortingState,
+    VisibilityState,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
@@ -22,7 +23,13 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-
+import {
+    DropdownMenu,
+    DropdownMenuCheckboxItem,
+    DropdownMenuContent,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { DataTablePagination } from "./pagination-shadcn";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -36,6 +43,8 @@ export function DataTable<TData, TValue>({
 {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+    const [rowSelection, setRowSelection] = React.useState({});
 
     const table = useReactTable({
         data,
@@ -46,9 +55,13 @@ export function DataTable<TData, TValue>({
         getSortedRowModel: getSortedRowModel(),
         onColumnFiltersChange: setColumnFilters,
         getFilteredRowModel: getFilteredRowModel(),
+        onColumnVisibilityChange: setColumnVisibility,
+        onRowSelectionChange: setRowSelection,
         state: {
             sorting,
-            columnFilters
+            columnFilters,
+            columnVisibility,
+            rowSelection
         },
     })
     // console.log("DataTable: table: ", table);
@@ -61,6 +74,30 @@ export function DataTable<TData, TValue>({
                 onChange={(event) => table.getColumn("email")?.setFilterValue(event.target.value)}
                 className="max-w-sm"
             />
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="ml-auto">
+                    Columns
+                </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    {table.getAllColumns()
+                    .filter((column) => column.getCanHide())
+                        .map((column) => {
+                            return (
+                                <DropdownMenuCheckboxItem
+                                    key={column.id}
+                                    className="capitalize"
+                                    checked={column.getIsVisible()}
+                                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                                >
+                                    {column.id}
+                                </DropdownMenuCheckboxItem>
+                            );
+                        }
+                    )}
+                </DropdownMenuContent>
+            </DropdownMenu>
         </div>
 
         <div className="rounded-md border">
@@ -69,12 +106,10 @@ export function DataTable<TData, TValue>({
                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>
                             {headerGroup.headers.map((header) => {
-                                console.log("header: ", header);
+                                // console.log("header: ", header);
                                 return (
                                     <TableHead key={header.id}>
-                                    {header.isPlaceholder
-                                        ? null
-                                        : flexRender(
+                                        {header.isPlaceholder? null: flexRender(
                                             header.column.columnDef.header,
                                             header.getContext()
                                         )}
@@ -109,8 +144,10 @@ export function DataTable<TData, TValue>({
             </Table>
         </div>
         
+        <DataTablePagination table={table} />
+
         {/* Previous and next page buttons, for pagination */}
-        <div className="flex items-center justify-end space-x-2 py-4">
+        {/* <div className="flex items-center justify-end space-x-2 py-4">
             <Button
                 variant="outline"
                 size="sm"
@@ -127,6 +164,7 @@ export function DataTable<TData, TValue>({
             >
                 Next
             </Button>
-        </div>
+        </div> */}
+
     </>);
 }

@@ -3,6 +3,7 @@
 import { MoreHorizontal, ArrowUpDown } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { DataTableColumnHeader } from "./column-header-shadcn";
 
 export type Payment = {
     id: string
@@ -21,39 +23,60 @@ export type Payment = {
 
 export const tableTestColumns: ColumnDef<Payment>[] = [
     {
+        id: "select",
+        header: ({ table }) => (
+            <Checkbox
+                checked={table.getIsAllPageRowsSelected()}
+                onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+                aria-label="Select all"
+            />
+        ),
+        cell: ({ row }) => (
+            <Checkbox
+                checked={row.getIsSelected()}
+                onCheckedChange={(value) => row.toggleSelected(!!value)}
+                aria-label="Select row"
+            />
+        ),
+        enableSorting: false,
+        enableHiding: false,
+    },
+    {
         accessorKey: "status",
         header: "Status",
     },
     {
         accessorKey: "email",
         // header: "Email",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Email <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
+        // header: ({ column }) => {
+        //     return (
+        //         <Button
+        //             variant="ghost"
+        //             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        //         >
+        //             Email <ArrowUpDown className="ml-2 h-4 w-4" />
+        //         </Button>
+        //     )
+        // },
+        header: ({ column }) => (<DataTableColumnHeader column={column} title="Email" />),
     },
     {
         accessorKey: "amount",
         // header: "Amount",
         //header: () => <div className="text-right">Amount</div>,
-        header: ({ column }) => {
-            return (
-                <div className="flex justify-end">
-                    <Button
-                        variant="ghost"
-                        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                    >
-                        Amount <ArrowUpDown className="ml-2 h-4 w-4" />
-                    </Button>
-                </div>
-            )
-        },
+        // header: ({ column }) => {
+        //     return (
+        //         <div className="flex justify-end">
+        //             <Button
+        //                 variant="ghost"
+        //                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        //             >
+        //                 Amount <ArrowUpDown className="ml-2 h-4 w-4" />
+        //             </Button>
+        //         </div>
+        //     )
+        // },
+        header: ({ column }) => (<DataTableColumnHeader className="flex justify-end" column={column} title="Amount" />),
         cell: ({ row }) => 
         {
             const amount = parseFloat(row.getValue("amount"))
