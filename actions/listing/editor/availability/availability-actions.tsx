@@ -6,19 +6,22 @@ import { UpdateAvailabilityRequest } from './update-availability-request';
 import * as yup from 'yup';
 
 export const updateAvailability = async (request: UpdateAvailabilityRequest) => {
+    console.log('yurt');
     const session = await getSession();
 
     if (!session?.user.id) {
         return { error: "Not authenticated" };
     }
-
+    console.log(JSON.stringify(request));
     // Validate the input data with Yup
     let validatedData: UpdateAvailabilityRequest;
     try {
         const validationResult = await AvailabilityValidationSchema.validate(request);
+        console.log('validation result: ', validationResult);
         validatedData = sanitizeData(validationResult);
     } catch (error: any) {
         if (error instanceof yup.ValidationError) {
+            console.log(error.errors);
             return { error: "Invalid input", details: error.errors };
         } else {
             // Handle other errors if necessary
@@ -52,6 +55,7 @@ export const updateAvailability = async (request: UpdateAvailabilityRequest) => 
 }
 
 function sanitizeData(data: any): UpdateAvailabilityRequest {
+    console.log('sanitizing data');
     return {
         ...data,
         restrictedCheckIn: data.restrictedCheckIn?.filter(Boolean) || [],

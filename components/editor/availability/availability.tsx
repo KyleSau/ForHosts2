@@ -71,7 +71,7 @@ export default function Availability({ availability }: AvailabilityProps) {
     initialValues: {
       ...availability
     },
-    // validationSchema: AvailabilityValidationSchema,
+    validationSchema: AvailabilityValidationSchema,
     onSubmit: async () => {
       setSubmitted(false);
       setIsLoading(true);
