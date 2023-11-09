@@ -98,6 +98,11 @@ export const createDummyBlog = async () => {
   return blog;
 };
 
+export const getAllBlogs = async () => {
+  const blogs = prisma.blog.findMany();
+  return blogs;
+}
+
 export const getBedrooms = async (postId: string) => {
   const post = await prisma.post.findUnique({
     where: { id: postId },

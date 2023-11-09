@@ -3,6 +3,7 @@ import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { notFound } from "next/navigation";
 import BlogManager from "@/components/blog-manager/BlogManager";
+import { getAllBlogs } from "@/lib/actions";
 
 
 export default async function AdminPage() {
@@ -17,9 +18,11 @@ export default async function AdminPage() {
         notFound();
     }
 
+    const blogs = await getAllBlogs();
+
     return (<div>
         <h3>Admin Dashboard</h3>
-        <BlogManager />
+        <BlogManager blogs={blogs} />
         <div>Add Blog Button</div>
         <div>List of blogs with Edit/Delete/View</div>
     </div>);
