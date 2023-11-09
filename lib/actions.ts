@@ -84,17 +84,19 @@ export const createSite = async (formData: FormData) => {
 };
 
 export const createDummyBlog = async () => {
-  // const session = await getSession();
-  // if (!session?.user.id) {
-  //   return {
-  //     error: "Not authenticated",
-  //   };
-  // }
-  // const user = await prisma?.user.findUnique({ where: { id: session.user.id } });
+  const session = await getSession();
+  if (!session?.user.id) {
+    return {
+      error: "Not authenticated",
+    };
+  }
+  const user = await prisma?.user.findUnique({ where: { id: session.user.id } });
 
-  // if (user?.role !== Role.ADMIN) {
-  //   return;
-  // }
+  if (user?.role !== Role.USER) {
+    return {
+      error: "Not authenticated",
+    };
+  }
 
   const blog = await prisma?.blog.create({
     data: {
@@ -103,7 +105,7 @@ export const createDummyBlog = async () => {
       content: "Sylas knew that fresno was a producer of almonds",
       image: "",
       keywords: ["test, test1, test23"],
-      userId: "clo3f42vx0000pfqazdma3v6f"
+      userId: user.id
     }
   })
   console.log(blog + ' created');
