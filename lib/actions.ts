@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { Bedroom, Post, Site } from "@prisma/client";
+import { Bedroom, Post, Role, Site } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { withPostAuth, withSiteAuth } from "./auth";
 import { getSession } from "@/lib/auth";
@@ -84,6 +84,18 @@ export const createSite = async (formData: FormData) => {
 };
 
 export const createDummyBlog = async () => {
+  // const session = await getSession();
+  // if (!session?.user.id) {
+  //   return {
+  //     error: "Not authenticated",
+  //   };
+  // }
+  // const user = await prisma?.user.findUnique({ where: { id: session.user.id } });
+
+  // if (user?.role !== Role.ADMIN) {
+  //   return;
+  // }
+
   const blog = await prisma?.blog.create({
     data: {
       title: "Sylas is a peanut",

@@ -3,6 +3,7 @@ import React from 'react'
 import prisma from "@/lib/prisma";
 import { createDummyBlog, getAllBlogs } from '@/lib/actions';
 import { Blog } from '@prisma/client';
+import { BlogDataTable } from './BlogDataTable';
 
 interface BlogManagerProps {
     blogs: Blog[];
@@ -17,9 +18,7 @@ export default function BlogManager({ blogs }: BlogManagerProps) {
     return (
         <div>
             <button onClick={onClickington}>Create Blogington</button>
-            {blogs.map((blog) =>
-                <li key={blog.id}>{blog.title}</li>
-            )}
+            <BlogDataTable blogs={blogs} />
         </div>
     )
 }

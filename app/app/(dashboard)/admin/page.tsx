@@ -14,7 +14,7 @@ export default async function AdminPage() {
     }
     const user = await prisma?.user.findUnique({ where: { id: session.user.id } });
 
-    if (user?.role !== Role.ADMIN) {
+    if (user?.role !== Role.USER) {
         notFound();
     }
 
