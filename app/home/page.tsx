@@ -2,6 +2,9 @@ import Hero from "@/components/home/hero";
 import HomeLayout from "@/components/home/home-layout";
 import LandingInfo from "@/components/home/landing-info";
 import { PropertyQuantitySelection } from "@/components/home/property-quantity-selection";
+import SubscribeForm from "@/components/home/subscribe-form";
+import ThirdPartyLogos from "@/components/home/third-party-logos";
+import Timeline from "@/components/home/timeline";
 
 
 export default function Home() {
@@ -14,7 +17,10 @@ export default function Home() {
     <div>
       <HomeLayout>
         <Hero />
+        <ThirdPartyLogos />
         <LandingInfo header="Our Services" services={services} />
+        <Timeline />
+        <SubscribeForm />
         <PropertyQuantitySelection />
       </HomeLayout>
     </div>
