@@ -40,10 +40,12 @@ model User {
 
 model Blog {
   id          String   @id @default(cuid())
+  avatar      String
+  author      String
   title       String   @db.Text
   description String?  @db.Text
   content     String?  @db.Text
-  slug        String   @default(cuid())
+  slug        String   @unique @default(cuid())
   image       String
   keywords    String[]
 

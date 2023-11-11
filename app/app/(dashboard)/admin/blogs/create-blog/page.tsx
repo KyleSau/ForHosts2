@@ -2,12 +2,13 @@ import { Role } from "@prisma/client";
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { notFound } from "next/navigation";
-import BlogManager from "@/components/blog-manager/BlogManager";
-import { getAllBlogs } from "@/lib/actions";
-import BlogForm from "@/components/blog-manager/BlogForm";
+import AddEditBlog from "@/components/blog-manager/AddEditBlog";
 
 
-export default async function AdminPage() {
+export default async function AddEditBlogPage() {
+
+    // query params
+
 
     const session = await getSession();
     if (!session) {
@@ -19,10 +20,9 @@ export default async function AdminPage() {
         notFound();
     }
 
-    const blogs = await getAllBlogs();
-
     return (<div>
-        Admin Dashboard
+        Create Blog Post
+        <AddEditBlog />
     </div>);
 
 }

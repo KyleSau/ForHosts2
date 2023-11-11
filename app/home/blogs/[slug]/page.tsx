@@ -11,6 +11,9 @@ import { GetServerSideProps } from "next";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getAllBlogs } from "@/lib/actions";
+
+
 type Params = {
   slug: string;
 };
@@ -24,6 +27,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     throw new Error("Params is undefined");
   }
   const { slug } = params;
+  const data = await getAllBlogs();
+  if (!data) {
+    notFound();
+  }
   const blog = data.find((blog) => blog.slug === slug);
   if (!blog) {
     throw new Error("Blog not found");
@@ -32,6 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: blog.title,
     description: blog.description,
+    keywords: blog.keywords
   };
 }
 
@@ -40,7 +48,7 @@ const BlogDetail: React.FC<Props> = async ({ params }) => {
   const { slug } = params;
   console.log(slug);
 
-  const data = await prisma?.blog.findMany();
+  const data = await getAllBlogs();
   if (!data) {
     notFound();
   }
@@ -61,7 +69,7 @@ const BlogDetail: React.FC<Props> = async ({ params }) => {
         <div className="container mx-auto px-8 py-4">
 
           <Image
-            src={blog.image.path}
+            src={blog.image}
             alt={blog.image.altText}
             width={52}
             height={52}

@@ -7,7 +7,7 @@ import { getAllBlogs } from "@/lib/actions";
 import BlogForm from "@/components/blog-manager/BlogForm";
 
 
-export default async function AdminPage() {
+export default async function AdminBlogPage() {
 
     const session = await getSession();
     if (!session) {
@@ -22,7 +22,10 @@ export default async function AdminPage() {
     const blogs = await getAllBlogs();
 
     return (<div>
-        Admin Dashboard
+        <div>Admin Dashboard</div>
+        {/* <BlogForm onSubmit={handleFormSubmit} initialValues={editingBlog} /> */}
+        <BlogManager blogs={blogs} />
+
     </div>);
 
 }

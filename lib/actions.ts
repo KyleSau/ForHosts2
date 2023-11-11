@@ -83,34 +83,81 @@ export const createSite = async (formData: FormData) => {
   }
 };
 
-export const createDummyBlog = async () => {
-  const session = await getSession();
-  if (!session?.user.id) {
+export async function getBlogById(blogId: string) {
+  if (!isAdmin())
     return {
       error: "Not authenticated",
     };
+  try {
+    const blog = await prisma.blog.findUnique({
+      where: { id: blogId },
+    });
+    return blog;
+  } catch (error) {
+    throw new Error('Error fetching blog: ' + error);
+  }
+}
+
+export async function createBlog(blogData: any) {
+  const session = await getSession();
+  if (!session?.user.id) {
+    return false;
   }
   const user = await prisma?.user.findUnique({ where: { id: session.user.id } });
 
   if (user?.role !== Role.USER) {
-    return {
-      error: "Not authenticated",
-    };
+    return false;
   }
+  // Ensure slug is unique or use cuid
+  const existingSlug = await prisma.blog.findFirst({ where: { slug: blogData.slug } });
+  if (existingSlug) {
+    throw new Error(`A blog with the slug "${blogData.slug}" already exists.`);
+  }
+  blogData.userId = user.id;
+  blogData.author = user.name;
+  blogData.avatar = user.image;
+  return prisma.blog.create({ data: blogData });
+}
 
-  const blog = await prisma?.blog.create({
-    data: {
-      title: "Sylas is a peanut",
-      description: "Sylas is also an ALMOND",
-      content: "Sylas knew that fresno was a producer of almonds",
-      image: "",
-      keywords: ["test, test1, test23"],
-      userId: user.id
-    }
-  })
-  console.log(blog + ' created');
-  return blog;
-};
+// updateBlog.js
+export async function updateBlog(blogId: any, blogData: any) {
+  const session = await getSession();
+  if (!session?.user.id) {
+    return false;
+  }
+  const user = await prisma?.user.findUnique({ where: { id: session.user.id } });
+
+  if (user?.role !== Role.USER) {
+    return false;
+  }
+  // Ensure slug is unique or use cuid
+  const existingSlug = await prisma.blog.findFirst({ where: { slug: blogData.slug } });
+  if (existingSlug) {
+    throw new Error('Slug already exists');
+  }
+  return prisma.blog.update({
+    where: { id: blogId },
+    data: blogData,
+  });
+}
+
+// deleteBlog.js
+export async function deleteBlogPost(blogId: any) {
+  return prisma.blog.delete({ where: { id: blogId } });
+}
+
+export const isAdmin = async () => {
+  const session = await getSession();
+  if (!session?.user.id) {
+    return false;
+  }
+  const user = await prisma?.user.findUnique({ where: { id: session.user.id } });
+
+  if (user?.role !== Role.USER) {
+    return false;
+  }
+  return true;
+}
 
 export const getAllBlogs = async () => {
   const blogs = prisma.blog.findMany();
