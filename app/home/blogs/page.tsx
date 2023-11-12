@@ -1,8 +1,7 @@
-import BlogComponent from "./BlogComponent";
-
+import { getAllBlogs } from "@/lib/actions";
+import MainBlogComponent from "../../../components/blogs/presenting-blog-component";
 export default async function BlogPage() {
+  const blogs = await getAllBlogs();
 
-    const blogs = await prisma?.blog.findMany();
-
-    return (<BlogComponent blogs={blogs} />)
+  return <MainBlogComponent blogs={blogs} />;
 }
