@@ -7,10 +7,10 @@ import Image from "next/image";
 
 const MainBlogCard: React.FC<BlogCardProps> = ({ blog }) => {
   return (
-    <div className="mx-2 my-6 w-full">
+    <div className="  my-6 w-full">
       <div className="space-y-2">
         <article className="rounded-lg bg-white p-4 shadow-lg">
-          <div className="flex items-start space-x-4">
+          <div className="flex items-start space-x-4 ">
             <Image
               alt="Blog 1 image"
               className="rounded-md"
@@ -22,8 +22,9 @@ const MainBlogCard: React.FC<BlogCardProps> = ({ blog }) => {
               }}
               width="100"
             />
-            <div>
-              <h2 className="text-2xl font-semibold">{blog.title}</h2>
+
+            <div className="truncate">
+              <h2 className=" text-2xl font-semibold">{blog.title}</h2>
               <div className="text-gray-500 dark:text-gray-400">
                 <span className="flex items-center">
                   <div className="mr-1 flex h-8 w-8 items-center justify-center border-0 text-gray-500">
