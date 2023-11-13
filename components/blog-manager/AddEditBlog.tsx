@@ -5,6 +5,8 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { createBlog, updateBlog, getBlogById } from '@/lib/actions';
 import { toast } from "sonner";
+import { BlogDataTable } from './BlogDataTable';
+import { Blog } from '@prisma/client';
 
 // Validation Schema using Yup
 const blogValidationSchema = Yup.object({
@@ -33,7 +35,9 @@ export default function AddEditBlog({ blogId }: AddEditBlogProps) {
 
     useEffect(() => {
         if (blogId) {
-            getBlogById(blogId).then(blogData => {
+            getBlogById(blogId).then((blogData: Blog) => {
+                if (!blogData)
+                    return;
                 setInitialValues({
                     title: blogData.title,
                     description: blogData.description,
