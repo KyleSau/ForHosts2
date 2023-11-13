@@ -40,26 +40,32 @@ model User {
 
 model Blog {
   id          String   @id @default(cuid())
+  avatar      String
+  author      String
   title       String   @db.Text
   description String?  @db.Text
   content     String?  @db.Text
-  slug        String   @default(cuid())
+  slug        String   @unique @default(cuid())
   image       String
   keywords    String[]
 
-  user   User?  @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model StripeAccount {
-  id                        String  @id @default(cuid())
+  id                        String   @id @default(cuid())
   accountId                 String
   accountEmail              String?
   oauthAccessToken          String
   oauthStripePublishableKey String
   oauthRefreshToken         String
-  userId                    String  @unique
-  user                      User    @relation(fields: [userId], references: [id])
+  userId                    String   @unique
+  user                      User     @relation(fields: [userId], references: [id])
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
 }
 
 model Account {

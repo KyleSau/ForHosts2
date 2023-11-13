@@ -8,6 +8,8 @@ import {
 import { redirect } from "next/navigation";
 import StripeLinkButton from "@/components/stripe-connect/stripe-connect-button";
 import StripeUnlinkButton from "@/components/stripe-connect/stripe-disconnect-button";
+import { HelpCircle } from "lucide-react";
+import Image from "next/image";
 const YES = <>✅&nbsp;&nbsp;Yes.</>;
 const NO = <>❌&nbsp;&nbsp;No.</>;
 
@@ -78,8 +80,54 @@ export default async function Page({
             }
         } else {
             return (
-                <div>
-                    <StripeLinkButton />
+                <div className="">
+                    {/* First Card */}
+                    <div className="bg-white p-6 shadow rounded mb-6">
+                        {/* Stripe Logo and Title Section */}
+                        <div className="flex items-center space-x-2 mb-4">
+                            {/* Replace with actual image */}
+                            <Image width={100} height={52} src="/stripe.png" alt="Stripe Logo" className="h-8" />
+                            <h1 className="text-xl font-normal text-gray-800">Stripe</h1>
+                        </div>
+
+                        {/* <hr className="border-gray-200 mb-4" /> */}
+
+                        {/* Description */}
+                        <p className="text-gray-600 mb-4">
+                            Process direct booking payments.
+                        </p>
+                        <hr className="mb-4" />
+                        <p>
+                            Stripe is the easiest way to accept credit cards. Process major international debit or credit cards, including Visa, Mastercard and American Express. You don't need a merchant account so you can start accepting payments today.
+                        </p>
+
+                        {/* Payment processing card */}
+                        <div className="bg-blue-100 p-2 rounded mb-4 inline-block">
+                            <span className="text-sm text-blue-800">Payment processing</span>
+                        </div>
+
+                    </div>
+
+                    {/* Second Card */}
+                    <div className="bg-white p-6 shadow rounded">
+                        {/* How to connect to Stripe Section */}
+                        <div className="flex items-center mb-4">
+                            {/* Replace with an actual question mark icon */}
+                            <HelpCircle color='black' size={18} />
+                            <h2 className="ml-2 text-lg font-semibold text-gray-900">How to connect to Stripe</h2>
+                        </div>
+
+                        <p className="text-gray-600 mb-4">
+                            Select the 'Connect with Stripe' button below. This will open your Stripe account to enable the connection.
+                        </p>
+
+                        <a href="/link-to-guide" className="text-blue-600 hover:text-blue-700 mb-4 inline-block">Click here for a step by step guide.</a>
+
+                        {/* Centered Stripe Link Button */}
+                        <div className="flex justify-center mt-4">
+                            <StripeLinkButton />
+                        </div>
+                    </div>
                 </div>
             );
         }

@@ -1,4 +1,6 @@
 "use client"
+import { ContainerDiv } from './stripe-styles'
+
 interface Props {
 }
 
@@ -11,13 +13,15 @@ const StripeConnectButton: React.FC<Props> = ({ }) => {
 
     return (
         <div>
-            <button
-                type="button"
-                onClick={handleClick}
-                className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded shadow-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
-                Link Stripe Account
-            </button>
+            <ContainerDiv>
+                <button
+                    type="button"
+                    onClick={handleClick}
+                    className="stripe-connect"
+                >
+                    <span>Connect with Stripe</span>
+                </button>
+            </ContainerDiv>
         </div>
     );
 };
