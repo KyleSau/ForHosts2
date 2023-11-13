@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import HomeLayout from "@/components/home/home-layout";
-import MainBlogCard from "@/components/blogs/main-blog-cards";
-import RecentBlogCard from "@/components/blogs/recent-blog-card";
+import MainBlogCard from "@/components/blog-listing-page/main-blog-cards";
+import RecentBlogCard from "@/components/blog-listing-page/recent-blog-card";
 import { Blog } from "@prisma/client";
 const MainBlogComponent = ({ blogs }: any) => {
   const heroBlogs: Blog[] = blogs

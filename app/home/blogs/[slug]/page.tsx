@@ -4,6 +4,9 @@ import HomeLayout from "@/components/home/home-layout";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllBlogs } from "@/lib/actions";
+import Image from "next/image";
+import BlogNotFound from "@/components/blog-viewing-page/blog-missing-page";
+import MainBlogViewingComponent from "@/components/blog-viewing-page/presenting-blog-viewing-page";
 
 type Params = {
   slug: string;
@@ -33,65 +36,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     keywords: blog.keywords,
   };
 }
-
-const BlogDetail: React.FC<Props> = async ({ params }) => {
+export default async function BlogViewingPage({ params }: Props) {
   const { slug } = params;
-  console.log(slug);
-
   const data = await getAllBlogs();
-  if (!data) {
-    notFound();
-  }
-  const blog = data.find((blog: Blog) => blog.slug === slug);
-
+  const blog = data.find((blog) => blog.slug === slug);
   if (!blog) {
-    console.log("blog not found");
-    return (
-      <HomeLayout>
-        <div className="flex justify-center pt-8">
-          <p className="text-center">Blog not found</p>
-        </div>
-      </HomeLayout>
-    );
+    return <BlogNotFound />;
   }
 
   return (
     <HomeLayout>
-      <div className="px-6 py-6 lg:py-16">
-        <div className="flex justify-center">
-          <article className="prose prose-zinc dark:prose-invert mx-auto text-center">
-            <div className="not-prose space-y-2">
-              <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl lg:leading-[3.5rem]">
-                {blog.title}
-              </h1>
-              <p className="text-zinc-500 dark:text-zinc-400">
-                By Author Name | Posted on November 9, 2023
-              </p>
-            </div>
-            <p>
-              This is the blog post content. It can be as long or as short as
-              needed, and can include any type of content that&#39;s necessary
-              for the blog post.
-            </p>
-            <figure>
-              <img
-                alt="Blog cover image"
-                className="aspect-video object-cover"
-                height="340"
-                src="/placeholder.svg"
-                width="1250"
-              />
-              <figcaption>Blog cover image caption</figcaption>
-            </figure>
-            <p>
-              More blog post content goes here. This could be additional
-              paragraphs, images, videos, etc.
-            </p>
-          </article>
-        </div>
-      </div>
+      <MainBlogViewingComponent blog={blog} />
     </HomeLayout>
   );
-};
-
-export default BlogDetail;
+}
