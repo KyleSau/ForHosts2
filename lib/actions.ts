@@ -94,7 +94,7 @@ export async function getBlogById(blogId: string) {
     });
     return blog;
   } catch (error) {
-    throw new Error('Error fetching blog: ' + error);
+    throw new Error("Error fetching blog: " + error);
   }
 }
 
@@ -103,13 +103,17 @@ export async function createBlog(blogData: any) {
   if (!session?.user.id) {
     return false;
   }
-  const user = await prisma?.user.findUnique({ where: { id: session.user.id } });
+  const user = await prisma?.user.findUnique({
+    where: { id: session.user.id },
+  });
 
   if (user?.role !== Role.USER) {
     return false;
   }
   // Ensure slug is unique or use cuid
-  const existingSlug = await prisma.blog.findFirst({ where: { slug: blogData.slug } });
+  const existingSlug = await prisma.blog.findFirst({
+    where: { slug: blogData.slug },
+  });
   if (existingSlug) {
     throw new Error(`A blog with the slug "${blogData.slug}" already exists.`);
   }
@@ -125,15 +129,19 @@ export async function updateBlog(blogId: any, blogData: any) {
   if (!session?.user.id) {
     return false;
   }
-  const user = await prisma?.user.findUnique({ where: { id: session.user.id } });
+  const user = await prisma?.user.findUnique({
+    where: { id: session.user.id },
+  });
 
   if (user?.role !== Role.USER) {
     return false;
   }
   // Ensure slug is unique or use cuid
-  const existingSlug = await prisma.blog.findFirst({ where: { slug: blogData.slug } });
+  const existingSlug = await prisma.blog.findFirst({
+    where: { slug: blogData.slug },
+  });
   if (existingSlug) {
-    throw new Error('Slug already exists');
+    throw new Error("Slug already exists");
   }
   return prisma.blog.update({
     where: { id: blogId },
@@ -151,18 +159,25 @@ export const isAdmin = async () => {
   if (!session?.user.id) {
     return false;
   }
-  const user = await prisma?.user.findUnique({ where: { id: session.user.id } });
+  const user = await prisma?.user.findUnique({
+    where: { id: session.user.id },
+  });
 
   if (user?.role !== Role.USER) {
     return false;
   }
   return true;
-}
-
+};
+export const getHeroBlogs = async () => {
+  const heroBlogs = (await prisma.heroBlog.findMany()).sort(
+    (a, b) => a.order - b.order,
+  );
+  return heroBlogs;
+};
 export const getAllBlogs = async () => {
   const blogs = prisma.blog.findMany();
   return blogs;
-}
+};
 
 export const getBedrooms = async (postId: string) => {
   const post = await prisma.post.findUnique({
@@ -653,9 +668,8 @@ export const updatePost = async (data: Post) => {
     }
 
     return updatedPost;
-
   } catch (error: any) {
-    console.error('Error updating post and its relations:', error);
+    console.error("Error updating post and its relations:", error);
     return { error: error.message };
   }
 };
@@ -777,7 +791,7 @@ export const updatePostMetadata = withPostAuth(
       // if the site has a custom domain, we need to revalidate those tags too
       post.site?.customDomain &&
         (await revalidateTag(`${post.site?.customDomain}-posts`),
-          await revalidateTag(`${post.site?.customDomain}-${post.slug}`));
+        await revalidateTag(`${post.site?.customDomain}-${post.slug}`));
 
       return response;
     } catch (error: any) {
