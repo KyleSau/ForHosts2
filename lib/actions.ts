@@ -168,12 +168,7 @@ export const isAdmin = async () => {
   }
   return true;
 };
-export const getHeroBlogs = async () => {
-  const heroBlogs = (await prisma.heroBlog.findMany()).sort(
-    (a, b) => a.order - b.order,
-  );
-  return heroBlogs;
-};
+
 export const getAllBlogs = async () => {
   const blogs = prisma.blog.findMany();
   return blogs;
