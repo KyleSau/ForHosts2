@@ -27,12 +27,12 @@ export default function AddEditBlog({ blog }: AddEditBlogProps) {
     const router = useRouter();
 
     const [initialValues, setInitialValues] = useState({
-        title: blog.title ?? '',
-        description: blog.description ?? '',
-        content: blog.content ?? '',
-        slug: blog.slug ?? '',
-        image: blog.image ?? '',
-        keywords: blog.keywords.toString() ?? '',
+        title: blog?.title ?? '',
+        description: blog?.description ?? '',
+        content: blog?.content ?? '',
+        slug: blog?.slug ?? '',
+        image: blog?.image ?? '',
+        keywords: blog?.keywords.toString() ?? '',
     });
 
     const formik = useFormik({
@@ -57,7 +57,7 @@ export default function AddEditBlog({ blog }: AddEditBlogProps) {
 
     return (
         <div className="container mx-auto p-6 bg-white shadow-md rounded">
-            <h1 className="text-xl font-semibold mb-4">{blog.id ? 'Edit' : 'Create'} Blog Post</h1>
+            <h1 className="text-xl font-semibold mb-4">{blog?.id ? 'Edit' : 'Create'} Blog Post</h1>
             <form onSubmit={formik.handleSubmit} className="space-y-4">
                 {/* Title Field */}
                 <div className="mb-4">
