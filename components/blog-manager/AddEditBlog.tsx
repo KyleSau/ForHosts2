@@ -7,6 +7,7 @@ import { createBlog, updateBlog, getBlogById } from '@/lib/actions';
 import { toast } from "sonner";
 import { BlogDataTable } from './BlogDataTable';
 import { Blog } from '@prisma/client';
+import IDK from './IDK';
 
 // Validation Schema using Yup
 const blogValidationSchema = Yup.object({
@@ -19,36 +20,20 @@ const blogValidationSchema = Yup.object({
 });
 
 interface AddEditBlogProps {
-    blogId?: string;
+    blog?: Blog;
 }
 
-export default function AddEditBlog({ blogId }: AddEditBlogProps) {
+export default function AddEditBlog({ blog }: AddEditBlogProps) {
     const router = useRouter();
-    const [initialValues, setInitialValues] = useState({
-        title: '',
-        description: '',
-        content: '',
-        slug: '',
-        image: '',
-        keywords: '',
-    });
 
-    useEffect(() => {
-        if (blogId) {
-            getBlogById(blogId).then((blogData: Blog) => {
-                if (!blogData)
-                    return;
-                setInitialValues({
-                    title: blogData.title,
-                    description: blogData.description,
-                    content: blogData.content,
-                    slug: blogData.slug,
-                    image: blogData.image,
-                    keywords: blogData.keywords,
-                });
-            });
-        }
-    }, [blogId]);
+    const [initialValues, setInitialValues] = useState({
+        title: blog.title ?? '',
+        description: blog.description ?? '',
+        content: blog.content ?? '',
+        slug: blog.slug ?? '',
+        image: blog.image ?? '',
+        keywords: blog.keywords.toString() ?? '',
+    });
 
     const formik = useFormik({
         initialValues,
@@ -56,22 +41,23 @@ export default function AddEditBlog({ blogId }: AddEditBlogProps) {
         validationSchema: blogValidationSchema,
         onSubmit: async (values, { resetForm }) => {
             try {
-                if (blogId) {
-                    await updateBlog(blogId, values);
+                if (blog) {
+                    await updateBlog(blog.id, values);
                 } else {
                     await createBlog(values);
                 }
                 toast.success('Blog post saved successfully');
                 resetForm();
-                router.push('/admin/blogs');
+                // router.push('/admin/blogs');
             } catch (error) {
                 toast.error('An error occurred while saving the blog post');
             }
         },
     });
+
     return (
         <div className="container mx-auto p-6 bg-white shadow-md rounded">
-            <h1 className="text-xl font-semibold mb-4">{blogId ? 'Edit' : 'Create'} Blog Post</h1>
+            <h1 className="text-xl font-semibold mb-4">{blog.id ? 'Edit' : 'Create'} Blog Post</h1>
             <form onSubmit={formik.handleSubmit} className="space-y-4">
                 {/* Title Field */}
                 <div className="mb-4">
@@ -92,14 +78,15 @@ export default function AddEditBlog({ blogId }: AddEditBlogProps) {
                     )}
                 </div>
                 {/* Content Field */}
-                <div className="mb-4">
+                {/* <div className="mb-4">
                     <label htmlFor="content" className="block text-sm font-medium text-gray-700">Content</label>
                     <textarea id="content" {...formik.getFieldProps('content')}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
                     {formik.touched.content && formik.errors.content && (
                         <p className="mt-2 text-sm text-red-600">{formik.errors.content}</p>
                     )}
-                </div>
+                </div> */}
+                <IDK formik={formik} field={"content"} />
                 {/* Slug Field */}
                 <div className="mb-4">
                     <label htmlFor="slug" className="block text-sm font-medium text-gray-700">Slug</label>
@@ -129,7 +116,7 @@ export default function AddEditBlog({ blogId }: AddEditBlogProps) {
                 </div>
                 {/* Submit Button */}
                 <button type="submit" className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    {blogId ? 'Update' : 'Submit'} Post
+                    {blog ? 'Update' : 'Submit'} Post
                 </button>
             </form>
         </div>

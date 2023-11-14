@@ -3,6 +3,7 @@ import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { notFound } from "next/navigation";
 import AddEditBlog from "@/components/blog-manager/AddEditBlog";
+import { getBlogById } from "@/lib/actions";
 
 
 export default async function AddEditBlogPage({
@@ -23,9 +24,11 @@ export default async function AddEditBlogPage({
         notFound();
     }
 
+    const blog = await getBlogById(slug);
+
     return (<div>
         Create Blog Post
-        <AddEditBlog blogId={slug} />
+        <AddEditBlog blog={blog} />
     </div>);
 
 }
