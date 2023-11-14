@@ -37,7 +37,7 @@ const MainBlogCard: React.FC<BlogCardProps> = ({ blog, isVisible }) => {
                       className=" rounded-full"
                       height="24"
                       title={blog.author}
-                      src="/kylexD.jpg" // Replace with the actual image path
+                      src={blog.avatar}
                       width="24"
                     />
                   </div>
