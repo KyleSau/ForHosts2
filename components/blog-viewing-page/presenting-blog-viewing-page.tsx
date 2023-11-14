@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import RecentBlogCard from "../blog-listing-page/recent-blog-card";
 const MainBlogViewingComponent = ({ blog }: any) => {
   return (
     <div className="px-4 py-6 md:px-6 md:py-12 lg:py-16">
@@ -32,7 +33,7 @@ const MainBlogViewingComponent = ({ blog }: any) => {
             alt="Main blog image"
             className="aspect-video object-cover"
             height="340"
-            src="/forhoststestlogo.png"
+            src={blog.image}
             width="1250"
           />
         </figure>

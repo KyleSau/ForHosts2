@@ -15,7 +15,7 @@ const MainBlogCard: React.FC<BlogCardProps> = ({ blog }) => {
               alt="Blog 1 image"
               className="rounded-md"
               height="100"
-              src="/forhoststestlogo.png"
+              src={blog.image}
               style={{
                 aspectRatio: "100/100",
                 objectFit: "cover",
