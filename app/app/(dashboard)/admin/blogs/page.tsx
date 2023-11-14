@@ -6,26 +6,26 @@ import BlogManager from "@/components/blog-manager/BlogManager";
 import { getAllBlogs } from "@/lib/actions";
 import BlogForm from "@/components/blog-manager/BlogForm";
 
-
 export default async function AdminBlogPage() {
+  const session = await getSession();
+  if (!session) {
+    redirect("/login");
+  }
+  const user = await prisma?.user.findUnique({
+    where: { id: session.user.id },
+  });
 
-    const session = await getSession();
-    if (!session) {
-        redirect("/login");
-    }
-    const user = await prisma?.user.findUnique({ where: { id: session.user.id } });
+  // if (user?.role !== Role.USER) {
+  //     notFound();
+  // }
 
-    if (user?.role !== Role.USER) {
-        notFound();
-    }
+  const blogs = await getAllBlogs();
 
-    const blogs = await getAllBlogs();
-
-    return (<div>
-        <div>Admin Dashboard</div>
-        {/* <BlogForm onSubmit={handleFormSubmit} initialValues={editingBlog} /> */}
-        <BlogManager blogs={blogs} />
-
-    </div>);
-
+  return (
+    <div>
+      <div>Admin Dashboard</div>
+      {/* <BlogForm onSubmit={handleFormSubmit} initialValues={editingBlog} /> */}
+      <BlogManager blogs={blogs} />
+    </div>
+  );
 }

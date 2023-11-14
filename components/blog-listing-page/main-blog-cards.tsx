@@ -5,9 +5,13 @@ import { BlogCardProps } from "./types";
 import Link from "next/link";
 import Image from "next/image";
 
-const MainBlogCard: React.FC<BlogCardProps> = ({ blog }) => {
+const MainBlogCard: React.FC<BlogCardProps> = ({ blog, isVisible }) => {
   return (
-    <div className="  my-6 w-full">
+    <div
+      className={`my-6 w-full transition-opacity duration-500 ${
+        isVisible ? "opacity-100" : "opacity-0"
+      }`}
+    >
       <div className="space-y-2">
         <article className="rounded-lg bg-white p-4 shadow-lg">
           <div className="flex items-start space-x-4 ">
