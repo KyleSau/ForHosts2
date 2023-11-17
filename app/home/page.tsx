@@ -2,7 +2,7 @@ import Hero from "@/components/home/hero";
 import HomeLayout from "@/components/home/home-layout";
 import LandingInfo from "@/components/home/landing-info";
 import { PropertyQuantitySelection } from "@/components/home/property-quantity-selection";
-
+import UnderDevelopment from "./under-development-page";
 
 export default function Home() {
   const services = [
@@ -12,11 +12,12 @@ export default function Home() {
   ];
   return (
     <div>
-      <HomeLayout>
+      {/* <HomeLayout>
         <Hero />
         <LandingInfo header="Our Services" services={services} />
         <PropertyQuantitySelection />
-      </HomeLayout>
+      </HomeLayout> */}
+      <UnderDevelopment />
     </div>
   );
 }
