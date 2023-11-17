@@ -13,14 +13,12 @@ const MainBlogComponent = ({ blogs }: any) => {
 
   const recentBlogs: Blog[] = blogs.filter((blog: Blog) => blog.order === null);
   useEffect(() => {
-    // Set a timeout to increment the visibleCards state
     const timer = setTimeout(() => {
       if (visibleCards < heroBlogs.length) {
         setVisibleCards(visibleCards + 1);
       }
-    }, 100); // Adjust the duration between each card appearance (in milliseconds)
+    }, 100);
 
-    // Clear the timeout if the component unmounts or when all cards are visible
     return () => clearTimeout(timer);
   }, [visibleCards, heroBlogs.length]);
 
