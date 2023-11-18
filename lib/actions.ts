@@ -125,6 +125,7 @@ export async function createBlog(blogData: any) {
 
 // updateBlog.js
 export async function updateBlog(blogId: any, blogData: any) {
+  console.log('updating....');
   const session = await getSession();
   if (!session?.user.id) {
     return false;
@@ -136,18 +137,27 @@ export async function updateBlog(blogId: any, blogData: any) {
   if (user?.role !== Role.USER) {
     return false;
   }
-  // Ensure slug is unique or use cuid
+
+  // Check if the slug exists and is not the slug of the current blog
   const existingSlug = await prisma.blog.findFirst({
-    where: { slug: blogData.slug },
+    where: {
+      slug: blogData.slug,
+      NOT: {
+        id: blogId
+      }
+    },
   });
+
   if (existingSlug) {
     throw new Error("Slug already exists");
   }
+
   return prisma.blog.update({
     where: { id: blogId },
     data: blogData,
   });
 }
+
 
 // deleteBlog.js
 export async function deleteBlogPost(blogId: any) {
@@ -786,7 +796,7 @@ export const updatePostMetadata = withPostAuth(
       // if the site has a custom domain, we need to revalidate those tags too
       post.site?.customDomain &&
         (await revalidateTag(`${post.site?.customDomain}-posts`),
-        await revalidateTag(`${post.site?.customDomain}-${post.slug}`));
+          await revalidateTag(`${post.site?.customDomain}-${post.slug}`));
 
       return response;
     } catch (error: any) {
