@@ -1,3 +1,4 @@
+import Features from "@/components/features";
 import Hero from "@/components/home/hero";
 import HomeLayout from "@/components/home/home-layout";
 import LandingInfo from "@/components/home/landing-info";
@@ -5,6 +6,8 @@ import { PropertyQuantitySelection } from "@/components/home/property-quantity-s
 import SubscribeForm from "@/components/home/subscribe-form";
 import ThirdPartyLogos from "@/components/home/third-party-logos";
 import Timeline from "@/components/home/timeline";
+import { VerticalFeatures } from "@/components/home/vertical-features";
+import WhyDirectSection from "@/components/home/why-direct-section";
 
 
 export default function Home() {
@@ -18,10 +21,12 @@ export default function Home() {
       <HomeLayout>
         <Hero />
         <ThirdPartyLogos />
-        <LandingInfo header="Our Services" services={services} />
-        <Timeline />
-        <SubscribeForm />
-        <PropertyQuantitySelection />
+        {/* <WhyDirectSection /> */}
+        <VerticalFeatures />
+        <Features />
+        {/* <Timeline /> */}
+        {/* <SubscribeForm /> */}
+        {/* <PropertyQuantitySelection /> */}
       </HomeLayout>
     </div>
   );

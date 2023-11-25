@@ -2,6 +2,8 @@
 import NextLink from 'next/link';
 import { FacebookIcon, LinkedinIcon, TwitterIcon } from 'react-share';
 import Container from './container';
+import Link from 'next/link';
+import Logo from './Logo';
 type SingleFooterListItem = { title: string; href: string };
 type FooterListItems = SingleFooterListItem[];
 type SingleFooterList = { title: string; items: FooterListItems };
@@ -46,31 +48,57 @@ const footerItems: FooterItems = [
 
 function Footer() {
   return (
-    <footer className="pt-2 pb-2 bg-gray-400 text-textSecondary">
-      <Container>
-        <div className="flex flex-col justify-center items-center mt-24 md:flex-col">
-          <div className="flex space-x-4 justify-center">
-            <NextLink href="https://www.twitter.com/my-saas-startup" passHref legacyBehavior>
-              <a>
-                <TwitterIcon size={50} round={true} />
-              </a>
-            </NextLink>
+    // <footer className="pt-2 pb-2 bg-gray-400 text-textSecondary">
+    //   <Container>
+    //     <div className="flex flex-col justify-center items-center mt-24 md:flex-col">
+    //       <div className="flex space-x-4 justify-center">
+    //         <NextLink href="https://www.twitter.com/my-saas-startup" passHref legacyBehavior>
+    //           <a>
+    //             <TwitterIcon size={50} round={true} />
+    //           </a>
+    //         </NextLink>
 
-            <NextLink href="https://www.facebook.com/profile.php?id=100091349487748" passHref legacyBehavior>
-              <a>
-                <FacebookIcon size={50} round={true} />
-              </a>
-            </NextLink>
+    //         <NextLink href="https://www.facebook.com/profile.php?id=100091349487748" passHref legacyBehavior>
+    //           <a>
+    //             <FacebookIcon size={50} round={true} />
+    //           </a>
+    //         </NextLink>
 
-            <NextLink href="https://www.linkedin.com/my-saas-startup" passHref legacyBehavior>
-              <a>
-                <LinkedinIcon size={50} round={true} />
-              </a>
-            </NextLink>
-          </div>
-          <p className="text-lg mt-2 text-center">&copy; ForHosts 2023</p>
-        </div>
-      </Container>
+    //         <NextLink href="https://www.linkedin.com/my-saas-startup" passHref legacyBehavior>
+    //           <a>
+    //             <LinkedinIcon size={50} round={true} />
+    //           </a>
+    //         </NextLink>
+    //       </div>
+    //       <p className="text-lg mt-2 text-center">&copy; ForHosts 2023</p>
+    //     </div>
+    //   </Container>
+    // </footer>
+    <footer className="p-4 bg-white md:p-8 lg:p-10 dark:bg-gray-800">
+      <Link className="flex justify-center items-center" href="/">
+        <Logo />
+      </Link>
+      <div className="mx-auto max-w-screen-xl text-center">
+        <p className="my-6 text-gray-500 dark:text-gray-400">Providing a direct booking engine to hosts since 2023.</p>
+        <ul className="flex flex-wrap justify-center items-center mb-6 text-gray-900 dark:text-white">
+          <li>
+            <a href="#" className="mr-4 hover:underline md:mr-6 ">About</a>
+          </li>
+          <li>
+            <a href="#" className="mr-4 hover:underline md:mr-6">Blog</a>
+          </li>
+          <li>
+            <a href="#" className="mr-4 hover:underline md:mr-6">Affiliate Program</a>
+          </li>
+          <li>
+            <a href="#" className="mr-4 hover:underline md:mr-6">FAQs</a>
+          </li>
+          <li>
+            <a href="#" className="mr-4 hover:underline md:mr-6">Contact</a>
+          </li>
+        </ul>
+        <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2023 <a href="#" className="hover:underline">ForHosts™</a>. All Rights Reserved.</span>
+      </div>
     </footer>
   );
 }

@@ -29,7 +29,7 @@ const navOptions: NavOption[] = [
   },
   {
     name: "Blogs",
-    url: "/blogs"
+    url: "/blog"
   },
 ];
 
@@ -65,15 +65,13 @@ const Navbar = () => {
   }, [isMobileMenuOpen]);
 
   return (
-    <nav className="bg-white h-20 text-lg text-black flex items-center px-4 shadow-xl justify-between">
-      <div className="flex items-center justify-between w-full md:justify-center">
+    <nav className="bg-white h-20 text-lg text-black flex px-4 shadow-xl justify-center">
+      <div className="flex justify-between w-8/12">
+        <Link className="p-5 flex" href="/">
+          <Logo />
+        </Link>
         <div className="flex items-center">
-          <Link className="p-5" href="/">
-            <Logo />
-          </Link>
-        </div>
-        <div className="flex items-center">
-          <ul className="hidden md:flex items-center space-x-4">
+          <ul className="hidden md:flex float-right items-center space-x-6">
             {navOptions.map((option) => (
               <li
                 key={option.name}
@@ -90,8 +88,8 @@ const Navbar = () => {
                 ) : (
                   <Link
                     href={option.url || "#"}
-                    className={`px-4 py-2 ${activeOption === option.name ? "underline" : ""
-                      } hover:underline text-black flex items-center`}
+                    className={`px-4 py-2 ${activeOption === option.name ? "hover:opacity-80" : ""
+                      } text-black flex items-center`}
                   >
                     {option.name}
                   </Link>
@@ -105,7 +103,7 @@ const Navbar = () => {
                       >
                         <Link
                           href={subOption.url}
-                          className={`block hover:underline text-black`}
+                          className={`hover:opacity-80 block text-black`}
                         >
                           {subOption.name}
                         </Link>
@@ -120,7 +118,7 @@ const Navbar = () => {
               session ? (
                 <Link href="https://dashboard.forhosts.com">
                   <button
-                    className="hover:underline text-black font-bold w-full h-12 text-lg focus:outline-none transition-all ease-in-out duration-150"
+                    className="hover:opacity-80 text-black font-bold w-full h-12 text-lg focus:outline-none transition-all ease-in-out duration-150"
                   >
                     Dashboard
                   </button>
@@ -128,7 +126,7 @@ const Navbar = () => {
               ) : (
                 <Link href="https://dashboard.forhosts.com/login">
                   <button
-                    className="hover:underline text-black font-bold w-full h-12 text-lg focus:outline-none transition-all ease-in-out duration-150"
+                    className="hover:opacity-80 text-black font-bold w-full h-12 text-lg focus:outline-none transition-all ease-in-out duration-150"
                   >
                     <span className="text-black"> Login</span>
                   </button>
@@ -198,7 +196,7 @@ const Navbar = () => {
           ))}
 
         </ul>
-        <div className="w-40 mt-24 ">
+        <div className="w-40 mt-24">
           {session ? (
             <Link href="https://dashboard.forhosts.com">
               <button

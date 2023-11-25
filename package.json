@@ -15,6 +15,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@headlessui/react": "^1.7.17",
     "@material-ui/core": "^4.12.4",
     "@mui/icons-material": "^5.14.0",
     "@mui/material": "^5.14.0",
@@ -54,6 +55,7 @@
     "@vercel/postgres": "^0.3.2",
     "add": "^2.0.6",
     "ai": "^2.1.9",
+    "aos": "^2.3.4",
     "calendar": "^0.1.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^1.2.1",
@@ -109,6 +111,7 @@
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/typography": "^0.5.8",
+    "@types/aos": "^3.0.7",
     "@types/file-saver": "^2.0.5",
     "@types/ical": "^0.8.0",
     "@types/js-cookie": "^3.0.2",
