@@ -2,7 +2,7 @@ import { VerticalFeatureRow } from "./vertical-feature-row";
 import { Section } from "./Section"
 import ThirdPartyLogos from "./third-party-logos";
 const VerticalFeatures = () => (
-  <section className="bg-white dark:bg-gray-900">
+  <section className="bg-white dark:bg-gray-900 mb-12">
     <div className="container px-6 py-10 mx-auto">
       <div className="lg:flex lg:items-center">
         <div className="w-full space-y-12 lg:w-1/2 ">
@@ -67,8 +67,6 @@ const VerticalFeatures = () => (
           <img className="w-[28rem] h-[28rem] object-cover xl:w-[34rem] xl:h-[34rem] rounded-full" src="https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=755&q=80" alt="" />
         </div>
       </div>
-
-      <hr className="my-12 border-gray-200 dark:border-gray-700" />
     </div>
   </section>
 );

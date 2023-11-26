@@ -1,4 +1,5 @@
-import Features from "@/components/features";
+import Faq from "@/components/home/faq";
+import Features from "@/components/home/features";
 import Hero from "@/components/home/hero";
 import HomeLayout from "@/components/home/home-layout";
 import LandingInfo from "@/components/home/landing-info";
@@ -24,6 +25,7 @@ export default function Home() {
         {/* <WhyDirectSection /> */}
         <VerticalFeatures />
         <Features />
+        <Faq />
         {/* <Timeline /> */}
         {/* <SubscribeForm /> */}
         {/* <PropertyQuantitySelection /> */}
