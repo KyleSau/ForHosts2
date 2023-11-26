@@ -16,7 +16,7 @@ export default function MDX({ source }: { source: MDXRemoteProps }) {
 
   return (
     <article
-      className="items-center prose-md prose prose-stone m-auto w-11/12 dark:prose-invert sm:prose-lg sm:w-3/4"
+      className="item-center prose-md prose prose-stone m-auto w-11/12 dark:prose-invert sm:prose-lg sm:w-3/4"
       suppressHydrationWarning={true}
     >
       {/* @ts-ignore */}
