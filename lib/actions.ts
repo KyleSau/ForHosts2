@@ -279,7 +279,49 @@ export const getSiteFromPostId = async (postId: string) => {
   return post?.siteId;
 };
 
+const getAirBnBData = () => {
+  const url = 'https://www.airbnb.ca/rooms/43805999';
+
+  const listingId = url.split('/').pop();
+  console.log('listingId: ', listingId);
+  const toEncode = `StayListing:${listingId}`;
+  const encoded = btoa(toEncode).replace('=', '%3D');
+
+  const headers = {
+    'accept-language': 'en-US',
+    'content-type': 'application/json',
+    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.81 Safari/537.36',
+    'x-airbnb-api-key': 'd306zoyjsyarp7ifhu67rjxn52tv0t20', // Copy from Airbnb request headers
+  };
+
+  const newUrl = `https://www.airbnb.ca/api/v3/StaysPdpSections?operationName=StaysPdpSections&locale=en-CA&currency=CAD&_cb=1987xzg1yzv9ed124yrix00ybtwv&variables=%7B%22id%22%3A%22${encoded}%22%2C%22pdpSectionsRequest%22%3A%7B%22adults%22%3A%221%22%2C%22bypassTargetings%22%3Afalse%2C%22categoryTag%22%3Anull%2C%22causeId%22%3Anull%2C%22children%22%3Anull%2C%22disasterId%22%3Anull%2C%22discountedGuestFeeVersion%22%3Anull%2C%22displayExtensions%22%3Anull%2C%22federatedSearchId%22%3Anull%2C%22forceBoostPriorityMessageType%22%3Anull%2C%22infants%22%3Anull%2C%22interactionType%22%3Anull%2C%22layouts%22%3A%5B%22SIDEBAR%22%2C%22SINGLE_COLUMN%22%5D%2C%22pets%22%3A0%2C%22pdpTypeOverride%22%3Anull%2C%22preview%22%3Afalse%2C%22previousStateCheckIn%22%3Anull%2C%22previousStateCheckOut%22%3Anull%2C%22priceDropSource%22%3Anull%2C%22privateBooking%22%3Afalse%2C%22promotionUuid%22%3Anull%2C%22relaxedAmenityIds%22%3Anull%2C%22searchId%22%3Anull%2C%22selectedCancellationPolicyId%22%3Anull%2C%22selectedRatePlanId%22%3Anull%2C%22staysBookingMigrationEnabled%22%3Afalse%2C%22translateUgc%22%3Anull%2C%22useNewSectionWrapperApi%22%3Afalse%2C%22sectionIds%22%3Anull%2C%22checkIn%22%3Anull%2C%22checkOut%22%3Anull%7D%7D&extensions=%7B%22persistedQuery%22%3A%7B%22version%22%3A1%2C%22sha256Hash%22%3A%222e71de979aa92574a9e7e83d9192b3bb6bb184b8c446380b12c3160cfc8a9cbc%22%7D%7D`;
+  //const newUrl = `https://www.airbnb.com/api/v2/get-data-layer-variables?locale=en&currency=USD`;
+  fetch(newUrl, { headers })
+    .then(response => response.json())
+    .then(data => {
+      // console.log(data.data.presentation.stayProductDetailPage.sections.metadata.loggingContext.eventDataLogging.listingLat);
+      const listingData = data.data.presentation.stayProductDetailPage;
+
+      // Extracting the required information
+      const title = listingData.sections.listingTitle.title;
+      const pictureUrls = listingData.sections.listingPhotos.photos.map(photo => photo.large);
+      const description = listingData.sections.listingDescription.description;
+      const amenities = listingData.sections.listingAmenities.amenities.map(amenity => amenity.title);
+      const maxGuests = listingData.sections.listingPolicies.policies.find(policy => policy.title === 'Max guests').content;
+
+      // Logging the extracted data
+      console.log('Title:', title);
+      console.log('Picture URLs:', pictureUrls);
+      console.log('Description:', description);
+      console.log('Amenities:', amenities);
+      console.log('Max Guests:', maxGuests);
+      return data;
+    })
+    .catch(error => console.error('Error:', error));
+}
+
 export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
+  getAirBnBData();
   const session = await getSession();
   if (!session?.user.id) {
     return {
