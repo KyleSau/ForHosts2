@@ -15,6 +15,7 @@ import {
 import { put } from "@vercel/blob";
 import { customAlphabet } from "nanoid";
 import { getBlurDataURL } from "@/lib/utils";
+import { Arsenal } from "next/font/google";
 
 const nanoid = customAlphabet(
   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
@@ -279,49 +280,82 @@ export const getSiteFromPostId = async (postId: string) => {
   return post?.siteId;
 };
 
-const getAirBnBData = () => {
-  const url = 'https://www.airbnb.ca/rooms/43805999';
+async function postRequest(url, payload) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
 
-  const listingId = url.split('/').pop();
-  console.log('listingId: ', listingId);
-  const toEncode = `StayListing:${listingId}`;
-  const encoded = btoa(toEncode).replace('=', '%3D');
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
 
-  const headers = {
-    'accept-language': 'en-US',
-    'content-type': 'application/json',
-    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.81 Safari/537.36',
-    'x-airbnb-api-key': 'd306zoyjsyarp7ifhu67rjxn52tv0t20', // Copy from Airbnb request headers
+  return await response.json();
+}
+
+async function getDataSetId(airbnbListingUrl: string) {
+  const payload = {
+    addMoreHostInfo: false,
+    calendarMonths: 0,
+    currency: "USD",
+    debugLog: false,
+    includeReviews: true,
+    limitPoints: 100,
+    locationQuery: "Sacramento, California",
+    maxConcurrency: 50,
+    maxListings: 10,
+    maxReviews: 10,
+    proxyConfiguration: { useApifyProxy: true },
+    simple: false,
+    startUrls: [
+      {
+        url: airbnbListingUrl
+      }
+    ],
+    timeoutMs: 300000
   };
 
-  const newUrl = `https://www.airbnb.ca/api/v3/StaysPdpSections?operationName=StaysPdpSections&locale=en-CA&currency=CAD&_cb=1987xzg1yzv9ed124yrix00ybtwv&variables=%7B%22id%22%3A%22${encoded}%22%2C%22pdpSectionsRequest%22%3A%7B%22adults%22%3A%221%22%2C%22bypassTargetings%22%3Afalse%2C%22categoryTag%22%3Anull%2C%22causeId%22%3Anull%2C%22children%22%3Anull%2C%22disasterId%22%3Anull%2C%22discountedGuestFeeVersion%22%3Anull%2C%22displayExtensions%22%3Anull%2C%22federatedSearchId%22%3Anull%2C%22forceBoostPriorityMessageType%22%3Anull%2C%22infants%22%3Anull%2C%22interactionType%22%3Anull%2C%22layouts%22%3A%5B%22SIDEBAR%22%2C%22SINGLE_COLUMN%22%5D%2C%22pets%22%3A0%2C%22pdpTypeOverride%22%3Anull%2C%22preview%22%3Afalse%2C%22previousStateCheckIn%22%3Anull%2C%22previousStateCheckOut%22%3Anull%2C%22priceDropSource%22%3Anull%2C%22privateBooking%22%3Afalse%2C%22promotionUuid%22%3Anull%2C%22relaxedAmenityIds%22%3Anull%2C%22searchId%22%3Anull%2C%22selectedCancellationPolicyId%22%3Anull%2C%22selectedRatePlanId%22%3Anull%2C%22staysBookingMigrationEnabled%22%3Afalse%2C%22translateUgc%22%3Anull%2C%22useNewSectionWrapperApi%22%3Afalse%2C%22sectionIds%22%3Anull%2C%22checkIn%22%3Anull%2C%22checkOut%22%3Anull%7D%7D&extensions=%7B%22persistedQuery%22%3A%7B%22version%22%3A1%2C%22sha256Hash%22%3A%222e71de979aa92574a9e7e83d9192b3bb6bb184b8c446380b12c3160cfc8a9cbc%22%7D%7D`;
-  //const newUrl = `https://www.airbnb.com/api/v2/get-data-layer-variables?locale=en&currency=USD`;
-  fetch(newUrl, { headers })
-    .then(response => response.json())
-    .then(data => {
-      // console.log(data.data.presentation.stayProductDetailPage.sections.metadata.loggingContext.eventDataLogging.listingLat);
-      const listingData = data.data.presentation.stayProductDetailPage;
+  // make post request to apify to create dataset
+  const apiUrl = 'https://api.apify.com/v2/acts/GsNzxEKzE2vQ5d9HN/runs?token=apify_ui_AAxZdNdbWcL7HNefUErjHundWsh9Ad2hD3T0';
+  const data = await postRequest(apiUrl, payload);
+  const dataSetId = data.data.defaultDatasetId;
+  return dataSetId;
+}
 
-      // Extracting the required information
-      const title = listingData.sections.listingTitle.title;
-      const pictureUrls = listingData.sections.listingPhotos.photos.map(photo => photo.large);
-      const description = listingData.sections.listingDescription.description;
-      const amenities = listingData.sections.listingAmenities.amenities.map(amenity => amenity.title);
-      const maxGuests = listingData.sections.listingPolicies.policies.find(policy => policy.title === 'Max guests').content;
+// Don't forget to define the postRequest function as shown in the previous example
+async function getAirBnBData() {
+  const airbnbListingUrl = "https://www.airbnb.com/rooms/709306665877984736?adults=1&category_tag=Tag%3A789&children=0&enable_m3_private_room=true&infants=0&pets=0&photo_id=1484820490&search_mode=flex_destinations_search&check_in=2023-12-03&check_out=2023-12-08&source_impression_id=p3_1701051629_Fnn2%2BPRhm2ffITpb&previous_page_section_name=1000&federated_search_id=97a37f65-40e0-4262-8990-9a3daea8b73e";
+  const dataSetId = await getDataSetId(airbnbListingUrl);
 
-      // Logging the extracted data
-      console.log('Title:', title);
-      console.log('Picture URLs:', pictureUrls);
-      console.log('Description:', description);
-      console.log('Amenities:', amenities);
-      console.log('Max Guests:', maxGuests);
-      return data;
-    })
-    .catch(error => console.error('Error:', error));
+  // Wait for a while to ensure the dataset is ready
+  await new Promise(resolve => setTimeout(resolve, 10000)); // 10 seconds delay
+
+  const url = `https://api.apify.com/v2/datasets/${dataSetId}/items?limit=50&offset=0&clean=1&view=overview&token=apify_ui_AAxZdNdbWcL7HNefUErjHundWsh9Ad2hD3T0`;
+  console.log('url:', url);
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  const data = await response.json();
+  const firstListing = data[0];
+  console.log('photos:', JSON.stringify(firstListing.photos));
+  /*const contentType = response.headers.get("content-type");
+  let data;
+  if (contentType && contentType.includes("application/json")) {
+    data = await response.json();
+  } else {
+    data = await response.text();
+  }*/
+
+  console.log('data:', data);
 }
 
 export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
-  getAirBnBData();
+  await getAirBnBData();
   const session = await getSession();
   if (!session?.user.id) {
     return {
@@ -379,10 +413,10 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
   if (!session?.user.id) {
     return { error: "Not authenticated" };
   }
-
+ 
   // Fetch the post and its related sub-tables
   console.log();
-
+ 
   const post = await prisma.post.findUnique({
     where: {
       id: data.id,
@@ -398,11 +432,11 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
       afterBookingInfo: true,
     },
   });
-
+ 
   if (!post || post.userId !== session.user.id) {
     return { error: "Post not found" };
   }
-
+ 
   try {
     const updatedPost = await prisma.post.update({
       where: {
@@ -413,10 +447,10 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
         description: data.description,
       },
     });
-
+ 
     // const locationId = data.locationId!;
     // const location = prisma.location.findUnique({ where: { id: locationId } });
-
+ 
     // LocationUpdateRequest
     if (data.location) {
       const { longitude, latitude, radius } = data.location;
@@ -425,38 +459,38 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
         parseFloat(longitude),
         radius ?? 0,
       );
-
+ 
       console.log("radius: ", radius);
-
+ 
       const lng: string = randomizedLocation.lng + "";
       const lat: string = randomizedLocation.lat + "";
-
+ 
       data.location.longitude = lng;
       data.location.latitude = lat;
-
+ 
       console.log("ideal location: ", JSON.stringify(data.location));
-
+ 
       await prisma.location.update({
         where: { id: post.location!.id },
         data: data.location,
       });
     }
-
+ 
     if (data.pricing) {
       await prisma.pricing.update({
         where: { id: post.pricing!.id },
         data: data.pricing,
       });
     }
-
+ 
     if (data.availability) {
       await prisma.availability.update({
         where: { id: post.availability!.id },
-
+ 
         data: data.availability,
       });
     }
-
+ 
     if (data.propertyRules) {
       console.log(JSON.stringify(data.propertyRules));
       await prisma.propertyRules.update({
@@ -464,7 +498,7 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
         data: data.propertyRules,
       });
     }
-
+ 
     // Check if the totalBedrooms field is being updated
     if (
       data.propertyDetails &&
@@ -472,7 +506,7 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
     ) {
       const newTotalBedrooms = data.propertyDetails.totalBedrooms;
       const currentTotalBedrooms = post.propertyDetails.totalBedrooms;
-
+ 
       // If there's an increase in totalBedrooms
       if (newTotalBedrooms > currentTotalBedrooms) {
         const difference = newTotalBedrooms - currentTotalBedrooms;
@@ -486,7 +520,7 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
           });
         }
       }
-
+ 
       // If there's a decrease in totalBedrooms
       if (newTotalBedrooms < currentTotalBedrooms) {
         const difference = currentTotalBedrooms - newTotalBedrooms;
@@ -497,13 +531,13 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
           orderBy: { createdAt: "desc" },
           take: difference,
         });
-
+ 
         for (const bedroom of bedroomsToDelete) {
           // Delete the Bedroom entry
           await prisma.bedroom.delete({ where: { id: bedroom.id } });
         }
       }
-
+ 
       // Now, update the propertyDetails
       await prisma.propertyDetails.update({
         where: { id: post.propertyDetails.id },
@@ -512,20 +546,20 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
     }
     // if (data.propertyDetails) {
     //   const totalBedrooms = data.propertyDetails.totalBedrooms;
-
+ 
     //   await prisma.propertyDetails.update({
     //     where: { id: post.propertyDetails!.id },
     //     data: data.propertyDetails,
     //   });
     // }
-
+ 
     if (data.afterBookingInfo) {
       await prisma.afterBookingInfo.update({
         where: { id: post.afterBookingInfo!.id },
         data: data.afterBookingInfo,
       });
     }
-
+ 
     return updatedPost;
   } catch (error: any) {
     console.error("Error updating post and its relations:", error);
