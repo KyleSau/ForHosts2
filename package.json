@@ -30,6 +30,7 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@stripe/react-stripe-js": "^2.1.1",
     "@stripe/stripe-js": "^1.54.1",
+    "@tanstack/react-table": "^8.10.7",
     "@tawk.to/tawk-messenger-react": "^2.0.2",
     "@tiptap/core": "^2.0.3",
     "@tiptap/extension-color": "^2.0.3",

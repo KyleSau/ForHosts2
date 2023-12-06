@@ -6,6 +6,7 @@ import {
   UnderlineIcon,
   StrikethroughIcon,
   CodeIcon,
+  Image
 } from "lucide-react";
 
 import { NodeSelector } from "./node-selector";
@@ -51,6 +52,12 @@ export const EditorBubbleMenu: FC<EditorBubbleMenuProps> = (props) => {
       isActive: () => props.editor.isActive("code"),
       command: () => props.editor.chain().focus().toggleCode().run(),
       icon: CodeIcon,
+    },
+    {
+      name: "image",
+      isActive: () => props.editor.isActive("image"),
+      command: () => props.editor.chain().focus().setImage({ src: window.prompt('URL') }).run(),
+      icon: Image,
     },
   ];
 

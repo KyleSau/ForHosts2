@@ -12,367 +12,114 @@ generator client {
   provider = "prisma-client-js"
 }
 
-enum Role {
-  USER
-  ADMIN
+// Define the model for FPMComplex
+model FPMComplex {
+  hMy               Int             @id @default(autoincrement())
+  hCompany          Int
+  sGuid             String          @unique
+  sName             String?
+  hAddedBy          Int
+  hLastModifiedBy   Int
+  dtLastModifiedUtc DateTime
+  // Define the relationship with FPMBuilding
+  buildings         FPMBuilding[]
+  FPMDrawingSet     FPMDrawingSet[]
 }
 
-// This should be a Host
-model User {
-  id            String         @id @default(cuid())
-  name          String?
-  // if you are using Github OAuth, you can get rid of the username attribute (that is for Twitter OAuth)
-  username      String?
-  gh_username   String?
-  email         String?        @unique
-  emailVerified DateTime?
-  image         String?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  stripeAccount StripeAccount? // add relation?
-  accounts      Account[]
-  sessions      Session[]
-  sites         Site[]
-  posts         Post[]
-  role          Role           @default(USER)
-  blogs         Blog[]
+// Define the model for FPMBuilding
+model FPMBuilding {
+  hMy                  Int        @id @default(autoincrement())
+  sGuid                String     @unique
+  hFPMComplex          Int
+  blsComplexDescriptor Boolean
+  hAddedBy             Int
+  hAddedUtc            DateTime
+  hLastModifiedBy      Int
+  dtLastModifiedUtc    DateTime
+  // Define the relationship with FPMComplex
+  complex              FPMComplex @relation(fields: [hFPMComplex], references: [hMy])
+  // Define the relationship with FPMFloor
+  floors               FPMFloor[]
 }
 
-model Blog {
-  id          String   @id @default(cuid())
-  title       String   @db.Text
-  description String?  @db.Text
-  content     String?  @db.Text
-  slug        String   @default(cuid())
-  image       String
-  keywords    String[]
-
-  user   User?  @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String
+// Define the model for FPMDrawing
+model FPMDrawing {
+  hMy                   Int               @id @default(autoincrement())
+  sGuid                 String            @unique
+  hFPMDrawingSet        Int
+  hFPMDrawingSourceFile Int
+  iDrawingType          Int
+  dtEffectiveUtc        DateTime?
+  sComments             String?
+  sName                 String?
+  // Define the relationship with FPMDrawingSet
+  drawingSet            FPMDrawingSet     @relation(fields: [hFPMDrawingSet], references: [hMy])
+  // Define the relationship with FPMDrawingSpace
+  spaces                FPMDrawingSpace[]
+  // Define the relationship with FPMFloorDrawingXref
+  floors                FPMFloor[]        @relation(name: "FPMFloorDrawingXref")
 }
 
-model StripeAccount {
-  id                        String  @id @default(cuid())
-  accountId                 String
-  accountEmail              String?
-  oauthAccessToken          String
-  oauthStripePublishableKey String
-  oauthRefreshToken         String
-  userId                    String  @unique
-  user                      User    @relation(fields: [userId], references: [id])
+// Define the model for FPMDrawingSet
+model FPMDrawingSet {
+  hMy                  Int          @id @default(autoincrement())
+  sGuid                String       @unique
+  hFPMComplex          Int
+  iAreaMeasureStandard Int
+  iPriority            Int
+  sName                String?
+  hAddedBy             Int
+  dtAddedUtc           DateTime
+  hLastModifiedBy      Int
+  dtLastModifiedUtc    DateTime
+  // Define the relationship with FPMComplex
+  complex              FPMComplex   @relation(fields: [hFPMComplex], references: [hMy])
+  // Define the relationship with FPMDrawing
+  drawings             FPMDrawing[]
 }
 
-model Account {
-  id                       String  @id @default(cuid())
-  userId                   String
-  type                     String
-  provider                 String
-  providerAccountId        String
-  refresh_token            String?
-  refresh_token_expires_in Int?
-  access_token             String?
-  expires_at               Int?
-  token_type               String?
-  scope                    String?
-  id_token                 String?
-  session_state            String?
-  oauth_token_secret       String?
-  oauth_token              String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-  @@index([userId])
+// Define the model for FPMDrawingSpace
+model FPMDrawingSpace {
+  hMy                   Int        @id @default(autoincrement())
+  sGuid                 String     @unique
+  hFPMDrawing           Int
+  hFPMFloor             Int
+  sCode                 String
+  iAreaCategory         Int
+  dNetArea              Decimal
+  hFPMBrandLogo         Int?
+  hPropertylistingspace Int?
+  // Define the relationship with FPMDrawing
+  drawing               FPMDrawing @relation(fields: [hFPMDrawing], references: [hMy])
+  // Define the relationship with FPMFloor
+  floor                 FPMFloor   @relation(fields: [hFPMFloor], references: [hMy])
 }
 
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  // shouldAllowUnlink?
-  @@index([userId])
+// Define the model for FPMFloor
+model FPMFloor {
+  hMy               Int               @id @default(autoincrement())
+  sGuid             String            @unique
+  hFPMBuilding      Int
+  iLevel            Int
+  sName             String
+  hAddedBy          Int
+  hAddedUtc         DateTime
+  hLastModifiedBy   Int
+  dtLastModifiedUtc DateTime
+  // Define the relationship with FPMBuilding
+  building          FPMBuilding       @relation(fields: [hFPMBuilding], references: [hMy])
+  // Define the relationship with FPMDrawingSpace
+  spaces            FPMDrawingSpace[]
+  // Define the relationship with FPMDrawing through FPMFloorDrawingXref
+  drawings          FPMDrawing[]      @relation(name: "FPMFloorDrawingXref")
 }
 
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
+// Define the model for FPMFloorDrawingXref
+model FPMFloorDrawingXref {
+  hFPMFloor   Int
+  hFPMDrawing Int
+  // Define the relationship
 
-  @@unique([identifier, token])
-}
-
-model StripePayment {
-  id         String   @id @default(cuid())
-  intentId   String   @unique
-  postId     String
-  startDate  DateTime
-  endDate    DateTime
-  status     String // PROCESSING, SUCCEEDED, FAILED
-  totalPrice Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-}
-
-model Image {
-  id         String   @id @default(cuid())
-  url        String
-  caption    String?
-  uploadedAt DateTime
-  size       String
-  fileName   String
-  orderIndex Int
-
-  siteId String?
-  site   Site?   @relation(fields: [siteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-  postId String
-  post   Post?  @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-  @@index([siteId])
-  @@index([postId])
-}
-
-model Post {
-  id          String   @id @default(cuid())
-  title       String   @db.Text
-  description String?  @db.Text
-  slug        String   @default(cuid())
-  published   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  // One to many relations: 
-  images       Image[]
-  calendars    Calendar[]
-  reservations Reservation[]
-  reviews      Review[]
-
-  // One to one relations:
-  site   Site?   @relation(fields: [siteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  siteId String?
-
-  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String?
-
-  locationId String?   @unique
-  location   Location? @relation(fields: [locationId], references: [id])
-
-  pricingId String?  @unique
-  pricing   Pricing? @relation(fields: [pricingId], references: [id])
-
-  availabilityId String?       @unique
-  availability   Availability? @relation(fields: [availabilityId], references: [id])
-
-  propertyDetailsId String?          @unique
-  propertyDetails   PropertyDetails? @relation(fields: [propertyDetailsId], references: [id])
-
-  afterBookingInfoId String?           @unique
-  afterBookingInfo   AfterBookingInfo? @relation(fields: [afterBookingInfoId], references: [id])
-
-  propertyRulesId String?        @unique
-  propertyRules   PropertyRules? @relation(fields: [propertyRulesId], references: [id])
-
-  // Many to many relations: 
-  @@unique([slug, siteId])
-  @@index([siteId])
-  @@index([userId])
-}
-
-model Location {
-  id          String  @id @default(cuid())
-  address     String?
-  longitude   String?
-  latitude    String?
-  approximate Boolean @default(false)
-
-  post Post?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Pricing {
-  id              String @id @default(cuid())
-  price           Int?
-  weekendPrice    Int?
-  cleaningFee     Int    @default(0)
-  securityDeposit Int    @default(0)
-  petFee          Int    @default(0)
-  weeklyDiscount  Float  @default(0)
-  monthlyDiscount Float  @default(0)
-
-  post Post?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Availability {
-  id                   String    @id @default(cuid())
-  instantBooking       Boolean?  @default(true)
-  minStay              Int?      @default(1) // days (1)
-  maxStay              Int?      @default(28) // days (365)
-  advanceNotice        Int?      @default(0) // days (0 - 7)
-  sameDayAdvanceNotice String?   @default("15:00") // hours (6AM - Midnight) or none
-  preparationTime      Int?      @default(0) // days (0 - 2 days)
-  availabilityWindow   Int?      @default(12) // months (3 - 24 months)
-  restrictedCheckIn    Boolean[] @default([false, false, false, false, false, false, false]) // days of the week restricted
-  restrictedCheckOut   Boolean[] @default([false, false, false, false, false, false, false]) // days of the week restricted
-  checkInWindowStart   String?   @default("15:00") // "HH:mm" // <-- should this be removed? (in place of checkInTime)
-  checkInWindowEnd     String?   @default("21:00") // "HH:mm"
-  checkInTime          String?   @default("15:00") // "HH:mm"
-  checkOutTime         String?   @default("10:00") // "HH:mm"
-
-  post Post?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-// schema.prisma
-
-model Bedroom {
-  id                String           @id @default(cuid())
-  double            Int?             @default(0)
-  queen             Int?             @default(0)
-  single            Int?             @default(0)
-  sofaBed           Int?             @default(0)
-  king              Int?             @default(0)
-  smallDouble       Int?             @default(0)
-  couch             Int?             @default(0)
-  bunkBed           Int?             @default(0)
-  floorMattress     Int?             @default(0)
-  airMattress       Int?             @default(0)
-  crib              Int?             @default(0)
-  toddlerBed        Int?             @default(0)
-  hammock           Int?             @default(0)
-  waterBed          Int?             @default(0)
-  PropertyDetails   PropertyDetails? @relation(fields: [propertyDetailsId], references: [id])
-  propertyDetailsId String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model PropertyRules {
-  id                         String  @id @default(cuid())
-  petsAllowed                Boolean @default(false)
-  eventsAllowed              Boolean @default(false)
-  smokingAllowed             Boolean @default(false)
-  photographyAllowed         Boolean @default(false)
-  checkInMethod              String  @default("Keypad")
-  quietHoursStart            String  @default("22:00") // "HH:mm"
-  quietHoursEnd              String  @default("7:00") // "HH:mm"
-  interactionPreferences     String  @default("I won’t be available in person, and prefer communicating through the app.")
-  additionalRules            String?
-  standardCancellationPolicy String  @default("Flexible")
-  longTermCancellationPolicy String  @default("Firm")
-
-  post Post?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model PropertyDetails {
-  id            String    @id @default(cuid())
-  placeType     String?   @default("House") // Types: Entire Home, Room
-  listingType   String?   @default("Entire Place") // 'Entire Place', 'Room', 'Shared Room'
-  propertyType  String?   @default("Home")
-  maxGuests     Int?      @default(2)
-  maxPets       Int?      @default(0) // disable this if !petsAllowed
-  totalBedrooms Int?      @default(1)
-  bathrooms     Int?      @default(1)
-  bedrooms      Bedroom[]
-  amenities     String[]
-
-  post Post?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model AfterBookingInfo {
-  id                     String  @id @default(cuid())
-  wifiName               String?
-  wifiPassword           String?
-  houseManual            String?
-  checkoutInstructions   String?
-  afterBookingDirections String?
-
-  post Post?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Calendar {
-  id   String @id @default(cuid())
-  name String
-  url  String
-
-  postId String
-  Post   Post   @relation(fields: [postId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([postId])
-}
-
-model Review {
-  id      String  @id @default(cuid())
-  postId  String
-  rating  Float
-  comment String?
-  post    Post    @relation(fields: [postId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([postId])
-}
-
-model Site {
-  id            String   @id @default(cuid())
-  name          String?
-  description   String?  @db.Text
-  logo          String?  @default("https://public.blob.vercel-storage.com/eEZHAoPTOBSYGBE3/JRajRyC-PhBHEinQkupt02jqfKacBVHLWJq7Iy.png") @db.Text
-  font          String   @default("font-cal")
-  image         String?  @default("https://public.blob.vercel-storage.com/eEZHAoPTOBSYGBE3/hxfcV5V-eInX3jbVUhjAt1suB7zB88uGd1j20b.png") @db.Text
-  imageBlurhash String?  @default("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAhCAYAAACbffiEAAAACXBIWXMAABYlAAAWJQFJUiTwAAABfUlEQVR4nN3XyZLDIAwE0Pz/v3q3r55JDlSBplsIEI49h76k4opexCK/juP4eXjOT149f2Tf9ySPgcjCc7kdpBTgDPKByKK2bTPFEdMO0RDrusJ0wLRBGCIuelmWJAjkgPGDSIQEMBDCfA2CEPM80+Qwl0JkNxBimiaYGOTUlXYI60YoehzHJDEm7kxjV3whOQTD3AaCuhGKHoYhyb+CBMwjIAFz647kTqyapdV4enGINuDJMSScPmijSwjCaHeLcT77C7EC0C1ugaCTi2HYfAZANgj6Z9A8xY5eiYghDMNQBJNCWhASot0jGsSCUiHWZcSGQjaWWCDaGMOWnsCcn2QhVkRuxqqNxMSdUSElCDbp1hbNOsa6Ugxh7xXauF4DyM1m5BLtCylBXgaxvPXVwEoOBjeIFVODtW74oj1yBQah3E8tyz3SkpolKS9Geo9YMD1QJR1Go4oJkgO1pgbNZq0AOUPChyjvh7vlXaQa+X1UXwKxgHokB2XPxbX+AnijwIU4ahazAAAAAElFTkSuQmCC") @db.Text
-  subdomain     String?  @unique
-  customDomain  String?  @unique
-  message404    String?  @default("Blimey! You've found a page that doesn't exist.") @db.Text
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId        String?
-  posts         Post[]
-  images        Image[]
-
-  @@index([userId])
-}
-
-model Reservation {
-  id         String   @id @default(cuid())
-  postId     String
-  startDate  DateTime
-  endDate    DateTime
-  totalPrice Int
-  adults     Int
-  children   Int
-  infants    Int
-  pets       Int
-  status     String // CONFIRMED, PENDING, CANCELLED
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  post Post? @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-  @@index([postId])
+  // Define the pk for the model
+  @@id([hFPMFloor, hFPMDrawing])
 }

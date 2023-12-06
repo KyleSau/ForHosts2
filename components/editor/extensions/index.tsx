@@ -9,6 +9,7 @@ import { Color } from "@tiptap/extension-color";
 import TaskItem from "@tiptap/extension-task-item";
 import TaskList from "@tiptap/extension-task-list";
 import { Markdown } from "tiptap-markdown";
+import { Image } from "@tiptap/extension-image";
 
 import SlashCommand from "./slash-command";
 import { InputRule } from "@tiptap/core";
@@ -48,6 +49,7 @@ export const TiptapExtensions = [
         spellcheck: "false",
       },
     },
+
     horizontalRule: false,
     dropcursor: {
       color: "#DBEAFE",
@@ -123,4 +125,9 @@ export const TiptapExtensions = [
     transformCopiedText: true,
     transformPastedText: true,
   }),
+  Image.configure({
+    inline: true,
+    allowBase64: true,
+
+  })
 ];

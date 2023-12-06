@@ -4,6 +4,8 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "@/lib/prisma";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
+import { Role } from "@prisma/client";
+import { RouteKind } from "next/dist/server/future/route-kind";
 
 const VERCEL_DEPLOYMENT = !!process.env.VERCEL_URL;
 
@@ -72,6 +74,7 @@ export function getSession() {
       username: string;
       email: string;
       image: string;
+      role: Role;
     };
   } | null>;
 }

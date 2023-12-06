@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { Bedroom, Post, Site } from "@prisma/client";
+import { Bedroom, Post, Role, Site } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { withPostAuth, withSiteAuth } from "./auth";
 import { getSession } from "@/lib/auth";
@@ -83,6 +83,107 @@ export const createSite = async (formData: FormData) => {
   }
 };
 
+export async function getBlogById(blogId: string) {
+  if (!isAdmin())
+    return {
+      error: "Not authenticated",
+    };
+  try {
+    const blog = await prisma.blog.findUnique({
+      where: { id: blogId },
+    });
+    return blog;
+  } catch (error) {
+    throw new Error("Error fetching blog: " + error);
+  }
+}
+
+export async function createBlog(blogData: any) {
+  const session = await getSession();
+  if (!session?.user.id) {
+    return false;
+  }
+  const user = await prisma?.user.findUnique({
+    where: { id: session.user.id },
+  });
+
+  if (user?.role !== Role.USER) {
+    return false;
+  }
+  // Ensure slug is unique or use cuid
+  const existingSlug = await prisma.blog.findFirst({
+    where: { slug: blogData.slug },
+  });
+  if (existingSlug) {
+    throw new Error(`A blog with the slug "${blogData.slug}" already exists.`);
+  }
+  blogData.userId = user.id;
+  blogData.author = user.name;
+  blogData.avatar = user.image;
+  return prisma.blog.create({ data: blogData });
+}
+
+// updateBlog.js
+export async function updateBlog(blogId: any, blogData: any) {
+  console.log('updating....');
+  const session = await getSession();
+  if (!session?.user.id) {
+    return false;
+  }
+  const user = await prisma?.user.findUnique({
+    where: { id: session.user.id },
+  });
+
+  if (user?.role !== Role.USER) {
+    return false;
+  }
+
+  // Check if the slug exists and is not the slug of the current blog
+  const existingSlug = await prisma.blog.findFirst({
+    where: {
+      slug: blogData.slug,
+      NOT: {
+        id: blogId
+      }
+    },
+  });
+
+  if (existingSlug) {
+    throw new Error("Slug already exists");
+  }
+
+  return prisma.blog.update({
+    where: { id: blogId },
+    data: blogData,
+  });
+}
+
+
+// deleteBlog.js
+export async function deleteBlogPost(blogId: any) {
+  return prisma.blog.delete({ where: { id: blogId } });
+}
+
+export const isAdmin = async () => {
+  const session = await getSession();
+  if (!session?.user.id) {
+    return false;
+  }
+  const user = await prisma?.user.findUnique({
+    where: { id: session.user.id },
+  });
+
+  if (user?.role !== Role.USER) {
+    return false;
+  }
+  return true;
+};
+
+export const getAllBlogs = async () => {
+  const blogs = prisma.blog.findMany();
+  return blogs;
+};
+
 export const getBedrooms = async (postId: string) => {
   const post = await prisma.post.findUnique({
     where: { id: postId },
@@ -151,7 +252,7 @@ export const updateSite = withSiteAuth(
           response = await removeDomainFromVercelProject(site.customDomain);
 
           /* Optional: remove domain from Vercel team 
-
+ 
           // first, we need to check if the apex domain is being used by other sites
           const apexDomain = getApexDomain(`https://${site.customDomain}`);
           const domainCount = await prisma.site.count({
@@ -168,7 +269,7 @@ export const updateSite = withSiteAuth(
               ],
             },
           });
-
+ 
           // if the apex domain is being used by other sites
           // we should only remove it from our Vercel project
           if (domainCount >= 1) {
@@ -337,10 +438,10 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
   if (!session?.user.id) {
     return { error: "Not authenticated" };
   }
-
+ 
   // Fetch the post and its related sub-tables
   console.log();
-
+ 
   const post = await prisma.post.findUnique({
     where: {
       id: data.id,
@@ -356,11 +457,11 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
       afterBookingInfo: true,
     },
   });
-
+ 
   if (!post || post.userId !== session.user.id) {
     return { error: "Post not found" };
   }
-
+ 
   try {
     const updatedPost = await prisma.post.update({
       where: {
@@ -371,10 +472,10 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
         description: data.description,
       },
     });
-
+ 
     // const locationId = data.locationId!;
     // const location = prisma.location.findUnique({ where: { id: locationId } });
-
+ 
     // LocationUpdateRequest
     if (data.location) {
       const { longitude, latitude, radius } = data.location;
@@ -383,38 +484,38 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
         parseFloat(longitude),
         radius ?? 0,
       );
-
+ 
       console.log("radius: ", radius);
-
+ 
       const lng: string = randomizedLocation.lng + "";
       const lat: string = randomizedLocation.lat + "";
-
+ 
       data.location.longitude = lng;
       data.location.latitude = lat;
-
+ 
       console.log("ideal location: ", JSON.stringify(data.location));
-
+ 
       await prisma.location.update({
         where: { id: post.location!.id },
         data: data.location,
       });
     }
-
+ 
     if (data.pricing) {
       await prisma.pricing.update({
         where: { id: post.pricing!.id },
         data: data.pricing,
       });
     }
-
+ 
     if (data.availability) {
       await prisma.availability.update({
         where: { id: post.availability!.id },
-
+ 
         data: data.availability,
       });
     }
-
+ 
     if (data.propertyRules) {
       console.log(JSON.stringify(data.propertyRules));
       await prisma.propertyRules.update({
@@ -422,7 +523,7 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
         data: data.propertyRules,
       });
     }
-
+ 
     // Check if the totalBedrooms field is being updated
     if (
       data.propertyDetails &&
@@ -430,7 +531,7 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
     ) {
       const newTotalBedrooms = data.propertyDetails.totalBedrooms;
       const currentTotalBedrooms = post.propertyDetails.totalBedrooms;
-
+ 
       // If there's an increase in totalBedrooms
       if (newTotalBedrooms > currentTotalBedrooms) {
         const difference = newTotalBedrooms - currentTotalBedrooms;
@@ -444,7 +545,7 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
           });
         }
       }
-
+ 
       // If there's a decrease in totalBedrooms
       if (newTotalBedrooms < currentTotalBedrooms) {
         const difference = currentTotalBedrooms - newTotalBedrooms;
@@ -455,13 +556,13 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
           orderBy: { createdAt: "desc" },
           take: difference,
         });
-
+ 
         for (const bedroom of bedroomsToDelete) {
           // Delete the Bedroom entry
           await prisma.bedroom.delete({ where: { id: bedroom.id } });
         }
       }
-
+ 
       // Now, update the propertyDetails
       await prisma.propertyDetails.update({
         where: { id: post.propertyDetails.id },
@@ -470,20 +571,20 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
     }
     // if (data.propertyDetails) {
     //   const totalBedrooms = data.propertyDetails.totalBedrooms;
-
+ 
     //   await prisma.propertyDetails.update({
     //     where: { id: post.propertyDetails!.id },
     //     data: data.propertyDetails,
     //   });
     // }
-
+ 
     if (data.afterBookingInfo) {
       await prisma.afterBookingInfo.update({
         where: { id: post.afterBookingInfo!.id },
         data: data.afterBookingInfo,
       });
     }
-
+ 
     return updatedPost;
   } catch (error: any) {
     console.error("Error updating post and its relations:", error);
@@ -572,9 +673,8 @@ export const updatePost = async (data: Post) => {
     }
 
     return updatedPost;
-
   } catch (error: any) {
-    console.error('Error updating post and its relations:', error);
+    console.error("Error updating post and its relations:", error);
     return { error: error.message };
   }
 };

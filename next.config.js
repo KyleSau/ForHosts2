@@ -34,7 +34,8 @@ module.exports = {
       "platform-lookaside.fbsbx.com",
       "ccd1kw3boji7y6xm.public.blob.vercel-storage.com",
       "stripe.com",
-      "upload.wikimedia.org"
+      "upload.wikimedia.org",
+      "http://google.com"
     ],
   },
   reactStrictMode: false,
