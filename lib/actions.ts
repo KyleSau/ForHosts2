@@ -279,7 +279,7 @@ export const getSiteFromPostId = async (postId: string) => {
   return post?.siteId;
 };
 
-export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
+/*export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
   const session = await getSession();
   if (!session?.user.id) {
     return {
@@ -328,7 +328,75 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
   site.customDomain && (await revalidateTag(`${site.customDomain}-posts`));
 
   return response;
+});*/
+
+export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
+  const session = await getSession();
+  if (!session?.user.id) {
+    return {
+      error: "Not authenticated",
+    };
+  }
+
+  const userId = session.user.id;
+
+  const response = await prisma.post.create({
+    data: {
+      title: "",
+      description: "",
+      site: {
+        connect: {
+          id: site.id,
+        },
+      },
+      user: {
+        connect: {
+          id: userId,
+        },
+      },
+      location: {
+        create: {
+          userId: userId
+        },
+      },
+      pricing: {
+        create: {
+          userId: userId
+        },
+      },
+      availability: {
+        create: {
+          userId: userId
+        },
+      },
+      propertyRules: {
+        create: {
+          userId: userId
+        },
+      },
+      propertyDetails: {
+        create: {
+          userId: userId
+        },
+      },
+      afterBookingInfo: {
+        create: {
+          userId: userId
+        },
+      },
+      // Note: You'd do the same for the Bedroom and Calendar tables
+      // if you have them in the post creation process.
+    },
+  });
+
+  await revalidateTag(
+    `${site.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}-posts`,
+  );
+  site.customDomain && (await revalidateTag(`${site.customDomain}-posts`));
+
+  return response;
 });
+
 
 // we need to break this update function up
 /*export const updatePost = async (data: Post) => {
@@ -491,6 +559,7 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
   }
 };*/
 
+
 export const updatePost = async (data: Post) => {
   const session = await getSession();
   if (!session?.user.id) {
@@ -498,6 +567,7 @@ export const updatePost = async (data: Post) => {
   }
 
   // Fetch the post and its related sub-tables
+
   const post = await prisma.post.findUnique({
     where: {
       id: data.id,
@@ -557,12 +627,13 @@ export const updatePost = async (data: Post) => {
       });
     }
 
-    if (post.propertyDetails) {
-      await prisma.propertyDetails.update({
-        where: { id: post.propertyDetails!.id },
-        data: post.propertyDetails,
-      });
-    }
+    // if (post.propertyDetails) {
+    //   console.log('update prop details!!' + JSON.stringify(post.propertyDetails));
+    //   await prisma.propertyDetails.update({
+    //     where: { id: post.propertyDetailsId },
+    //     data: post.propertyDetails,
+    //   });
+    // }
 
     if (post.afterBookingInfo) {
       await prisma.afterBookingInfo.update({
