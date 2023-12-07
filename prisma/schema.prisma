@@ -46,6 +46,7 @@ model Blog {
   slug        String   @default(cuid())
   image       String
   keywords    String[]
+  published   Boolean  @default(false)
 
   user   User?  @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String
