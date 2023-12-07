@@ -29,7 +29,6 @@ export default async function PostPage({ params }: { params: { id: string } }) {
 
   return (
     <div>
-
     </div>
   );
 }
