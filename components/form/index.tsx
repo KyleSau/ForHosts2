@@ -67,7 +67,7 @@ export default function Form({
         <p className="text-sm text-stone-500 dark:text-stone-400">
           {description}
         </p>
-        {/* {inputAttrs.name === "image" || inputAttrs.name === "logo" ? (
+        {inputAttrs.name === "image" || inputAttrs.name === "logo" ? (
           <Uploader
             defaultValue={inputAttrs.defaultValue}
             name={inputAttrs.name}
@@ -120,7 +120,7 @@ export default function Form({
             required
             className="w-full max-w-md rounded-md border border-stone-300 text-sm text-stone-900 placeholder-stone-300 focus:border-stone-500 focus:outline-none focus:ring-stone-500 dark:border-stone-600 dark:bg-black dark:text-white dark:placeholder-stone-700"
           />
-        )} */}
+        )}
       </div>
       {inputAttrs.name === "customDomain" && inputAttrs.defaultValue && (
         <DomainConfiguration domain={inputAttrs.defaultValue} />
