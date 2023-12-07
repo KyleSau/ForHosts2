@@ -278,6 +278,9 @@ dependencies:
   react-tweet:
     specifier: ^3.0.1
     version: 3.0.1(react-dom@18.2.0)(react@18.2.0)
+  regex-url:
+    specifier: ^1.0.0
+    version: 1.0.0
   remark:
     specifier: ^14.0.2
     version: 14.0.3
@@ -10343,6 +10346,10 @@ packages:
     resolution: {integrity: sha512-knzmNAcuyxV+gQCufkYcvOqX/qIIfHLv0u5x79kRxuGojfYVky1f15TzZEu2Avte8QGepvUNTnLskf8E6X6Vyg==}
     dependencies:
       '@babel/runtime': 7.22.5
+    dev: false
+
+  /regex-url@1.0.0:
+    resolution: {integrity: sha512-GLkFE4J6+5FPtMYcxtXRkEE5cBiXKQxUaD3FJHg5lstVt8yEAtYZOcODyh4mujhdALEnlF24gEEilcGbJfzC+g==}
     dev: false
 
   /regexp.prototype.flags@1.5.0:
