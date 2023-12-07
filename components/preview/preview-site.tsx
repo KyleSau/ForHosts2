@@ -12,26 +12,40 @@ import RegExURL from './regex-url';
 import Logo from '../Logo';
 
 
-export default function PreviewSite({ url }) {
+interface PreviewSiteProps {
+    url: string;
+}
+
+export default function PreviewSite({ url }: PreviewSiteProps) {
     const iframeRef = useRef(null);
     const [isLoading, setIsLoading] = useState(true);
     const urlTextRef = useRef(null);
 
     const handleBack = () => {
-        iframeRef.current.contentWindow.history.back();
+        const iframe = iframeRef.current;
+
+        if (!iframe) {
+            return;
+        }
+
+        const contentWindow = iframe.contentWindow;
+
+        if (contentWindow) {
+            contentWindow.history.back();
+        }
     };
 
     const handleRefresh = () => {
-        setIsLoading(true); // Show loading message and spinner again
+        setIsLoading(true);
         iframeRef.current.src = url;
     };
 
     const handleLoad = () => {
-        setIsLoading(false); // Hide loading message and spinner when iframe has loaded
+        setIsLoading(false);
     };
 
     const handleLoadStart = () => {
-        setIsLoading(true); // Show loading message and spinner when iframe starts loading
+        setIsLoading(true);
     };
 
     const handleUrlClick = () => {
@@ -46,7 +60,7 @@ export default function PreviewSite({ url }) {
 
     return (
         <div className='flex justify-center pt-14'>
-            <div className="md:w-full md:h-screen border border-black w-[300px] h-[500px] relative"> {/* Add relative class */}
+            <div className="md:w-full md:h-screen border border-black w-[300px] h-[500px] relative">
                 <div className='bg-zinc-700 flex items-center'>
                     <button
                         disabled={true}
@@ -87,7 +101,6 @@ export default function PreviewSite({ url }) {
 
                     <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
                         <Logo />
-                        {/* <div className="text-black text-xl">Website Preview Loading</div> */}
                         <Loader2 className='animate-spin ml-2' />
                     </div>
                 )}
