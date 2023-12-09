@@ -3,9 +3,7 @@ import MainBlogComponent from "../../../components/blog-listing-page/presenting-
 import prisma from "@/lib/prisma";
 
 export default async function BlogPage() {
-  // const blogs = await getAllBlogs();
-
-  const blogs = await prisma?.blog.findMany();
+  const blogs = await getAllBlogs();
 
   return (
     <div className="bg-gray-50">
