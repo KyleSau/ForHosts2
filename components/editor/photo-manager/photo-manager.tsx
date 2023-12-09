@@ -194,7 +194,7 @@ export default function PhotoManager({
             />
           ))}
 
-          <PhotoUploader onFileUpload={onPhotoUpload} />
+          <PhotoUploader onFileUpload={() => onPhotoUpload} />
         </ReactSortable>
       </div>
     </EditorWrapper>
