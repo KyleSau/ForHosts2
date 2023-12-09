@@ -125,7 +125,7 @@ export async function createBlog(blogData: any) {
 
 // updateBlog.js
 export async function updateBlog(blogId: any, blogData: any) {
-  console.log('updating....');
+  console.log("updating....");
   const session = await getSession();
   if (!session?.user.id) {
     return false;
@@ -143,8 +143,8 @@ export async function updateBlog(blogId: any, blogData: any) {
     where: {
       slug: blogData.slug,
       NOT: {
-        id: blogId
-      }
+        id: blogId,
+      },
     },
   });
 
@@ -157,7 +157,6 @@ export async function updateBlog(blogId: any, blogData: any) {
     data: blogData,
   });
 }
-
 
 // deleteBlog.js
 export async function deleteBlogPost(blogId: any) {
@@ -180,7 +179,7 @@ export const isAdmin = async () => {
 };
 
 export const getAllBlogs = async () => {
-  const blogs = prisma.blog.findMany();
+  const blogs = await prisma.blog.findMany();
   return blogs;
 };
 
@@ -796,7 +795,7 @@ export const updatePostMetadata = withPostAuth(
       // if the site has a custom domain, we need to revalidate those tags too
       post.site?.customDomain &&
         (await revalidateTag(`${post.site?.customDomain}-posts`),
-          await revalidateTag(`${post.site?.customDomain}-${post.slug}`));
+        await revalidateTag(`${post.site?.customDomain}-${post.slug}`));
 
       return response;
     } catch (error: any) {
