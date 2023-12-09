@@ -27,7 +27,7 @@ const MainBlogComponent = ({ blogs }: any) => {
       <div className="flex h-full w-auto items-center justify-center">
         <div className="flex">
           <div className="flex flex-col justify-center gap-8">
-            {heroBlogs.map((heroBlog: any, index: number) => (
+            {heroBlogs.map((heroBlog: Blog, index: number) => (
               <MainBlogCard
                 key={heroBlog.order}
                 blog={heroBlog}
@@ -39,7 +39,7 @@ const MainBlogComponent = ({ blogs }: any) => {
             <h1 className="mb-6 text-start text-2xl font-bold">
               Recent Articles
             </h1>
-            {recentBlogs.map((recentBlog: any) => (
+            {recentBlogs.map((recentBlog: Blog) => (
               <RecentBlogCard key={recentBlog.id} blog={recentBlog} />
             ))}
           </div>
