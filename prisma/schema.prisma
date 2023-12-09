@@ -46,28 +46,24 @@ model Blog {
   title       String   @db.Text
   description String?  @db.Text
   content     String?  @db.Text
-  slug        String   @unique @default(cuid())
+  slug        String   @default(cuid())
   image       String
   keywords    String[]
   published   Boolean  @default(false)
 
-  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  user   User?  @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String
 }
 
 model StripeAccount {
-  id                        String   @id @default(cuid())
+  id                        String  @id @default(cuid())
   accountId                 String
   accountEmail              String?
   oauthAccessToken          String
   oauthStripePublishableKey String
   oauthRefreshToken         String
-  userId                    String   @unique
-  user                      User     @relation(fields: [userId], references: [id])
-  createdAt                 DateTime @default(now())
-  updatedAt                 DateTime @updatedAt
+  userId                    String  @unique
+  user                      User    @relation(fields: [userId], references: [id])
 }
 
 model Account {
