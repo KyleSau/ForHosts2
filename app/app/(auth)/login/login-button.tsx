@@ -25,37 +25,37 @@ export default function LoginButton() {
 
   return (
     <div className="btn-wrapper text-center">
-    <button
-      className="active:bg-blueGray-50 text-blueGray-700 mb-1 mr-2 inline-flex items-center rounded bg-white px-4 py-2 text-xs font-bold font-normal uppercase shadow outline-none transition-all duration-150 ease-linear hover:shadow-md focus:outline-none"
-      type="button"
-  onClick={() => {
-    setGithubLoading(true);
-    signIn("github");
-  }}
-    >
-      <img
-        alt="..."
-        className="mr-1 w-5"
-        src="https://demos.creative-tim.com/notus-js/assets/img/github.svg"
-      />
-      Github
-    </button>
-    <button
-      className="active:bg-blueGray-50 text-blueGray-700 mb-1 mr-1 inline-flex items-center rounded bg-white px-4 py-2 text-xs font-bold font-normal uppercase shadow outline-none transition-all duration-150 ease-linear hover:shadow-md focus:outline-none"
-      type="button"
-  onClick={() => {
-    setGoogleLoading(true);
-    signIn("google");
-  }}
-    >
-      <img
-        alt="..."
-        className="mr-1 w-5"
-        src="https://demos.creative-tim.com/notus-js/assets/img/google.svg"
-      />
-      Google{" "}
-    </button>
-  </div>
+      <button
+        className="active:bg-blueGray-50 text-blueGray-700 mb-1 mr-2 inline-flex items-center rounded bg-white px-4 py-2 text-xs font-bold font-normal uppercase shadow outline-none transition-all duration-150 ease-linear hover:shadow-md focus:outline-none"
+        type="button"
+        onClick={() => {
+          setGithubLoading(true);
+          signIn("github");
+        }}
+      >
+        <img
+          alt="..."
+          className="mr-1 w-5"
+          src="https://demos.creative-tim.com/notus-js/assets/img/github.svg"
+        />
+        Github
+      </button>
+      <button
+        className="active:bg-blueGray-50 text-blueGray-700 mb-1 mr-1 inline-flex items-center rounded bg-white px-4 py-2 text-xs font-bold font-normal uppercase shadow outline-none transition-all duration-150 ease-linear hover:shadow-md focus:outline-none"
+        type="button"
+        onClick={() => {
+          setGoogleLoading(true);
+          signIn("google");
+        }}
+      >
+        <img
+          alt="..."
+          className="mr-1 w-5"
+          src="https://demos.creative-tim.com/notus-js/assets/img/google.svg"
+        />
+        Google{" "}
+      </button>
+    </div>
     // <div>
     //   <button
     //     disabled={githubLoading}

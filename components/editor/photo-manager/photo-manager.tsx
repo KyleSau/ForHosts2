@@ -18,6 +18,8 @@ import { LocalPhoto } from "./local-photo";
 import EditorWrapper from "../editor-wrapper";
 import EditorTitle from "../editor-components-title";
 import { humanReadableFileSize } from "@/lib/utils";
+import { stepConnectorClasses } from "@mui/material";
+import { toast } from "sonner";
 
 const PERMITTED_TYPES = new Set([
   FILE_CONSTS.BMP,
@@ -32,7 +34,7 @@ interface PhotoMangerProps {
 }
 
 interface OversizedFileData {
-  fileName: string, 
+  fileName: string,
   fileSize: number
 }
 
@@ -66,7 +68,7 @@ export default function PhotoManager({
   const onPhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = event.target;
     const localFiles = Array.from(files ?? []).filter((file) => PERMITTED_TYPES.has(file.type));
-    
+
     if (
       photos.length > IMAGE_UPLOAD_QUANTITY_LIMIT ||
       photos.length + localFiles.length > IMAGE_UPLOAD_QUANTITY_LIMIT
@@ -96,7 +98,7 @@ export default function PhotoManager({
       const file = localFiles[i];
 
       if (file.size > IMAGE_SIZE_LIMIT_BYTES) {
-        oversizedFileNames.push({fileName: file.name, fileSize: file.size});
+        oversizedFileNames.push({ fileName: file.name, fileSize: file.size });
         continue;
       }
 
@@ -105,9 +107,11 @@ export default function PhotoManager({
           access: "public",
           handleBlobUploadUrl: "/api/upload_blob",
         });
-        
+
+        if (!blobResult) toast.error("Error uploading file");
+
         const photo = await createImageMetadata(blobResult, postId, siteId);
-        
+
         if (photo) {
           setPhotos((prevPhotos) => [...prevPhotos, photo]);
 
@@ -141,11 +145,11 @@ export default function PhotoManager({
         } the file size limit of ${IMAGE_SIZE_LIMIT_MB
         } MB.\n\n${formattedNames}`,
       );
-      
+
       setLocalPhotos((prevLocalPhotos) =>
-          prevLocalPhotos.filter(
-              (localPhoto) => !overSizedFileNameSet.has(localPhoto.name),
-          ),
+        prevLocalPhotos.filter(
+          (localPhoto) => !overSizedFileNameSet.has(localPhoto.name),
+        ),
       );
     }
   };
@@ -157,9 +161,8 @@ export default function PhotoManager({
         desc={
           photos.length == 0
             ? "Manage your listing's photos"
-            : `You may add ${
-                IMAGE_UPLOAD_QUANTITY_LIMIT - photos.length
-              } more photos`
+            : `You may add ${IMAGE_UPLOAD_QUANTITY_LIMIT - photos.length
+            } more photos`
         }
       />
       <div className="flex justify-center">
@@ -191,7 +194,7 @@ export default function PhotoManager({
             />
           ))}
 
-          <PhotoUploader onFileUpload={onPhotoUpload} />
+          <PhotoUploader onFileUpload={() => onPhotoUpload} />
         </ReactSortable>
       </div>
     </EditorWrapper>

@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { Bedroom, Post, Role, Site } from "@prisma/client";
+import { Bedroom, Blog, Post, Site } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { withPostAuth, withSiteAuth } from "./auth";
 import { getSession } from "@/lib/auth";
@@ -83,104 +83,76 @@ export const createSite = async (formData: FormData) => {
   }
 };
 
-export async function getBlogById(blogId: string) {
-  if (!isAdmin())
+export const createBlogPost = async () => {
+  const session = await getSession();
+  if (!session?.user.id) {
     return {
       error: "Not authenticated",
     };
-  try {
-    const blog = await prisma.blog.findUnique({
-      where: { id: blogId },
-    });
-    return blog;
-  } catch (error) {
-    throw new Error("Error fetching blog: " + error);
   }
-}
 
-export async function createBlog(blogData: any) {
-  const session = await getSession();
-  if (!session?.user.id) {
-    return false;
-  }
-  const user = await prisma?.user.findUnique({
-    where: { id: session.user.id },
+  const user = await prisma.user.findUnique({
+    where: { id: session?.user.id },
   });
 
-  if (user?.role !== Role.USER) {
-    return false;
-  }
-  // Ensure slug is unique or use cuid
-  const existingSlug = await prisma.blog.findFirst({
-    where: { slug: blogData.slug },
-  });
-  if (existingSlug) {
-    throw new Error(`A blog with the slug "${blogData.slug}" already exists.`);
-  }
-  blogData.userId = user.id;
-  blogData.author = user.name;
-  blogData.avatar = user.image;
-  return prisma.blog.create({ data: blogData });
-}
-
-// updateBlog.js
-export async function updateBlog(blogId: any, blogData: any) {
-  console.log("updating....");
-  const session = await getSession();
-  if (!session?.user.id) {
-    return false;
-  }
-  const user = await prisma?.user.findUnique({
-    where: { id: session.user.id },
-  });
-
-  if (user?.role !== Role.USER) {
-    return false;
+  if (!user) {
+    return {
+      error: "User not found",
+    };
   }
 
-  // Check if the slug exists and is not the slug of the current blog
-  const existingSlug = await prisma.blog.findFirst({
-    where: {
-      slug: blogData.slug,
-      NOT: {
-        id: blogId,
-      },
+  const response = await prisma.blog.create({
+    data: {
+      // userId: user.id,
+      order: 0,
+      /*user: {
+        create: {
+          id: user.id
+        },
+      },*/
+      userId: user.id,
+      author: user?.name ?? "Anonymous",
+      avatar: user?.image ?? "",
+      title: "Untitled Blog Post",
+      description: "",
+      content: "",
+      image: "",
+      keywords: [],
     },
   });
 
-  if (existingSlug) {
-    throw new Error("Slug already exists");
-  }
+  revalidateTag("blogs"); // re-visit this
 
-  return prisma.blog.update({
-    where: { id: blogId },
-    data: blogData,
-  });
-}
-
-// deleteBlog.js
-export async function deleteBlogPost(blogId: any) {
-  return prisma.blog.delete({ where: { id: blogId } });
-}
-
-export const isAdmin = async () => {
-  const session = await getSession();
-  if (!session?.user.id) {
-    return false;
-  }
-  const user = await prisma?.user.findUnique({
-    where: { id: session.user.id },
-  });
-
-  if (user?.role !== Role.USER) {
-    return false;
-  }
-  return true;
+  return response;
 };
 
-export const getAllBlogs = async () => {
-  const blogs = await prisma.blog.findMany();
-  return blogs;
+export const updateBlogPost = async (data: Blog) => {
+  console.log("update blog postaroons");
+  const session = await getSession();
+  if (!session?.user.id) {
+    return {
+      error: "Not authenticated",
+    };
+  }
+
+  console.log("data id: ", data.id);
+  console.log("update blog data: " + JSON.stringify(data));
+
+  await prisma.blog.update({
+    where: {
+      id: data.id,
+    },
+    data: {
+      title: data.title,
+      description: data.description,
+      content: data.content,
+      slug: data.slug,
+      image: data.image,
+      keywords: data.keywords,
+    },
+  });
+
+  revalidateTag("blogs"); // re-visit this
 };
 
 export const getBedrooms = async (postId: string) => {
@@ -379,7 +351,7 @@ export const getSiteFromPostId = async (postId: string) => {
   return post?.siteId;
 };
 
-export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
+/*export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
   const session = await getSession();
   if (!session?.user.id) {
     return {
@@ -419,6 +391,73 @@ export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
       afterBookingInfo: {
         create: {},
       },
+    },
+  });
+
+  await revalidateTag(
+    `${site.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}-posts`,
+  );
+  site.customDomain && (await revalidateTag(`${site.customDomain}-posts`));
+
+  return response;
+});*/
+
+export const createPost = withSiteAuth(async (_: FormData, site: Site) => {
+  const session = await getSession();
+  if (!session?.user.id) {
+    return {
+      error: "Not authenticated",
+    };
+  }
+
+  const userId = session.user.id;
+
+  const response = await prisma.post.create({
+    data: {
+      title: "",
+      description: "",
+      site: {
+        connect: {
+          id: site.id,
+        },
+      },
+      user: {
+        connect: {
+          id: userId,
+        },
+      },
+      location: {
+        create: {
+          userId: userId,
+        },
+      },
+      pricing: {
+        create: {
+          userId: userId,
+        },
+      },
+      availability: {
+        create: {
+          userId: userId,
+        },
+      },
+      propertyRules: {
+        create: {
+          userId: userId,
+        },
+      },
+      propertyDetails: {
+        create: {
+          userId: userId,
+        },
+      },
+      afterBookingInfo: {
+        create: {
+          userId: userId,
+        },
+      },
+      // Note: You'd do the same for the Bedroom and Calendar tables
+      // if you have them in the post creation process.
     },
   });
 
@@ -598,6 +637,7 @@ export const updatePost = async (data: Post) => {
   }
 
   // Fetch the post and its related sub-tables
+
   const post = await prisma.post.findUnique({
     where: {
       id: data.id,
@@ -657,12 +697,13 @@ export const updatePost = async (data: Post) => {
       });
     }
 
-    if (post.propertyDetails) {
-      await prisma.propertyDetails.update({
-        where: { id: post.propertyDetails!.id },
-        data: post.propertyDetails,
-      });
-    }
+    // if (post.propertyDetails) {
+    //   console.log('update prop details!!' + JSON.stringify(post.propertyDetails));
+    //   await prisma.propertyDetails.update({
+    //     where: { id: post.propertyDetailsId },
+    //     data: post.propertyDetails,
+    //   });
+    // }
 
     if (post.afterBookingInfo) {
       await prisma.afterBookingInfo.update({
