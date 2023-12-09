@@ -28,6 +28,7 @@ import {
   Info,
   BedSingle,
   Image,
+  Crown,
 } from "lucide-react";
 import {
   useParams,
@@ -40,6 +41,11 @@ import { getSiteFromPostId } from "@/lib/actions";
 import Logo from "./Logo";
 
 const externalLinks = [
+  {
+    name: "Admin Dashboard",
+    href: "/admin",
+    icon: <Crown width={18} />,
+  },
   {
     name: "Guides",
     href: undefined,

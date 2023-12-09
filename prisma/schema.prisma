@@ -40,6 +40,9 @@ model User {
 
 model Blog {
   id          String   @id @default(cuid())
+  order       Int?
+  avatar      String
+  author      String
   title       String   @db.Text
   description String?  @db.Text
   content     String?  @db.Text

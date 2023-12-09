@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { Bedroom, Post, Site } from "@prisma/client";
+import { Bedroom, Blog, Post, Site } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { withPostAuth, withSiteAuth } from "./auth";
 import { getSession } from "@/lib/auth";
@@ -82,6 +82,76 @@ export const createSite = async (formData: FormData) => {
     }
   }
 };
+
+export const createBlogPost = (async () => {
+  const session = await getSession();
+  if (!session?.user.id) {
+    return {
+      error: "Not authenticated",
+    };
+  }
+
+  const user = await prisma.user.findUnique({ where: { id: session?.user.id } });
+
+  if (!user) {
+    return {
+      error: "User not found",
+    };
+  }
+
+  const response = await prisma.blog.create({
+    data: {
+      // userId: user.id,
+      order: 0,
+      /*user: {
+        create: {
+          id: user.id
+        },
+      },*/
+      userId: user.id,
+      author: user?.name ?? 'Anonymous',
+      avatar: user?.image ?? '',
+      title: 'Untitled Blog Post',
+      description: '',
+      content: '',
+      image: '',
+      keywords: [],
+    },
+  });
+
+  revalidateTag('blogs'); // re-visit this
+
+  return response;
+});
+
+export const updateBlogPost = async (data: Blog) => {
+  console.log('update blog postaroons');
+  const session = await getSession();
+  if (!session?.user.id) {
+    return {
+      error: "Not authenticated",
+    };
+  }
+
+  console.log('data id: ', data.id);
+  console.log('update blog data: ' + JSON.stringify(data));
+
+  await prisma.blog.update({
+    where: {
+      id: data.id,
+    },
+    data: {
+      title: data.title,
+      description: data.description,
+      content: data.content,
+      slug: data.slug,
+      image: data.image,
+      keywords: data.keywords,
+    },
+  });
+
+  revalidateTag('blogs'); // re-visit this
+}
 
 export const getBedrooms = async (postId: string) => {
   const post = await prisma.post.findUnique({
