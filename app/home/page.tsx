@@ -12,12 +12,9 @@ export default function Home() {
   ];
   return (
     <div>
-      {/* <HomeLayout>
-        <Hero />
-        <LandingInfo header="Our Services" services={services} />
-        <PropertyQuantitySelection />
-      </HomeLayout> */}
-      <UnderDevelopment />
+      <HomeLayout>
+        <UnderDevelopment />
+      </HomeLayout>
     </div>
   );
 }
