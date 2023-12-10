@@ -1,6 +1,7 @@
 import { ReactNode, Suspense } from "react";
 import Profile from "@/components/profile";
 import Nav from "@/components/nav";
+import Breadcrumbs from "@/components/breadcrumbs";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
@@ -10,7 +11,10 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           <Profile />
         </Suspense>
       </Nav>
-      <div className="min-h-screen  sm:pl-60">{children}</div>
+      <div className="min-h-screen sm:pl-60">
+        <Breadcrumbs homeElement={"Dashboard"} separator={""} />
+        {children}
+      </div>
     </div>
   );
 }

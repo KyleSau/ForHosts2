@@ -10,6 +10,9 @@ import ListingDescription from "@/components/users-sites/listing-description";
 import dynamic from 'next/dynamic'
 import { CalendarDemo } from "@/components/ui/uicalendar";
 import ShowMoreModal from "@/components/users-sites/show-more-modal"
+import Featured from "@/components/users-sites/featured";
+import BedroomCarousel from "@/components/users-sites/bedroom-carousel";
+import WhatToKnow from "@/components/users-sites/what-to-know";
 // import OpenStreetMap from '../component/OpenStreetMap'
 const Map = dynamic(() => import('@/components/users-sites/open-street-map'), {
   ssr: false,
@@ -73,14 +76,13 @@ export default async function SitePostPage({
         </div>
         <div className="bg-white rounded-sm col-start-1 md:col-start-3 md:col-span-3 p-8 m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
           <div className="">
-            Notable Features
+            <Featured />
           </div>
         </div>
         <div className="bg-white col-start-1 md:col-start-3 md:col-span-3 p-8 m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
           <div className="">
             Listing Description
           </div>
-          {/* <ListingDescription description={data.description} /> */}
           {data.description && (
             <div>
               <ShowMoreModal text={data.description} />
@@ -89,7 +91,7 @@ export default async function SitePostPage({
         </div>
         <div className="bg-white col-start-1 md:col-start-3 md:col-span-3 p-8 m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
           <div className="">
-            Sleeping quarters and beds
+            <BedroomCarousel />
           </div>
         </div>
         <div className="bg-white col-start-1 md:col-start-3 md:col-span-3 p-8 m-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
@@ -105,45 +107,13 @@ export default async function SitePostPage({
         <hr className="m-5 col-span-1 md:col-span-full" />
         <div className="col-span-1 md:col-span-full m-2">
           <div className="">
+            map here
             {/* <Map /> */}
           </div>
         </div>
         <hr className="m-5 col-span-1 md:col-span-full" />
-        <div className="bg-white col-span-1 md:col-span-full m-2 rounded-sm">
-          <p className="text-xl font-bold flex justify-center mb-5">What To Know About Where You&apos;re Staying</p>
-          <div className="grid grid-cols-3">
-            <div className="m-2">
-              <p className="text-lg font-bold flex justify-center">House Rules</p>
-              <hr />
-              <p className=" flex justify-center">Check-in after 3:00 PM<br />
-                Checkout before 11:00 AM<br />
-                No pets
-
-              </p>
-            </div>
-            <div className="m-2">
-              <p className="text-lg font-bold flex justify-center">Cancellation Info</p>
-              <hr />
-              <p className="flex justify-center">Check-in after 3:00 PM<br />
-                Checkout before 11:00 AM<br />
-                No pets
-
-              </p>
-            </div>
-            <div className="m-2">
-              <p className="text-lg font-bold flex justify-center">Safety</p>
-              <hr />
-              <p className=" flex justify-center">Check-in after 3:00 PM<br />
-                Checkout before 11:00 AM<br />
-                No pets
-
-              </p>
-            </div>
-          </div>
-        </div>
+        <WhatToKnow />
       </div >
-
-      <MDX source={data.mdxSource} />
       {
         data.adjacentPosts.length > 0 && (
           <div className="relative mb-20 mt-10 sm:mt-20">
