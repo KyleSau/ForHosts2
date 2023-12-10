@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     throw new Error("Params is undefined");
   }
   const { slug } = params;
-  const data = await getAllBlogs();
+  const data = await prisma?.blog.findMany();
   if (!data) {
     notFound();
   }
@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 export default async function BlogViewingPage({ params }: Props) {
   const { slug } = params;
-  const data = await getAllBlogs();
+  const data = await prisma?.blog.findMany();
   const blog = data.find((blog) => blog.slug === slug);
   if (!blog) {
     return <BlogNotFound />;

@@ -43,9 +43,7 @@ const MainBlogViewingComponent = async ({ blog }: any) => {
         </figure>
         <figcaption className="text-center">Image caption</figcaption>
         {/* <p className="mt-8 text-center">{blog.content}</p> */}
-        <div className="mt-8 text-center">
-          <MDX source={mdx} />
-        </div>
+        <MDX source={mdx} />
 
       </article>
     </div>

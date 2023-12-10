@@ -747,6 +747,11 @@ export const getPosts = async (
   return posts;
 };
 
+export const getAllBlogs = async () => {
+  const blogs = await prisma.blog.findMany({});
+  return blogs;
+}
+
 // revisit this
 export const updatePostMetadata = withPostAuth(
   async (
@@ -836,7 +841,7 @@ export const updatePostMetadata = withPostAuth(
       // if the site has a custom domain, we need to revalidate those tags too
       post.site?.customDomain &&
         (await revalidateTag(`${post.site?.customDomain}-posts`),
-        await revalidateTag(`${post.site?.customDomain}-${post.slug}`));
+          await revalidateTag(`${post.site?.customDomain}-${post.slug}`));
 
       return response;
     } catch (error: any) {
