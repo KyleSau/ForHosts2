@@ -1,23 +1,16 @@
-import Hero from "@/components/home/hero";
+// page.tsx
 import HomeLayout from "@/components/home/home-layout";
-import LandingInfo from "@/components/home/landing-info";
-import { PropertyQuantitySelection } from "@/components/home/property-quantity-selection";
-import UnderDevelopment from "./under-development-page";
+import { Hero } from "./hero";
+import { Benefits } from "./benefits";
+import { HowItWorks } from "./HowItWorks";
+import { Testimonials } from "./Testimonials";
+import { Footer } from "react-day-picker";
+import Home from "./Home";
 
-export default function Home() {
-  const services = [
-    { imageUrl: "https://example.com/image1.jpg", description: "Service 1" },
-    { imageUrl: "https://example.com/image2.jpg", description: "Service 2" },
-    { imageUrl: "https://example.com/image3.jpg", description: "Service 3" },
-  ];
+export default function HomePage() {
   return (
     <div>
-      {/* <HomeLayout>
-        <Hero />
-        <LandingInfo header="Our Services" services={services} />
-        <PropertyQuantitySelection />
-      </HomeLayout> */}
-      <UnderDevelopment />
-    </div>
+      <Home />
+    </div >
   );
 }
