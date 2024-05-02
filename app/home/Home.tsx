@@ -249,7 +249,7 @@ export default function Home() {
     )
 }
 
-function BadgeIcon(props) {
+function BadgeIcon(props: any) {
     return (
         <svg
             {...props}
@@ -269,7 +269,7 @@ function BadgeIcon(props) {
 }
 
 
-function BarChartIcon(props) {
+function BarChartIcon(props: any) {
     return (
         <svg
             {...props}
@@ -291,7 +291,7 @@ function BarChartIcon(props) {
 }
 
 
-function BrushIcon(props) {
+function BrushIcon(props: any) {
     return (
         <svg
             {...props}
@@ -312,7 +312,7 @@ function BrushIcon(props) {
 }
 
 
-function CheckIcon(props) {
+function CheckIcon(props: any) {
     return (
         <svg
             {...props}
@@ -332,7 +332,7 @@ function CheckIcon(props) {
 }
 
 
-function CreditCardIcon(props) {
+function CreditCardIcon(props: any) {
     return (
         <svg
             {...props}
@@ -353,7 +353,7 @@ function CreditCardIcon(props) {
 }
 
 
-function FolderSyncIcon(props) {
+function FolderSyncIcon(props: any) {
     return (
         <svg
             {...props}
@@ -377,7 +377,7 @@ function FolderSyncIcon(props) {
 }
 
 
-function HomeIcon(props) {
+function HomeIcon(props: any) {
     return (
         <svg
             {...props}
@@ -398,7 +398,7 @@ function HomeIcon(props) {
 }
 
 
-function MenuIcon(props) {
+function MenuIcon(props: any) {
     return (
         <svg
             {...props}
@@ -420,7 +420,7 @@ function MenuIcon(props) {
 }
 
 
-function WalletIcon(props) {
+function WalletIcon(props: any) {
     return (
         <svg
             {...props}
