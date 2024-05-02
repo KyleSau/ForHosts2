@@ -48,9 +48,6 @@ export default function Home() {
                         </p>
                         <div className="flex gap-4">
                             <Button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-lg">Get Started</Button>
-                            {/* <Link className="text-gray-400 hover:text-gray-300" href="#">
-                                Learn More
-                            </Link> */}
                         </div>
                     </div>
                     <img
@@ -197,7 +194,7 @@ export default function Home() {
                                         </Avatar>
                                         <div>
                                             <h3 className="font-semibold">Jane Smith</h3>
-                                            <p className="text-gray-500 dark:text-gray-400">Superhost, VRBO</p>
+                                            <p className="text-gray-500 dark:text-gray-400">Premier Host, VRBO</p>
                                         </div>
                                     </div>
                                     <p className="text-gray-500 dark:text-gray-400">
@@ -227,7 +224,7 @@ export default function Home() {
                         </div>
                     </div>
                 </section>
-                <section className="bg-gray-100 dark:bg-gray-800 py-20 px-6 md:px-12" id="contact">
+                {/* <section className="bg-gray-100 dark:bg-gray-800 py-20 px-6 md:px-12" id="contact">
                     <div className="max-w-5xl mx-auto space-y-12">
                         <div className="text-center space-y-4">
                             <h2 className="text-3xl font-bold">Get in Touch</h2>
@@ -243,7 +240,7 @@ export default function Home() {
                             </div>
                         </form>
                     </div>
-                </section>
+                </section> */}
             </main>
         </div>
     )
