@@ -202,7 +202,7 @@ export default function Home() {
                                     </div>
                                     <p className="text-gray-500 dark:text-gray-400">
                                         &ldquo;The customization options on ForHosts have allowed me to create a truly unique and branded
-                                        experience for my guests. It's been a game-changer for my business.&ldquo;
+                                        experience for my guests. It has been a game-changer for my business.&ldquo;
                                     </p>
                                 </CardContent>
                             </Card>
@@ -220,7 +220,7 @@ export default function Home() {
                                     </div>
                                     <p className="text-gray-500 dark:text-gray-400">
                                         &ldquo;The analytics and marketing tools on ForHosts have been invaluable in helping me understand my
-                                        guests and optimize my business. It's a must-have for any short-term rental owner.&ldquo;
+                                        guests and optimize my business. It is a must-have for any short-term rental owner.&ldquo;
                                     </p>
                                 </CardContent>
                             </Card>
