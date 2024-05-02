@@ -114,7 +114,7 @@ export default function Home() {
                         </div>
                     </div>
                 </section>
-                <section>
+                <section id="pricing">
                     <div className="relative items-center w-full mx-auto md:px-12 lg:px-16 max-w-7xl">
                         <div className="max-w-2xl px-4 py-24 mx-auto sm:px-6 lg:px-8">
                             <div className="justify-center mx-auto space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:mx-auto xl:max-w-2xl xl:mx-0 xl:grid-cols-2">
