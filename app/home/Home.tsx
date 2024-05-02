@@ -20,16 +20,16 @@ export default function Home() {
                     </div>
                 </Link>
                 <nav className="hidden md:flex items-center gap-6">
-                    <Link className="hover:underline" href="#">
+                    <Link className="hover:underline" href="#features">
                         Features
                     </Link>
-                    <Link className="hover:underline" href="#">
+                    <Link className="hover:underline" href="#pricing">
                         Pricing
                     </Link>
-                    <Link className="hover:underline" href="#">
+                    <Link className="hover:underline" href="#testimonials">
                         Testimonials
                     </Link>
-                    <Link className="hover:underline" href="#">
+                    <Link className="hover:underline" href="#contact">
                         Contact
                     </Link>
                     <Button variant="secondary">Sign Up</Button>
